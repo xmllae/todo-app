@@ -34,8 +34,8 @@ function ensureSubMode() {
   var h = '';
   h += '<div class="task-card">';
   h += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:10px">';
-  h += '<h3 style="margin:0;font-size:1.2rem;font-weight:700">⏰ 订阅管理</h3>';
-  h += '<button onclick="openSubModal()" style="background:var(--acc);border:none;color:#fff;padding:9px 18px;border-radius:10px;cursor:pointer;font-size:.9rem;font-weight:600;white-space:nowrap">＋ 添加</button>';
+  h += '<h3 style="margin:0;font-size:1.2rem;font-weight:700">\u23f0 \u8ba2\u9605\u7ba1\u7406</h3>';
+  h += '<button onclick="openSubModal()" style="background:var(--acc);border:none;color:#fff;padding:9px 18px;border-radius:10px;cursor:pointer;font-size:.9rem;font-weight:600;white-space:nowrap">\uff0b \u6dfb\u52a0</button>';
   h += '</div>';
   h += '<div id="subStats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px"></div>';
   h += '<div id="subBanner"></div>';
@@ -83,9 +83,9 @@ function _subNextStatus(cur) {
 }
 
 function _subStatusInfo(st) {
-  if (st === 'paused')    return { dot: '#94a3b8', label: '已暂停' };
-  if (st === 'cancelled') return { dot: '#ef4444', label: '已取消' };
-  return { dot: '#22c55e', label: '激活中' };
+  if (st === 'paused')    return { dot: '#94a3b8', label: '\u5df2\u6682\u505c' };
+  if (st === 'cancelled') return { dot: '#ef4444', label: '\u5df2\u53d6\u6d88' };
+  return { dot: '#22c55e', label: '\u6fc0\u6d3b\u4e2d' };
 }
 
 function subToggleStatus(id) {
@@ -114,28 +114,28 @@ function _subBatchDel() {
   if (!_subSelected.size) return;
   subscriptions = JSON.parse(localStorage.getItem('tuole_subs') || '[]');
   var names = subscriptions.filter(function(s){ return _subSelected.has(s.id); }).map(function(s){ return s.name; });
-  if (!confirm('确认删除 ' + _subSelected.size + ' 项？
-' + names.join('、'))) return;
+  if (!confirm('\u786e\u8ba4\u5220\u9664 ' + _subSelected.size + ' \u9879\uff1f\n' + names.join('\u3001'))) return;
   subscriptions = subscriptions.filter(function(s){ return !_subSelected.has(s.id); });
   localStorage.setItem('tuole_subs', JSON.stringify(subscriptions));
   _subSelected.clear();
   rSubscriptions();
-  toast('🗑️ 已删除');
+  toast('\ud83d\uddd1\ufe0f \u5df2\u5220\u9664');
 }
 
 function delSub(id) {
   subscriptions = JSON.parse(localStorage.getItem('tuole_subs') || '[]');
   var s = subscriptions.find(function(x){ return x.id === id; });
   var name = s ? s.name : '';
-  if (!confirm('确认删除「' + name + '」？')) return;
+  if (!confirm('\u786e\u8ba4\u5220\u9664\u300c' + name + '\u300d\uff1f')) return;
   subscriptions = subscriptions.filter(function(x){ return x.id !== id; });
   localStorage.setItem('tuole_subs', JSON.stringify(subscriptions));
   _subSelected.delete(id);
   rSubscriptions();
-  toast('🗑️ 已删除');
+  toast('\ud83d\uddd1\ufe0f \u5df2\u5220\u9664');
 }
 
 function editSub(id) { openSubModal(id); }
+
 function rSubscriptions() {
   subscriptions = JSON.parse(localStorage.getItem('tuole_subs') || '[]');
   var stats = document.getElementById('subStats');
@@ -168,21 +168,21 @@ function rSubscriptions() {
   }
 
   stats.innerHTML =
-    mk('#eef2ff','#818cf8','📦','订阅总数', total) +
-    mk('#fff7ed','#f97316','🔔','本月到期', thisMonth) +
-    mk('#f0fdf4','#22c55e','💰','月均花费', '¥' + monthCost.toFixed(2)) +
-    mk('#eff6ff','#3b82f6','📅','年度花费', '¥' + yearCost.toFixed(2));
+    mk('#eef2ff','#818cf8','\ud83d\udce6','\u8ba2\u9605\u603b\u6570', total) +
+    mk('#fff7ed','#f97316','\ud83d\udd14','\u672c\u6708\u5230\u671f', thisMonth) +
+    mk('#f0fdf4','#22c55e','\ud83d\udcb0','\u6708\u5747\u82b1\u8d39', '\u00a5' + monthCost.toFixed(2)) +
+    mk('#eff6ff','#3b82f6','\ud83d\udcc5','\u5e74\u5ea6\u82b1\u8d39', '\u00a5' + yearCost.toFixed(2));
 
   var banner = document.getElementById('subBanner');
   if (banner && !_subBannerDismissed) {
     var expiring = subscriptions.filter(function(s){ return calcDaysLeft(s.expireDate) <= 7; });
     if (expiring.length) {
-      var bnames = expiring.map(function(s){ return s.name; }).join('、');
+      var bnames = expiring.map(function(s){ return s.name; }).join('\u3001');
       var bh = '';
       bh += '<div style="background:#fff7ed;border:1.5px solid #fed7aa;border-radius:12px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px">';
-      bh += '<span style="flex-shrink:0">⚠️</span>';
-      bh += '<span style="flex:1;font-size:.88rem;color:#92400e"><strong>即将到期：</strong> ' + esc(bnames) + ' — 请及时处理</span>';
-      bh += '<button onclick="_subBannerDismissed=true;document.getElementById(\'subBanner\').innerHTML=\'\';" style="background:none;border:none;cursor:pointer;font-size:1.1rem;color:#92400e;flex-shrink:0">×</button>';
+      bh += '<span style="flex-shrink:0">\u26a0\ufe0f</span>';
+      bh += '<span style="flex:1;font-size:.88rem;color:#92400e"><strong>\u5373\u5c06\u5230\u671f\uff1a</strong> ' + esc(bnames) + ' \u2014 \u8bf7\u53ca\u65f6\u5904\u7406</span>';
+      bh += '<button onclick="_subBannerDismissed=true;document.getElementById(\'subBanner\').innerHTML=\'\';" style="background:none;border:none;cursor:pointer;font-size:1.1rem;color:#92400e;flex-shrink:0">\u00d7</button>';
       bh += '</div>';
       banner.innerHTML = bh;
     } else { banner.innerHTML = ''; }
@@ -191,23 +191,52 @@ function rSubscriptions() {
 }
 
 function _clb(c) {
-  if (c === 'month')   return '月付';
-  if (c === 'year')    return '年付';
-  if (c === 'quarter') return '季付';
-  return '一次性';
+  if (c === 'month')   return '\u6708\u4ed8';
+  if (c === 'year')    return '\u5e74\u4ed8';
+  if (c === 'quarter') return '\u5b63\u4ed8';
+  return '\u4e00\u6b21\u6027';
 }
-  tbl += ' onchange="_subToggleAll(this.checked)" style="cursor:pointer;width:14px;height:14px"></div>';
-  tbl += '<div>服务名称</div>';
-  tbl += '<div style="text-align:center">到期日期</div>';
-  tbl += '<div style="text-align:center">剩余天数</div>';
-  tbl += '<div style="text-align:center">周期</div>';
-  tbl += '<div style="text-align:right">费用</div>';
-  tbl += '<div style="text-align:center">状态</div>';
-  tbl += '<div style="text-align:center">操作</div>';
+
+function rSubList() {
+  var list = document.getElementById('subList');
+  if (!list) return;
+  var COL = '36px 1fr 110px 90px 70px 80px 90px 100px';
+
+  var toolbar = '<div class="sub-toolbar" style="display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap">';
+  toolbar += '<input type="text" placeholder="\u641c\u7d22\u8ba2\u9605\u2026" value="' + esc(_subSearch) + '" oninput="_subSetSearch(this.value)" style="flex:1;min-width:140px;border:1.5px solid var(--inp-bd);border-radius:9px;padding:8px 12px;font-size:.88rem;color:var(--text);background:var(--inp-bg);outline:0">';
+  toolbar += '<select onchange="_subSetSort(this.value)" style="border:1.5px solid var(--inp-bd);border-radius:9px;padding:8px 10px;font-size:.85rem;color:var(--text2);background:var(--inp-bg);outline:0;cursor:pointer">';
+  toolbar += '<option value="days"' + (_subSort==='days'?' selected':'') + '>\u6309\u5269\u4f59\u5929\u6570</option>';
+  toolbar += '<option value="name"' + (_subSort==='name'?' selected':'') + '>\u6309\u540d\u79f0</option>';
+  toolbar += '<option value="cost"' + (_subSort==='cost'?' selected':'') + '>\u6309\u8d39\u7528</option>';
+  toolbar += '</select>';
+  toolbar += '</div>';
+
+  var filtered = subscriptions.slice();
+  if (_subSearch) {
+    var q = _subSearch.toLowerCase();
+    filtered = filtered.filter(function(s){ return s.name.toLowerCase().indexOf(q) >= 0; });
+  }
+  filtered.sort(function(a, b) {
+    if (_subSort === 'name') return (a.name||'').localeCompare(b.name||'');
+    if (_subSort === 'cost') return (+b.cost||0) - (+a.cost||0);
+    return calcDaysLeft(a.expireDate) - calcDaysLeft(b.expireDate);
+  });
+
+  var tbl = '';
+  tbl += '<div class="sub-table-wrap" style="border:1.5px solid var(--task-bd);border-radius:14px;overflow:hidden">';
+  tbl += '<div style="display:grid;grid-template-columns:' + COL + ';align-items:center;padding:0 14px;min-height:42px;background:var(--hov);font-size:.77rem;font-weight:600;color:var(--text3)">';
+  tbl += '<div><input type="checkbox" onchange="_subToggleAll(this.checked)" style="cursor:pointer;width:14px;height:14px"></div>';
+  tbl += '<div>\u670d\u52a1\u540d\u79f0</div>';
+  tbl += '<div style="text-align:center">\u5230\u671f\u65e5\u671f</div>';
+  tbl += '<div style="text-align:center">\u5269\u4f59\u5929\u6570</div>';
+  tbl += '<div style="text-align:center">\u5468\u671f</div>';
+  tbl += '<div style="text-align:right">\u8d39\u7528</div>';
+  tbl += '<div style="text-align:center">\u72b6\u6001</div>';
+  tbl += '<div style="text-align:center">\u64cd\u4f5c</div>';
   tbl += '</div>';
 
-  if (!filtered.length) {
-    tbl += '<div style="padding:32px;text-align:center;color:var(--text3);font-size:.9rem">未找到匹配的订阅</div>';
+  if   (!filtered.length) {
+    tbl += '<div style="padding:32px;text-align:center;color:var(--text3);font-size:.9rem">\u672a\u627e\u5230\u5339\u914d\u7684\u8ba2\u9605</div>';
   } else {
     filtered.forEach(function(s, i) {
       var dl = calcDaysLeft(s.expireDate);
@@ -221,22 +250,22 @@ function _clb(c) {
       tbl += '<div><input type="checkbox" ' + (sel ? 'checked' : '') + ' onchange="_subToggleOne(' + s.id + ',this.checked)" style="cursor:pointer;width:14px;height:14px"></div>';
       tbl += '<div style="min-width:0;padding-right:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.9rem;font-weight:600;color:var(--text)">' + nm + '</div>';
       tbl += '<div style="text-align:center;font-size:.81rem;color:var(--text2)">' + s.expireDate + '</div>';
-      tbl += '<div style="text-align:center"><span class="' + (al ? 'sub-shake' : '') + '" style="display:inline-block;padding:2px 9px;border-radius:20px;background:' + c.bg + ';color:' + c.text + ';font-size:.77rem;font-weight:700;border:1px solid ' + c.border + '">' + (al ? '⚠️ ' : '') + dl + '</span></div>';
+      tbl += '<div style="text-align:center"><span class="' + (al ? 'sub-shake' : '') + '" style="display:inline-block;padding:2px 9px;border-radius:20px;background:' + c.bg + ';color:' + c.text + ';font-size:.77rem;font-weight:700;border:1px solid ' + c.border + '">' + (al ? '\u26a0\ufe0f ' : '') + dl + '</span></div>';
       tbl += '<div style="text-align:center;font-size:.81rem;color:var(--text2)">' + _clb(s.cycle) + '</div>';
-      tbl += '<div style="text-align:right;font-size:.86rem;font-weight:600;color:var(--text)">¥' + (+s.cost).toFixed(2) + '</div>';
+      tbl += '<div style="text-align:right;font-size:.86rem;font-weight:600;color:var(--text)">\u00a5' + (+s.cost).toFixed(2) + '</div>';
       tbl += '<div style="text-align:center"><button onclick="subToggleStatus(' + s.id + ')" style="display:inline-flex;align-items:center;gap:5px;background:var(--hov);border:1.5px solid var(--inp-bd);border-radius:20px;padding:3px 10px;cursor:pointer;font-size:.75rem;color:var(--text2)"><span style="width:7px;height:7px;border-radius:50%;background:' + st.dot + ';display:inline-block"></span>' + st.label + '</button></div>';
       tbl += '<div class="sub-act-btns" style="display:flex;gap:5px;justify-content:center">';
-      tbl += '<button onclick="editSub(' + s.id + ')" style="background:var(--acc-bg);border:1.5px solid var(--acc-bd);color:var(--acc);padding:4px 10px;border-radius:7px;cursor:pointer;font-size:.76rem;font-weight:500">编辑</button>';
-      tbl += '<button onclick="delSub(' + s.id + ')" style="background:#fef2f2;border:1.5px solid #fca5a5;color:#ef4444;padding:4px 10px;border-radius:7px;cursor:pointer;font-size:.76rem;font-weight:500">删除</button>';
+      tbl += '<button onclick="editSub(' + s.id + ')" style="background:var(--acc-bg);border:1.5px solid var(--acc-bd);color:var(--acc);padding:4px 10px;border-radius:7px;cursor:pointer;font-size:.76rem;font-weight:500">\u7f16\u8f91</button>';
+      tbl += '<button onclick="delSub(' + s.id + ')" style="background:#fef2f2;border:1.5px solid #fca5a5;color:#ef4444;padding:4px 10px;border-radius:7px;cursor:pointer;font-size:.76rem;font-weight:500">\u5220\u9664</button>';
       tbl += '</div></div>';
     });
   }
   tbl += '</div>';
-  // ---- MOBILE CARDS ----
+
   var cards = '';
   cards += '<div class="sub-card-list">';
   if (!filtered.length) {
-    cards += '<div style="padding:20px;text-align:center;color:var(--text3);font-size:.9rem">未找到匹配的订阅</div>';
+    cards += '<div style="padding:20px;text-align:center;color:var(--text3);font-size:.9rem">\u672a\u627e\u5230\u5339\u914d\u7684\u8ba2\u9605</div>';
   } else {
     filtered.forEach(function(s) {
       var dl = calcDaysLeft(s.expireDate);
@@ -252,16 +281,16 @@ function _clb(c) {
       cards += '<div style="font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + nm + '</div>';
       cards += '<div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">';
       cards += '<span style="font-size:.78rem;color:var(--text3)">' + s.expireDate + '</span>';
-      cards += '<span style="font-size:.78rem;color:var(--text3)">· ' + _clb(s.cycle) + '</span>';
-      cards += '<span style="font-size:.82rem;font-weight:600;color:var(--text)">· ¥' + (+s.cost).toFixed(2) + '</span>';
+      cards += '<span style="font-size:.78rem;color:var(--text3)">\u00b7 ' + _clb(s.cycle) + '</span>';
+      cards += '<span style="font-size:.82rem;font-weight:600;color:var(--text)">\u00b7 \u00a5' + (+s.cost).toFixed(2) + '</span>';
       cards += '</div></div>';
-      cards += '<span class="' + (al ? 'sub-shake' : '') + '" style="display:inline-block;padding:2px 9px;border-radius:20px;background:' + c.bg + ';color:' + c.text + ';font-size:.77rem;font-weight:700;border:1px solid ' + c.border + '">' + (al ? '⚠️ ' : '') + dl + '天</span>';
+      cards += '<span class="' + (al ? 'sub-shake' : '') + '" style="display:inline-block;padding:2px 9px;border-radius:20px;background:' + c.bg + ';color:' + c.text + ';font-size:.77rem;font-weight:700;border:1px solid ' + c.border + '">' + (al ? '\u26a0\ufe0f ' : '') + dl + '\u5929</span>';
       cards += '</div>';
       cards += '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--task-bd)">';
       cards += '<button onclick="subToggleStatus(' + s.id + ')" style="display:inline-flex;align-items:center;gap:5px;background:var(--hov);border:1.5px solid var(--inp-bd);border-radius:20px;padding:4px 12px;cursor:pointer;font-size:.78rem;color:var(--text2)"><span style="width:7px;height:7px;border-radius:50%;background:' + st.dot + ';display:inline-block"></span>' + st.label + '</button>';
       cards += '<div style="display:flex;gap:6px">';
-      cards += '<button onclick="editSub(' + s.id + ')" style="background:var(--acc-bg);border:1.5px solid var(--acc-bd);color:var(--acc);padding:6px 14px;border-radius:8px;cursor:pointer;font-size:.82rem;font-weight:500">编辑</button>';
-      cards += '<button onclick="delSub(' + s.id + ')" style="background:#fef2f2;border:1.5px solid #fca5a5;color:#ef4444;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:.82rem;font-weight:500">删除</button>';
+      cards += '<button onclick="editSub(' + s.id + ')" style="background:var(--acc-bg);border:1.5px solid var(--acc-bd);color:var(--acc);padding:6px 14px;border-radius:8px;cursor:pointer;font-size:.82rem;font-weight:500">\u7f16\u8f91</button>';
+      cards += '<button onclick="delSub(' + s.id + ')" style="background:#fef2f2;border:1.5px solid #fca5a5;color:#ef4444;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:.82rem;font-weight:500">\u5220\u9664</button>';
       cards += '</div></div></div>';
     });
   }
@@ -270,9 +299,9 @@ function _clb(c) {
   var batchBar = '';
   if (_subSelected.size > 0) {
     batchBar += '<div style="display:flex;align-items:center;gap:12px;margin-top:12px;padding:10px 16px;background:#fef2f2;border:1.5px solid #fca5a5;border-radius:12px;flex-wrap:wrap">';
-    batchBar += '<span style="flex:1;font-size:.88rem;color:#b91c1c;font-weight:500">已选 ' + _subSelected.size + ' 项</span>';
-    batchBar += '<button onclick="_subBatchDel()" style="background:#ef4444;border:none;color:#fff;padding:7px 18px;border-radius:8px;cursor:pointer;font-size:.84rem;font-weight:600">🗑️ 批量删除</button>';
-    batchBar += '<button onclick="_subSelected.clear();rSubList()" style="background:var(--hov);border:1.5px solid var(--inp-bd);color:var(--text2);padding:7px 14px;border-radius:8px;cursor:pointer;font-size:.84rem">取消</button>';
+    batchBar += '<span style="flex:1;font-size:.88rem;color:#b91c1c;font-weight:500">\u5df2\u9009 ' + _subSelected.size + ' \u9879</span>';
+    batchBar += '<button onclick="_subBatchDel()" style="background:#ef4444;border:none;color:#fff;padding:7px 18px;border-radius:8px;cursor:pointer;font-size:.84rem;font-weight:600">\ud83d\uddd1\ufe0f \u6279\u91cf\u5220\u9664</button>';
+    batchBar += '<button onclick="_subSelected.clear();rSubList()" style="background:var(--hov);border:1.5px solid var(--inp-bd);color:var(--text2);padding:7px 14px;border-radius:8px;cursor:pointer;font-size:.84rem">\u53d6\u6d88</button>';
     batchBar += '</div>';
   }
 
