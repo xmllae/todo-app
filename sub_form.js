@@ -1,4 +1,4 @@
-﻿/* --- Subscription Form --- */
+/* --- Subscription Form --- */
 
 var _subDraft = null;
 
@@ -18,6 +18,8 @@ function _subSetCycle(v){
   // Show/hide date row vs days-only row
   const dateRow=document.getElementById('subDateRow');
   if(dateRow) dateRow.style.display=isCustom?'none':'block';
+  // If switching to custom, show preview for current default days
+  if(isCustom){ setTimeout(_subUpdateDateFromDays, 0); return; }
   // For non-custom: auto-set expiry date
   if(!isCustom){
     const dateEl=document.getElementById('subDateIn');
@@ -60,7 +62,7 @@ function _subUpdateDateFromDays(){
   d.setDate(d.getDate()+days);
   const pad=n=>String(n).padStart(2,'0');
   if(dateEl) dateEl.value=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
-  if(preview)   if(preview) preview.textContent='到期 '+d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate();
+  if(preview) preview.textContent='\u5230\u671f '+d.getFullYear()+'/'+pad(d.getMonth()+1)+'/'+pad(d.getDate());
 }
 
 function _subSaveDraft(){
@@ -145,16 +147,15 @@ function openSubModal(id){
     +'<div style="font-size:.95rem;font-weight:700;color:var(--text);letter-spacing:-.3px">'+(s?'\u7f16\u8f91\u8ba2\u9605':'\u6dfb\u52a0\u8ba2\u9605')+'</div>'
     +'<div style="font-size:.75rem;color:var(--text3);margin-top:1px">'+(s?'\u4fee\u6539\u8ba2\u9605\u4fe1\u606f':'\u8bb0\u5f55\u4e00\u4e2a\u65b0\u7684\u8ba2\u9605\u670d\u52a1')+'</div>'
     +'</div></div>'
-    +'<div style="'+G+'">'+lbl('\u540d\u79f0',true)
+    +'<div style="'+G+'">'+lbl('\u670d\u52a1\u540d\u79f0',true)
     +'<input id="subNameIn" type="text" value="'+(s?esc(s.name):draftName)+'" style="'+IS+'" '+FE+' autocomplete="off"></div>'
-    +'<div style="'+G+'">'+lbl('\u5468\u671f',true)
+    +'<div style="'+G+'">'+lbl('\u8ba2\u9605\u5468\u671f',true)
     +'<div style="display:flex;gap:4px;background:var(--hov);padding:4px;border-radius:10px">'+cyBtns2+'</div>'
     +'<div id="subCustomDaysWrap" style="display:'+(showCustom?'flex':'none')+';align-items:center;gap:8px;margin-top:8px">'
     +'<input id="subCustomDaysIn" type="number" value="'+editCustomDays+'" placeholder="30" min="1" step="1" style="width:80px;border:1.5px solid var(--inp-bd);border-radius:10px;padding:8px 12px;font-size:.9rem;color:var(--text);background:var(--inp-bg);outline:none;font-family:inherit;box-sizing:border-box" '+FE+' oninput="_subUpdateDateFromDays()">'
     +'<span style="font-size:.85rem;color:var(--text2)">\u5929</span>'
-    +'<span id="subCustomDatePreview" style="font-size:.75rem;color:#999;margin-left:6px;white-space:nowrap"></span></div></div>'
-    +'<div id="subDateRow" style="'+G+';display:'+(showCustom?'none':'block')+'">'+lbl('\u5230\u671f',true)
-    +'<div style="position:relative">'
+    +'<span id="subCustomDatePreview" style="font-size:.75rem;color:#999;margin-left:6px;white-space:nowrap">'+(function(){if(!showCustom||!editCustomDays)return '';var _d=new Date();_d.setDate(_d.getDate()+parseInt(editCustomDays));var _p=function(n){return String(n).padStart(2,'0');};return '到期 '+_d.getFullYear()+'/'+_p(_d.getMonth()+1)+'/'+_p(_d.getDate());})()+'</span></div>'
+    +'<div id="subDateRow" style="margin-top:8px;display:'+(showCustom?'none':'block')+'"><div style="position:relative">'
     +'<input id="subDateIn" type="date" value="'+ds+'" style="'+IS+';padding-right:110px" '+FE+' oninput="_subUpdateDaysLeft()">'
     +'<span id="subDaysInline" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:.75rem;color:'+initHintColor+';pointer-events:none;white-space:nowrap">'+initHint+'</span>'
     +'</div></div>'
@@ -162,19 +163,15 @@ function openSubModal(id){
     +'<div style="display:flex;align-items:center;border:1.5px solid var(--inp-bd);border-radius:10px;overflow:hidden;background:var(--inp-bg)">'
     +'<span style="padding:0 8px 0 14px;font-size:.9rem;font-weight:600;color:var(--text3);flex-shrink:0">\u00a5</span>'
     +'<input id="subCostIn" type="number" value="'+(s?s.cost:draftCost)+'" placeholder="0.00" step="0.01" min="0" style="flex:1;border:none;outline:none;padding:10px 14px 10px 0;font-size:.9rem;color:var(--text);background:transparent;font-family:inherit;box-sizing:border-box" '+FE+'></div></div>'
+    +'<div style="'+G+'">'+lbl('\u7eed\u671f\u65b9\u5f0f',false)
+    +'<div style="display:flex;gap:4px;background:var(--hov);padding:4px;border-radius:10px">'
+    +'<button type="button" id="subRenMan" onclick="window._subRenewalVal=\'manual\';var m=document.getElementById(\'subRenMan\'),a=document.getElementById(\'subRenAut\');m.style.background=\'var(--acc)\';m.style.color=\'#fff\';m.style.fontWeight=\'600\';m.style.boxShadow=\'0 2px 8px rgba(79,70,229,.25)\';a.style.background=\'transparent\';a.style.color=\'var(--text2)\';a.style.fontWeight=\'400\';a.style.boxShadow=\'none\'" style="flex:1;padding:9px 4px;border-radius:8px;cursor:pointer;font-size:.84rem;border:none;transition:all .2s;font-weight:'+(renewal==='manual'?'600':'400')+';background:'+(renewal==='manual'?'var(--acc)':'transparent')+';color:'+(renewal==='manual'?'#fff':'var(--text2)')+';box-shadow:'+(renewal==='manual'?'0 2px 8px rgba(79,70,229,.25)':'none')+'">\u624b\u52a8\u7eed\u671f</button>'
+    +'<button type="button" id="subRenAut" onclick="window._subRenewalVal=\'auto\';var m=document.getElementById(\'subRenMan\'),a=document.getElementById(\'subRenAut\');a.style.background=\'var(--acc)\';a.style.color=\'#fff\';a.style.fontWeight=\'600\';a.style.boxShadow=\'0 2px 8px rgba(79,70,229,.25)\';m.style.background=\'transparent\';m.style.color=\'var(--text2)\';m.style.fontWeight=\'400\';m.style.boxShadow=\'none\'" style="flex:1;padding:9px 4px;border-radius:8px;cursor:pointer;font-size:.84rem;border:none;transition:all .2s;font-weight:'+(renewal==='auto'?'600':'400')+';background:'+(renewal==='auto'?'var(--acc)':'transparent')+';color:'+(renewal==='auto'?'#fff':'var(--text2)')+';box-shadow:'+(renewal==='auto'?'0 2px 8px rgba(79,70,229,.25)':'none')+'">\u81ea\u52a8\u7eed\u671f</button>'
+    +'</div></div>'
     +'<div style="'+G+'">'+lbl('\u5907\u6ce8',false)
     +'<textarea id="subNoteIn" placeholder="\u6dfb\u52a0\u5907\u6ce8\uff0c\u5982\u8d26\u53f7\u3001\u63d0\u9192\u7b49\u2026" style="'+IS+';height:40px;resize:none;overflow-y:auto" '+FE+'>'+(s?esc(s.note||''):draftNote)+'</textarea></div>'
-    +'<div style="'+G+'">'+lbl('\u7eed\u671f\u65b9\u5f0f',false)
-    +'<div style="display:flex;gap:16px;align-items:center">'
-    +'<label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.88rem;color:var(--text2)">'
-    +'<input type="radio" name="subRenewal" value="manual" '+(renewal==='manual'?'checked':'')+' onchange="window._subRenewalVal=this.value" style="accent-color:var(--acc);width:15px;height:15px;cursor:pointer">'
-    +'\u624b\u52a8\u7eed\u671f</label>'
-    +'<label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.88rem;color:var(--text2)">'
-    +'<input type="radio" name="subRenewal" value="auto" '+(renewal==='auto'?'checked':'')+' onchange="window._subRenewalVal=this.value" style="accent-color:var(--acc);width:15px;height:15px;cursor:pointer">'
-    +'\u81ea\u52a8\u7eed\u671f</label>'
-    +'</div></div>'
-    +'<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:6px">'
-    +'<button type="button" onclick="clM()" style="padding:0 4px;border:none;background:none;color:var(--text3);font-size:.88rem;cursor:pointer;font-family:inherit;transition:color .15s;flex-shrink:0" onmouseover="this.style.color=\'var(--text)\'" onmouseout="this.style.color=\'var(--text3)\'">\u53d6\u6d88</button>'
+    +'<div style="display:flex;gap:10px;padding-top:6px">'
+    +'<button type="button" onclick="clM()" style="flex:1;padding:11px;border-radius:10px;border:1.5px solid var(--inp-bd);background:transparent;color:var(--text2);font-size:.92rem;font-weight:500;cursor:pointer;transition:all .2s;font-family:inherit" onmouseover="this.style.borderColor=\'var(--text3)\';this.style.color=\'var(--text)\'" onmouseout="this.style.borderColor=\'var(--inp-bd)\';this.style.color=\'var(--text2)\'">\u53d6\u6d88</button>'
     +'<button type="button" onclick="saveSub('+(s?s.id:0)+')" style="flex:1;padding:11px;border-radius:10px;border:none;background:var(--acc);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;box-shadow:0 4px 14px rgba(79,70,229,.3);letter-spacing:.3px" onmouseover="this.style.background=\'#4338ca\';this.style.boxShadow=\'0 6px 18px rgba(79,70,229,.4)\'" onmouseout="this.style.background=\'var(--acc)\';this.style.boxShadow=\'0 4px 14px rgba(79,70,229,.3)\'">'+(s?'\u4fdd\u5b58\u4fee\u6539':'\u4fdd\u5b58')+'</button>'
     +'</div></div>';
 
