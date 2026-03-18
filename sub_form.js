@@ -6,10 +6,12 @@ function _subSetCycle(v){
   _subCycle=v;
   document.querySelectorAll('.sub-cycle-btn').forEach(b=>{
     const on=b.dataset.v===v;
-    b.style.background=on?'var(--acc-bg)':'var(--inp-bg)';
-    b.style.color=on?'var(--acc)':'var(--text2)';
-    b.style.fontWeight=on?'600':'400';
-    b.style.borderColor=on?'var(--acc)':'var(--inp-bd)';
+    b.style.background=on?'linear-gradient(135deg,#818cf8,#6366f1)':'var(--inp-bg)';
+    b.style.color=on?'#fff':'var(--text2)';
+    b.style.fontWeight=on?'700':'400';
+    b.style.borderColor=on?'#6366f1':'var(--inp-bd)';
+    b.style.boxShadow=on?'0 4px 12px rgba(99,102,241,.3)':'none';
+    b.style.transform=on?'translateY(-2px)':'translateY(0)';
   });
   const isCustom=v==='custom';
   // Show/hide custom days wrap
@@ -27,22 +29,22 @@ function _subUpdateDaysLeft(){
   const dateEl=document.getElementById('subDateIn');
   const badge=document.getElementById('subDaysInline');
   if(!dateEl||!badge) return;
-  const val=(dateEl.value||'').substring(0,10); // handle datetime-local
+  const val=(dateEl.value||'').substring(0,10);
   if(!val){badge.style.display='none';return;}
   const e=new Date(val),t=new Date();
   t.setHours(0,0,0,0);e.setHours(0,0,0,0);
   const days=Math.ceil((e-t)/864e5);
-  // Color constants
-  var bg,color,text;
-  if(days>30){bg='#f0fdf4';color='#16a34a';text='还剩 '+days+' 天';}
-  else if(days>=7){bg='#fefce8';color='#ca8a04';text='还剩 '+days+' 天';}
-  else if(days>=1){bg='#fff7ed';color='#ea580c';text='还剩 '+days+' 天';}
-  else{bg='#fef2f2';color='#dc2626';text='已到期';}
+  var bg,color,text,anim='';
+  if(days>60){bg='linear-gradient(135deg,#d1fae5,#a7f3d0)';color='#065f46';text='🟢 还剩 '+days+' 天';}
+  else if(days>=30){bg='linear-gradient(135deg,#fef9c3,#fde68a)';color='#854d0e';text='🟡 还剩 '+days+' 天';}
+  else if(days>=1){bg='linear-gradient(135deg,#fee2e2,#fca5a5)';color='#991b1b';text='🔴 还剩 '+days+' 天';anim='subBadgePulse 1.8s ease-in-out infinite';}
+  else{bg='linear-gradient(135deg,#fee2e2,#fca5a5)';color='#991b1b';text='🔴 已过期 '+Math.abs(days)+' 天';anim='subBadgePulse 1.8s ease-in-out infinite';}
   badge.textContent=text;
   badge.style.display='inline-block';
   badge.style.background=bg;
   badge.style.color=color;
-  badge.style.transition='background .3s,color .3s';
+  badge.style.animation=anim;
+  badge.style.transition='all 0.3s ease';
 }
 
 function _subUpdateDateFromDays(){
@@ -81,6 +83,15 @@ function _subCalcDate(){
   var el=document.getElementById('subDateIn');
   if(el) el.value=cd.getFullYear()+'-'+p(cd.getMonth()+1)+'-'+p(cd.getDate())+'T00:00';
   _subUpdateDaysLeft();
+  var btn=document.getElementById('subCalcBtn');
+  if(btn){
+    var orig=btn.textContent;
+    btn.textContent='✓ 已推算';
+    btn.style.background='linear-gradient(135deg,#22c55e,#16a34a)';
+    btn.style.color='#fff';
+    btn.style.borderColor='transparent';
+    setTimeout(function(){btn.textContent=orig;btn.style.background='transparent';btn.style.color='var(--acc)';btn.style.borderColor='var(--acc)';},1600);
+  }
 }
 
 function openSubModal(id){
@@ -97,11 +108,11 @@ function openSubModal(id){
   const ds=s?s.expireDate:(draft&&draft.expireDate?draft.expireDate:todayStr);
 
   const cycles=[['month','\u6708\u4ed8'],['quarter','\u5b63\u4ed8'],['year','\u5e74\u4ed8'],['custom','\u81ea\u5b9a\u4e49']];
-  const IS='width:100%;border:1.5px solid var(--inp-bd);border-radius:10px;padding:10px 14px;font-size:.9rem;color:var(--text);background:var(--inp-bg);outline:none;transition:border-color .25s,box-shadow .25s;font-family:inherit;box-sizing:border-box';
+  const IS='width:100%;border:1.5px solid #e2e8f0;border-radius:10px;padding:10px 14px;font-size:.9rem;color:var(--text);background:#f8faff;outline:none;transition:all 0.3s ease;font-family:inherit;box-sizing:border-box'
   const FEon="this.style.borderColor='#818cf8';this.style.boxShadow='0 0 0 3px rgba(129,140,248,.15)'";
   const FEoff="this.style.borderColor='var(--inp-bd)';this.style.boxShadow='none'";
   const FE='onfocus="'+FEon+'" onblur="'+FEoff+'"';
-  const lbl=(t,req)=>'<label style="display:flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600;color:var(--text2);margin-bottom:7px;letter-spacing:.3px;text-transform:uppercase">'+t+(req?'<span style="color:#ef4444;margin-left:2px">*</span>':'')+'</label>';
+  const lbl=(t,req)=>'<label style="display:flex;align-items:center;gap:5px;font-size:.76rem;font-weight:700;color:#334155;margin-bottom:7px;letter-spacing:.3px;text-transform:uppercase">'+t+(req?'<span style="color:#ef4444;margin-left:1px">*</span>':'')+'</label>';
 
   // Compute inline hint for initial date
   let initHint='',initHintColor='#94a3b8',initHintBg='transparent';
@@ -118,15 +129,6 @@ function openSubModal(id){
     else{initHint='已到期';initHintColor='#dc2626';initHintBg='#fef2f2';}
   }
 
-  const cyBtns=cycles.map(([v,l])=>{
-    const on=_subCycle===v;
-    return '<button type="button" class="sub-cycle-btn" data-v="'+v+'" onclick="_subSetCycle(\''+v+'\')">'
-      // inline style via attribute
-      .replace('<button','<button style="flex:1;padding:9px 4px;border-radius:8px;cursor:pointer;font-size:.84rem;border:none;transition:all .2s;'
-        +'font-weight:'+(on?'600':'400')+';background:'+(on?'var(--acc)':'transparent')+';>'
-        +'color:'+(on?'#fff':'var(--text2)')+';box-shadow:'+(on?'0 2px 8px rgba(79,70,229,.25)':'none')+'"')
-      +l+'</button>';
-  }).join('');
 
   const draftName=draft?esc(draft.name):'';
   const draftCost=draft?draft.cost:'';
@@ -136,37 +138,49 @@ function openSubModal(id){
   const editCustomDays=s&&s.customDays?s.customDays:draftCustomDays;
   const renewal=window._subRenewalVal||'manual';
   const G='margin-bottom:16px';
-  const cycleData=[['month','月付','30天'],['quarter','季付','90天'],['year','年付','365天'],['custom','自定义','']];
+  const cycleData=[['month','月付','📅','30天'],['quarter','季付','🗓','90天'],['year','年付','📆','365天'],['custom','自定义','⚙️','']];
   const cyBtns2=cycleData.map(function(row){
-    var v=row[0],label=row[1],sub=row[2],on=(_subCycle===v);
-    var btnStyle='flex:1;min-width:calc(50% - 4px);padding:10px 8px;border-radius:10px;cursor:pointer;border:1.5px solid '+(on?'var(--acc)':'var(--inp-bd)')+';transition:all .2s;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;background:'+(on?'var(--acc-bg)':'var(--inp-bg)')+';color:'+(on?'var(--acc)':'var(--text2)');
-    return '<button type="button" class="sub-cycle-btn" data-v="'+v+'" onclick="_subSetCycle(\''+v+'\')" style="'+btnStyle+'"><span style="font-size:.88rem;font-weight:600">'+label+'</span>'+(sub?'<span style="font-size:.72rem;opacity:.75">'+sub+'</span>':'')+'</button>';
-  }).join('');
+    var v=row[0],label=row[1],emoji=row[2],sub=row[3],on=(_subCycle===v);
+    var base='flex:1;min-width:calc(50% - 4px);padding:10px 8px;border-radius:12px;cursor:pointer;border:1.5px solid '+(on?'#6366f1':'#e2e8f0')+';transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;position:relative;overflow:hidden;background:'+(on?'linear-gradient(135deg,#818cf8,#6366f1)':'#f8faff')+';color:'+(on?'#fff':'var(--text2)')+';box-shadow:'+(on?'0 4px 12px rgba(99,102,241,.3)':'none')+';transform:'+(on?'translateY(-2px)':'translateY(0)');
+    return '<button type="button" class="sub-cycle-btn" data-v="'+v+'" onclick="_subSetCycle(this.dataset.v)" style="'+base+'"><span style="font-size:1.1rem">'+emoji+'</span><span style="font-size:.85rem;font-weight:700">'+label+'</span>'+(sub?'<span style="font-size:.7rem;opacity:.8">'+sub+'</span>':'')+(on?'<span style="position:absolute;top:4px;right:6px;font-size:.65rem;color:#fff;opacity:.9">✓</span>':'')+'</button>';
+  }).join('')
   const estLabel=_subCycle==='month'?'按月付 +30天':_subCycle==='quarter'?'按季付 +90天':_subCycle==='year'?'按年付 +365天':'';
 
 
   const h=
-    '<style>#subCalcBtn:hover{background:var(--acc)!important;color:#fff!important}#subNoteIn::-webkit-scrollbar{display:none}#subNoteIn{scrollbar-width:none}#subCostIn::-webkit-inner-spin-button,#subCostIn::-webkit-outer-spin-button{display:none}#subCostIn{-moz-appearance:textfield}#subCustomDaysIn::-webkit-inner-spin-button,#subCustomDaysIn::-webkit-outer-spin-button{display:none}#subCustomDaysIn{-moz-appearance:textfield}</style>'
+    '<style>'
+    +'@keyframes subBadgePulse{0%,100%{opacity:1}50%{opacity:.5}}'
+    +'@keyframes subRipple{to{transform:scale(4);opacity:0}}'
+    +'#subCalcBtn:hover{background:linear-gradient(135deg,#818cf8,#6366f1)!important;color:#fff!important;border-color:transparent!important}'
+    +'.sub-cycle-btn:hover{transform:translateY(-3px)!important;box-shadow:0 6px 16px rgba(99,102,241,.22)!important;border-color:#818cf8!important}'
+    +'#subRenMan:hover,#subRenAut:hover{border-color:#818cf8!important;color:#6366f1!important}'
+    +'#subCancelBtn:hover{border-color:#ef4444!important;color:#ef4444!important}'
+    +'#subSaveBtn:hover{transform:translateY(-2px)!important;box-shadow:0 8px 24px rgba(99,102,241,.45)!important}'
+    +'input::placeholder,textarea::placeholder{color:#b4c0d8}'
+    +'#subNoteIn::-webkit-scrollbar{display:none}#subNoteIn{scrollbar-width:none}'
+    +'#subCostIn::-webkit-inner-spin-button,#subCostIn::-webkit-outer-spin-button{display:none}#subCostIn{-moz-appearance:textfield}'
+    +'#subCustomDaysIn::-webkit-inner-spin-button,#subCustomDaysIn::-webkit-outer-spin-button{display:none}#subCustomDaysIn{-moz-appearance:textfield}'
+    +'</style>'
     +'<div id="subForm">'
     +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1.5px solid var(--task-bd)">'
-    +'<div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--acc-bg),var(--acc-bd));display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;box-shadow:0 2px 8px rgba(79,70,229,.12)">'
+    +'<div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#818cf8,#6366f1);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;box-shadow:0 6px 18px rgba(99,102,241,.38)">'
     +(s?'\u270f\ufe0f':'\ud83d\udce6')
     +'</div><div>'
-    +'<div style="font-size:.95rem;font-weight:700;color:var(--text);letter-spacing:-.3px">'+(s?'\u7f16\u8f91\u8ba2\u9605':'\u6dfb\u52a0\u8ba2\u9605')+'</div>'
-    +'<div style="font-size:.75rem;color:var(--text3);margin-top:1px">'+(s?'\u4fee\u6539\u8ba2\u9605\u4fe1\u606f':'\u8bb0\u5f55\u4e00\u4e2a\u65b0\u7684\u8ba2\u9605\u670d\u52a1')+'</div>'
+    +'<div style="font-size:1rem;font-weight:800;color:var(--text);letter-spacing:-.4px">'+(s?'\u7f16\u8f91\u8ba2\u9605':'\u6dfb\u52a0\u8ba2\u9605')+'</div>'
+    +'<div style="font-size:.74rem;color:#94a3b8;margin-top:2px">'+(s?'\u4fee\u6539\u8ba2\u9605\u4fe1\u606f':'\u8bb0\u5f55\u4e00\u4e2a\u65b0\u7684\u8ba2\u9605\u670d\u52a1')+'</div>'
     +'</div></div>'
         +'<div id="subFormErr" style="display:none;color:#ef4444;font-size:.82rem;margin-bottom:10px;padding:8px 12px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca"></div>'
-+'<div style="'+G+'">'+lbl('\u670d\u52a1\u540d\u79f0',true)
++'<div style="'+G+'">'+lbl('📌 服务名称',true)
     +'<input id="subNameIn" type="text" value="'+(s?esc(s.name):draftName)+'" style="'+IS+'" '+FE+' autocomplete="off"></div>'
-    +'<div style="'+G+'">'+lbl('\u8ba2\u9605\u5468\u671f',true)
+    +'<div style="'+G+'">'+lbl('🔄 订阅周期',true)
     +'<div style="display:flex;flex-wrap:wrap;gap:8px">'+cyBtns2+'</div>'
-    +'<div id="subCustomDaysWrap" style="display:'+(showCustom?'flex':'none')+';align-items:center;gap:8px;margin-top:8px">'
-    +'<input id="subCustomDaysIn" type="number" value="'+editCustomDays+'" placeholder="30" min="1" step="1" style="width:80px;border:1.5px solid var(--inp-bd);border-radius:10px;padding:8px 12px;font-size:.9rem;color:var(--text);background:var(--inp-bg);outline:none;font-family:inherit;box-sizing:border-box" '+FE+' oninput="_subUpdateDateFromDays()">'
+    +'<div id="subCustomDaysWrap" style="display:'+(showCustom?'flex':'none')+';align-items:center;gap:8px;margin-top:10px;padding:10px 14px;border:1.5px dashed #818cf8;border-radius:10px;background:#f5f3ff">'
+    +'<input id="subCustomDaysIn" type="number" value="'+editCustomDays+'" placeholder="30" min="1" step="1" style="width:72px;border:1.5px solid #818cf8;border-radius:10px;padding:8px 10px;font-size:.9rem;color:#6366f1;font-weight:700;text-align:center;background:#ede9fe;outline:none;font-family:inherit;box-sizing:border-box" '+FE+' oninput="_subUpdateDateFromDays()">'
     +'<span style="font-size:.85rem;color:var(--text2)">\u5929</span>'
-    +'<span id="subCustomDatePreview" style="font-size:.75rem;color:#999;margin-left:6px;white-space:nowrap">'+(function(){if(!showCustom||!editCustomDays)return '';var _d=new Date();_d.setDate(_d.getDate()+parseInt(editCustomDays));var _p=function(n){return String(n).padStart(2,'0');};return '到期 '+_d.getFullYear()+'/'+_p(_d.getMonth()+1)+'/'+_p(_d.getDate());})()+'</span></div>'
+    +'<span id="subCustomDatePreview" style="font-size:.75rem;color:#6366f1;font-weight:600;margin-left:6px;white-space:nowrap">'+(function(){if(!showCustom||!editCustomDays)return '';var _d=new Date();_d.setDate(_d.getDate()+parseInt(editCustomDays));var _p=function(n){return String(n).padStart(2,'0');};return '到期 '+_d.getFullYear()+'/'+_p(_d.getMonth()+1)+'/'+_p(_d.getDate());})()+'</span></div>'
     +'</div>'
     // Expiry date - separate field
-    +'<div style="'+G+'">'+lbl('\u5230\u671f\u65e5\u671f',true)
+    +'<div style="'+G+'">'+lbl('📅 到期日期',true)
 
     +'<div style="display:flex;align-items:center;gap:8px">'
     +'<input id="subDateIn" type="datetime-local" value="'+ds+'T00:00" style="'+IS+'" '+FE+' oninput="_subUpdateDaysLeft()">'
@@ -174,20 +188,20 @@ function openSubModal(id){
     +'</div>'
     +'<div id="subDaysInline" style="display:none;margin-top:6px;font-size:.78rem;font-weight:500;padding:3px 10px;border-radius:20px;transition:background .3s,color .3s;background:'+initHintBg+';color:'+initHintColor+'">'+initHint+'</div>'
     +'</div></div>'
-        +'<div style="margin-top:16px;'+G+'">'+lbl('\u8d39\u7528',true)
-    +'<div style="display:flex;align-items:center;border:1.5px solid var(--inp-bd);border-radius:10px;overflow:hidden;background:var(--inp-bg)">' // ✅ done
-    +'<span style="padding:0 8px 0 14px;font-size:.9rem;font-weight:600;color:var(--text3);flex-shrink:0">\u00a5</span>'
-    +'<input id="subCostIn" type="number" value="'+(s?s.cost:draftCost)+'" placeholder="0.00" step="0.01" min="0" style="flex:1;border:none;outline:none;padding:10px 14px 10px 0;font-size:.9rem;color:var(--text);background:transparent;font-family:inherit;box-sizing:border-box" '+FE+'></div></div>'
-    +'<div style="'+G+'">'+lbl('\u7eed\u671f\u65b9\u5f0f',false)
-    +'<div style="display:flex;gap:4px;background:var(--hov);padding:4px;border-radius:10px">'
-    +'<button type="button" id="subRenMan" onclick="window._subRenewalVal=\'manual\';var m=document.getElementById(\'subRenMan\'),a=document.getElementById(\'subRenAut\');m.style.background=\'var(--acc)\';m.style.color=\'#fff\';m.style.fontWeight=\'600\';m.style.boxShadow=\'0 2px 8px rgba(79,70,229,.25)\';a.style.background=\'transparent\';a.style.color=\'var(--text2)\';a.style.fontWeight=\'400\';a.style.boxShadow=\'none\'" style="flex:1;padding:9px 4px;border-radius:8px;cursor:pointer;font-size:.84rem;border:none;transition:all .2s;font-weight:'+(renewal==='manual'?'600':'400')+';background:'+(renewal==='manual'?'var(--acc)':'transparent')+';color:'+(renewal==='manual'?'#fff':'var(--text2)')+';box-shadow:'+(renewal==='manual'?'0 2px 8px rgba(79,70,229,.25)':'none')+'">\u624b\u52a8\u7eed\u671f</button>'
-    +'<button type="button" id="subRenAut" onclick="window._subRenewalVal=\'auto\';var m=document.getElementById(\'subRenMan\'),a=document.getElementById(\'subRenAut\');a.style.background=\'var(--acc)\';a.style.color=\'#fff\';a.style.fontWeight=\'600\';a.style.boxShadow=\'0 2px 8px rgba(79,70,229,.25)\';m.style.background=\'transparent\';m.style.color=\'var(--text2)\';m.style.fontWeight=\'400\';m.style.boxShadow=\'none\'" style="flex:1;padding:9px 4px;border-radius:8px;cursor:pointer;font-size:.84rem;border:none;transition:all .2s;font-weight:'+(renewal==='auto'?'600':'400')+';background:'+(renewal==='auto'?'var(--acc)':'transparent')+';color:'+(renewal==='auto'?'#fff':'var(--text2)')+';box-shadow:'+(renewal==='auto'?'0 2px 8px rgba(79,70,229,.25)':'none')+'">\u81ea\u52a8\u7eed\u671f</button>'
+        +'<div style="margin-top:16px;'+G+'">'+lbl('💰 费用',true)
+    +'<div style="position:relative">'
+    +'<span style="position:absolute;left:0;top:0;bottom:0;width:40px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#818cf8,#6366f1);border-radius:9px 0 0 9px;font-size:.88rem;font-weight:700;color:#fff;pointer-events:none">\u00a5</span>'
+    +'<input id="subCostIn" type="number" value="'+(s?s.cost:draftCost)+'" placeholder="0.00" step="0.01" min="0" style="width:100%;border:1.5px solid #e2e8f0;border-radius:10px;padding:10px 14px 10px 50px;font-size:.9rem;color:var(--text);background:#f8faff;outline:none;font-family:inherit;box-sizing:border-box;transition:all 0.3s ease" '+FE+'></div></div>'
+    +'<div style="'+G+'">'+lbl('🔄 续期方式',false)
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
+    +'<button type="button" id="subRenMan" onclick="window._subRenewalVal=\'manual\';var m=document.getElementById(\'subRenMan\'),a=document.getElementById(\'subRenAut\');m.style.background=\'linear-gradient(135deg,#818cf8,#6366f1)\';m.style.color=\'#fff\';m.style.borderColor=\'#6366f1\';a.style.background=\'#f8faff\';a.style.color=\'var(--text2)\';a.style.borderColor=\'#e2e8f0\';" style="padding:10px 8px;border-radius:10px;cursor:pointer;font-size:.85rem;border:1.5px solid '+(renewal==='manual'?'#6366f1':'#e2e8f0')+';transition:all 0.3s ease;font-family:inherit;font-weight:'+(renewal==='manual'?'700':'400')+';background:'+(renewal==='manual'?'linear-gradient(135deg,#818cf8,#6366f1)':'#f8faff')+';color:'+(renewal==='manual'?'#fff':'var(--text2)')+'">\u624b\u52a8\u7eed\u671f</button>'
+    +'<button type="button" id="subRenAut" onclick="window._subRenewalVal=\'auto\';var m=document.getElementById(\'subRenMan\'),a=document.getElementById(\'subRenAut\');a.style.background=\'linear-gradient(135deg,#818cf8,#6366f1)\';a.style.color=\'#fff\';a.style.borderColor=\'#6366f1\';m.style.background=\'#f8faff\';m.style.color=\'var(--text2)\';m.style.borderColor=\'#e2e8f0\';" style="padding:10px 8px;border-radius:10px;cursor:pointer;font-size:.85rem;border:1.5px solid '+(renewal==='auto'?'#6366f1':'#e2e8f0')+';transition:all 0.3s ease;font-family:inherit;font-weight:'+(renewal==='auto'?'700':'400')+';background:'+(renewal==='auto'?'linear-gradient(135deg,#818cf8,#6366f1)':'#f8faff')+';color:'+(renewal==='auto'?'#fff':'var(--text2)')+'">\u81ea\u52a8\u7eed\u671f</button>'
     +'</div></div>'
-    +'<div style="'+G+'">'+lbl('\u5907\u6ce8',false)
+    +'<div style="'+G+'">'+lbl('📝 备注',false)
     +'<textarea id="subNoteIn" placeholder="\u6dfb\u52a0\u5907\u6ce8\uff0c\u5982\u8d26\u53f7\u3001\u63d0\u9192\u7b49\u2026" style="'+IS+';height:40px;resize:none;overflow-y:auto" '+FE+'>'+(s?esc(s.note||''):draftNote)+'</textarea></div>'
-    +'<div style="display:flex;gap:10px;padding-top:6px">'
-    +'<button type="button" onclick="clM()" style="flex:1;padding:11px;border-radius:10px;border:1.5px solid var(--inp-bd);background:transparent;color:var(--text2);font-size:.92rem;font-weight:500;cursor:pointer;transition:all .2s;font-family:inherit" onmouseover="this.style.borderColor=\'var(--text3)\';this.style.color=\'var(--text)\'" onmouseout="this.style.borderColor=\'var(--inp-bd)\';this.style.color=\'var(--text2)\'">\u53d6\u6d88</button>'
-    +'<button type="button" onclick="saveSub('+(s?s.id:0)+')" style="flex:1;padding:11px;border-radius:10px;border:none;background:var(--acc);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;box-shadow:0 4px 14px rgba(79,70,229,.3);letter-spacing:.3px" onmouseover="this.style.background=\'#4338ca\';this.style.boxShadow=\'0 6px 18px rgba(79,70,229,.4)\'" onmouseout="this.style.background=\'var(--acc)\';this.style.boxShadow=\'0 4px 14px rgba(79,70,229,.3)\'">'+(s?'\u4fdd\u5b58\u4fee\u6539':'\u4fdd\u5b58')+'</button>'
+    +'<div style="display:grid;grid-template-columns:1fr 2fr;gap:10px;padding-top:8px">'
+    +'<button type="button" id="subCancelBtn" onclick="clM()" style="padding:11px;border-radius:10px;border:1.5px solid #e2e8f0;background:transparent;color:var(--text2);font-size:.92rem;font-weight:500;cursor:pointer;transition:all 0.3s ease;font-family:inherit">\u53d6\u6d88</button>'
+    +'<button type="button" id="subSaveBtn" onclick="(function(e){var r=document.createElement(\'span\');r.style=\'position:absolute;border-radius:50%;background:rgba(255,255,255,.6);transform:scale(0);animation:subRipple .6s linear;pointer-events:none;width:100px;height:100px;left:\'+((e.clientX-e.currentTarget.getBoundingClientRect().left-50))+\'px;top:\'+((e.clientY-e.currentTarget.getBoundingClientRect().top-50))+\'px\';e.currentTarget.appendChild(r);setTimeout(function(){r.remove();},700);saveSub('+(s?s.id:0)+');})(event)" style="padding:11px;border-radius:10px;border:none;background:linear-gradient(135deg,#818cf8,#6366f1);color:#fff;font-size:.92rem;font-weight:700;cursor:pointer;transition:all 0.3s ease;font-family:inherit;box-shadow:0 4px 14px rgba(99,102,241,.35);letter-spacing:.3px;position:relative;overflow:hidden">'+(s?'\u4fdd\u5b58\u4fee\u6539':'\u4fdd\u5b58')+'</button>'
     +'</div></div>';
 
   document.getElementById('mBody').innerHTML=h;
