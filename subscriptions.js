@@ -61,27 +61,6 @@ function calcDaysLeft(d) {
   return Math.ceil((e - t) / 864e5);
 }
 
-function _subNextStatus(cur) {
-  if (cur === 'active')  return 'paused';
-  if (cur === 'paused')  return 'cancelled';
-  return 'active';
-}
-
-function _subStatusInfo(st) {
-  if (st === 'paused')    return { dot: '#94a3b8', label: '\u5df2\u6682\u505c' };
-  if (st === 'cancelled') return { dot: '#ef4444', label: '\u5df2\u53d6\u6d88' };
-  return { dot: '#22c55e', label: '\u6fc0\u6d3b\u4e2d' };
-}
-
-function subToggleStatus(id) {
-  subscriptions = JSON.parse(localStorage.getItem('tuole_subs') || '[]');
-  var s = subscriptions.find(function(x){ return x.id === id; });
-  if (!s) return;
-  s.status = _subNextStatus(s.status || 'active');
-  localStorage.setItem('tuole_subs', JSON.stringify(subscriptions));
-  rSubscriptions();
-}
-
 function _subSetSearch(v) { _subSearch = v; rSubList(); }
 function _subSetSort(v)   { _subSort = v;   rSubList(); }
 
@@ -179,7 +158,7 @@ function _clb(c, customDays) {
   if (c === 'month')   return '\u6708\u4ed8';
   if (c === 'year')    return '\u5e74\u4ed8';
   if (c === 'quarter') return '\u5b63\u4ed8';
-  if (c === 'custom')  return '\u81ea\u5b9a\u4e49' + (customDays ? '(' + customDays + '\u5929)' : '');
+  if (c === 'custom')  return customDays ? customDays + '\u5929' : '\u81ea\u5b9a\u4e49';
   return '\u81ea\u5b9a\u4e49';
 }
 
@@ -217,7 +196,7 @@ function rSubList() {
   tbl += '<div style="text-align:center">\u5269\u4f59\u5929\u6570</div>';
   tbl += '<div style="text-align:center">\u5468\u671f</div>';
   tbl += '<div style="text-align:right">\u8d39\u7528</div>';
-  tbl += '<div style="text-align:center">\u72b6\u6001</div>';
+  tbl += '<div style="text-align:center">\u7eed\u671f</div>';
   tbl += '<div style="text-align:center">\u64cd\u4f5c</div>';
   tbl += '</div>';
 
@@ -229,7 +208,6 @@ function rSubList() {
       var c  = getSubColor(dl);
       var al = dl <= 7;
       var sel = _subSelected.has(s.id);
-      var st  = _subStatusInfo(s.status || 'active');
       var bt = i === 0 ? '' : 'border-top:1px solid var(--task-bd);';
       var nm = (s.icon ? s.icon + ' ' : '') + esc(s.name);
       tbl += '<div class="sub-row" style="display:grid;grid-template-columns:' + COL + ';align-items:center;padding:0 14px;min-height:52px;' + bt + (sel ? 'background:rgba(99,102,241,.07);' : '') + '">';
@@ -239,7 +217,7 @@ function rSubList() {
       tbl += '<div style="text-align:center"><span class="' + (al ? 'sub-shake' : '') + '" style="display:inline-block;padding:2px 9px;border-radius:20px;background:' + c.bg + ';color:' + c.text + ';font-size:.77rem;font-weight:700;border:1px solid ' + c.border + '">' + (al ? '\u26a0\ufe0f ' : '') + dl + '</span></div>';
       tbl += '<div style="text-align:center;font-size:.81rem;color:var(--text2)">' + _clb(s.cycle, s.customDays) + '</div>';
       tbl += '<div style="text-align:right;font-size:.86rem;font-weight:600;color:var(--text)">\u00a5' + (+s.cost).toFixed(2) + '</div>';
-      tbl += '<div style="text-align:center"><button onclick="subToggleStatus(' + s.id + ')" style="display:inline-flex;align-items:center;gap:5px;background:var(--hov);border:1.5px solid var(--inp-bd);border-radius:20px;padding:3px 10px;cursor:pointer;font-size:.75rem;color:var(--text2)"><span style="width:7px;height:7px;border-radius:50%;background:' + st.dot + ';display:inline-block"></span>' + st.label + '</button></div>';
+      tbl += '<div style="text-align:center"><span style="display:inline-block;padding:2px 9px;border-radius:20px;font-size:.74rem;font-weight:600;background:' + (s.renewal==='auto'?'#eff6ff':'#f0fdf4') + ';color:' + (s.renewal==='auto'?'#3b82f6':'#16a34a') + ';border:1px solid ' + (s.renewal==='auto'?'#bfdbfe':'#bbf7d0') + '">' + (s.renewal==='auto'?'自动':'手动') + '</span></div>';
       tbl += '<div class="sub-act-btns" style="display:flex;gap:5px;justify-content:center">';
       tbl += '<button onclick="editSub(' + s.id + ')" style="background:var(--acc-bg);border:1.5px solid var(--acc-bd);color:var(--acc);padding:4px 10px;border-radius:7px;cursor:pointer;font-size:.76rem;font-weight:500">\u7f16\u8f91</button>';
       tbl += '<button onclick="delSub(' + s.id + ')" style="background:#fef2f2;border:1.5px solid #fca5a5;color:#ef4444;padding:4px 10px;border-radius:7px;cursor:pointer;font-size:.76rem;font-weight:500">\u5220\u9664</button>';
@@ -258,7 +236,6 @@ function rSubList() {
       var c  = getSubColor(dl);
       var al = dl <= 7;
       var sel = _subSelected.has(s.id);
-      var st  = _subStatusInfo(s.status || 'active');
       var nm = (s.icon ? s.icon + ' ' : '') + esc(s.name);
       cards += '<div style="background:var(--task-bg);border:1.5px solid var(--task-bd);border-radius:14px;padding:14px 16px;' + (sel ? 'background:rgba(99,102,241,.07);' : '') + '">';
       cards += '<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px">';
@@ -273,7 +250,7 @@ function rSubList() {
       cards += '<span class="' + (al ? 'sub-shake' : '') + '" style="display:inline-block;padding:2px 9px;border-radius:20px;background:' + c.bg + ';color:' + c.text + ';font-size:.77rem;font-weight:700;border:1px solid ' + c.border + '">' + (al ? '\u26a0\ufe0f ' : '') + dl + '\u5929</span>';
       cards += '</div>';
       cards += '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--task-bd)">';
-      cards += '<button onclick="subToggleStatus(' + s.id + ')" style="display:inline-flex;align-items:center;gap:5px;background:var(--hov);border:1.5px solid var(--inp-bd);border-radius:20px;padding:4px 12px;cursor:pointer;font-size:.78rem;color:var(--text2)"><span style="width:7px;height:7px;border-radius:50%;background:' + st.dot + ';display:inline-block"></span>' + st.label + '</button>';
+      cards += '<span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:.74rem;font-weight:600;background:' + (s.renewal==='auto'?'#eff6ff':'#f0fdf4') + ';color:' + (s.renewal==='auto'?'#3b82f6':'#16a34a') + ';border:1px solid ' + (s.renewal==='auto'?'#bfdbfe':'#bbf7d0') + '">' + (s.renewal==='auto'?'自动续期':'手动续期') + '</span>';
       cards += '<div style="display:flex;gap:6px">';
       cards += '<button onclick="editSub(' + s.id + ')" style="background:var(--acc-bg);border:1.5px solid var(--acc-bd);color:var(--acc);padding:6px 14px;border-radius:8px;cursor:pointer;font-size:.82rem;font-weight:500">\u7f16\u8f91</button>';
       cards += '<button onclick="delSub(' + s.id + ')" style="background:#fef2f2;border:1.5px solid #fca5a5;color:#ef4444;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:.82rem;font-weight:500">\u5220\u9664</button>';
