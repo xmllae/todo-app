@@ -6,10 +6,10 @@ function _subSetCycle(v){
   _subCycle=v;
   document.querySelectorAll('.sub-cycle-btn').forEach(b=>{
     const on=b.dataset.v===v;
-    b.style.background=on?'var(--acc)':'transparent';
-    b.style.color=on?'#fff':'var(--text2)';
+    b.style.background=on?'var(--acc-bg)':'var(--inp-bg)';
+    b.style.color=on?'var(--acc)':'var(--text2)';
     b.style.fontWeight=on?'600':'400';
-    b.style.boxShadow=on?'0 2px 8px rgba(79,70,229,.25)':'none';
+    b.style.borderColor=on?'var(--acc)':'var(--inp-bd)';
   });
   const isCustom=v==='custom';
   // Show/hide custom days wrap
@@ -47,7 +47,6 @@ function _subUpdateDaysLeft(){
 
 function _subUpdateDateFromDays(){
   const daysInEl=document.getElementById('subCustomDaysIn');
-  const dateEl=document.getElementById('subDateIn');
   const preview=document.getElementById('subCustomDatePreview');
   if(!daysInEl) return;
   const days=parseInt(daysInEl.value)||0;
@@ -55,8 +54,7 @@ function _subUpdateDateFromDays(){
   const d=new Date();
   d.setDate(d.getDate()+days);
   const pad=n=>String(n).padStart(2,'0');
-  if(dateEl) dateEl.value=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
-  if(preview) preview.textContent='\u5230\u671f '+d.getFullYear()+'/'+pad(d.getMonth()+1)+'/'+pad(d.getDate());
+  if(preview) preview.textContent='到期 '+d.getFullYear()+'/'+pad(d.getMonth()+1)+'/'+pad(d.getDate());
 }
 
 function _subSaveDraft(){
