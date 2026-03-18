@@ -20,35 +20,29 @@ function _subSetCycle(v){
   if(dateRow) dateRow.style.display=isCustom?'none':'block';
   // If switching to custom, show preview for current default days
   if(isCustom){ setTimeout(_subUpdateDateFromDays, 0); return; }
-  // For non-custom: auto-set expiry date
-  if(!isCustom){
-    const dateEl=document.getElementById('subDateIn');
-    if(dateEl){
-      const d=new Date();
-      const days=v==='month'?30:v==='quarter'?90:v==='year'?365:30;
-      d.setDate(d.getDate()+days);
-      const pad=n=>String(n).padStart(2,'0');
-      dateEl.value=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
-      _subUpdateDaysLeft();
-    }
-  }
+  // Cycle and date are independent - no auto-set
 }
 
 function _subUpdateDaysLeft(){
   const dateEl=document.getElementById('subDateIn');
-  const inlineHint=document.getElementById('subDaysInline');
-  if(!dateEl) return;
-  const val=dateEl.value;
-  if(!val){if(inlineHint)inlineHint.textContent='';return;}
+  const badge=document.getElementById('subDaysInline');
+  if(!dateEl||!badge) return;
+  const val=(dateEl.value||'').substring(0,10); // handle datetime-local
+  if(!val){badge.style.display='none';return;}
   const e=new Date(val),t=new Date();
   t.setHours(0,0,0,0);e.setHours(0,0,0,0);
   const days=Math.ceil((e-t)/864e5);
-  if(inlineHint){
-    if(days>0) inlineHint.textContent='\u8fd8\u5269 '+days+' \u5929';
-    else if(days===0) inlineHint.textContent='\u4eca\u5929\u5230\u671f';
-    else inlineHint.textContent='\u5df2\u8fc7\u671f '+Math.abs(days)+' \u5929';
-    inlineHint.style.color=days<=7?'#ef4444':days<=30?'#ea580c':'#94a3b8';
-  }
+  // Color constants
+  var bg,color,text;
+  if(days>30){bg='#f0fdf4';color='#16a34a';text='还剩 '+days+' 天';}
+  else if(days>=7){bg='#fefce8';color='#ca8a04';text='还剩 '+days+' 天';}
+  else if(days>=1){bg='#fff7ed';color='#ea580c';text='还剩 '+days+' 天';}
+  else{bg='#fef2f2';color='#dc2626';text='已到期';}
+  badge.textContent=text;
+  badge.style.display='inline-block';
+  badge.style.background=bg;
+  badge.style.color=color;
+  badge.style.transition='background .3s,color .3s';
 }
 
 function _subUpdateDateFromDays(){
@@ -81,6 +75,16 @@ function _subSaveDraft(){
 }
 
 function _subClearDraft(){ _subDraft=null; }
+function _subCalcDate(){
+  var cd=new Date();
+  var days=_subCycle==='month'?30:_subCycle==='quarter'?90:_subCycle==='year'?365:(_subCycle==='custom'?parseInt((document.getElementById('subCustomDaysIn')||{}).value)||30:30);
+  cd.setDate(cd.getDate()+days);
+  var p=function(n){return String(n).padStart(2,'0');};
+  var el=document.getElementById('subDateIn');
+  if(el) el.value=cd.getFullYear()+'-'+p(cd.getMonth()+1)+'-'+p(cd.getDate())+'T00:00';
+  _subUpdateDaysLeft();
+}
+
 function openSubModal(id){
   const s=id?subscriptions.find(x=>x.id===id):null;
   const draft=(!s&&_subDraft)?_subDraft:null;
@@ -91,8 +95,8 @@ function openSubModal(id){
   const pad=n=>String(n).padStart(2,'0');
   const defaultDays=_subCycle==='quarter'?90:_subCycle==='year'?365:30;
   const dd=new Date();dd.setDate(dd.getDate()+defaultDays);
-  const defaultDate=dd.getFullYear()+'-'+pad(dd.getMonth()+1)+'-'+pad(dd.getDate());
-  const ds=s?s.expireDate:(draft&&draft.expireDate?draft.expireDate:defaultDate);
+  const pad2=n=>String(n).padStart(2,'0');const _td=new Date();const todayStr=_td.getFullYear()+'-'+pad2(_td.getMonth()+1)+'-'+pad2(_td.getDate());
+  const ds=s?s.expireDate:(draft&&draft.expireDate?draft.expireDate:todayStr);
 
   const cycles=[['month','\u6708\u4ed8'],['quarter','\u5b63\u4ed8'],['year','\u5e74\u4ed8'],['custom','\u81ea\u5b9a\u4e49']];
   const IS='width:100%;border:1.5px solid var(--inp-bd);border-radius:10px;padding:10px 14px;font-size:.9rem;color:var(--text);background:var(--inp-bg);outline:none;transition:border-color .25s,box-shadow .25s;font-family:inherit;box-sizing:border-box';
@@ -102,16 +106,18 @@ function openSubModal(id){
   const lbl=(t,req)=>'<label style="display:flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600;color:var(--text2);margin-bottom:7px;letter-spacing:.3px;text-transform:uppercase">'+t+(req?'<span style="color:#ef4444;margin-left:2px">*</span>':'')+'</label>';
 
   // Compute inline hint for initial date
-  let initHint='',initHintColor='#94a3b8';
+  let initHint='',initHintColor='#94a3b8',initHintBg='transparent';
   let initCustomDays=30;
   if(ds){
     const e=new Date(ds),t2=new Date();
     t2.setHours(0,0,0,0);e.setHours(0,0,0,0);
     const days=Math.ceil((e-t2)/864e5);
     initCustomDays=days>0?days:30;
-    if(days>0){initHint='\u8fd8\u5269 '+days+' \u5929';initHintColor=days<=7?'#ef4444':days<=30?'#ea580c':'#94a3b8';}
-    else if(days===0){initHint='\u4eca\u5929\u5230\u671f';initHintColor='#ef4444';}
-    else{initHint='\u5df2\u8fc7\u671f '+Math.abs(days)+' \u5929';initHintColor='#ef4444';}
+    if(days>30){initHint='还剩 '+days+' 天';initHintColor='#16a34a';initHintBg='#f0fdf4';}
+    else if(days>=7){initHint='还剩 '+days+' 天';initHintColor='#ca8a04';initHintBg='#fefce8';}
+    else if(days>=1){initHint='还剩 '+days+' 天';initHintColor='#ea580c';initHintBg='#fff7ed';}
+    else if(days===0){initHint='今天到期';initHintColor='#dc2626';initHintBg='#fef2f2';}
+    else{initHint='已到期';initHintColor='#dc2626';initHintBg='#fef2f2';}
   }
 
   const cyBtns=cycles.map(([v,l])=>{
@@ -132,13 +138,17 @@ function openSubModal(id){
   const editCustomDays=s&&s.customDays?s.customDays:draftCustomDays;
   const renewal=window._subRenewalVal||'manual';
   const G='margin-bottom:16px';
-  const cyBtns2=cycles.map(([v,l])=>{
-    const on=_subCycle===v;
-    return '<button type="button" class="sub-cycle-btn" data-v="'+v+'" onclick="_subSetCycle(\''+v+'\')" style="flex:1;padding:9px 4px;border-radius:8px;cursor:pointer;font-size:.84rem;border:none;transition:all .2s;font-weight:'+(on?'600':'400')+';background:'+(on?'var(--acc)':'transparent')+';color:'+(on?'#fff':'var(--text2)')+';box-shadow:'+(on?'0 2px 8px rgba(79,70,229,.25)':'none')+'">'+l+'</button>';
+  const cycleData=[['month','月付','30天'],['quarter','季付','90天'],['year','年付','365天'],['custom','自定义','']];
+  const cyBtns2=cycleData.map(function(row){
+    var v=row[0],label=row[1],sub=row[2],on=(_subCycle===v);
+    var btnStyle='flex:1;min-width:calc(50% - 4px);padding:10px 8px;border-radius:10px;cursor:pointer;border:1.5px solid '+(on?'var(--acc)':'var(--inp-bd)')+';transition:all .2s;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;background:'+(on?'var(--acc-bg)':'var(--inp-bg)')+';color:'+(on?'var(--acc)':'var(--text2)');
+    return '<button type="button" class="sub-cycle-btn" data-v="'+v+'" onclick="_subSetCycle(\''+v+'\')" style="'+btnStyle+'"><span style="font-size:.88rem;font-weight:600">'+label+'</span>'+(sub?'<span style="font-size:.72rem;opacity:.75">'+sub+'</span>':'')+'</button>';
   }).join('');
+  const estLabel=_subCycle==='month'?'按月付 +30天':_subCycle==='quarter'?'按季付 +90天':_subCycle==='year'?'按年付 +365天':'';
+
 
   const h=
-    '<style>#subNoteIn::-webkit-scrollbar{display:none}#subNoteIn{scrollbar-width:none}#subCostIn::-webkit-inner-spin-button,#subCostIn::-webkit-outer-spin-button{display:none}#subCostIn{-moz-appearance:textfield}#subCustomDaysIn::-webkit-inner-spin-button,#subCustomDaysIn::-webkit-outer-spin-button{display:none}#subCustomDaysIn{-moz-appearance:textfield}</style>'
+    '<style>#subCalcBtn:hover{background:var(--acc)!important;color:#fff!important}#subNoteIn::-webkit-scrollbar{display:none}#subNoteIn{scrollbar-width:none}#subCostIn::-webkit-inner-spin-button,#subCostIn::-webkit-outer-spin-button{display:none}#subCostIn{-moz-appearance:textfield}#subCustomDaysIn::-webkit-inner-spin-button,#subCustomDaysIn::-webkit-outer-spin-button{display:none}#subCustomDaysIn{-moz-appearance:textfield}</style>'
     +'<div id="subForm">'
     +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1.5px solid var(--task-bd)">'
     +'<div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--acc-bg),var(--acc-bd));display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;box-shadow:0 2px 8px rgba(79,70,229,.12)">'
@@ -147,17 +157,24 @@ function openSubModal(id){
     +'<div style="font-size:.95rem;font-weight:700;color:var(--text);letter-spacing:-.3px">'+(s?'\u7f16\u8f91\u8ba2\u9605':'\u6dfb\u52a0\u8ba2\u9605')+'</div>'
     +'<div style="font-size:.75rem;color:var(--text3);margin-top:1px">'+(s?'\u4fee\u6539\u8ba2\u9605\u4fe1\u606f':'\u8bb0\u5f55\u4e00\u4e2a\u65b0\u7684\u8ba2\u9605\u670d\u52a1')+'</div>'
     +'</div></div>'
-    +'<div style="'+G+'">'+lbl('\u670d\u52a1\u540d\u79f0',true)
+        +'<div id="subFormErr" style="display:none;color:#ef4444;font-size:.82rem;margin-bottom:10px;padding:8px 12px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca"></div>'
++'<div style="'+G+'">'+lbl('\u670d\u52a1\u540d\u79f0',true)
     +'<input id="subNameIn" type="text" value="'+(s?esc(s.name):draftName)+'" style="'+IS+'" '+FE+' autocomplete="off"></div>'
     +'<div style="'+G+'">'+lbl('\u8ba2\u9605\u5468\u671f',true)
-    +'<div style="display:flex;gap:4px;background:var(--hov);padding:4px;border-radius:10px">'+cyBtns2+'</div>'
+    +'<div style="display:flex;flex-wrap:wrap;gap:8px">'+cyBtns2+'</div>'
     +'<div id="subCustomDaysWrap" style="display:'+(showCustom?'flex':'none')+';align-items:center;gap:8px;margin-top:8px">'
     +'<input id="subCustomDaysIn" type="number" value="'+editCustomDays+'" placeholder="30" min="1" step="1" style="width:80px;border:1.5px solid var(--inp-bd);border-radius:10px;padding:8px 12px;font-size:.9rem;color:var(--text);background:var(--inp-bg);outline:none;font-family:inherit;box-sizing:border-box" '+FE+' oninput="_subUpdateDateFromDays()">'
     +'<span style="font-size:.85rem;color:var(--text2)">\u5929</span>'
     +'<span id="subCustomDatePreview" style="font-size:.75rem;color:#999;margin-left:6px;white-space:nowrap">'+(function(){if(!showCustom||!editCustomDays)return '';var _d=new Date();_d.setDate(_d.getDate()+parseInt(editCustomDays));var _p=function(n){return String(n).padStart(2,'0');};return '到期 '+_d.getFullYear()+'/'+_p(_d.getMonth()+1)+'/'+_p(_d.getDate());})()+'</span></div>'
-    +'<div id="subDateRow" style="margin-top:8px;display:'+(showCustom?'none':'block')+'"><div style="position:relative">'
-    +'<input id="subDateIn" type="date" value="'+ds+'" style="'+IS+';padding-right:110px" '+FE+' oninput="_subUpdateDaysLeft()">'
-    +'<span id="subDaysInline" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:.75rem;color:'+initHintColor+';pointer-events:none;white-space:nowrap">'+initHint+'</span>'
+    +'</div>'
+    // Expiry date - separate field
+    +'<div style="'+G+'">'+lbl('\u5230\u671f\u65e5\u671f',true)
+
+    +'<div style="display:flex;align-items:center;gap:8px">'
+    +'<input id="subDateIn" type="datetime-local" value="'+ds+'T00:00" style="'+IS+'" '+FE+' oninput="_subUpdateDaysLeft()">'
+    +'<button type="button" id="subCalcBtn" onclick="_subCalcDate()" style="white-space:nowrap;flex-shrink:0;padding:8px 12px;border-radius:8px;border:1.5px solid var(--acc);background:transparent;color:var(--acc);font-size:.8rem;font-weight:600;cursor:pointer;font-family:inherit;transition:background .2s,color .2s">\u63a8\u7b97\u5230\u671f</button>'
+    +'</div>'
+    +'<div id="subDaysInline" style="display:none;margin-top:6px;font-size:.78rem;font-weight:500;padding:3px 10px;border-radius:20px;transition:background .3s,color .3s;background:'+initHintBg+';color:'+initHintColor+'">'+initHint+'</div>'
     +'</div></div>'
         +'<div style="margin-top:16px;'+G+'">'+lbl('\u8d39\u7528',true)
     +'<div style="display:flex;align-items:center;border:1.5px solid var(--inp-bd);border-radius:10px;overflow:hidden;background:var(--inp-bg)">' // ✅ done
@@ -186,13 +203,13 @@ function openSubModal(id){
 
 function saveSub(id){
   const name=(document.getElementById('subNameIn').value||'').trim();
-  const _dEl=document.getElementById('subDateIn');const expireDate=(_dEl?_dEl.value:'')||'';
+  const _dEl=document.getElementById('subDateIn');const expireDate=((_dEl?_dEl.value:'')||'').substring(0,10);
   const cost=parseFloat(document.getElementById('subCostIn').value)||0;
   const note=(document.getElementById('subNoteIn').value||'').trim();
   const customDaysEl=document.getElementById('subCustomDaysIn');
   const customDays=customDaysEl?parseInt(customDaysEl.value)||30:30;
   const renewal=window._subRenewalVal||'manual';
-  if(!name||!expireDate){toast('\u26a0\ufe0f \u8bf7\u586b\u5199\u540d\u79f0\u548c\u5230\u671f\u65e5\u671f');return;}
+  if(!name||!expireDate){var _er=document.getElementById('subFormErr');if(_er){_er.textContent='⚠️ 请填写服务名称和到期日期';_er.style.display='block';}return;}
   subscriptions=JSON.parse(localStorage.getItem('tuole_subs')||'[]');
   const entry={name,expireDate,cost,cycle:_subCycle,note,renewal,customDays:_subCycle==='custom'?customDays:undefined};
   if(!id){entry.id=Date.now();subscriptions.push(entry);}
