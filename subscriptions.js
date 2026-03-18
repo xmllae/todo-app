@@ -1,4 +1,4 @@
-let subscriptions = [];
+﻿let subscriptions = [];
 let _subCycle = 'month';
 var _subSearch = '';
 var _subSort = 'days';
@@ -45,24 +45,9 @@ function ensureSubMode() {
   document.getElementById('appMain').appendChild(d);
 }
 
-window.addEventListener('load', function() {
-  window.applyMode = function(mode) {
-    ['taskMode','kanbanMode','settingsMode','statsMode','subscriptionsMode'].forEach(function(id) {
-      var el = document.getElementById(id);
-      if (el) el.classList.add('hidden');
-    });
-    if (mode === 'task') document.getElementById('taskMode').classList.remove('hidden');
-    else if (mode === 'kanban') document.getElementById('kanbanMode').classList.remove('hidden');
-    else if (mode === 'settings') document.getElementById('settingsMode').classList.remove('hidden');
-    else if (mode === 'stats') document.getElementById('statsMode').classList.remove('hidden');
-    else if (mode === 'subscriptions') {
-      ensureSubMode();
-      document.getElementById('subscriptionsMode').classList.remove('hidden');
-      rSubscriptions();
-    }
-    if (mode !== 'subscriptions') rAll();
-  };
-});
+// applyMode is defined in index.html and already handles the subscriptions mode.
+// subscriptions.js exposes ensureSubMode and rSubscriptions globally.
+
 
 function getSubColor(days) {
   if (days <= 7)  return { bg: '#fef2f2', border: '#fca5a5', text: '#ef4444' };
@@ -190,11 +175,12 @@ function rSubscriptions() {
   rSubList();
 }
 
-function _clb(c) {
+function _clb(c, customDays) {
   if (c === 'month')   return '\u6708\u4ed8';
   if (c === 'year')    return '\u5e74\u4ed8';
   if (c === 'quarter') return '\u5b63\u4ed8';
-  return '\u4e00\u6b21\u6027';
+  if (c === 'custom')  return '\u81ea\u5b9a\u4e49' + (customDays ? '(' + customDays + '\u5929)' : '');
+  return '\u81ea\u5b9a\u4e49';
 }
 
 function rSubList() {
@@ -251,7 +237,7 @@ function rSubList() {
       tbl += '<div style="min-width:0;padding-right:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.9rem;font-weight:600;color:var(--text)">' + nm + '</div>';
       tbl += '<div style="text-align:center;font-size:.81rem;color:var(--text2)">' + s.expireDate + '</div>';
       tbl += '<div style="text-align:center"><span class="' + (al ? 'sub-shake' : '') + '" style="display:inline-block;padding:2px 9px;border-radius:20px;background:' + c.bg + ';color:' + c.text + ';font-size:.77rem;font-weight:700;border:1px solid ' + c.border + '">' + (al ? '\u26a0\ufe0f ' : '') + dl + '</span></div>';
-      tbl += '<div style="text-align:center;font-size:.81rem;color:var(--text2)">' + _clb(s.cycle) + '</div>';
+      tbl += '<div style="text-align:center;font-size:.81rem;color:var(--text2)">' + _clb(s.cycle, s.customDays) + '</div>';
       tbl += '<div style="text-align:right;font-size:.86rem;font-weight:600;color:var(--text)">\u00a5' + (+s.cost).toFixed(2) + '</div>';
       tbl += '<div style="text-align:center"><button onclick="subToggleStatus(' + s.id + ')" style="display:inline-flex;align-items:center;gap:5px;background:var(--hov);border:1.5px solid var(--inp-bd);border-radius:20px;padding:3px 10px;cursor:pointer;font-size:.75rem;color:var(--text2)"><span style="width:7px;height:7px;border-radius:50%;background:' + st.dot + ';display:inline-block"></span>' + st.label + '</button></div>';
       tbl += '<div class="sub-act-btns" style="display:flex;gap:5px;justify-content:center">';
@@ -281,7 +267,7 @@ function rSubList() {
       cards += '<div style="font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + nm + '</div>';
       cards += '<div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">';
       cards += '<span style="font-size:.78rem;color:var(--text3)">' + s.expireDate + '</span>';
-      cards += '<span style="font-size:.78rem;color:var(--text3)">\u00b7 ' + _clb(s.cycle) + '</span>';
+      cards += '<span style="font-size:.78rem;color:var(--text3)">\u00b7 ' + _clb(s.cycle, s.customDays) + '</span>';
       cards += '<span style="font-size:.82rem;font-weight:600;color:var(--text)">\u00b7 \u00a5' + (+s.cost).toFixed(2) + '</span>';
       cards += '</div></div>';
       cards += '<span class="' + (al ? 'sub-shake' : '') + '" style="display:inline-block;padding:2px 9px;border-radius:20px;background:' + c.bg + ';color:' + c.text + ';font-size:.77rem;font-weight:700;border:1px solid ' + c.border + '">' + (al ? '\u26a0\ufe0f ' : '') + dl + '\u5929</span>';

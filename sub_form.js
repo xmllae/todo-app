@@ -1,5 +1,7 @@
 /* ─── Subscription Form – Linear/Raycast style ─── */
 
+var _subDraft = null;
+
 function _subSetCycle(v){
   _subCycle=v;
   document.querySelectorAll('.sub-cycle-btn').forEach(b=>{
@@ -9,17 +11,47 @@ function _subSetCycle(v){
     b.style.fontWeight=on?'600':'400';
     b.style.boxShadow=on?'0 2px 8px rgba(79,70,229,.25)':'none';
   });
+  const wrap=document.getElementById('subCustomDaysWrap');
+  if(wrap) wrap.style.display=v==='custom'?'block':'none';
 }
+
+function _subSaveDraft(){
+  const nameEl=document.getElementById('subNameIn');
+  if(!nameEl) return;
+  const name=(nameEl.value||'').trim();
+  const dateEl=document.getElementById('subDateIn');
+  const costEl=document.getElementById('subCostIn');
+  const noteEl=document.getElementById('subNoteIn');
+  const customDaysEl=document.getElementById('subCustomDaysIn');
+  const cost=(costEl?costEl.value:'')||'';
+  const note=(noteEl?noteEl.value:'')||'';
+  const customDays=(customDaysEl?customDaysEl.value:'')||'';
+  if(!name && !cost && !note && !customDays) return;
+  _subDraft={
+    name: nameEl.value||'',
+    expireDate: dateEl?dateEl.value:'',
+    cost: cost,
+    cycle: _subCycle,
+    note: note,
+    customDays: customDays
+  };
+}
+
+function _subClearDraft(){ _subDraft=null; }
 
 function openSubModal(id){
   const s=id?subscriptions.find(x=>x.id===id):null;
-  _subCycle=s?s.cycle:'month';
+  // Load draft only when adding new subscription
+  const draft=(!s && _subDraft)?_subDraft:null;
+  if(s) _subClearDraft();
+  _subCycle=s?s.cycle:(draft?draft.cycle:'month');
 
   const dd=new Date();dd.setDate(dd.getDate()+30);
   const pad=n=>String(n).padStart(2,'0');
-  const ds=s?s.expireDate:`${dd.getFullYear()}-${pad(dd.getMonth()+1)}-${pad(dd.getDate())}`;
+  const defaultDate=`${dd.getFullYear()}-${pad(dd.getMonth()+1)}-${pad(dd.getDate())}`;
+  const ds=s?s.expireDate:(draft&&draft.expireDate?draft.expireDate:defaultDate);
 
-  const cycles=[['month','月付'],['quarter','季付'],['year','年付'],['once','一次性']];
+  const cycles=[['month','月付'],['quarter','季付'],['year','年付'],['custom','自定义']];
 
   const IS=[
     'width:100%',
@@ -72,6 +104,12 @@ function openSubModal(id){
   }).join('');
 
   const G='margin-bottom:18px';
+  const draftName=draft?esc(draft.name):'';
+  const draftCost=draft?draft.cost:'';
+  const draftNote=draft?esc(draft.note||''):'';
+  const draftCustomDays=draft&&draft.customDays?draft.customDays:30;
+  const showCustom=_subCycle==='custom';
+  const editCustomDays=s&&s.customDays?s.customDays:draftCustomDays;
 
   const h=`
   <style>
@@ -97,7 +135,7 @@ function openSubModal(id){
     ${lbl('🏷️','服务名称',true)}
     <div class="sf-field-wrap">
       <span class="sf-icon">🏷️</span>
-      <input id="subNameIn" type="text" value="${s?esc(s.name):''}" placeholder="如：Netflix、Spotify、iCloud…"
+      <input id="subNameIn" type="text" value="${s?esc(s.name):draftName}"
         style="${IS}" ${FE} autocomplete="off">
     </div>
   </div>
@@ -115,7 +153,7 @@ function openSubModal(id){
     ${lbl('💰','费用',true)}
     <div class="sf-field-wrap">
       <span class="sf-icon" style="font-size:.85rem;font-weight:600;color:var(--text3)">¥</span>
-      <input id="subCostIn" type="number" value="${s?s.cost:''}" placeholder="0.00" step="0.01" min="0"
+      <input id="subCostIn" type="number" value="${s?s.cost:draftCost}" placeholder="0.00" step="0.01" min="0"
         style="${IS}" ${FE}>
     </div>
   </div>
@@ -127,6 +165,16 @@ function openSubModal(id){
     </div>
   </div>
 
+  <div id="subCustomDaysWrap" style="${G};display:${showCustom?'block':'none'}">
+    ${lbl('📆','自定义天数（天）',true)}
+    <div class="sf-field-wrap">
+      <span class="sf-icon">📆</span>
+      <input id="subCustomDaysIn" type="number" value="${editCustomDays}" placeholder="30" min="1" step="1"
+        style="${IS}" ${FE}>
+    </div>
+    <div style="font-size:.75rem;color:var(--text3);margin-top:5px;padding-left:2px">输入自定义周期天数，到期日将按此天数自动推算</div>
+  </div>
+
   <div style="${G}">
     ${lbl('📝','备注','')}
     <div class="sf-field-wrap">
@@ -134,7 +182,7 @@ function openSubModal(id){
       <textarea id="subNoteIn"
         placeholder="添加备注，如账号、提醒等…"
         style="${IS_BARE};height:80px;resize:none"
-        ${FE}>${s?esc(s.note||''):''}</textarea>
+        ${FE}>${s?esc(s.note||''):draftNote}</textarea>
     </div>
   </div>
 
@@ -178,12 +226,14 @@ function saveSub(id){
   const expireDate=(document.getElementById('subDateIn').value||'').trim();
   const cost=parseFloat(document.getElementById('subCostIn').value)||0;
   const note=(document.getElementById('subNoteIn').value||'').trim();
+  const customDaysEl=document.getElementById('subCustomDaysIn');
+  const customDays=customDaysEl?parseInt(customDaysEl.value)||30:30;
   if(!name||!expireDate){
     toast('⚠️ 请填写服务名称和到期日期');
     return;
   }
   subscriptions=JSON.parse(localStorage.getItem('tuole_subs')||'[]');
-  const entry={name,expireDate,cost,cycle:_subCycle,note};
+  const entry={name,expireDate,cost,cycle:_subCycle,note,customDays:_subCycle==='custom'?customDays:undefined};
   if(!id){
     entry.id=Date.now();
     subscriptions.push(entry);
@@ -197,6 +247,7 @@ function saveSub(id){
     }
   }
   localStorage.setItem('tuole_subs',JSON.stringify(subscriptions));
+  _subClearDraft();
   clM();
   const mb=document.getElementById('mBody');
   if(mb){mb.style.maxWidth='';mb.style.width='';mb.style.borderRadius='';mb.style.padding='';mb.style.textAlign='';mb.style.boxSizing='';}

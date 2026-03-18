@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -65,10 +65,11 @@ button,input,select,textarea{font-family:inherit}
 <div id="statsMode" class="hidden"><div class="stats-card"><h3>📊 任务完成统计</h3><div class="stats-period"><button class="on" onclick="setStatP('week',this)">近 7 天</button><button onclick="setStatP('two',this)">近 14 天</button><button onclick="setStatP('month',this)">近 30 天</button></div><div class="stats-tag-filter" id="statsTagFilter"></div><div class="stats-summary" id="statsSummary"></div><div class="chart-area" id="chartArea"></div></div></div>
 <div class="multi-bar" id="multiBar"><span class="mb-cnt" id="msCnt">已选 0 条</span><button class="mb-btn" onclick="msSelectAll()">全选</button><button class="mb-btn" onclick="msPriority()">优先级</button><button class="mb-btn" onclick="msTag()">标签</button><button class="mb-btn" onclick="msMove()">移动</button><button class="mb-btn" onclick="msCopy()">📋 复制到…</button><button class="mb-btn" onclick="msColor()">颜色</button><button class="mb-btn" onclick="msFreeze()">❄️</button><button class="mb-btn danger" onclick="msDel()">🗑️</button><button class="mb-btn" onclick="toggleMultiSelect()">取消</button></div>
 </div>
-<div class="modal-bg" id="mBg" onclick="event.target===this&&clM()"><div class="modal" id="mBody"></div></div>
+<div class="modal-bg" id="mBg" onclick="event.target===this&&(typeof _subSaveDraft==='function'&&_subSaveDraft(),clM())"><div class="modal" id="mBody"></div></div>
 <div class="undo-bar" id="undoBar"><span id="undoDesc"></span><button class="undo-btn" onclick="doUndo()">↩️ 撤销</button><button class="undo-close" onclick="hideUndo()">✕</button></div>
 <div class="toast" id="toast"></div>
 
+<script src='subscriptions.js'></script><script src='sub_form.js'></script>
 <script>
 const AVATARS=['😊','😎','🤓','🧑‍💻','👩‍🎨','👨‍🚀','🦊','🐱','🐼','🌸','🔥','💎'];const WD=['日','一','二','三','四','五','六'];const COLORS=['','#ef4444','#f97316','#eab308','#22c55e','#3b82f6','#8b5cf6','#ec4899','#6b7280'];const TIME_BLOCKS=[{id:'morning',name:'🌅 早晨',from:'00:00',to:'09:00'},{id:'forenoon',name:'☀️ 上午',from:'09:00',to:'12:00'},{id:'afternoon',name:'🌤 下午',from:'12:00',to:'18:00'},{id:'evening',name:'🌙 晚上',from:'18:00',to:'24:00'},{id:'unset',name:'📌 未安排',from:'',to:''}];const DEFAULT_TAGS=[{id:'work',name:'工作',color:'#3b82f6'},{id:'personal',name:'个人',color:'#22c55e'},{id:'study',name:'学习',color:'#a855f7'},{id:'health',name:'健康',color:'#ef4444'}];const DEFAULT_PRIO_COLORS={high:'#ef4444',medium:'#eab308',low:'#22c55e'};const ARCH_PAGE=15;
 let authToken=null,isGuest=false,currentUser=null,selAvatar=AVATARS[0];let cY,cM,sel,T={},F='all',FTag='',statP='week',statTag='',isDark=false;let editingId=null,editingTimeId=null,expandedId=null,editingSubId=null;let templates=[],sortStates={},recurRules=[],customTags=[],autoArchive=false,showArchivedInList=false;let priorityColors={...DEFAULT_PRIO_COLORS};let showDeadline=false;let defaultSortMode='high-first',autoSortEnabled=false;let multiSelect=false,selectedIds=new Set(),viewMode='list',lastSort='high-first',ppOpenId=null;let undoStack=[],undoTimer=null,kbHideDone=true,kbTimeFilter='all';let archQYear='',archQMonth='',archQDay='',archSearch='',archYearMap={};let odCollapsed=false,collapsedBlocks={};let saveTimer=null,pendingSave=false;if(!window._archCollapsed)window._archCollapsed={};if(!window._archPages)window._archPages={};const now=new Date();cY=now.getFullYear();cM=now.getMonth();sel=fd(now);
@@ -179,6 +180,6 @@ async function init(){renderAvatarPicker();try{const dk=localStorage.getItem('tu
 init();
 </script>
 <script>(function(){var l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.loli.net/css2?family=Noto+Sans+SC:wght@400;700&display=swap';document.head.appendChild(l)})()</script>
-<script src='subscriptions.js'></script><script src='sub_form.js'></script>
+
 </body>
 </html>
