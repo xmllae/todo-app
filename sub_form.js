@@ -159,8 +159,8 @@ function openSubModal(id){
     +'<input id="subDateIn" type="date" value="'+ds+'" style="'+IS+';padding-right:110px" '+FE+' oninput="_subUpdateDaysLeft()">'
     +'<span id="subDaysInline" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:.75rem;color:'+initHintColor+';pointer-events:none;white-space:nowrap">'+initHint+'</span>'
     +'</div></div>'
-        +'<div style="'+G+'">'+lbl('\u8d39\u7528',true)
-    +'<div style="display:flex;align-items:center;border:1.5px solid var(--inp-bd);border-radius:10px;overflow:hidden;background:var(--inp-bg)">'
+        +'<div style="margin-top:16px;'+G+'">'+lbl('\u8d39\u7528',true)
+    +'<div style="display:flex;align-items:center;border:1.5px solid var(--inp-bd);border-radius:10px;overflow:hidden;background:var(--inp-bg)">' // ✅ done
     +'<span style="padding:0 8px 0 14px;font-size:.9rem;font-weight:600;color:var(--text3);flex-shrink:0">\u00a5</span>'
     +'<input id="subCostIn" type="number" value="'+(s?s.cost:draftCost)+'" placeholder="0.00" step="0.01" min="0" style="flex:1;border:none;outline:none;padding:10px 14px 10px 0;font-size:.9rem;color:var(--text);background:transparent;font-family:inherit;box-sizing:border-box" '+FE+'></div></div>'
     +'<div style="'+G+'">'+lbl('\u7eed\u671f\u65b9\u5f0f',false)
