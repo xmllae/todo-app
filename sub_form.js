@@ -138,7 +138,7 @@ function openSubModal(id){
   const editCustomDays=s&&s.customDays?s.customDays:draftCustomDays;
   const renewal=window._subRenewalVal||'manual';
   const G='margin-bottom:16px';
-  const cycleData=[['month','月付','📅','30天'],['quarter','季付','🌿','90天'],['year','年付','📆','365天'],['custom','自定义','⚙️','']];
+  const cycleData=[['month','月付','📅','30天'],['quarter','季付','🌿','90天'],['year','年付','📆','365天'],['custom','自定义','⚙️','自设天数']];
   const cyBtns2=cycleData.map(function(row){
     var v=row[0],label=row[1],emoji=row[2],sub=row[3],on=(_subCycle===v);
     var base='flex:1;min-width:calc(50% - 4px);padding:10px 8px;border-radius:12px;cursor:pointer;border:1.5px solid '+(on?'#6366f1':'#e2e8f0')+';transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;position:relative;overflow:hidden;background:'+(on?'linear-gradient(135deg,#818cf8,#6366f1)':'#f8faff')+';color:'+(on?'#fff':'var(--text2)')+';box-shadow:'+(on?'0 4px 12px rgba(99,102,241,.3)':'none')+';transform:'+(on?'translateY(-2px)':'translateY(0)');
@@ -171,7 +171,7 @@ function openSubModal(id){
     +'<div style="font-size:.74rem;color:#94a3b8;margin-top:2px">'+(s?'\u4fee\u6539\u8ba2\u9605\u4fe1\u606f':'\u8bb0\u5f55\u4e00\u4e2a\u65b0\u7684\u8ba2\u9605\u670d\u52a1')+'</div>'
     +'</div></div>'
         +'<div id="subFormErr" style="display:none"></div>'
-+'<div style="'+G+'">'+lbl('📌 服务名称',true)
++'<div style="'+G+'">'+lbl('🏷️ 服务名称',true)
     +'<input id="subNameIn" type="text" value="'+(s?esc(s.name):draftName)+'" placeholder="\u8bf7\u8f93\u5165\u8ba2\u9605\u670d\u52a1\u540d\u79f0" style="'+IS+'" '+FE+' autocomplete="off" oninput="var e=document.getElementById(\'subNameErr\');if(e&&this.value.trim())e.style.display=\'none\';">'
     +'<div id="subNameErr" style="display:none;color:#ef4444;font-size:.78rem;font-weight:600;margin-top:5px">\u26a0\ufe0f \u8bf7\u586b\u5199\u670d\u52a1\u540d\u79f0</div>'
     +'</div>'
