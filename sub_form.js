@@ -76,7 +76,33 @@ function _subSaveDraft(){
   _subDraft={name:nameEl.value||'',expireDate:dateEl?dateEl.value:'',cost,cycle:_subCycle,note,customDays,renewal:window._subRenewalVal||'manual'};
 }
 
-function _subCancel(){if(confirm('\u786e\u5b9a\u53d6\u6d88\uff1f\u5df2\u586b\u5199\u5185\u5bb9\u5c06\u88ab\u6e05\u7a7a')){_subClearDraft();clM();}}
+function _subCancel(){
+  var btn=document.getElementById('subCancelBtn');
+  if(!btn) return;
+  // Show inline confirm popover near cancel button
+  var existing=document.getElementById('subCancelConfirm');
+  if(existing){existing.remove();return;}
+  var pop=document.createElement('div');
+  pop.id='subCancelConfirm';
+  pop.style.cssText='position:absolute;z-index:9999;background:#fff;border:1.5px solid #fca5a5;border-radius:10px;padding:10px 14px;box-shadow:0 4px 16px rgba(0,0,0,.12);font-size:.82rem;color:#374151;white-space:nowrap;display:flex;flex-direction:column;gap:8px;';
+  pop.innerHTML='<span style="font-weight:600;color:#dc2626">\u786e\u5b9a\u653e\u5f03\u5df2\u586b\u5185\u5bb9\uff1f</span>'
+    +'<div style="display:flex;gap:6px">'
+    +'<button onclick="_subClearDraft();clM();document.getElementById(\'subCancelConfirm\')&&document.getElementById(\'subCancelConfirm\').remove()" style="flex:1;padding:5px 10px;border-radius:7px;border:none;background:#ef4444;color:#fff;font-size:.8rem;font-weight:600;cursor:pointer;font-family:inherit">\u786e\u5b9a</button>'
+    +'<button onclick="document.getElementById(\'subCancelConfirm\').remove()" style="flex:1;padding:5px 10px;border-radius:7px;border:1.5px solid #e2e8f0;background:transparent;color:#6b7280;font-size:.8rem;cursor:pointer;font-family:inherit">\u8fd4\u56de</button>'
+    +'</div>';
+  // Position above the cancel button
+  var rect=btn.getBoundingClientRect();
+  var formRect=document.getElementById('subForm').getBoundingClientRect();
+  pop.style.bottom=(formRect.bottom-rect.top+6)+'px';
+  pop.style.left=(rect.left-formRect.left)+'px';
+  document.getElementById('subForm').style.position='relative';
+  document.getElementById('subForm').appendChild(pop);
+  // Close on outside click
+  setTimeout(function(){
+    function outsideClick(e){if(!pop.contains(e.target)&&e.target!==btn){pop.remove();document.removeEventListener('click',outsideClick);}}
+    document.addEventListener('click',outsideClick);
+  },10);
+}
 function _subSaveClick(e,id){
   var r=document.createElement('span');
   var btn=e.currentTarget;
