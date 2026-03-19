@@ -337,7 +337,7 @@ function rSubList() {
         : (dl <= 7 ? '<span style="display:inline-block;padding:1px 6px;border-radius:8px;font-size:.65rem;font-weight:700;background:#fff7ed;color:#ea580c;border:1px solid #fed7aa;margin-left:5px">\u5373\u5c06\u5230\u671f</span>' : '');
       cards += '<div style="background:' + cardBg + ';border:1.5px solid var(--task-bd);border-radius:14px;padding:14px 16px;">';
       cards += '<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px">';
-      cards += '<input type="checkbox" ' + (sel ? 'checked' : '') + ' onchange="_subToggleOne(' + s.id + ',this.checked)" style="margin-top:3px;cursor:pointer;width:15px;height:15px;flex-shrink:0">';
+      cards += '<input type="checkbox" ' + (sel ? 'checked' : '') + ' onclick="_subToggleOne(' + s.id + ',this.checked)" style="margin-top:3px;cursor:pointer;width:15px;height:15px;flex-shrink:0">';
       cards += '<div style="flex:1;min-width:0">';
       cards += '<div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-bottom:4px"><span style="font-size:.95rem;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + nm + '</span>' + statusBadge + '</div>';
       cards += '<div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">';
@@ -350,8 +350,9 @@ function rSubList() {
       cards += '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--task-bd)">';
       cards += '<span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:.74rem;font-weight:600;background:' + (s.renewal==='auto'?'#eff6ff':'#f0fdf4') + ';color:' + (s.renewal==='auto'?'#3b82f6':'#16a34a') + ';border:1px solid ' + (s.renewal==='auto'?'#bfdbfe':'#bbf7d0') + '">' + (s.renewal==='auto'?'\u81ea\u52a8\u7eed\u671f':'\u624b\u52a8\u7eed\u671f') + '</span>';
       cards += '<div style="display:flex;gap:6px">';
-      cards += '<button onclick="editSub(' + s.id + ')" style="background:var(--acc-bg);border:1.5px solid var(--acc-bd);color:var(--acc);padding:6px 14px;border-radius:8px;cursor:pointer;font-size:.82rem;font-weight:500">\u7f16\u8f91</button>';
-      cards += '<button onclick="delSub(' + s.id + ')" style="background:#fef2f2;border:1.5px solid #fca5a5;color:#ef4444;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:.82rem;font-weight:500">\u5220\u9664</button>';
+      cards += '<button onclick="editSub(' + s.id + ')" style="background:var(--acc-bg);border:1.5px solid var(--acc-bd);color:var(--acc);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:.8rem;font-weight:500">\u7f16\u8f91</button>';
+      cards += '<button onclick="_subRenewOne(' + s.id + ')" style="background:#eff6ff;border:1.5px solid #bfdbfe;color:#3b82f6;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:.8rem;font-weight:500">\u7eed\u671f</button>';
+      cards += '<button onclick="delSub(' + s.id + ')" style="background:#fef2f2;border:1.5px solid #fca5a5;color:#ef4444;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:.8rem;font-weight:500">\u5220\u9664</button>';
       cards += '</div></div></div>';
     });
   }
