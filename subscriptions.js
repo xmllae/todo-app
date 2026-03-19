@@ -35,7 +35,7 @@ function ensureSubMode() {
   h += '<div class="task-card">';
   h += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:10px">';
   h += '<h3 style="margin:0;font-size:1.2rem;font-weight:700">\u23f0 \u8ba2\u9605\u7ba1\u7406</h3>';
-  h += '<button onclick="openSubModal()" style="background:var(--acc);border:none;color:#fff;padding:9px 18px;border-radius:10px;cursor:pointer;font-size:.9rem;font-weight:600;white-space:nowrap">\uff0b \u6dfb\u52a0</button>';
+  h += '<button onclick="openSubModal()" style="background:var(--acc);border:none;color:#fff;padding:9px 18px;border-radius:10px;cursor:pointer;font-size:.9rem;font-weight:600;white-space:nowrap;box-shadow:0 4px 12px rgba(99,102,241,0.35);transition:all 150ms ease" onmouseenter="this.style.transform=\'translateY(-1px)\';this.style.boxShadow=\'0 6px 18px rgba(99,102,241,0.45)\'" onmouseleave="this.style.transform=\'\';this.style.boxShadow=\'0 4px 12px rgba(99,102,241,0.35)\'">+ \u6dfb\u52a0</button>';
   h += '</div>';
   h += '<div id="subStats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px"></div>';
   h += '<div id="subBanner"></div>';
@@ -119,23 +119,27 @@ function rSubscriptions() {
   }, 0);
   var yearCost = monthCost * 12;
 
-  function mk(bg, accent, em, label, val) {
+  function mk(bg, topColor, svgIcon, label, val) {
     var h = '';
-    h += '<div style="background:' + bg + ';border-left:4px solid ' + accent + ';border-radius:12px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.06)">';
-    h += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">';
-    h += '<span style="font-size:1.3rem;flex-shrink:0">' + em + '</span>';
+    h += '<div style="background:' + bg + ';border-radius:12px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden;position:relative">';
+    h += '<div style="height:3px;background:' + topColor + ';border-radius:3px 3px 0 0;position:absolute;top:0;left:0;right:0"></div>';
+    h += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;margin-top:4px">';
+    h += '<span style="color:' + topColor + ';flex-shrink:0">' + svgIcon + '</span>';
     h += '<span style="font-size:.78rem;color:var(--text3);font-weight:600">' + label + '</span>';
     h += '</div>';
-    h += '<div style="font-size:1.6rem;font-weight:700;color:' + accent + '">' + val + '</div>';
+    h += '<div style="font-size:32px;font-weight:700;color:' + topColor + ';line-height:1">' + val + '</div>';
     h += '</div>';
     return h;
   }
-
+  var calSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
+  var bellSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>';
+  var coinSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8m-4-4h8"/></svg>';
+  var chartSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>';
   stats.innerHTML =
-    mk('#eef2ff','#818cf8','\ud83d\udce6','\u8ba2\u9605\u603b\u6570', total) +
-    mk('#fff7ed','#f97316','\ud83d\udd14','\u672c\u6708\u5230\u671f', thisMonth) +
-    mk('#f0fdf4','#22c55e','\ud83d\udcb0','\u6708\u5747\u82b1\u8d39', '\u00a5' + monthCost.toFixed(2)) +
-    mk('#eff6ff','#3b82f6','\ud83d\udcc5','\u5e74\u5ea6\u82b1\u8d39', '\u00a5' + yearCost.toFixed(2));
+    mk('#EEF0FF','#6366f1', calSvg, '\u8ba2\u9605\u603b\u6570', total) +
+    mk('#FFF4EC','#f97316', bellSvg, '\u672c\u6708\u5230\u671f', thisMonth) +
+    mk('#F0FFF4','#22c55e', coinSvg, '\u6708\u5747\u82b1\u8d39', '\u00a5' + monthCost.toFixed(2)) +
+    mk('#EEF6FF','#3b82f6', chartSvg, '\u5e74\u5ea6\u82b1\u8d39', '\u00a5' + yearCost.toFixed(2));
 
   var banner = document.getElementById('subBanner');
   if (banner && !_subBannerDismissed) {
@@ -165,11 +169,14 @@ function _clb(c, customDays) {
 function rSubList() {
   var list = document.getElementById('subList');
   if (!list) return;
-  var COL = '36px 1fr 110px 90px 70px 80px 90px 100px';
+  var COL = '30% 20% 12% 12% 12% 8% 6%';
 
-  var toolbar = '<div class="sub-toolbar" style="display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap">';
-  toolbar += '<input type="text" placeholder="\u641c\u7d22\u8ba2\u9605\u2026" value="' + esc(_subSearch) + '" oninput="_subSetSearch(this.value)" style="flex:1;min-width:140px;border:1.5px solid var(--inp-bd);border-radius:9px;padding:8px 12px;font-size:.88rem;color:var(--text);background:var(--inp-bg);outline:0">';
-  toolbar += '<select onchange="_subSetSort(this.value)" style="border:1.5px solid var(--inp-bd);border-radius:9px;padding:8px 10px;font-size:.85rem;color:var(--text2);background:var(--inp-bg);outline:0;cursor:pointer">';
+  var toolbar = '<div class="sub-toolbar" style="display:flex;gap:12px;margin-bottom:12px;align-items:center;flex-wrap:wrap">';
+  toolbar += '<div style="position:relative;flex:1;max-width:65%;min-width:140px">';
+  toolbar += '<input type="text" id="subSearchInp" placeholder="\u641c\u7d22\u8ba2\u9605\u2026" value="' + esc(_subSearch) + '" oninput="_subSetSearch(this.value);var c=document.getElementById(\'subSearchClear\');if(c)c.style.display=this.value?\'flex\':\'none\';" style="width:100%;border:1.5px solid var(--inp-bd);border-radius:9px;padding:8px 32px 8px 12px;font-size:.88rem;color:var(--text);background:var(--inp-bg);outline:0;box-sizing:border-box">';
+  toolbar += '<span id="subSearchClear" onclick="document.getElementById(\'subSearchInp\').value=\'\';_subSetSearch(\'\');this.style.display=\'none\';" style="display:' + (_subSearch ? 'flex' : 'none') + ';position:absolute;right:8px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--text3);width:18px;height:18px;align-items:center;justify-content:center;font-size:.8rem;border-radius:50%;background:var(--hov)">\u00d7</span>';
+  toolbar += '</div>';
+  toolbar += '<select onchange="_subSetSort(this.value)" style="width:140px;flex-shrink:0;border:1.5px solid var(--inp-bd);border-radius:9px;padding:8px 10px;font-size:.85rem;color:var(--text2);background:var(--inp-bg);outline:0;cursor:pointer">';
   toolbar += '<option value="days"' + (_subSort==='days'?' selected':'') + '>\u6309\u5269\u4f59\u5929\u6570</option>';
   toolbar += '<option value="name"' + (_subSort==='name'?' selected':'') + '>\u6309\u540d\u79f0</option>';
   toolbar += '<option value="cost"' + (_subSort==='cost'?' selected':'') + '>\u6309\u8d39\u7528</option>';
@@ -190,17 +197,23 @@ function rSubList() {
   var tbl = '';
   tbl += '<div class="sub-table-wrap" style="border:1.5px solid var(--task-bd);border-radius:14px;overflow:hidden">';
   tbl += '<div style="display:grid;grid-template-columns:' + COL + ';align-items:center;padding:0 14px;min-height:42px;background:var(--hov);font-size:.77rem;font-weight:600;color:var(--text3)">';
-  tbl += '<div><input type="checkbox" onchange="_subToggleAll(this.checked)" style="cursor:pointer;width:14px;height:14px"></div>';
+  tbl += (filtered.length ? '<div><input type="checkbox" onchange="_subToggleAll(this.checked)" style="cursor:pointer;width:14px;height:14px"></div>' : '<div></div>');
   tbl += '<div>\u670d\u52a1\u540d\u79f0</div>';
-  tbl += '<div style="text-align:center">\u5230\u671f\u65e5\u671f</div>';
-  tbl += '<div style="text-align:center">\u5269\u4f59\u5929\u6570</div>';
-  tbl += '<div style="text-align:center">\u5468\u671f</div>';
+  tbl += '<div style="text-align:right">\u5230\u671f\u65e5\u671f</div>';
+  tbl += '<div style="text-align:right">\u5269\u4f59\u5929\u6570</div>';
+  tbl += '<div style="text-align:right">\u5468\u671f</div>';
   tbl += '<div style="text-align:right">\u8d39\u7528</div>';
-  tbl += '<div style="text-align:center">\u7eed\u671f</div>';
-  tbl += '<div style="text-align:center">\u64cd\u4f5c</div>';
+  tbl += '<div style="text-align:right">\u7eed\u671f</div>';
   tbl += '</div>';
 
-  if   (!filtered.length) {
+  if (!filtered.length && subscriptions.length === 0) {
+    tbl += '<div style="min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 16px;gap:12px">';
+    tbl += '<svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/><line x1="12" y1="2" x2="12" y2="3"/></svg>';
+    tbl += '<div style="font-size:15px;color:#666;font-weight:500">\u6682\u65e0\u8ba2\u9605\u8bb0\u5f55</div>';
+    tbl += '<div style="font-size:13px;color:#999">\u70b9\u51fb\u53f3\u4e0a\u89d2 + \u6dfb\u52a0 \u5f00\u59cb\u8bb0\u5f55</div>';
+    tbl += '<button onclick="openSubModal()" style="margin-top:4px;background:transparent;border:1.5px solid #818cf8;color:#6366f1;padding:8px 20px;border-radius:10px;cursor:pointer;font-size:.88rem;font-weight:600;transition:all 150ms ease" onmouseenter="this.style.background=\'#eef2ff\'" onmouseleave="this.style.background=\'transparent\'">+ \u6dfb\u52a0\u8ba2\u9605</button>';
+    tbl += '</div>';
+  } else if (!filtered.length) {
     tbl += '<div style="padding:32px;text-align:center;color:var(--text3);font-size:.9rem">\u672a\u627e\u5230\u5339\u914d\u7684\u8ba2\u9605</div>';
   } else {
     filtered.forEach(function(s, i) {
@@ -211,16 +224,15 @@ function rSubList() {
       var bt = i === 0 ? '' : 'border-top:1px solid var(--task-bd);';
       var nm = (s.icon ? s.icon + ' ' : '') + esc(s.name);
       tbl += '<div class="sub-row" style="display:grid;grid-template-columns:' + COL + ';align-items:center;padding:0 14px;min-height:52px;' + bt + (sel ? 'background:rgba(99,102,241,.07);' : '') + '">';
-      tbl += '<div><input type="checkbox" ' + (sel ? 'checked' : '') + ' onchange="_subToggleOne(' + s.id + ',this.checked)" style="cursor:pointer;width:14px;height:14px"></div>';
-      tbl += '<div style="min-width:0;padding-right:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.9rem;font-weight:600;color:var(--text)">' + nm + '</div>';
-      tbl += '<div style="text-align:center;font-size:.81rem;color:var(--text2)">' + s.expireDate + (s.expireTime ? '<br><span style="font-size:.72rem;color:#94a3b8">' + s.expireTime + '</span>' : '') + '</div>';
-      tbl += '<div style="text-align:center"><span class="' + (al ? 'sub-shake' : '') + '" style="display:inline-block;padding:2px 9px;border-radius:20px;background:' + c.bg + ';color:' + c.text + ';font-size:.77rem;font-weight:700;border:1px solid ' + c.border + '">' + (al ? '\u26a0\ufe0f ' : '') + dl + '</span></div>';
-      tbl += '<div style="text-align:center;font-size:.81rem;color:var(--text2)">' + _clb(s.cycle, s.customDays) + '</div>';
+      tbl += '<div style="display:flex;align-items:center;gap:8px;min-width:0;padding-right:8px"><input type="checkbox" ' + (sel ? 'checked' : '') + ' onchange="_subToggleOne(' + s.id + ',this.checked)" style="cursor:pointer;width:14px;height:14px;flex-shrink:0"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.9rem;font-weight:600;color:var(--text)">' + nm + '</span></div>';
+      tbl += '<div style="text-align:right;font-size:.81rem;color:var(--text2)">' + s.expireDate + (s.expireTime ? '<br><span style="font-size:.72rem;color:#94a3b8">' + s.expireTime + '</span>' : '') + '</div>';
+      tbl += '<div style="text-align:right"><span class="' + (al ? 'sub-shake' : '') + '" style="display:inline-block;padding:2px 7px;border-radius:20px;background:' + c.bg + ';color:' + c.text + ';font-size:.77rem;font-weight:700;border:1px solid ' + c.border + '">' + (al ? '\u26a0\ufe0f ' : '') + dl + '</span></div>';
+      tbl += '<div style="text-align:right;font-size:.81rem;color:var(--text2)">' + _clb(s.cycle, s.customDays) + '</div>';
       tbl += '<div style="text-align:right;font-size:.86rem;font-weight:600;color:var(--text)">\u00a5' + (+s.cost).toFixed(2) + '</div>';
-      tbl += '<div style="text-align:center"><span style="display:inline-block;padding:2px 9px;border-radius:20px;font-size:.74rem;font-weight:600;background:' + (s.renewal==='auto'?'#eff6ff':'#f0fdf4') + ';color:' + (s.renewal==='auto'?'#3b82f6':'#16a34a') + ';border:1px solid ' + (s.renewal==='auto'?'#bfdbfe':'#bbf7d0') + '">' + (s.renewal==='auto'?'自动':'手动') + '</span></div>';
-      tbl += '<div class="sub-act-btns" style="display:flex;gap:5px;justify-content:center">';
-      tbl += '<button onclick="editSub(' + s.id + ')" style="background:var(--acc-bg);border:1.5px solid var(--acc-bd);color:var(--acc);padding:4px 10px;border-radius:7px;cursor:pointer;font-size:.76rem;font-weight:500">\u7f16\u8f91</button>';
-      tbl += '<button onclick="delSub(' + s.id + ')" style="background:#fef2f2;border:1.5px solid #fca5a5;color:#ef4444;padding:4px 10px;border-radius:7px;cursor:pointer;font-size:.76rem;font-weight:500">\u5220\u9664</button>';
+      tbl += '<div style="text-align:right"><span style="display:inline-block;padding:2px 7px;border-radius:20px;font-size:.74rem;font-weight:600;background:' + (s.renewal==='auto'?'#eff6ff':'#f0fdf4') + ';color:' + (s.renewal==='auto'?'#3b82f6':'#16a34a') + ';border:1px solid ' + (s.renewal==='auto'?'#bfdbfe':'#bbf7d0') + '">' + (s.renewal==='auto'?'\u81ea\u52a8':'\u624b\u52a8') + '</span></div>';
+      tbl += '<div class="sub-act-btns" style="display:flex;gap:3px;justify-content:flex-end">';
+      tbl += '<button onclick="editSub(' + s.id + ')" style="background:var(--acc-bg);border:1.5px solid var(--acc-bd);color:var(--acc);padding:3px 6px;border-radius:6px;cursor:pointer;font-size:.7rem;font-weight:500">\u7f16\u8f91</button>';
+      tbl += '<button onclick="delSub(' + s.id + ')" style="background:#fef2f2;border:1.5px solid #fca5a5;color:#ef4444;padding:3px 6px;border-radius:6px;cursor:pointer;font-size:.7rem;font-weight:500">\u5220\u9664</button>';
       tbl += '</div></div>';
     });
   }
