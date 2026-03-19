@@ -132,12 +132,30 @@ function _subSetDate(v,fromCalc){
 }
 function _subSetTime(v){
   window._subTimeVal=v;
-  var tc=document.getElementById('subTimeChip');
-  if(tc){
-    if(v){tc.innerHTML='⏰ '+v+' <span onclick="event.stopPropagation();_subClearTime()" style="margin-left:4px;cursor:pointer;opacity:.7">✕</span>';tc.style.background='linear-gradient(135deg,#818cf8,#6366f1)';tc.style.color='#fff';tc.style.border='none';}
-    else{tc.innerHTML='⏰ + 添加时间';tc.style.background='transparent';tc.style.color='#94a3b8';tc.style.border='1.5px dashed #c7d2fe';}
+  var ti=document.getElementById('subTimeInput');
+  var clr=document.getElementById('subTimeClear');
+  if(ti){ti.value=v||'';ti.style.color=v?'var(--text)':'#b4c0d8';}
+  if(clr){
+    if(v){clr.setAttribute('data-has-val','1');clr.style.opacity='1';clr.style.pointerEvents='auto';}
+    else{clr.removeAttribute('data-has-val');clr.style.opacity='0';clr.style.pointerEvents='none';}
   }
   _subSyncHiddenDate();
+}
+function _subClearTime(){
+  window._subTimeVal='';
+  var ti=document.getElementById('subTimeInput');
+  var clr=document.getElementById('subTimeClear');
+  if(ti){ti.value='';ti.style.color='#b4c0d8';}
+  if(clr){clr.removeAttribute('data-has-val');clr.style.opacity='0';clr.style.pointerEvents='none';}
+  _subSyncHiddenDate();
+}
+function _subBoxMouseEnter(){
+  var clr=document.getElementById('subTimeClear');
+  if(clr&&clr.getAttribute('data-has-val')){clr.style.opacity='1';clr.style.pointerEvents='auto';}
+}
+function _subBoxMouseLeave(){
+  var clr=document.getElementById('subTimeClear');
+  if(clr){clr.style.opacity='0';clr.style.pointerEvents='none';}
 }
 function _subDateFocus(el){var b=document.getElementById('subDateTimeBox');if(b){b.style.borderColor='#6c63ff';b.style.boxShadow='0 0 0 3px rgba(108,99,255,.1)';}}
 function _subDateBlur(el){var b=document.getElementById('subDateTimeBox');if(b){b.style.borderColor='#e2e8f0';b.style.boxShadow='none';}}
@@ -158,13 +176,17 @@ function _subDateInputChange(v){
 }
 function _subTimeInputChange(v){
   var clean=v.trim();
-  // Auto-format: "9" -> "09:", "930" -> "09:30"
   clean=clean.replace(/[^0-9:]/g,'');
   var ok=/^([01]?\d|2[0-3]):[0-5]\d$/.test(clean);
   var inp=document.getElementById('subTimeInput');
-  if(ok&&inp){inp.style.borderColor='#6366f1';window._subTimeVal=clean;_subSyncHiddenDate();_subUpdateTimeChip();}
-  else if(inp&&clean){inp.style.borderColor='#ef4444';}
-  else if(inp){inp.style.borderColor='transparent';window._subTimeVal='';_subSyncHiddenDate();_subUpdateTimeChip();}
+  if(ok){
+    if(inp)inp.style.color='var(--text)';
+    _subSetTime(clean);
+  } else if(clean){
+    if(inp)inp.style.color='#ef4444';
+  } else {
+    _subSetTime('');
+  }
 }
 function _subTimeInputAuto(inp){
   var v=inp.value.replace(/[^0-9]/g,'');
@@ -280,17 +302,27 @@ function openSubModal(id){
     +'<input id="subDateIn" type="hidden" value="'+ds+'T00:00">'
     +'<input id="subDatePicker" type="date" value="'+ds+'" style="position:absolute;opacity:0;pointer-events:none;width:0;height:0" onchange="_subSetDate(this.value)">'
     +'<input id="subTimePicker" type="time" style="position:absolute;opacity:0;pointer-events:none;width:0;height:0" onchange="_subSetTime(this.value)">'
-    +'<style>#subDateTimeBox{display:flex;align-items:stretch;border:1.5px solid #e2e8f0;border-radius:12px;overflow:hidden;height:44px;transition:border-color .2s,box-shadow .2s;background:var(--inp-bg)}#subDateTimeBox:hover{border-color:#818cf8;box-shadow:0 0 0 3px rgba(129,140,248,.12)}#subDateSide,#subTimeSide{display:flex;align-items:center;gap:6px;padding:0 12px;cursor:text;transition:background .15s;flex:1}#subDateSide:hover,#subTimeSide:hover{background:rgba(129,140,248,.07)}#subDateSide{border-right:1px solid #e2e8f0}#subTimeSide{flex:0 0 auto}</style>'
-    +'<div id="subDateTimeBox">'
+    +'<style>'
+    +'#subDateTimeBox{display:flex;align-items:stretch;border:1.5px solid #e2e8f0;border-radius:12px;overflow:hidden;height:44px;transition:border-color .2s,box-shadow .2s;background:var(--inp-bg);position:relative}'
+    +'#subDateTimeBox:hover{border-color:#818cf8;box-shadow:0 0 0 3px rgba(129,140,248,.12)}'
+    +'#subDateSide{display:flex;align-items:center;gap:6px;padding:0 8px 0 12px;cursor:text;transition:background .15s;flex:2;min-width:0;border-right:1px solid #e2e8f0}'
+    +'#subTimeSide{display:flex;align-items:center;gap:6px;padding:0 10px;cursor:text;transition:background .15s;flex:1;min-width:120px}'
+    +'#subDateSide:hover,#subTimeSide:hover{background:rgba(129,140,248,.07)}'
+    +'#subChevronBtn{background:none;border:none;cursor:pointer;padding:0;display:flex;align-items:center;flex-shrink:0;color:#8c93a8;transition:color .15s}'
+    +'#subChevronBtn:hover{color:#3b5bdb}'
+    +'#subTimeClear{opacity:0;pointer-events:none;cursor:pointer;color:#94a3b8;font-size:.72rem;line-height:1;flex-shrink:0;transition:opacity .15s}'
+    +'#subDateTimeBox:hover #subTimeClear.has-val{opacity:1;pointer-events:auto}'
+    +'</style>'
+    +'<div id="subDateTimeBox" onmouseenter="_subBoxMouseEnter()" onmouseleave="_subBoxMouseLeave()">'
     +'<div id="subDateSide" onclick="document.getElementById(\'subDateInput\').focus()">'
     +'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'
-    +'<input id="subDateInput" type="text" value="'+(ds?ds.replace(/-/g,'/'):'')+'" placeholder="YYYY/MM/DD" maxlength="10" style="border:none;outline:none;font-size:.88rem;font-weight:600;color:'+(ds?'var(--text)':'#b4c0d8')+';font-family:inherit;width:96px;background:transparent;cursor:text" oninput="_subDateInputChange(this.value)" onfocus="_subDateFocus(this)" onblur="_subDateBlur(this)">'
-    +'<button type="button" onclick="_subOpenDatePicker()" style="background:none;border:none;cursor:pointer;padding:2px 4px;color:#818cf8;font-size:.78rem;line-height:1;flex-shrink:0;opacity:.7" title="\u6253\u5f00\u65e5\u5386">\u25be</button>'
+    +'<input id="subDateInput" type="text" value="'+(ds?ds.replace(/-/g,'/'):'')+'" placeholder="YYYY/MM/DD" maxlength="10" style="border:none;outline:none;font-size:.88rem;font-weight:600;color:'+(ds?'var(--text)':'#b4c0d8')+';font-family:inherit;flex:1;min-width:0;background:transparent;cursor:text;margin-right:4px" oninput="_subDateInputChange(this.value)" onfocus="_subDateFocus(this)" onblur="_subDateBlur(this)">'
+    +'<button type="button" id="subChevronBtn" onclick="_subOpenDatePicker()" title="\u6253\u5f00\u65e5\u5386"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>'
     +'</div>'
     +'<div id="subTimeSide" onclick="document.getElementById(\'subTimeInput\').focus()">'
     +'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'
-    +'<input id="subTimeInput" type="text" placeholder="\u65f6\u95f4" maxlength="5" style="border:none;outline:none;font-size:.88rem;color:#b4c0d8;font-family:inherit;width:44px;background:transparent;cursor:text" oninput="_subTimeInputAuto(this);_subTimeInputChange(this.value)" onfocus="_subTimeFocus(this)" onblur="_subTimeBlur(this)">'
-    +'<span id="subTimeClear" onclick="_subClearTime()" style="display:none;cursor:pointer;color:#94a3b8;font-size:.72rem;line-height:1;flex-shrink:0">\u2715</span>'
+    +'<input id="subTimeInput" type="text" placeholder="HH:MM" maxlength="5" style="border:none;outline:none;font-size:.88rem;color:#b4c0d8;font-family:inherit;flex:1;min-width:0;background:transparent;cursor:text" oninput="_subTimeInputAuto(this);_subTimeInputChange(this.value)" onfocus="_subTimeFocus(this)" onblur="_subTimeBlur(this)">'
+    +'<span id="subTimeClear" onclick="event.stopPropagation();_subClearTime()" style="opacity:0;pointer-events:none;cursor:pointer;color:#94a3b8;font-size:.72rem;line-height:1;flex-shrink:0;transition:opacity .15s">\u2715</span>'
     +'</div>'
     +'</div>'
     +'<div id="subDaysInline" style="display:none;margin-top:6px;font-size:.78rem;font-weight:500;padding:3px 10px;border-radius:20px;transition:background .3s,color .3s;background:'+initHintBg+';color:'+initHintColor+'">'+initHint+'</div>'
