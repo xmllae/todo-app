@@ -214,14 +214,7 @@ function rSubList() {
   if (_subMonthFilter){var _mn=new Date();_allSubs=_allSubs.filter(function(s){var d=new Date(s.expireDate);return d.getMonth()===_mn.getMonth()&&d.getFullYear()===_mn.getFullYear();});}
   var cntAll=_allSubs.length,cntExp=0,cntSoon=0,cntNorm=0;
   _allSubs.forEach(function(s){var d=calcDaysLeft(s.expireDate);if(d<=0)cntExp++;else if(d<=7)cntSoon++;else cntNorm++;});
-  // Batch bar
-  if(_subSelected.size>0){
-    toolbar+='<div class="sub-batch-bar" style="display:flex;align-items:center;gap:10px;margin-bottom:10px;padding:8px 14px;background:#f8faff;border:1.5px solid #c7d2fe;border-radius:10px;flex-wrap:wrap">';
-    toolbar+='<span style="flex:1;font-size:.88rem;color:#4338ca;font-weight:600">\u5df2\u9009 '+_subSelected.size+' \u9879</span>';
-    toolbar+='<button onclick="_subBatchDel()" style="background:#ef4444;border:none;color:#fff;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:.82rem;font-weight:600">\u6279\u91cf\u5220\u9664</button>';
-    toolbar+='<button onclick="_subSelected.clear();rSubList()" style="background:var(--hov);border:1.5px solid var(--inp-bd);color:var(--text2);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:.82rem">\u53d6\u6d88\u9009\u62e9</button>';
-    toolbar+='</div>';
-  }
+  // Batch bar rendered inside table after header row
   // Tabs
   toolbar+='<div style="display:flex;border-bottom:1.5px solid var(--task-bd);margin-bottom:10px">';
   var tabs=[['all','\u5168\u90e8',cntAll],['expired','\u5df2\u5230\u671f',cntExp],['soon','\u5373\u5c06\u5230\u671f',cntSoon],['normal','\u6b63\u5e38',cntNorm]];
@@ -268,7 +261,7 @@ function rSubList() {
   var tbl = '';
   tbl += '<div class="sub-table-wrap" style="border:1.5px solid var(--task-bd);border-radius:14px;overflow:hidden">';
   tbl += '<div style="display:grid;grid-template-columns:' + COL + ';align-items:center;padding:0 14px;min-height:42px;background:var(--hov);font-size:.77rem;font-weight:600;color:var(--text3)">';
-  tbl += '<div style="display:flex;align-items:center;gap:8px">' + (filtered.length ? '<input type="checkbox" onchange="_subToggleAll(this.checked)" style="cursor:pointer;width:14px;height:14px;flex-shrink:0">' : '') + '\u670d\u52a1\u540d\u79f0</div>';
+  tbl += '<div style="display:flex;align-items:center;gap:8px">' + (filtered.length ? '<label style="display:inline-flex;align-items:center;cursor:pointer;min-width:20px;min-height:20px;flex-shrink:0"><input type="checkbox" id="subHdrCb" onclick="_subToggleAll(this.checked)" style="cursor:pointer;width:16px;height:16px;accent-color:#6366f1"></label>' : '') + '\u670d\u52a1\u540d\u79f0</div>';
   tbl += '<div style="text-align:center">\u5230\u671f\u65e5\u671f</div>';
   tbl += '<div style="text-align:center">\u5269\u4f59\u5929\u6570</div>';
   tbl += '<div style="text-align:center">\u5468\u671f</div>';
@@ -276,6 +269,15 @@ function rSubList() {
   tbl += '<div style="text-align:center">\u7eed\u671f</div>';
   tbl += '<div style="text-align:center">\u64cd\u4f5c</div>';
   tbl += '</div>';
+  // Batch bar inside table, below header
+  if (_subSelected.size > 0) {
+    tbl += '<div class="sub-batch-bar" style="display:flex;align-items:center;gap:10px;padding:8px 14px;background:#eef2ff;border-bottom:1.5px solid #c7d2fe;flex-wrap:wrap">';
+    tbl += '<span style="flex:1;font-size:.85rem;color:#4338ca;font-weight:600">\u5df2\u9009 ' + _subSelected.size + ' \u9879</span>';
+    tbl += '<button onclick="_subBatchDel()" style="background:#ef4444;border:none;color:#fff;padding:5px 12px;border-radius:7px;cursor:pointer;font-size:.8rem;font-weight:600">\u6279\u91cf\u5220\u9664</button>';
+    tbl += '<button onclick="_subBatchRenew()" style="background:#3b82f6;border:none;color:#fff;padding:5px 12px;border-radius:7px;cursor:pointer;font-size:.8rem;font-weight:600">\u6279\u91cf\u7eed\u671f</button>';
+    tbl += '<button onclick="_subSelected.clear();rSubList()" style="background:transparent;border:1.5px solid #a5b4fc;color:#4338ca;padding:5px 10px;border-radius:7px;cursor:pointer;font-size:.8rem">\u53d6\u6d88\u9009\u62e9</button>';
+    tbl += '</div>';
+  }
 
   if (!filtered.length && subscriptions.length === 0) {
     tbl += '<div style="min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 16px;gap:12px">';
@@ -356,34 +358,80 @@ function rSubList() {
   list.innerHTML = toolbar + tbl + cards;
 }
 
+function _subSyncHdrCb() {
+  var hdrCb = document.getElementById('subHdrCb');
+  if (!hdrCb) return;
+  var rows = document.querySelectorAll('#subList .sub-row[data-id]');
+  if (!rows.length) return;
+  var selCount = 0;
+  rows.forEach(function(r){ if(_subSelected.has(+r.getAttribute('data-id'))) selCount++; });
+  if (selCount === 0) { hdrCb.checked = false; hdrCb.indeterminate = false; }
+  else if (selCount === rows.length) { hdrCb.checked = true; hdrCb.indeterminate = false; }
+  else { hdrCb.checked = false; hdrCb.indeterminate = true; }
+}
+
 function _subToggleOne(id, checked) {
   if (checked) _subSelected.add(id); else _subSelected.delete(id);
-  // Update row bg without full re-render
-  var row = document.querySelector('.sub-row[data-id="'+id+'"]');
+  var row = document.querySelector('#subList .sub-row[data-id="'+id+'"]');
   if (row) {
-    var dl = calcDaysLeft((subscriptions.find(function(s){return s.id===id;})||{}).expireDate||'');
+    var s = subscriptions.find(function(x){return x.id===id;});
+    var dl = s ? calcDaysLeft(s.expireDate) : 99;
     var nat = dl<=0?'rgba(239,68,68,.06)':(dl<=7?'rgba(249,115,22,.06)':'');
     row.style.background = checked ? 'rgba(99,102,241,.07)' : nat;
     var cb = row.querySelector('input[type=checkbox]'); if(cb) cb.checked = checked;
   }
-  rSubList();
+  _subSyncHdrCb();
+  _subUpdateBatchBar();
 }
 
 function _subToggleAll(checked) {
+  // Get all currently filtered row IDs from DOM
   var list = document.getElementById('subList');
   if (!list) return;
-  // Get currently visible filtered IDs from rendered checkboxes
-  var cbs = list.querySelectorAll('.sub-row input[type=checkbox]');
-  cbs.forEach(function(cb){
-    var row = cb.closest('.sub-row');
-    if (!row) return;
+  var rows = list.querySelectorAll('.sub-row[data-id]');
+  rows.forEach(function(row){
     var id = +row.getAttribute('data-id');
     if (checked) _subSelected.add(id); else _subSelected.delete(id);
   });
-  // Also update the header checkbox state
-  var hdrCb = list.querySelector('.sub-table-wrap input[type=checkbox]');
-  if (hdrCb) hdrCb.checked = checked;
-  rSubList();
+  // Update header checkbox visual state
+  var hdrCb = document.getElementById('subHdrCb');
+  if (hdrCb) { hdrCb.checked = checked; hdrCb.indeterminate = false; }
+  // Update each row checkbox and background
+  rows.forEach(function(row){
+    var id = +row.getAttribute('data-id');
+    var cb = row.querySelector('input[type=checkbox]'); if(cb) cb.checked = checked;
+    var s = subscriptions.find(function(x){return x.id===id;});
+    var dl = s ? calcDaysLeft(s.expireDate) : 99;
+    var nat = dl<=0?'rgba(239,68,68,.06)':(dl<=7?'rgba(249,115,22,.06)':'');
+    row.style.background = checked ? 'rgba(99,102,241,.07)' : nat;
+  });
+  // Update batch bar without full re-render to preserve checkbox state
+  _subUpdateBatchBar();
+}
+
+function _subUpdateBatchBar() {
+  var list = document.getElementById('subList');
+  if (!list) return;
+  var bar = list.querySelector('.sub-batch-bar');
+  if (_subSelected.size > 0) {
+    var html = '<span style="flex:1;font-size:.85rem;color:#4338ca;font-weight:600">\u5df2\u9009 '+_subSelected.size+' \u9879</span>';
+    html += '<button onclick="_subBatchDel()" style="background:#ef4444;border:none;color:#fff;padding:5px 12px;border-radius:7px;cursor:pointer;font-size:.8rem;font-weight:600">\u6279\u91cf\u5220\u9664</button>';
+    html += '<button onclick="_subBatchRenew()" style="background:#3b82f6;border:none;color:#fff;padding:5px 12px;border-radius:7px;cursor:pointer;font-size:.8rem;font-weight:600">\u6279\u91cf\u7eed\u671f</button>';
+    html += '<button onclick="_subSelected.clear();_subUpdateBatchBar();rSubList()" style="background:transparent;border:1.5px solid #a5b4fc;color:#4338ca;padding:5px 10px;border-radius:7px;cursor:pointer;font-size:.8rem">\u53d6\u6d88\u9009\u62e9</button>';
+    if (bar) {
+      bar.innerHTML = html;
+    } else {
+      var newBar = document.createElement('div');
+      newBar.className = 'sub-batch-bar';
+      newBar.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px 14px;background:#eef2ff;border-bottom:1.5px solid #c7d2fe;flex-wrap:wrap';
+      newBar.innerHTML = html;
+      var wrap = list.querySelector('.sub-table-wrap');
+      var hdrRow = wrap && wrap.querySelector('div');
+      if (hdrRow) hdrRow.insertAdjacentElement('afterend', newBar);
+    }
+  } else {
+    if (bar) bar.remove();
+  }
 }
 
 function _subBatchDel() {
@@ -397,11 +445,31 @@ function _subBatchDel() {
   toast('\ud83d\uddd1\ufe0f \u5df2\u6279\u91cf\u5220\u9664');
 }
 
+function _subBatchRenew() {
+  if (_subSelected.size === 0) return;
+  var updated = 0;
+  subscriptions.forEach(function(s) {
+    if (!_subSelected.has(s.id)) return;
+    var base = new Date(s.expireDate);
+    if (isNaN(base)) return;
+    if (s.cycle === 'month') base.setMonth(base.getMonth() + 1);
+    else if (s.cycle === 'year') base.setFullYear(base.getFullYear() + 1);
+    else if (s.cycle === 'quarter') base.setMonth(base.getMonth() + 3);
+    else if (s.cycle === 'custom' && s.customDays) base.setDate(base.getDate() + (+s.customDays));
+    else base.setMonth(base.getMonth() + 1);
+    s.expireDate = base.toISOString().slice(0, 10);
+    updated++;
+  });
+  localStorage.setItem('tuole_subs', JSON.stringify(subscriptions));
+  _subSelected.clear();
+  rSubscriptions();
+  toast('\u2705 \u5df2\u6279\u91cf\u7eed\u671f ' + updated + ' \u6761\u8ba2\u9605');
+}
+
 function _subHighlightRow(id) {
   var row = document.querySelector('.sub-row[data-id="'+id+'"]');
   if (!row) return;
   row.scrollIntoView({behavior:'smooth', block:'center'});
-  // Preserve the natural background after highlight
   var s = subscriptions.find(function(x){return x.id===id;});
   var dl = s ? calcDaysLeft(s.expireDate) : 99;
   var sel = _subSelected.has(id);
