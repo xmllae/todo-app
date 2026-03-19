@@ -271,7 +271,7 @@ function openSubModal(id){
   const FEon="this.style.borderColor='#818cf8';this.style.boxShadow='0 0 0 3px rgba(129,140,248,.15)'";
   const FEoff="this.style.borderColor='var(--inp-bd)';this.style.boxShadow='none'";
   const FE='onfocus="'+FEon+'" onblur="'+FEoff+'"';
-  const lbl=(t,req)=>'<label style="display:flex;align-items:center;gap:7px;font-size:.72rem;font-weight:700;color:#334155;margin-bottom:7px;letter-spacing:.5px;text-transform:uppercase"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#818cf8,#6366f1);flex-shrink:0"></span>'+t+(req?'<span style="color:#ef4444;margin-left:1px">*</span>':'')+'</label>';
+  const lbl=(t,req)=>'<label style="display:flex;align-items:center;gap:6px;font-size:.72rem;font-weight:700;color:#334155;margin-bottom:7px;letter-spacing:.5px;text-transform:uppercase"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#818cf8,#6366f1);flex-shrink:0"></span>'+t+(req?'<span style="color:#ef4444;margin-left:1px">*</span>':'')+'</label>';
 
   // Compute inline hint for initial date
   let initHint='',initHintColor='#94a3b8',initHintBg='transparent';
@@ -296,7 +296,7 @@ function openSubModal(id){
   const showCustom=_subCycle==='custom';
   const editCustomDays=s&&s.customDays?s.customDays:draftCustomDays;
   const renewal=window._subRenewalVal||'manual';
-  const G='margin-bottom:16px';
+  const G='margin-bottom:24px';
   const cycleData=[
     ['month','月付','30天'],
     ['quarter','季付','90天'],
@@ -367,7 +367,7 @@ function openSubModal(id){
     +'</div>'
     // Expiry date - separate field
     +'<div class="sub-divider"></div>'
-    +'<div style="'+G+'">'+'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px"><label style="display:flex;align-items:center;gap:7px;font-size:.72rem;font-weight:700;color:#334155;letter-spacing:.5px;text-transform:uppercase"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#818cf8,#6366f1);flex-shrink:0"></span>到期日期<span style="color:#ef4444;margin-left:1px">*</span></label><button type="button" id="subCalcBtn" onclick="_subCalcDate()" style="font-size:.74rem;color:#818cf8;background:none;border:none;cursor:pointer;font-family:inherit;padding:0;font-weight:600">推算到期</button></div>'
+    +'<div style="'+G+'">'+'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px"><label style="display:flex;align-items:center;gap:7px;font-size:.72rem;font-weight:700;color:#334155;letter-spacing:.5px;text-transform:uppercase"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#818cf8,#6366f1);flex-shrink:0"></span>到期日期<span style="color:#ef4444;margin-left:1px">*</span></label><button type="button" id="subCalcBtn" onclick="_subCalcDate()" style="font-size:.74rem;color:#818cf8;background:none;border:none;cursor:pointer;font-family:inherit;padding:0;font-weight:600;text-decoration:underline;text-underline-offset:2px">推算到期</button></div>'
 
     +'<input id="subDateIn" type="hidden" value="'+ds+'T00:00">'
     +'<input id="subDatePicker" type="date" value="'+ds+'" style="position:absolute;opacity:0;pointer-events:none;width:0;height:0" onchange="_subSetDate(this.value)">'
@@ -400,7 +400,7 @@ function openSubModal(id){
     +'<div class="sub-divider"></div>'
         +'<div style="margin-top:16px;'+G+'">'+lbl('费用',true)
     +'<div style="display:flex;align-items:stretch;border:1.5px solid #e2e8f0;border-radius:10px;overflow:hidden;background:#f8faff;transition:all 0.3s ease">'
-    +'<span style="display:flex;align-items:center;padding:0 12px;font-size:.88rem;font-weight:600;color:#6366f1;background:#f8faff;border-right:1.5px solid #e2e8f0;flex-shrink:0;white-space:nowrap">\u00a5</span>'
+    +'<span style="display:flex;align-items:center;padding:0 12px;font-size:.88rem;font-weight:600;color:#6366f1;background:#f8faff;border-right:1.5px solid #E0E0E0;flex-shrink:0;white-space:nowrap">\u00a5</span>'
     +'<input id="subCostIn" type="number" value="'+(s?s.cost:draftCost)+'" placeholder="0.00" step="0.01" min="0" style="flex:1;border:none;outline:none;padding:10px 14px;font-size:.9rem;color:var(--text);background:#f8faff;font-family:inherit;min-width:0" '+FE+'></div></div>'
     +'<div style="'+G+'">'+lbl('续期方式',false)
     +'<style>'
@@ -421,7 +421,7 @@ function openSubModal(id){
     +'<span>\u81ea\u52a8\u7eed\u671f</span><span class="ren-check">\u2713</span></button>'
     +'</div></div>'
     +'<div style="'+G+'">'+lbl('备注',false)
-    +'<textarea id="subNoteIn" placeholder="\u6dfb\u52a0\u5907\u6ce8\uff0c\u5982\u8d26\u53f7\u3001\u63d0\u9192\u7b49\u2026" style="'+IS+';height:40px;resize:none;overflow-y:auto" '+FE+'>'+(s?esc(s.note||''):draftNote)+'</textarea></div>'
+    +'<textarea id="subNoteIn" placeholder="\u6dfb\u52a0\u5907\u6ce8\uff0c\u5982\u8d26\u53f7\u3001\u63d0\u9192\u7b49\u2026" style="'+IS+';height:80px;resize:none;overflow-y:auto" '+FE+'>'+(s?esc(s.note||''):draftNote)+'</textarea></div>'
     +'<div style="display:grid;grid-template-columns:1fr 2fr;gap:10px;padding-top:8px">'
     +'<button type="button" id="subCancelBtn" onclick="_subCancel()" style="padding:11px;border-radius:10px;border:1.5px solid #e2e8f0;background:transparent;color:var(--text2);font-size:.92rem;font-weight:500;cursor:pointer;transition:all 0.3s ease;font-family:inherit">\u53d6\u6d88</button>'
     +'<button type="button" id="subSaveBtn" onclick="_subSaveClick(event,'+(s?s.id:0)+')" style="padding:11px;border-radius:10px;border:none;background:linear-gradient(135deg,#818cf8,#6366f1);color:#fff;font-size:.92rem;font-weight:700;cursor:pointer;transition:all 0.3s ease;font-family:inherit;box-shadow:0 4px 14px rgba(99,102,241,.35);letter-spacing:.3px;position:relative;overflow:hidden"><span class="btn-text">'+(s?'\u4fdd\u5b58\u4fee\u6539':'\u4fdd\u5b58')+'</span><span class="btn-spinner"></span></button>'
