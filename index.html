@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -65,7 +65,7 @@ button,input,select,textarea{font-family:inherit}
 <div id="statsMode" class="hidden"><div class="stats-card"><h3>📊 任务完成统计</h3><div class="stats-period"><button class="on" onclick="setStatP('week',this)">近 7 天</button><button onclick="setStatP('two',this)">近 14 天</button><button onclick="setStatP('month',this)">近 30 天</button></div><div class="stats-tag-filter" id="statsTagFilter"></div><div class="stats-summary" id="statsSummary"></div><div class="chart-area" id="chartArea"></div></div></div>
 <div class="multi-bar" id="multiBar"><span class="mb-cnt" id="msCnt">已选 0 条</span><button class="mb-btn" onclick="msSelectAll()">全选</button><button class="mb-btn" onclick="msPriority()">优先级</button><button class="mb-btn" onclick="msTag()">标签</button><button class="mb-btn" onclick="msMove()">移动</button><button class="mb-btn" onclick="msCopy()">📋 复制到…</button><button class="mb-btn" onclick="msColor()">颜色</button><button class="mb-btn" onclick="msFreeze()">❄️</button><button class="mb-btn danger" onclick="msDel()">🗑️</button><button class="mb-btn" onclick="toggleMultiSelect()">取消</button></div>
 </div>
-<div class="modal-bg" id="mBg" onclick="event.target===this&&(typeof _subSaveDraft==='function'&&_subSaveDraft(),clM())"><div class="modal" id="mBody"></div></div>
+<div class="modal-bg" id="mBg" onmousedown="window._mBgMd=(event.target===this)" onclick="if(window._mBgMd&&event.target===this){typeof _subSaveDraft==='function'&&_subSaveDraft();clM();}"><div class="modal" id="mBody"></div></div>
 <div class="undo-bar" id="undoBar"><span id="undoDesc"></span><button class="undo-btn" onclick="doUndo()">↩️ 撤销</button><button class="undo-close" onclick="hideUndo()">✕</button></div>
 <div class="toast" id="toast"></div>
 

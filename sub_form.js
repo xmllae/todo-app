@@ -276,7 +276,7 @@ function openSubModal(id){
   const cycleData=[['month','月付','📅','30天'],['quarter','季付','🌿','90天'],['year','年付','📆','365天'],['custom','自定义','⚙️','自设天数']];
   const cyBtns2=cycleData.map(function(row){
     var v=row[0],label=row[1],emoji=row[2],sub=row[3],on=(_subCycle===v);
-    var base='flex:1;min-width:calc(50% - 4px);padding:10px 8px;border-radius:12px;cursor:pointer;border:1.5px solid '+(on?'#6366f1':'#e2e8f0')+';transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;position:relative;overflow:hidden;background:'+(on?'linear-gradient(135deg,#818cf8,#6366f1)':'#f8faff')+';color:'+(on?'#fff':'var(--text2)')+';box-shadow:'+(on?'0 4px 12px rgba(99,102,241,.3)':'none')+';transform:'+(on?'translateY(-2px)':'translateY(0)');
+    var base='flex:1;padding:10px 8px;border-radius:12px;cursor:pointer;border:1.5px solid '+(on?'#6366f1':'#e2e8f0')+';transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;position:relative;overflow:hidden;background:'+(on?'linear-gradient(135deg,#818cf8,#6366f1)':'#f8faff')+';color:'+(on?'#fff':'var(--text2)')+';box-shadow:'+(on?'0 4px 12px rgba(99,102,241,.3)':'none')+';transform:'+(on?'translateY(-2px)':'translateY(0)');
     return '<button type="button" class="sub-cycle-btn" data-v="'+v+'" onclick="_subSetCycle(this.dataset.v)" style="'+base+'"><span style="font-size:1.1rem">'+emoji+'</span><span style="font-size:.85rem;font-weight:700">'+label+'</span>'+(sub?'<span style="font-size:.7rem;opacity:.8">'+sub+'</span>':'')+(on?'<span style="position:absolute;top:4px;right:6px;font-size:.65rem;color:#fff;opacity:.9">✓</span>':'')+'</button>';
   }).join('')
   const estLabel=_subCycle==='month'?'按月付 +30天':_subCycle==='quarter'?'按季付 +90天':_subCycle==='year'?'按年付 +365天':'';
@@ -316,7 +316,7 @@ function openSubModal(id){
     +'</div>'
     +'<div style="'+G+'">'+lbl('订阅周期',true)
     +'<div class="sub-divider"></div>'
-    +'<div style="display:flex;flex-wrap:wrap;gap:8px">'+cyBtns2+'</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+cyBtns2+'</div>'
     +'<div id="subCustomDaysWrap" style="display:'+(showCustom?'flex':'none')+';align-items:center;gap:8px;margin-top:10px;padding:10px 14px;border:1.5px dashed #818cf8;border-radius:10px;background:#f5f3ff">'
     +'<input id="subCustomDaysIn" type="number" value="'+editCustomDays+'" placeholder="30" min="1" step="1" style="width:72px;border:1.5px solid #818cf8;border-radius:10px;padding:8px 10px;font-size:.9rem;color:#6366f1;font-weight:700;text-align:center;background:#ede9fe;outline:none;font-family:inherit;box-sizing:border-box" '+FE+' oninput="_subUpdateDateFromDays()">'
     +'<span style="font-size:.85rem;color:var(--text2)">\u5929</span>'
