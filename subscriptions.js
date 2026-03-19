@@ -174,7 +174,9 @@ function rSubscriptions() {
     mk('#EEF6FF', yearCostColor, chartSvg, '\u5e74\u5ea6\u82b1\u8d39', yearCost > 0 ? '\u00a5' + yearCost.toFixed(2) : '\u2014\u2014', '', false, '\u6708\u5747\u82b1\u8d39 \u00d7 12\uff0c\u514d\u8d39\u8ba2\u9605\u4e0d\u8ba1\u5165');
 
   var banner = document.getElementById('subBanner');
-  if (banner && !_subBannerDismissed) {
+  var _shouldShow = typeof _subAlertShouldShow === 'function' ? _subAlertShouldShow() : !_subBannerDismissed;
+  if (banner && !_shouldShow) { banner.innerHTML = ''; }
+  if (banner && _shouldShow) {
     var expiring = subscriptions.filter(function(s){ return calcDaysLeft(s.expireDate) <= 7; });
     if (expiring.length) {
       var today = new Date(); today.setHours(0,0,0,0);
@@ -188,7 +190,7 @@ function rSubscriptions() {
       bh += '<div style="background:#fff7ed;border:1.5px solid #fed7aa;border-radius:12px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px">';
       bh += '<span style="flex-shrink:0">\u26a0\ufe0f</span>';
       bh += '<span style="flex:1;font-size:.88rem;color:#92400e"><strong>\u5373\u5c06\u5230\u671f\uff1a</strong> ' + bnames + ' \u2014 \u8bf7\u53ca\u65f6\u5904\u7406</span>';
-      bh += '<button onclick="_subBannerDismissed=true;document.getElementById(\'subBanner\').innerHTML=\'\'" style="background:none;border:none;cursor:pointer;font-size:1.1rem;color:#92400e;flex-shrink:0">\u00d7</button>';
+      bh += '<button onclick="_subAlertDismiss&&_subAlertDismiss();_subBannerDismissed=true;document.getElementById(\'subBanner\').innerHTML=\'\'" style="background:none;border:none;cursor:pointer;font-size:1.1rem;color:#92400e;flex-shrink:0">\u00d7</button>';
       bh += '</div>';
       banner.innerHTML = bh;
     } else { banner.innerHTML = ''; }
@@ -222,12 +224,12 @@ function rSubList() {
   tabs.forEach(function(t){toolbar+='<button class="sub-tab' + (t[0]===_subTabFilter?' active':'') + '" onclick="_subSetTab(\''+t[0]+'\')"\u003e'+t[1]+' <span class="sub-tab-badge">'+t[2]+'</span></button>';});
   toolbar+='</div>';
   // Search + sort
-  toolbar+='<div class="sub-toolbar" style="display:flex;gap:12px;margin-bottom:12px;align-items:center;flex-wrap:wrap">';
-  toolbar += '<div style="position:relative;flex:1;max-width:65%;min-width:140px">';
+  toolbar+='<div class="sub-toolbar" style="display:flex;gap:12px;margin-bottom:12px;align-items:center;width:100%">';
+  toolbar += '<div style="position:relative;flex:1;min-width:0">';
   toolbar += '<input type="text" id="subSearchInp" placeholder="\u641c\u7d22\u8ba2\u9605\u2026" value="' + esc(_subSearch) + '" oninput="_subSetSearch(this.value);var c=document.getElementById(\'subSearchClear\');if(c)c.style.display=this.value?\'flex\':\'none\';" style="width:100%;border:1.5px solid var(--inp-bd);border-radius:9px;padding:8px 32px 8px 12px;font-size:.88rem;color:var(--text);background:var(--inp-bg);outline:0;box-sizing:border-box">';
   toolbar += '<span id="subSearchClear" onclick="document.getElementById(\'subSearchInp\').value=\'\';_subSetSearch(\'\');this.style.display=\'none\';" style="display:' + (_subSearch ? 'flex' : 'none') + ';position:absolute;right:8px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--text3);width:18px;height:18px;align-items:center;justify-content:center;font-size:.8rem;border-radius:50%;background:var(--hov)">\u00d7</span>';
   toolbar += '</div>';
-  toolbar += '<select onchange="_subSetSort(this.value)" style="width:160px;flex-shrink:0;border:1.5px solid var(--inp-bd);border-radius:9px;padding:8px 10px;font-size:.85rem;color:var(--text2);background:var(--inp-bg);outline:0;cursor:pointer">';
+  toolbar += '<select onchange="_subSetSort(this.value)" style="width:180px;flex-shrink:0;border:1.5px solid var(--inp-bd);border-radius:9px;padding:8px 10px;font-size:.85rem;color:var(--text2);background:var(--inp-bg);outline:0;cursor:pointer">';
   toolbar += '<option value="days"' + (_subSort==='days'?' selected':'') + '>\u6309\u5269\u4f59\u5929\u6570\uff08\u5347\u5e8f\uff09</option>';
   toolbar += '<option value="days_desc"' + (_subSort==='days_desc'?' selected':'') + '>\u6309\u5269\u4f59\u5929\u6570\uff08\u964d\u5e8f\uff09</option>';
   toolbar += '<option value="expire"' + (_subSort==='expire'?' selected':'') + '>\u6309\u5230\u671f\u65e5\u671f</option>';
