@@ -114,6 +114,19 @@ function _subSaveClick(e,id){
   setTimeout(function(){saveSub(id);},120);
 }
 function _subClearDraft(){ _subDraft=null; }
+function _subSetRenewal(v){
+  window._subRenewalVal=v;
+  var m=document.getElementById('subRenMan');
+  var a=document.getElementById('subRenAut');
+  if(!m||!a) return;
+  if(v==='manual'){
+    m.classList.add('ren-on');m.style.borderColor='#c7d2fe';m.style.background='#eef2ff';m.style.color='#4338ca';
+    a.classList.remove('ren-on');a.style.borderColor='#e2e8f0';a.style.background='#f8faff';a.style.color='var(--text2)';
+  } else {
+    a.classList.add('ren-on');a.style.borderColor='#c7d2fe';a.style.background='#eef2ff';a.style.color='#4338ca';
+    m.classList.remove('ren-on');m.style.borderColor='#e2e8f0';m.style.background='#f8faff';m.style.color='var(--text2)';
+  }
+}
 function _subUpdateProgress(){
   var name=(document.getElementById('subNameIn')||{}).value||'';
   var date=(document.getElementById('subDateIn')||{}).value||'';
@@ -360,9 +373,22 @@ function openSubModal(id){
     +'<span style="display:flex;align-items:center;padding:0 12px;font-size:.88rem;font-weight:600;color:#6366f1;background:#f8faff;border-right:1.5px solid #e2e8f0;flex-shrink:0;white-space:nowrap">\u00a5</span>'
     +'<input id="subCostIn" type="number" value="'+(s?s.cost:draftCost)+'" placeholder="0.00" step="0.01" min="0" style="flex:1;border:none;outline:none;padding:10px 14px;font-size:.9rem;color:var(--text);background:#f8faff;font-family:inherit;min-width:0" '+FE+'></div></div>'
     +'<div style="'+G+'">'+lbl('续期方式',false)
+    +'<style>'
+    +'#subRenMan,#subRenAut{position:relative;display:flex;align-items:center;gap:10px;padding:0 14px;height:52px;border-radius:10px;cursor:pointer;font-size:.88rem;font-family:inherit;font-weight:500;transition:background 150ms ease-in-out,border-color 150ms ease-in-out,color 150ms ease-in-out;overflow:hidden;text-align:left;}'
+    +'#subRenMan .ren-icon,#subRenAut .ren-icon{font-size:1rem;transition:transform 150ms ease-in-out;flex-shrink:0}'
+    +'#subRenMan:hover .ren-icon,#subRenAut:hover .ren-icon{transform:scale(1.15)}'
+    +'#subRenMan.ren-on,#subRenAut.ren-on{border-left:4px solid #6366f1!important;background:#eef2ff!important;color:#4338ca!important;font-weight:600;border-color:#c7d2fe!important}'
+    +'#subRenMan:not(.ren-on):hover,#subRenAut:not(.ren-on):hover{border-color:#818cf8!important;color:#6366f1!important}'
+    +'.ren-check{width:16px;height:16px;border-radius:50%;background:#6366f1;display:flex;align-items:center;justify-content:center;margin-left:auto;flex-shrink:0;font-size:.6rem;color:#fff;opacity:0;transform:scale(0);transition:opacity 150ms ease-in-out,transform 150ms ease-in-out}'
+    +'.ren-on .ren-check{opacity:1;transform:scale(1)}'
+    +'</style>'
     +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
-    +'<button type="button" id="subRenMan" onclick="window._subRenewalVal=\'manual\';var m=document.getElementById(\'subRenMan\'),a=document.getElementById(\'subRenAut\');m.style.background=\'linear-gradient(135deg,#818cf8,#6366f1)\';m.style.color=\'#fff\';m.style.borderColor=\'#6366f1\';a.style.background=\'#f8faff\';a.style.color=\'var(--text2)\';a.style.borderColor=\'#e2e8f0\';" style="padding:10px 8px;border-radius:10px;cursor:pointer;font-size:.85rem;border:1.5px solid '+(renewal==='manual'?'#6366f1':'#e2e8f0')+';transition:all 0.3s ease;font-family:inherit;font-weight:'+(renewal==='manual'?'700':'400')+';background:'+(renewal==='manual'?'linear-gradient(135deg,#818cf8,#6366f1)':'#f8faff')+';color:'+(renewal==='manual'?'#fff':'var(--text2)')+'">\u624b\u52a8\u7eed\u671f</button>'
-    +'<button type="button" id="subRenAut" onclick="window._subRenewalVal=\'auto\';var m=document.getElementById(\'subRenMan\'),a=document.getElementById(\'subRenAut\');a.style.background=\'linear-gradient(135deg,#818cf8,#6366f1)\';a.style.color=\'#fff\';a.style.borderColor=\'#6366f1\';m.style.background=\'#f8faff\';m.style.color=\'var(--text2)\';m.style.borderColor=\'#e2e8f0\';" style="padding:10px 8px;border-radius:10px;cursor:pointer;font-size:.85rem;border:1.5px solid '+(renewal==='auto'?'#6366f1':'#e2e8f0')+';transition:all 0.3s ease;font-family:inherit;font-weight:'+(renewal==='auto'?'700':'400')+';background:'+(renewal==='auto'?'linear-gradient(135deg,#818cf8,#6366f1)':'#f8faff')+';color:'+(renewal==='auto'?'#fff':'var(--text2)')+'">\u81ea\u52a8\u7eed\u671f</button>'
+    +'<button type="button" id="subRenMan" class="'+(renewal==='manual'?'ren-on':'')+'" onclick="_subSetRenewal(\'manual\')" style="border:1.5px solid '+(renewal==='manual'?'#c7d2fe':'#e2e8f0')+';background:'+(renewal==='manual'?'#eef2ff':'#f8faff')+';color:'+(renewal==='manual'?'#4338ca':'var(--text2)')+'">'
+    +'<svg class="ren-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'
+    +'<span>\u624b\u52a8\u7eed\u671f</span><span class="ren-check">\u2713</span></button>'
+    +'<button type="button" id="subRenAut" class="'+(renewal==='auto'?'ren-on':'')+'" onclick="_subSetRenewal(\'auto\')" style="border:1.5px solid '+(renewal==='auto'?'#c7d2fe':'#e2e8f0')+';background:'+(renewal==='auto'?'#eef2ff':'#f8faff')+';color:'+(renewal==='auto'?'#4338ca':'var(--text2)')+'">'
+    +'<svg class="ren-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>'
+    +'<span>\u81ea\u52a8\u7eed\u671f</span><span class="ren-check">\u2713</span></button>'
     +'</div></div>'
     +'<div style="'+G+'">'+lbl('备注',false)
     +'<textarea id="subNoteIn" placeholder="\u6dfb\u52a0\u5907\u6ce8\uff0c\u5982\u8d26\u53f7\u3001\u63d0\u9192\u7b49\u2026" style="'+IS+';height:40px;resize:none;overflow-y:auto" '+FE+'>'+(s?esc(s.note||''):draftNote)+'</textarea></div>'
