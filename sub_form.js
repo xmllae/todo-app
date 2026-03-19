@@ -356,9 +356,9 @@ function openSubModal(id){
     +'</div></div>'
     +'<div class="sub-divider"></div>'
         +'<div style="margin-top:16px;'+G+'">'+lbl('费用',true)
-    +'<div style="position:relative">'
-    +'<span style="position:absolute;left:0;top:0;bottom:0;width:40px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#818cf8,#6366f1);border-radius:9px 0 0 9px;font-size:.88rem;font-weight:700;color:#fff;pointer-events:none">\u00a5</span>'
-    +'<input id="subCostIn" type="number" value="'+(s?s.cost:draftCost)+'" placeholder="0.00" step="0.01" min="0" style="width:100%;border:1.5px solid #e2e8f0;border-radius:10px;padding:10px 14px 10px 50px;font-size:.9rem;color:var(--text);background:#f8faff;outline:none;font-family:inherit;box-sizing:border-box;transition:all 0.3s ease" '+FE+'></div></div>'
+    +'<div style="display:flex;align-items:stretch;border:1.5px solid #e2e8f0;border-radius:10px;overflow:hidden;background:#f8faff;transition:all 0.3s ease">'
+    +'<span style="display:flex;align-items:center;padding:0 12px;font-size:.88rem;font-weight:600;color:#6366f1;background:#f8faff;border-right:1.5px solid #e2e8f0;flex-shrink:0;white-space:nowrap">\u00a5</span>'
+    +'<input id="subCostIn" type="number" value="'+(s?s.cost:draftCost)+'" placeholder="0.00" step="0.01" min="0" style="flex:1;border:none;outline:none;padding:10px 14px;font-size:.9rem;color:var(--text);background:#f8faff;font-family:inherit;min-width:0" '+FE+'></div></div>'
     +'<div style="'+G+'">'+lbl('续期方式',false)
     +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
     +'<button type="button" id="subRenMan" onclick="window._subRenewalVal=\'manual\';var m=document.getElementById(\'subRenMan\'),a=document.getElementById(\'subRenAut\');m.style.background=\'linear-gradient(135deg,#818cf8,#6366f1)\';m.style.color=\'#fff\';m.style.borderColor=\'#6366f1\';a.style.background=\'#f8faff\';a.style.color=\'var(--text2)\';a.style.borderColor=\'#e2e8f0\';" style="padding:10px 8px;border-radius:10px;cursor:pointer;font-size:.85rem;border:1.5px solid '+(renewal==='manual'?'#6366f1':'#e2e8f0')+';transition:all 0.3s ease;font-family:inherit;font-weight:'+(renewal==='manual'?'700':'400')+';background:'+(renewal==='manual'?'linear-gradient(135deg,#818cf8,#6366f1)':'#f8faff')+';color:'+(renewal==='manual'?'#fff':'var(--text2)')+'">\u624b\u52a8\u7eed\u671f</button>'
