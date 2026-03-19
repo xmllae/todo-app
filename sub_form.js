@@ -109,6 +109,12 @@ function _subCancel(){
   },10);
 }
 function _subSaveClick(e,id){
+  // Validate name first - don't show loading if invalid
+  var name=(document.getElementById('subNameIn')||{}).value||'';
+  if(!name.trim()){
+    saveSub(id);
+    return;
+  }
   var r=document.createElement('span');
   var btn=e.currentTarget;
   var rect=btn.getBoundingClientRect();
@@ -339,12 +345,12 @@ function openSubModal(id){
     +'#subSaveBtn .btn-spinner{display:none}#subSaveBtn.loading .btn-text{display:none}#subSaveBtn.loading .btn-spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:subSpin .7s linear infinite;vertical-align:middle}'
     +'</style>'
     +'<div id="subForm">'
-    +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1.5px solid var(--task-bd)">'
-    +'<div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#818cf8,#6366f1);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;box-shadow:0 6px 18px rgba(99,102,241,.38)">'
-    +(s?'\u270f\ufe0f':'\ud83d\udce6')
+    +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1.5px solid var(--task-bd);transition:background 100ms ease" onmouseenter="this.style.background=\'rgba(129,140,248,.04)\'"	onmouseleave="this.style.background=\'transparent\'">'
+    +'<div id="subHdrIcon" style="width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#818cf8,#6366f1);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 6px 18px rgba(99,102,241,.38);transition:transform 100ms ease">'
+    +(s?'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>':'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/><line x1="12" y1="2" x2="12" y2="3"/><line x1="19" y1="5" x2="18" y2="6"/><line x1="5" y1="5" x2="6" y2="6"/></svg>')
     +'</div><div>'
-    +'<div style="font-size:1rem;font-weight:800;color:var(--text);letter-spacing:-.4px">'+(s?'\u7f16\u8f91\u8ba2\u9605':'\u6dfb\u52a0\u8ba2\u9605')+'</div>'
-    +'<div style="font-size:.74rem;color:#94a3b8;margin-top:2px">'+(s?'\u4fee\u6539\u8ba2\u9605\u4fe1\u606f':'\u8bb0\u5f55\u4e00\u4e2a\u65b0\u7684\u8ba2\u9605\u670d\u52a1')+'</div>'
+    +'<div style="font-size:1rem;font-weight:600;color:var(--text);letter-spacing:-.3px">'+(s?'\u7f16\u8f91\u8ba2\u9605':'\u6dfb\u52a0\u8ba2\u9605')+'</div>'
+    +'<div style="font-size:.74rem;color:#999;margin-top:2px">'+(s?'\u4fee\u6539\u8ba2\u9605\u4fe1\u606f':'\u8bb0\u5f55\u4e00\u4e2a\u65b0\u7684\u8ba2\u9605\u670d\u52a1')+'</div>'
     +'</div></div>'
         +'<div id="subFormErr" style="display:none"></div>'
 +'<div style="'+G+'">'+lbl('服务名称',true)
