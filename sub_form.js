@@ -23,28 +23,26 @@ function _subSetCycle(v){
   // Show/hide custom days wrap
   const wrap=document.getElementById('subCustomDaysWrap');
   if(wrap) wrap.style.display=isCustom?'flex':'none';
-  // Show/hide date row vs days-only row
+  // Date row always visible regardless of cycle
   const dateRow=document.getElementById('subDateRow');
-  if(dateRow) dateRow.style.display=isCustom?'none':'block';
-  // If switching to custom, show preview for current default days
-  if(isCustom){ setTimeout(_subUpdateDateFromDays, 0); return; }
-  // Cycle and date are independent - no auto-set
+  if(dateRow) dateRow.style.display='block';
+  // If switching to custom, update preview for current default days
+  if(isCustom){ setTimeout(_subUpdateDateFromDays, 0); }
 }
 
 function _subUpdateDaysLeft(){
-  const dateEl=document.getElementById('subDateIn');
   const badge=document.getElementById('subDaysInline');
-  if(!dateEl||!badge) return;
-  const val=(dateEl.value||'').substring(0,10);
+  if(!badge) return;
+  const val=window._subDateVal||'';
   if(!val){badge.style.display='none';return;}
   const e=new Date(val),t=new Date();
   t.setHours(0,0,0,0);e.setHours(0,0,0,0);
   const days=Math.ceil((e-t)/864e5);
   var bg,color,text,anim='';
-  if(days>60){bg='linear-gradient(135deg,#d1fae5,#a7f3d0)';color='#065f46';text='🟢 还剩 '+days+' 天';}
-  else if(days>=30){bg='linear-gradient(135deg,#fef9c3,#fde68a)';color='#854d0e';text='🟡 还剩 '+days+' 天';}
-  else if(days>=1){bg='linear-gradient(135deg,#fee2e2,#fca5a5)';color='#991b1b';text='🔴 还剩 '+days+' 天';anim='subBadgePulse 1.8s ease-in-out infinite';}
-  else{bg='linear-gradient(135deg,#fee2e2,#fca5a5)';color='#991b1b';text='🔴 已过期 '+Math.abs(days)+' 天';anim='subBadgePulse 1.8s ease-in-out infinite';}
+  if(days>60){bg='linear-gradient(135deg,#d1fae5,#a7f3d0)';color='#065f46';text='\ud83d\udfe2 \u8fd8\u5269 '+days+' \u5929';}
+  else if(days>=30){bg='linear-gradient(135deg,#fef9c3,#fde68a)';color='#854d0e';text='\ud83d\udfe1 \u8fd8\u5269 '+days+' \u5929';}
+  else if(days>=1){bg='linear-gradient(135deg,#fee2e2,#fca5a5)';color='#991b1b';text='\ud83d\udd34 \u8fd8\u5269 '+days+' \u5929';anim='subBadgePulse 1.8s ease-in-out infinite';}
+  else{bg='linear-gradient(135deg,#fee2e2,#fca5a5)';color='#991b1b';text='\ud83d\udd34 \u5df2\u8fc7\u671f '+Math.abs(days)+' \u5929';anim='subBadgePulse 1.8s ease-in-out infinite';}
   badge.textContent=text;
   badge.style.display='inline-block';
   badge.style.background=bg;
@@ -213,16 +211,26 @@ function _subDateBlur(el){var b=document.getElementById('subDateTimeBox');if(b){
 function _subTimeFocus(el){var b=document.getElementById('subDateTimeBox');if(b){b.style.borderColor='#6c63ff';b.style.boxShadow='0 0 0 3px rgba(108,99,255,.1)';}}
 function _subTimeBlur(el){var b=document.getElementById('subDateTimeBox');if(b){b.style.borderColor='#e2e8f0';b.style.boxShadow='none';}}
 function _subDateInputChange(v){
-  // Accept YYYY/MM/DD or YYYY-MM-DD
-  var clean=v.replace(/\//g,'-').trim();
-  var ok=/^\d{4}-\d{2}-\d{2}$/.test(clean);
   var inp=document.getElementById('subDateInput');
-  if(ok){
-    var d=new Date(clean);
-    ok=!isNaN(d.getTime());
+  // Only parse/normalize when input has two separators (complete date)
+  var parts=v.match(/^(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})$/);
+  var ok=false;
+  var clean='';
+  if(parts){
+    var mo=+parts[2],dy=+parts[3];
+    // Only normalize if day is 2 digits OR day value >3 (can't be first digit of a valid 2-digit day starting >3)
+    var dayStr=parts[3];
+    var dayComplete=(dayStr.length===2)||(dy>3);
+    if(!dayComplete){inp.style.borderColor='';inp.style.boxShadow='';return;}
+    if(mo>=1&&mo<=12&&dy>=1&&dy<=31){
+      clean=parts[1]+'-'+String(mo).padStart(2,'0')+'-'+String(dy).padStart(2,'0');
+      var d=new Date(clean);
+      ok=!isNaN(d.getTime());
+    }
   }
   if(ok&&inp){inp.style.borderColor='#6366f1';inp.style.boxShadow='0 0 0 3px rgba(99,102,241,.15)';}
-  else if(inp){inp.style.borderColor='#ef4444';inp.style.boxShadow='0 0 0 2px rgba(239,68,68,.15)';}
+  else if(!ok&&v.length>=8&&inp){inp.style.borderColor='#ef4444';inp.style.boxShadow='0 0 0 2px rgba(239,68,68,.15)';}
+  else if(inp){inp.style.borderColor='';inp.style.boxShadow='';}
   if(ok) _subSetDate(clean,false);
 }
 function _subTimeInputChange(v){
