@@ -355,3 +355,60 @@ function rSubList() {
 
   list.innerHTML = toolbar + tbl + cards;
 }
+
+function _subToggleOne(id, checked) {
+  if (checked) _subSelected.add(id); else _subSelected.delete(id);
+  // Update row bg without full re-render
+  var row = document.querySelector('.sub-row[data-id="'+id+'"]');
+  if (row) {
+    var dl = calcDaysLeft((subscriptions.find(function(s){return s.id===id;})||{}).expireDate||'');
+    var nat = dl<=0?'rgba(239,68,68,.06)':(dl<=7?'rgba(249,115,22,.06)':'');
+    row.style.background = checked ? 'rgba(99,102,241,.07)' : nat;
+    var cb = row.querySelector('input[type=checkbox]'); if(cb) cb.checked = checked;
+  }
+  rSubList();
+}
+
+function _subToggleAll(checked) {
+  var list = document.getElementById('subList');
+  if (!list) return;
+  // Get currently visible filtered IDs from rendered checkboxes
+  var cbs = list.querySelectorAll('.sub-row input[type=checkbox]');
+  cbs.forEach(function(cb){
+    var row = cb.closest('.sub-row');
+    if (!row) return;
+    var id = +row.getAttribute('data-id');
+    if (checked) _subSelected.add(id); else _subSelected.delete(id);
+  });
+  // Also update the header checkbox state
+  var hdrCb = list.querySelector('.sub-table-wrap input[type=checkbox]');
+  if (hdrCb) hdrCb.checked = checked;
+  rSubList();
+}
+
+function _subBatchDel() {
+  if (_subSelected.size === 0) return;
+  var names = subscriptions.filter(function(s){ return _subSelected.has(s.id); }).map(function(s){ return s.name; });
+  if (!confirm('\u786e\u8ba4\u5220\u9664\u6240\u9009 ' + _subSelected.size + ' \u6761\u8ba2\u9605\uff1f\n' + names.join('\u3001'))) return;
+  subscriptions = subscriptions.filter(function(s){ return !_subSelected.has(s.id); });
+  localStorage.setItem('tuole_subs', JSON.stringify(subscriptions));
+  _subSelected.clear();
+  rSubscriptions();
+  toast('\ud83d\uddd1\ufe0f \u5df2\u6279\u91cf\u5220\u9664');
+}
+
+function _subHighlightRow(id) {
+  var row = document.querySelector('.sub-row[data-id="'+id+'"]');
+  if (!row) return;
+  row.scrollIntoView({behavior:'smooth', block:'center'});
+  // Preserve the natural background after highlight
+  var s = subscriptions.find(function(x){return x.id===id;});
+  var dl = s ? calcDaysLeft(s.expireDate) : 99;
+  var sel = _subSelected.has(id);
+  var naturalBg = sel ? 'rgba(99,102,241,.07)' : (dl<=0?'rgba(239,68,68,.06)':(dl<=7?'rgba(249,115,22,.06)':''));
+  row.style.transition = 'background .3s';
+  row.style.background = 'rgba(251,191,36,.28)';
+  setTimeout(function(){
+    row.style.background = naturalBg;
+  }, 1500);
+}
