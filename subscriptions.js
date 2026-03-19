@@ -13,11 +13,11 @@ var _subSelected = new Set();
   var css = '';
   css += '@keyframes subShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-3px)}40%{transform:translateX(3px)}60%{transform:translateX(-2px)}80%{transform:translateX(2px)}}';
   css += '.sub-shake{animation:subShake .5s ease infinite;}';
-  css += '.sub-act-btns{opacity:0;transition:opacity .15s;}';
-  css += '.sub-row:hover .sub-act-btns{opacity:1;}';
-  css += '.sub-row{overflow:hidden;}';
+  css += '.sub-act-btns{opacity:0;transition:opacity .15s ease;position:absolute;right:10px;top:50%;transform:translateY(-50%);display:flex;gap:4px;background:var(--card);padding:2px 4px;border-radius:8px;box-shadow:0 1px 6px rgba(0,0,0,.08);}';
+  css += '.sub-row:hover .sub-act-btns{opacity:1;}'
+  css += '.sub-row{position:relative;overflow:visible;}';
   css += '.sub-renew-badge{display:inline-block;padding:2px 7px;border-radius:20px;font-size:.74rem;font-weight:600;}';
-  css += '.sub-row td,.sub-row>div{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}';
+  css += '.sub-act-btns button{min-width:44px;overflow:visible;white-space:nowrap;}';
   css += '@media(max-width:640px){';
   css += '#subStats{grid-template-columns:repeat(2,1fr)!important;gap:8px!important;}';
   css += '.sub-table-wrap{display:none!important;}';
@@ -187,7 +187,7 @@ function _clb(c, customDays) {
 function rSubList() {
   var list = document.getElementById('subList');
   if (!list) return;
-  var COL = '30% 20% 12% 12% 12% 8% 6%';
+  var COL = '28% 14% 10% 10% 10% 10% 18%';
 
   var toolbar = '<div class="sub-toolbar" style="display:flex;gap:12px;margin-bottom:12px;align-items:center;flex-wrap:wrap">';
   toolbar += '<div style="position:relative;flex:1;max-width:65%;min-width:140px">';
@@ -223,11 +223,12 @@ function rSubList() {
   tbl += '<div class="sub-table-wrap" style="border:1.5px solid var(--task-bd);border-radius:14px;overflow:hidden">';
   tbl += '<div style="display:grid;grid-template-columns:' + COL + ';align-items:center;padding:0 14px;min-height:42px;background:var(--hov);font-size:.77rem;font-weight:600;color:var(--text3)">';
   tbl += '<div style="display:flex;align-items:center;gap:8px">' + (filtered.length ? '<input type="checkbox" onchange="_subToggleAll(this.checked)" style="cursor:pointer;width:14px;height:14px;flex-shrink:0">' : '') + '\u670d\u52a1\u540d\u79f0</div>';
-  tbl += '<div style="text-align:right">\u5230\u671f\u65e5\u671f</div>';
-  tbl += '<div style="text-align:right">\u5269\u4f59\u5929\u6570</div>';
+  tbl += '<div style="text-align:center">\u5230\u671f\u65e5\u671f</div>';
+  tbl += '<div style="text-align:center">\u5269\u4f59\u5929\u6570</div>';
   tbl += '<div style="text-align:center">\u5468\u671f</div>';
-  tbl += '<div style="text-align:right">\u8d39\u7528</div>';
+  tbl += '<div style="text-align:center">\u8d39\u7528</div>';
   tbl += '<div style="text-align:center">\u7eed\u671f</div>';
+  tbl += '<div style="text-align:center">\u64cd\u4f5c</div>';
   tbl += '</div>';
 
   if (!filtered.length && subscriptions.length === 0) {
@@ -252,14 +253,14 @@ function rSubList() {
       var alIcon = dl <= 0 ? '\u26a0\ufe0f ' : (dl <= 30 ? '\u26a0\ufe0f ' : '');
       tbl += '<div class="sub-row" data-id="' + s.id + '" style="display:grid;grid-template-columns:' + COL + ';align-items:center;padding:0 14px;height:56px;' + bt + (sel ? 'background:rgba(99,102,241,.07);' : '') + '">';
       tbl += '<div style="display:flex;align-items:center;gap:8px;min-width:0;overflow:hidden"><input type="checkbox" ' + (sel ? 'checked' : '') + ' onchange="_subToggleOne(' + s.id + ',this.checked)" style="cursor:pointer;width:14px;height:14px;flex-shrink:0"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.9rem;font-weight:600;color:var(--text)">' + nm + '</span></div>';
-      tbl += '<div style="text-align:right;font-size:.81rem;color:var(--text2);overflow:hidden;white-space:nowrap">' + dateDisp + '</div>';
-      tbl += '<div style="text-align:right"><span class="' + (al ? 'sub-shake' : '') + '" style="display:inline-block;padding:2px 7px;border-radius:20px;background:' + c.bg + ';color:' + c.text + ';font-size:.77rem;font-weight:700;border:1px solid ' + c.border + '">' + alIcon + dl + '</span></div>';
+      tbl += '<div style="text-align:center;font-size:.81rem;color:var(--text2);overflow:hidden;white-space:nowrap">' + dateDisp + '</div>';
+      tbl += '<div style="text-align:center"><span class="' + (al ? 'sub-shake' : '') + '" style="display:inline-block;padding:2px 7px;border-radius:20px;background:' + c.bg + ';color:' + c.text + ';font-size:.77rem;font-weight:700;border:1px solid ' + c.border + '">' + alIcon + dl + '</span></div>';
       tbl += '<div style="text-align:center;font-size:.81rem;color:var(--text2)">' + _clb(s.cycle, s.customDays) + '</div>';
-      tbl += '<div style="text-align:right">' + costDisp + '</div>';
+      tbl += '<div style="text-align:center">' + costDisp + '</div>';
       tbl += '<div style="text-align:center"><span class="sub-renew-badge" style="background:' + (s.renewal==='auto'?'#eff6ff':'#f0fdf4') + ';color:' + (s.renewal==='auto'?'#3b82f6':'#16a34a') + ';border:1px solid ' + (s.renewal==='auto'?'#bfdbfe':'#bbf7d0') + '">' + (s.renewal==='auto'?'\u81ea\u52a8':'\u624b\u52a8') + '</span></div>';
-      tbl += '<div class="sub-act-btns" style="display:flex;gap:3px;justify-content:flex-end">';
-      tbl += '<button onclick="editSub(' + s.id + ')" style="background:var(--acc-bg);border:1.5px solid var(--acc-bd);color:var(--acc);padding:3px 6px;border-radius:6px;cursor:pointer;font-size:.7rem;font-weight:500">\u7f16\u8f91</button>';
-      tbl += '<button onclick="delSub(' + s.id + ')" style="background:#fef2f2;border:1.5px solid #fca5a5;color:#ef4444;padding:3px 6px;border-radius:6px;cursor:pointer;font-size:.7rem;font-weight:500">\u5220\u9664</button>';
+      tbl += '<div style="display:flex;gap:5px;justify-content:center;align-items:center">';
+      tbl += '<button onclick="editSub(' + s.id + ')" style="background:var(--acc-bg);border:1.5px solid var(--acc-bd);color:var(--acc);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.76rem;font-weight:500;white-space:nowrap">\u7f16\u8f91</button>';
+      tbl += '<button onclick="delSub(' + s.id + ')" style="background:#fef2f2;border:1.5px solid #fca5a5;color:#ef4444;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.76rem;font-weight:500;white-space:nowrap">\u5220\u9664</button>';
       tbl += '</div></div>';
     });
   }
