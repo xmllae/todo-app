@@ -26,7 +26,8 @@ var _subSelected = new Set();
   css += '.sub-tab:hover:not(.active){color:var(--text);}';
   css += '.sub-tab-badge{display:inline-block;min-width:16px;height:16px;border-radius:8px;background:#e0e7ff;color:#6366f1;font-size:.6rem;font-weight:700;text-align:center;line-height:16px;padding:0 4px;}';
   css += '.sub-tab.active .sub-tab-badge{background:#6366f1;color:#fff;}';
-  css += '.sub-tooltip-wrap{position:relative;}';
+  css += '.sub-row-actions{display:none;}';
+  css += '.sub-row-actions.open{display:flex!important;}';
   css += '.sub-tooltip-wrap .sub-tip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1e293b;color:#f1f5f9;font-size:.72rem;padding:5px 10px;border-radius:8px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s;z-index:50;line-height:1.4;text-align:center;max-width:200px;white-space:normal;width:max-content;}';
   css += '.sub-tooltip-wrap:hover .sub-tip{opacity:1;}';
   css += '@media(max-width:640px){';
@@ -206,7 +207,7 @@ function _clb(c, customDays) {
 function rSubList() {
   var list = document.getElementById('subList');
   if (!list) return;
-  var COL = '28% 14% 10% 10% 10% 10% 18%';
+  var COL = '26% 14% 10% 10% 10% 10% 20%';
 
   var toolbar = '';
   // Tab counts
@@ -302,15 +303,16 @@ function rSubList() {
       var alIcon = dl <= 0 ? '\u26a0\ufe0f ' : (dl <= 30 ? '\u26a0\ufe0f ' : '');
       var statusBadge = dl <= 0 ? '<span style="display:inline-block;padding:1px 6px;border-radius:8px;font-size:.65rem;font-weight:700;background:#fef2f2;color:#ef4444;border:1px solid #fca5a5;margin-left:5px;vertical-align:middle;flex-shrink:0">\u5df2\u5230\u671f</span>' : (dl <= 7 ? '<span style="display:inline-block;padding:1px 6px;border-radius:8px;font-size:.65rem;font-weight:700;background:#fff7ed;color:#ea580c;border:1px solid #fed7aa;margin-left:5px;vertical-align:middle;flex-shrink:0">\u5373\u5c06\u5230\u671f</span>' : '');
       tbl += '<div class="sub-row" data-id="' + s.id + '" style="display:grid;grid-template-columns:' + COL + ';align-items:center;padding:0 14px;height:56px;' + bt + rowBg + '">';
-      tbl += '<div style="display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden"><input type="checkbox" ' + (sel ? 'checked' : '') + ' onchange="_subToggleOne(' + s.id + ',this.checked)" style="cursor:pointer;width:14px;height:14px;flex-shrink:0"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.9rem;font-weight:600;color:var(--text)">' + nm + '</span>' + statusBadge + '</div>';
+      tbl += '<div style="display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden"><input type="checkbox" ' + (sel ? 'checked' : '') + ' onclick="event.stopPropagation();_subToggleOne(' + s.id + ',this.checked)" style="cursor:pointer;width:14px;height:14px;flex-shrink:0"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.9rem;font-weight:600;color:var(--text)">' + nm + '</span>' + statusBadge + '</div>';
       tbl += '<div style="text-align:center;font-size:.81rem;color:var(--text2);overflow:hidden;white-space:nowrap">' + dateDisp + '</div>';
       tbl += '<div style="text-align:center"><span class="' + (al ? 'sub-shake' : '') + '" style="display:inline-block;padding:2px 7px;border-radius:20px;background:' + c.bg + ';color:' + c.text + ';font-size:.77rem;font-weight:700;border:1px solid ' + c.border + '">' + alIcon + dl + '</span></div>';
       tbl += '<div style="text-align:center;font-size:.81rem;color:var(--text2)">' + _clb(s.cycle, s.customDays) + '</div>';
       tbl += '<div style="text-align:center">' + costDisp + '</div>';
       tbl += '<div style="text-align:center"><span class="sub-renew-badge" style="background:' + (s.renewal==='auto'?'#eff6ff':'#f0fdf4') + ';color:' + (s.renewal==='auto'?'#3b82f6':'#16a34a') + ';border:1px solid ' + (s.renewal==='auto'?'#bfdbfe':'#bbf7d0') + '">' + (s.renewal==='auto'?'\u81ea\u52a8':'\u624b\u52a8') + '</span></div>';
-      tbl += '<div class="sub-act-btns">';
-      tbl += '<button onclick="editSub(' + s.id + ')" style="background:var(--acc-bg);border:1.5px solid var(--acc-bd);color:var(--acc);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.76rem;font-weight:500;white-space:nowrap">\u7f16\u8f91</button>';
-      tbl += '<button onclick="delSub(' + s.id + ')" style="background:#fef2f2;border:1.5px solid #fca5a5;color:#ef4444;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.76rem;font-weight:500;white-space:nowrap">\u5220\u9664</button>';
+      tbl += '<div class="sub-act-btns" style="display:flex;gap:4px;justify-content:center;align-items:center">';
+      tbl += '<button onclick="editSub(' + s.id + ')" style="background:var(--acc-bg);border:1.5px solid var(--acc-bd);color:var(--acc);padding:3px 8px;border-radius:6px;cursor:pointer;font-size:.72rem;font-weight:500;white-space:nowrap">\u7f16\u8f91</button>';
+      tbl += '<button onclick="_subRenewOne(' + s.id + ')" style="background:#eff6ff;border:1.5px solid #bfdbfe;color:#3b82f6;padding:3px 8px;border-radius:6px;cursor:pointer;font-size:.72rem;font-weight:500;white-space:nowrap">\u7eed\u671f</button>';
+      tbl += '<button onclick="delSub(' + s.id + ')" style="background:#fef2f2;border:1.5px solid #fca5a5;color:#ef4444;padding:3px 8px;border-radius:6px;cursor:pointer;font-size:.72rem;font-weight:500;white-space:nowrap">\u5220\u9664</button>';
       tbl += '</div></div>';
     });
   }
@@ -356,6 +358,34 @@ function rSubList() {
   cards += '</div>';
 
   list.innerHTML = toolbar + tbl + cards;
+}
+
+function _subRowClick(e, id) {
+  // Close all other open panels
+  document.querySelectorAll('.sub-row-actions.open').forEach(function(el){
+    if (+el.getAttribute('data-for') !== id) { el.classList.remove('open'); el.style.display = 'none'; }
+  });
+  var panel = document.querySelector('.sub-row-actions[data-for="'+id+'"]');
+  if (!panel) return;
+  var isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open', !isOpen);
+  panel.style.display = isOpen ? 'none' : 'flex';
+}
+
+function _subRenewOne(id) {
+  var s = subscriptions.find(function(x){return x.id===id;});
+  if (!s) return;
+  var base = new Date(s.expireDate);
+  if (isNaN(base)) { toast('\u65e0\u6548\u5230\u671f\u65e5\u671f'); return; }
+  if (s.cycle === 'month') base.setMonth(base.getMonth() + 1);
+  else if (s.cycle === 'year') base.setFullYear(base.getFullYear() + 1);
+  else if (s.cycle === 'quarter') base.setMonth(base.getMonth() + 3);
+  else if (s.cycle === 'custom' && s.customDays) base.setDate(base.getDate() + (+s.customDays));
+  else base.setMonth(base.getMonth() + 1);
+  s.expireDate = base.toISOString().slice(0, 10);
+  localStorage.setItem('tuole_subs', JSON.stringify(subscriptions));
+  rSubscriptions();
+  toast('\u2705 \u5df2\u7eed\u671f\uff1a' + esc(s.name));
 }
 
 function _subSyncHdrCb() {
