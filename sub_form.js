@@ -5,14 +5,27 @@ var _subDraft = null;
 function _subSetCycle(v){
   window._subCalcDone=false;_subUpdateCalcBtn();
   _subCycle=v;
-  document.querySelectorAll('.sub-cycle-btn').forEach(b=>{
-    const on=b.dataset.v===v;
-    b.style.background=on?'linear-gradient(135deg,#818cf8,#6366f1)':'var(--inp-bg)';
+  document.querySelectorAll('.sub-cycle-btn').forEach(function(b){
+    var on=b.dataset.v===v;
+    b.style.background=on?'#6366f1':'#f8faff';
     b.style.color=on?'#fff':'var(--text2)';
-    b.style.fontWeight=on?'700':'400';
-    b.style.borderColor=on?'#6366f1':'var(--inp-bd)';
-    b.style.boxShadow=on?'0 4px 12px rgba(99,102,241,.3)':'none';
-    b.style.transform=on?'translateY(-2px)':'translateY(0)';
+    b.style.borderColor=on?'#6366f1':'#e2e8f0';
+    b.style.boxShadow=on?'inset 0 2px 8px rgba(0,0,0,.15)':'none';
+    b.style.transform='none';
+    // Update SVG stroke color
+    var svgs=b.querySelectorAll('svg');
+    svgs.forEach(function(svg){svg.setAttribute('stroke',on?'#fff':'#6366f1');});
+    // Update checkmark badge
+    var chk=b.querySelector('.cyc-check');
+    if(on&&!chk){
+      var s=document.createElement('span');
+      s.className='cyc-check';
+      s.style.cssText='position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center';
+      s.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+      b.appendChild(s);
+    } else if(!on&&chk){
+      chk.remove();
+    }
   });
   const isCustom=v==='custom';
   // Show/hide custom days wrap
@@ -286,12 +299,31 @@ function openSubModal(id){
   const editCustomDays=s&&s.customDays?s.customDays:draftCustomDays;
   const renewal=window._subRenewalVal||'manual';
   const G='margin-bottom:16px';
-  const cycleData=[['month','月付','📅','30天'],['quarter','季付','🌿','90天'],['year','年付','📆','365天'],['custom','自定义','⚙️','自设天数']];
+  const cycleData=[
+    ['month','月付','30天'],
+    ['quarter','季付','90天'],
+    ['year','年付','365天'],
+    ['custom','自定义','自设天数']
+  ];
+  const cycleIcons={
+    month:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+    quarter:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/></svg>',
+    year:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="9 16 11 18 15 14"/></svg>',
+    custom:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="12" y1="14" x2="12" y2="18"/><line x1="10" y1="16" x2="14" y2="16"/></svg>'
+  };
   const cyBtns2=cycleData.map(function(row){
-    var v=row[0],label=row[1],emoji=row[2],sub=row[3],on=(_subCycle===v);
-    var base='flex:1;padding:10px 8px;border-radius:12px;cursor:pointer;border:1.5px solid '+(on?'#6366f1':'#e2e8f0')+';transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;position:relative;overflow:hidden;background:'+(on?'linear-gradient(135deg,#818cf8,#6366f1)':'#f8faff')+';color:'+(on?'#fff':'var(--text2)')+';box-shadow:'+(on?'0 4px 12px rgba(99,102,241,.3)':'none')+';transform:'+(on?'translateY(-2px)':'translateY(0)');
-    return '<button type="button" class="sub-cycle-btn" data-v="'+v+'" onclick="_subSetCycle(this.dataset.v)" style="'+base+'"><span style="font-size:1.1rem">'+emoji+'</span><span style="font-size:.85rem;font-weight:700">'+label+'</span>'+(sub?'<span style="font-size:.7rem;opacity:.8">'+sub+'</span>':'')+(on?'<span style="position:absolute;top:4px;right:6px;font-size:.65rem;color:#fff;opacity:.9">✓</span>':'')+'</button>';
-  }).join('')
+    var v=row[0],label=row[1],sub=row[2],on=(_subCycle===v);
+    var icon=cycleIcons[v];
+    var onIcon=icon.replace(/stroke="#6366f1"/g,'stroke="#fff"');
+    var st='width:100%;padding:12px 8px;border-radius:12px;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;transition:border-color 120ms ease,background 120ms ease,box-shadow 120ms ease;';
+    if(on){
+      st+='border:1.5px solid #6366f1;background:#6366f1;color:#fff;box-shadow:inset 0 2px 8px rgba(0,0,0,.15);';
+    } else {
+      st+='border:1.5px solid #e2e8f0;background:#f8faff;color:var(--text2);';
+    }
+    var check=on?'<span style="position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>':'';
+    return '<button type="button" class="sub-cycle-btn" data-v="'+v+'" onclick="_subSetCycle(this.dataset.v)" style="'+st+'">'+check+(on?onIcon:icon)+'<span style="font-size:.82rem;font-weight:700;margin-top:1px">'+label+'</span>'+(sub?'<span style="font-size:.68rem;opacity:.75">'+sub+'</span>':'')+'</button>';
+  }).join('');
   const estLabel=_subCycle==='month'?'按月付 +30天':_subCycle==='quarter'?'按季付 +90天':_subCycle==='year'?'按年付 +365天':'';
 
 
@@ -301,7 +333,7 @@ function openSubModal(id){
     +'@keyframes subNameShake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}'
     +'@keyframes subRipple{to{transform:scale(4);opacity:0}}'
     +'#subCalcBtn:hover{background:linear-gradient(135deg,#818cf8,#6366f1)!important;color:#fff!important;border-color:transparent!important}'
-    +'.sub-cycle-btn:hover{transform:translateY(-3px)!important;box-shadow:0 6px 16px rgba(99,102,241,.22)!important;border-color:#818cf8!important}'
+    +'.sub-cycle-btn:hover{border-color:#818cf8!important;box-shadow:0 2px 8px rgba(99,102,241,.18)!important}'
     +'#subRenMan:hover,#subRenAut:hover{border-color:#818cf8!important;color:#6366f1!important}'
     +'#subCancelBtn:hover{border-color:#ef4444!important;color:#ef4444!important}'
     +'#subSaveBtn:hover{transform:translateY(-2px)!important;box-shadow:0 8px 24px rgba(99,102,241,.45)!important}'
