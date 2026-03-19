@@ -53,6 +53,7 @@ function _subUpdateDateFromDays(){
   const preview=document.getElementById('subCustomDatePreview');
   if(!daysInEl) return;
   const days=parseInt(daysInEl.value)||0;
+  window._subCalcDone=false;_subUpdateCalcBtn();
   if(days<=0){if(preview)preview.textContent='';return;}
   const d=new Date();
   d.setDate(d.getDate()+days);
