@@ -4,6 +4,7 @@ var _subSearch = '';
 var _subSort = 'days';
 var _subBannerDismissed = false;
 var _subMonthFilter = false;
+var _subTabFilter = 'all'; // all | expired | soon | normal
 var _subSelected = new Set();
 
 (function(){
@@ -18,6 +19,16 @@ var _subSelected = new Set();
   css += '.sub-row{position:relative;overflow:visible;}';
   css += '.sub-renew-badge{display:inline-block;padding:2px 7px;border-radius:20px;font-size:.74rem;font-weight:600;}';
   css += '.sub-act-btns button{min-width:44px;overflow:visible;white-space:nowrap;}';
+  css += '@keyframes subSlideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}';
+  css += '.sub-batch-bar{animation:subSlideDown .18s ease;}';
+  css += '.sub-tab{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border:none;background:transparent;cursor:pointer;font-size:.85rem;color:var(--text3);border-bottom:2px solid transparent;transition:all .15s;position:relative;font-family:inherit;}';
+  css += '.sub-tab.active{color:#6366f1;font-weight:700;border-bottom-color:#6366f1;}';
+  css += '.sub-tab:hover:not(.active){color:var(--text);}';
+  css += '.sub-tab-badge{display:inline-block;min-width:16px;height:16px;border-radius:8px;background:#e0e7ff;color:#6366f1;font-size:.6rem;font-weight:700;text-align:center;line-height:16px;padding:0 4px;}';
+  css += '.sub-tab.active .sub-tab-badge{background:#6366f1;color:#fff;}';
+  css += '.sub-tooltip-wrap{position:relative;}';
+  css += '.sub-tooltip-wrap .sub-tip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1e293b;color:#f1f5f9;font-size:.72rem;padding:5px 10px;border-radius:8px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s;z-index:50;line-height:1.4;text-align:center;max-width:200px;white-space:normal;width:max-content;}';
+  css += '.sub-tooltip-wrap:hover .sub-tip{opacity:1;}';
   css += '@media(max-width:640px){';
   css += '#subStats{grid-template-columns:repeat(2,1fr)!important;gap:8px!important;}';
   css += '.sub-table-wrap{display:none!important;}';
@@ -77,6 +88,7 @@ function _subHighlightRow(id) {
 function _subSetSearch(v) { _subSearch = v; rSubList(); }
 function _subSetSort(v)   { _subSort = v;   rSubList(); }
 function _subToggleMonthFilter() { _subMonthFilter = !_subMonthFilter; rSubscriptions(); }
+function _subSetTab(v) { _subTabFilter = v; rSubList(); }
 
 function _subToggleAll(checked) {
   subscriptions.forEach(function(s){ if (checked) _subSelected.add(s.id); else _subSelected.delete(s.id); });
@@ -133,17 +145,18 @@ function rSubscriptions() {
   }, 0);
   var yearCost = monthCost * 12;
 
-  function mk(bg, topColor, svgIcon, label, val, clickFn, isActive) {
+  function mk(bg, topColor, svgIcon, label, val, clickFn, isActive, tip) {
     var h = '';
     var extra = clickFn ? 'cursor:pointer;' : '';
     var border = isActive ? 'box-shadow:0 0 0 2.5px ' + topColor + ';' : '';
-    h += '<div onclick="' + (clickFn||'') + '" style="background:' + bg + ';border-radius:12px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden;position:relative;' + extra + border + 'transition:box-shadow .15s">';
+    h += '<div class="sub-tooltip-wrap" onclick="' + (clickFn||'') + '" style="background:' + bg + ';border-radius:12px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:visible;position:relative;' + extra + border + 'transition:box-shadow .15s">';
     h += '<div style="height:3px;background:' + topColor + ';border-radius:3px 3px 0 0;position:absolute;top:0;left:0;right:0"></div>';
     h += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;margin-top:4px">';
     h += '<span style="color:' + topColor + ';flex-shrink:0">' + svgIcon + '</span>';
     h += '<span style="font-size:.78rem;color:var(--text3);font-weight:600">' + label + '</span>';
     h += '</div>';
     h += '<div style="font-size:32px;font-weight:700;color:' + topColor + ';line-height:1">' + val + '</div>';
+    if (tip) h += '<div class="sub-tip">' + tip + '</div>';
     h += '</div>';
     return h;
   }
@@ -154,16 +167,22 @@ function rSubscriptions() {
   var monthCostColor = monthCost > 0 ? '#22c55e' : '#999';
   var yearCostColor = yearCost > 0 ? '#3b82f6' : '#999';
   stats.innerHTML =
-    mk('#EEF0FF','#6366f1', calSvg, '\u8ba2\u9605\u603b\u6570', total, '', false) +
-    mk('#FFF4EC','#f97316', bellSvg, '\u672c\u6708\u5230\u671f', thisMonth, '_subToggleMonthFilter()', _subMonthFilter) +
-    mk('#F0FFF4', monthCostColor, coinSvg, '\u6708\u5747\u82b1\u8d39', monthCost > 0 ? '\u00a5' + monthCost.toFixed(2) : '\u2014\u2014', '', false) +
-    mk('#EEF6FF', yearCostColor, chartSvg, '\u5e74\u5ea6\u82b1\u8d39', yearCost > 0 ? '\u00a5' + yearCost.toFixed(2) : '\u2014\u2014', '', false);
+    mk('#EEF0FF','#6366f1', calSvg, '\u8ba2\u9605\u603b\u6570', total, '', false, '\u5f53\u524d\u5171 ' + total + ' \u6761\u8ba2\u9605\u8bb0\u5f55') +
+    mk('#FFF4EC','#f97316', bellSvg, '\u672c\u6708\u5230\u671f', thisMonth, '_subToggleMonthFilter()', _subMonthFilter, '\u672c\u6708\u5171 ' + thisMonth + ' \u6761\u8ba2\u9605\u5373\u5c06\u6216\u5df2\u5230\u671f\uff0c\u70b9\u51fb\u7b5b\u9009') +
+    mk('#F0FFF4', monthCostColor, coinSvg, '\u6708\u5747\u82b1\u8d39', monthCost > 0 ? '\u00a5' + monthCost.toFixed(2) : '\u2014\u2014', '', false, '\u6240\u6709\u4ed8\u8d39\u8ba2\u9605\u8d39\u7528\u4e4b\u548c \u00f7 \u8ba2\u9605\u6570') +
+    mk('#EEF6FF', yearCostColor, chartSvg, '\u5e74\u5ea6\u82b1\u8d39', yearCost > 0 ? '\u00a5' + yearCost.toFixed(2) : '\u2014\u2014', '', false, '\u6708\u5747\u82b1\u8d39 \u00d7 12\uff0c\u514d\u8d39\u8ba2\u9605\u4e0d\u8ba1\u5165');
 
   var banner = document.getElementById('subBanner');
   if (banner && !_subBannerDismissed) {
     var expiring = subscriptions.filter(function(s){ return calcDaysLeft(s.expireDate) <= 7; });
     if (expiring.length) {
-      var bnames = expiring.map(function(s){ return '<span onclick="_subHighlightRow('+s.id+')" style="cursor:pointer;text-decoration:underline;color:#92400e;font-weight:700">'+esc(s.name)+'</span>'; }).join('\u3001');
+      var today = new Date(); today.setHours(0,0,0,0);
+      var bnames = expiring.map(function(s){
+        var ed = new Date(s.expireDate); ed.setHours(0,0,0,0);
+        var diff = Math.ceil((ed-today)/864e5);
+        var dateLabel = diff === 0 ? '<strong style="color:#ea580c">\u4eca\u5929</strong>' : (ed.getMonth()+1) + '-' + String(ed.getDate()).padStart(2,'0');
+        return '<span onclick="_subHighlightRow('+s.id+')" style="cursor:pointer;text-decoration:underline;color:#92400e;font-weight:700">'+esc(s.name)+'\uff08'+dateLabel+'\uff09</span>';
+      }).join('\u3001');
       var bh = '';
       bh += '<div style="background:#fff7ed;border:1.5px solid #fed7aa;border-radius:12px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px">';
       bh += '<span style="flex-shrink:0">\u26a0\ufe0f</span>';
@@ -189,15 +208,37 @@ function rSubList() {
   if (!list) return;
   var COL = '28% 14% 10% 10% 10% 10% 18%';
 
-  var toolbar = '<div class="sub-toolbar" style="display:flex;gap:12px;margin-bottom:12px;align-items:center;flex-wrap:wrap">';
+  var toolbar = '';
+  // Tab counts
+  var _allSubs = subscriptions.slice();
+  if (_subMonthFilter){var _mn=new Date();_allSubs=_allSubs.filter(function(s){var d=new Date(s.expireDate);return d.getMonth()===_mn.getMonth()&&d.getFullYear()===_mn.getFullYear();});}
+  var cntAll=_allSubs.length,cntExp=0,cntSoon=0,cntNorm=0;
+  _allSubs.forEach(function(s){var d=calcDaysLeft(s.expireDate);if(d<=0)cntExp++;else if(d<=7)cntSoon++;else cntNorm++;});
+  // Batch bar
+  if(_subSelected.size>0){
+    toolbar+='<div class="sub-batch-bar" style="display:flex;align-items:center;gap:10px;margin-bottom:10px;padding:8px 14px;background:#f8faff;border:1.5px solid #c7d2fe;border-radius:10px;flex-wrap:wrap">';
+    toolbar+='<span style="flex:1;font-size:.88rem;color:#4338ca;font-weight:600">\u5df2\u9009 '+_subSelected.size+' \u9879</span>';
+    toolbar+='<button onclick="_subBatchDel()" style="background:#ef4444;border:none;color:#fff;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:.82rem;font-weight:600">\u6279\u91cf\u5220\u9664</button>';
+    toolbar+='<button onclick="_subSelected.clear();rSubList()" style="background:var(--hov);border:1.5px solid var(--inp-bd);color:var(--text2);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:.82rem">\u53d6\u6d88\u9009\u62e9</button>';
+    toolbar+='</div>';
+  }
+  // Tabs
+  toolbar+='<div style="display:flex;border-bottom:1.5px solid var(--task-bd);margin-bottom:10px">';
+  var tabs=[['all','\u5168\u90e8',cntAll],['expired','\u5df2\u5230\u671f',cntExp],['soon','\u5373\u5c06\u5230\u671f',cntSoon],['normal','\u6b63\u5e38',cntNorm]];
+  tabs.forEach(function(t){toolbar+='<button class="sub-tab' + (t[0]===_subTabFilter?' active':'') + '" onclick="_subSetTab(\''+t[0]+'\')"\u003e'+t[1]+' <span class="sub-tab-badge">'+t[2]+'</span></button>';});
+  toolbar+='</div>';
+  // Search + sort
+  toolbar+='<div class="sub-toolbar" style="display:flex;gap:12px;margin-bottom:12px;align-items:center;flex-wrap:wrap">';
   toolbar += '<div style="position:relative;flex:1;max-width:65%;min-width:140px">';
   toolbar += '<input type="text" id="subSearchInp" placeholder="\u641c\u7d22\u8ba2\u9605\u2026" value="' + esc(_subSearch) + '" oninput="_subSetSearch(this.value);var c=document.getElementById(\'subSearchClear\');if(c)c.style.display=this.value?\'flex\':\'none\';" style="width:100%;border:1.5px solid var(--inp-bd);border-radius:9px;padding:8px 32px 8px 12px;font-size:.88rem;color:var(--text);background:var(--inp-bg);outline:0;box-sizing:border-box">';
   toolbar += '<span id="subSearchClear" onclick="document.getElementById(\'subSearchInp\').value=\'\';_subSetSearch(\'\');this.style.display=\'none\';" style="display:' + (_subSearch ? 'flex' : 'none') + ';position:absolute;right:8px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--text3);width:18px;height:18px;align-items:center;justify-content:center;font-size:.8rem;border-radius:50%;background:var(--hov)">\u00d7</span>';
   toolbar += '</div>';
-  toolbar += '<select onchange="_subSetSort(this.value)" style="width:140px;flex-shrink:0;border:1.5px solid var(--inp-bd);border-radius:9px;padding:8px 10px;font-size:.85rem;color:var(--text2);background:var(--inp-bg);outline:0;cursor:pointer">';
-  toolbar += '<option value="days"' + (_subSort==='days'?' selected':'') + '>\u6309\u5269\u4f59\u5929\u6570</option>';
-  toolbar += '<option value="name"' + (_subSort==='name'?' selected':'') + '>\u6309\u540d\u79f0</option>';
-  toolbar += '<option value="cost"' + (_subSort==='cost'?' selected':'') + '>\u6309\u8d39\u7528</option>';
+  toolbar += '<select onchange="_subSetSort(this.value)" style="width:160px;flex-shrink:0;border:1.5px solid var(--inp-bd);border-radius:9px;padding:8px 10px;font-size:.85rem;color:var(--text2);background:var(--inp-bg);outline:0;cursor:pointer">';
+  toolbar += '<option value="days"' + (_subSort==='days'?' selected':'') + '>\u6309\u5269\u4f59\u5929\u6570\uff08\u5347\u5e8f\uff09</option>';
+  toolbar += '<option value="days_desc"' + (_subSort==='days_desc'?' selected':'') + '>\u6309\u5269\u4f59\u5929\u6570\uff08\u964d\u5e8f\uff09</option>';
+  toolbar += '<option value="expire"' + (_subSort==='expire'?' selected':'') + '>\u6309\u5230\u671f\u65e5\u671f</option>';
+  toolbar += '<option value="cost"' + (_subSort==='cost'?' selected':'') + '>\u6309\u8d39\u7528\u9ad8\u4f4e</option>';
+  toolbar += '<option value="name"' + (_subSort==='name'?' selected':'') + '>\u6309\u540d\u79f0 A-Z</option>';
   toolbar += '</select>';
   toolbar += '</div>';
 
@@ -209,6 +250,9 @@ function rSubList() {
       return d.getMonth() === _now.getMonth() && d.getFullYear() === _now.getFullYear();
     });
   }
+  if (_subTabFilter === 'expired') filtered = filtered.filter(function(s){ return calcDaysLeft(s.expireDate) <= 0; });
+  else if (_subTabFilter === 'soon') filtered = filtered.filter(function(s){ var d=calcDaysLeft(s.expireDate); return d>0&&d<=7; });
+  else if (_subTabFilter === 'normal') filtered = filtered.filter(function(s){ return calcDaysLeft(s.expireDate) > 7; });
   if (_subSearch) {
     var q = _subSearch.toLowerCase();
     filtered = filtered.filter(function(s){ return s.name.toLowerCase().indexOf(q) >= 0; });
@@ -216,6 +260,8 @@ function rSubList() {
   filtered.sort(function(a, b) {
     if (_subSort === 'name') return (a.name||'').localeCompare(b.name||'');
     if (_subSort === 'cost') return (+b.cost||0) - (+a.cost||0);
+    if (_subSort === 'days_desc') return calcDaysLeft(b.expireDate) - calcDaysLeft(a.expireDate);
+    if (_subSort === 'expire') return new Date(a.expireDate) - new Date(b.expireDate);
     return calcDaysLeft(a.expireDate) - calcDaysLeft(b.expireDate);
   });
 
@@ -307,14 +353,5 @@ function rSubList() {
   }
   cards += '</div>';
 
-  var batchBar = '';
-  if (_subSelected.size > 0) {
-    batchBar += '<div style="display:flex;align-items:center;gap:12px;margin-top:12px;padding:10px 16px;background:#fef2f2;border:1.5px solid #fca5a5;border-radius:12px;flex-wrap:wrap">';
-    batchBar += '<span style="flex:1;font-size:.88rem;color:#b91c1c;font-weight:500">\u5df2\u9009 ' + _subSelected.size + ' \u9879</span>';
-    batchBar += '<button onclick="_subBatchDel()" style="background:#ef4444;border:none;color:#fff;padding:7px 18px;border-radius:8px;cursor:pointer;font-size:.84rem;font-weight:600">\ud83d\uddd1\ufe0f \u6279\u91cf\u5220\u9664</button>';
-    batchBar += '<button onclick="_subSelected.clear();rSubList()" style="background:var(--hov);border:1.5px solid var(--inp-bd);color:var(--text2);padding:7px 14px;border-radius:8px;cursor:pointer;font-size:.84rem">\u53d6\u6d88</button>';
-    batchBar += '</div>';
-  }
-
-  list.innerHTML = toolbar + tbl + cards + batchBar;
+  list.innerHTML = toolbar + tbl + cards;
 }
