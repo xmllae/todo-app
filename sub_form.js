@@ -358,7 +358,6 @@ function openSubModal(id){
     +'<div id="subNameErr" style="display:none;color:#ef4444;font-size:.78rem;font-weight:600;margin-top:5px">\u26a0\ufe0f \u8bf7\u586b\u5199\u670d\u52a1\u540d\u79f0</div>'
     +'</div>'
     +'<div style="'+G+'">'+lbl('订阅周期',true)
-    +'<div class="sub-divider"></div>'
     +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+cyBtns2+'</div>'
     +'<div id="subCustomDaysWrap" style="display:'+(showCustom?'flex':'none')+';align-items:center;gap:8px;margin-top:10px;padding:10px 14px;border:1.5px dashed #818cf8;border-radius:10px;background:#f5f3ff">'
     +'<input id="subCustomDaysIn" type="number" value="'+editCustomDays+'" placeholder="30" min="1" step="1" style="width:72px;border:1.5px solid #818cf8;border-radius:10px;padding:8px 10px;font-size:.9rem;color:#6366f1;font-weight:700;text-align:center;background:#ede9fe;outline:none;font-family:inherit;box-sizing:border-box" '+FE+' oninput="_subUpdateDateFromDays()">'
@@ -366,7 +365,6 @@ function openSubModal(id){
     +'<span id="subCustomDatePreview" style="font-size:.75rem;color:#6366f1;font-weight:600;margin-left:6px;white-space:nowrap">'+(function(){if(!showCustom||!editCustomDays)return '';var _d=new Date();_d.setDate(_d.getDate()+parseInt(editCustomDays));var _p=function(n){return String(n).padStart(2,'0');};return '到期 '+_d.getFullYear()+'/'+_p(_d.getMonth()+1)+'/'+_p(_d.getDate());})()+'</span></div>'
     +'</div>'
     // Expiry date - separate field
-    +'<div class="sub-divider"></div>'
     +'<div style="'+G+'">'+'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px"><label style="display:flex;align-items:center;gap:7px;font-size:.72rem;font-weight:700;color:#334155;letter-spacing:.5px;text-transform:uppercase"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#818cf8,#6366f1);flex-shrink:0"></span>到期日期<span style="color:#ef4444;margin-left:1px">*</span></label><button type="button" id="subCalcBtn" onclick="_subCalcDate()" style="font-size:.74rem;color:#818cf8;background:none;border:none;cursor:pointer;font-family:inherit;padding:0;font-weight:600;text-decoration:underline;text-underline-offset:2px">推算到期</button></div>'
 
     +'<input id="subDateIn" type="hidden" value="'+ds+'T00:00">'
@@ -397,7 +395,6 @@ function openSubModal(id){
     +'</div>'
     +'<div id="subDaysInline" style="display:none;margin-top:6px;font-size:.78rem;font-weight:500;padding:3px 10px;border-radius:20px;transition:background .3s,color .3s;background:'+initHintBg+';color:'+initHintColor+'">'+initHint+'</div>'
     +'</div></div>'
-    +'<div class="sub-divider"></div>'
         +'<div style="margin-top:16px;'+G+'">'+lbl('费用',true)
     +'<div style="display:flex;align-items:stretch;border:1.5px solid #e2e8f0;border-radius:10px;overflow:hidden;background:#f8faff;transition:all 0.3s ease">'
     +'<span style="display:flex;align-items:center;padding:0 12px;font-size:.88rem;font-weight:600;color:#6366f1;background:#f8faff;border-right:1.5px solid #E0E0E0;flex-shrink:0;white-space:nowrap">\u00a5</span>'
