@@ -15,17 +15,9 @@ function _subSetCycle(v){
     // Update SVG stroke color
     var svgs=b.querySelectorAll('svg');
     svgs.forEach(function(svg){svg.setAttribute('stroke',on?'#fff':'#6366f1');});
-    // Update checkmark badge
+    // Update checkmark badge - removed
     var chk=b.querySelector('.cyc-check');
-    if(on&&!chk){
-      var s=document.createElement('span');
-      s.className='cyc-check';
-      s.style.cssText='position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center';
-      s.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
-      b.appendChild(s);
-    } else if(!on&&chk){
-      chk.remove();
-    }
+    if(chk) chk.remove();
   });
   const isCustom=v==='custom';
   // Show/hide custom days wrap
@@ -321,7 +313,7 @@ function openSubModal(id){
     } else {
       st+='border:1.5px solid #e2e8f0;background:#f8faff;color:var(--text2);';
     }
-    var check=on?'<span style="position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>':'';
+    var check='';
     return '<button type="button" class="sub-cycle-btn" data-v="'+v+'" onclick="_subSetCycle(this.dataset.v)" style="'+st+'">'+check+(on?onIcon:icon)+'<span style="font-size:.82rem;font-weight:700;margin-top:1px">'+label+'</span>'+(sub?'<span style="font-size:.68rem;opacity:.75">'+sub+'</span>':'')+'</button>';
   }).join('');
   const estLabel=_subCycle==='month'?'按月付 +30天':_subCycle==='quarter'?'按季付 +90天':_subCycle==='year'?'按年付 +365天':'';
