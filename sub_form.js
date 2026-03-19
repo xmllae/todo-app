@@ -198,7 +198,7 @@ function openSubModal(id){
   const FEon="this.style.borderColor='#818cf8';this.style.boxShadow='0 0 0 3px rgba(129,140,248,.15)'";
   const FEoff="this.style.borderColor='var(--inp-bd)';this.style.boxShadow='none'";
   const FE='onfocus="'+FEon+'" onblur="'+FEoff+'"';
-  const lbl=(t,req)=>'<label style="display:flex;align-items:center;gap:5px;font-size:.76rem;font-weight:700;color:#334155;margin-bottom:7px;letter-spacing:.3px;text-transform:uppercase">'+t+(req?'<span style="color:#ef4444;margin-left:1px">*</span>':'')+'</label>';
+  const lbl=(t,req)=>'<label style="display:flex;align-items:center;gap:7px;font-size:.72rem;font-weight:700;color:#334155;margin-bottom:7px;letter-spacing:.5px;text-transform:uppercase"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#818cf8,#6366f1);flex-shrink:0"></span>'+t+(req?'<span style="color:#ef4444;margin-left:1px">*</span>':'')+'</label>';
 
   // Compute inline hint for initial date
   let initHint='',initHintColor='#94a3b8',initHintBg='transparent';
@@ -261,11 +261,11 @@ function openSubModal(id){
     +'<div style="font-size:.74rem;color:#94a3b8;margin-top:2px">'+(s?'\u4fee\u6539\u8ba2\u9605\u4fe1\u606f':'\u8bb0\u5f55\u4e00\u4e2a\u65b0\u7684\u8ba2\u9605\u670d\u52a1')+'</div>'
     +'</div></div>'
         +'<div id="subFormErr" style="display:none"></div>'
-+'<div style="'+G+'">'+lbl('🏷️ 服务名称',true)
++'<div style="'+G+'">'+lbl('服务名称',true)
     +'<input id="subNameIn" type="text" value="'+(s?esc(s.name):draftName)+'" placeholder="\u8bf7\u8f93\u5165\u8ba2\u9605\u670d\u52a1\u540d\u79f0" style="'+IS+'" '+FE+' autocomplete="off" oninput="var e=document.getElementById(\'subNameErr\');if(e&&this.value.trim())e.style.display=\'none\';">'
     +'<div id="subNameErr" style="display:none;color:#ef4444;font-size:.78rem;font-weight:600;margin-top:5px">\u26a0\ufe0f \u8bf7\u586b\u5199\u670d\u52a1\u540d\u79f0</div>'
     +'</div>'
-    +'<div style="'+G+'">'+lbl('🔄 订阅周期',true)
+    +'<div style="'+G+'">'+lbl('订阅周期',true)
     +'<div class="sub-divider"></div>'
     +'<div style="display:flex;flex-wrap:wrap;gap:8px">'+cyBtns2+'</div>'
     +'<div id="subCustomDaysWrap" style="display:'+(showCustom?'flex':'none')+';align-items:center;gap:8px;margin-top:10px;padding:10px 14px;border:1.5px dashed #818cf8;border-radius:10px;background:#f5f3ff">'
@@ -275,7 +275,7 @@ function openSubModal(id){
     +'</div>'
     // Expiry date - separate field
     +'<div class="sub-divider"></div>'
-    +'<div style="'+G+'">'+'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px"><label style="display:flex;align-items:center;gap:5px;font-size:.76rem;font-weight:700;color:#334155;letter-spacing:.3px;text-transform:uppercase">📅 到期日期<span style="color:#ef4444;margin-left:1px">*</span></label><button type="button" id="subCalcBtn" onclick="_subCalcDate()" style="font-size:.74rem;color:#818cf8;background:none;border:none;cursor:pointer;font-family:inherit;padding:0;font-weight:600">推算到期</button></div>'
+    +'<div style="'+G+'">'+'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px"><label style="display:flex;align-items:center;gap:7px;font-size:.72rem;font-weight:700;color:#334155;letter-spacing:.5px;text-transform:uppercase"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#818cf8,#6366f1);flex-shrink:0"></span>到期日期<span style="color:#ef4444;margin-left:1px">*</span></label><button type="button" id="subCalcBtn" onclick="_subCalcDate()" style="font-size:.74rem;color:#818cf8;background:none;border:none;cursor:pointer;font-family:inherit;padding:0;font-weight:600">推算到期</button></div>'
 
     +'<input id="subDateIn" type="hidden" value="'+ds+'T00:00">'
     +'<input id="subDatePicker" type="date" value="'+ds+'" style="position:absolute;opacity:0;pointer-events:none;width:0;height:0" onchange="_subSetDate(this.value)">'
@@ -294,16 +294,16 @@ function openSubModal(id){
     +'<div id="subDaysInline" style="display:none;margin-top:6px;font-size:.78rem;font-weight:500;padding:3px 10px;border-radius:20px;transition:background .3s,color .3s;background:'+initHintBg+';color:'+initHintColor+'">'+initHint+'</div>'
     +'</div></div>'
     +'<div class="sub-divider"></div>'
-        +'<div style="margin-top:16px;'+G+'">'+lbl('💰 费用',true)
+        +'<div style="margin-top:16px;'+G+'">'+lbl('费用',true)
     +'<div style="position:relative">'
     +'<span style="position:absolute;left:0;top:0;bottom:0;width:40px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#818cf8,#6366f1);border-radius:9px 0 0 9px;font-size:.88rem;font-weight:700;color:#fff;pointer-events:none">\u00a5</span>'
     +'<input id="subCostIn" type="number" value="'+(s?s.cost:draftCost)+'" placeholder="0.00" step="0.01" min="0" style="width:100%;border:1.5px solid #e2e8f0;border-radius:10px;padding:10px 14px 10px 50px;font-size:.9rem;color:var(--text);background:#f8faff;outline:none;font-family:inherit;box-sizing:border-box;transition:all 0.3s ease" '+FE+'></div></div>'
-    +'<div style="'+G+'">'+lbl('🔄 续期方式',false)
+    +'<div style="'+G+'">'+lbl('续期方式',false)
     +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
     +'<button type="button" id="subRenMan" onclick="window._subRenewalVal=\'manual\';var m=document.getElementById(\'subRenMan\'),a=document.getElementById(\'subRenAut\');m.style.background=\'linear-gradient(135deg,#818cf8,#6366f1)\';m.style.color=\'#fff\';m.style.borderColor=\'#6366f1\';a.style.background=\'#f8faff\';a.style.color=\'var(--text2)\';a.style.borderColor=\'#e2e8f0\';" style="padding:10px 8px;border-radius:10px;cursor:pointer;font-size:.85rem;border:1.5px solid '+(renewal==='manual'?'#6366f1':'#e2e8f0')+';transition:all 0.3s ease;font-family:inherit;font-weight:'+(renewal==='manual'?'700':'400')+';background:'+(renewal==='manual'?'linear-gradient(135deg,#818cf8,#6366f1)':'#f8faff')+';color:'+(renewal==='manual'?'#fff':'var(--text2)')+'">\u624b\u52a8\u7eed\u671f</button>'
     +'<button type="button" id="subRenAut" onclick="window._subRenewalVal=\'auto\';var m=document.getElementById(\'subRenMan\'),a=document.getElementById(\'subRenAut\');a.style.background=\'linear-gradient(135deg,#818cf8,#6366f1)\';a.style.color=\'#fff\';a.style.borderColor=\'#6366f1\';m.style.background=\'#f8faff\';m.style.color=\'var(--text2)\';m.style.borderColor=\'#e2e8f0\';" style="padding:10px 8px;border-radius:10px;cursor:pointer;font-size:.85rem;border:1.5px solid '+(renewal==='auto'?'#6366f1':'#e2e8f0')+';transition:all 0.3s ease;font-family:inherit;font-weight:'+(renewal==='auto'?'700':'400')+';background:'+(renewal==='auto'?'linear-gradient(135deg,#818cf8,#6366f1)':'#f8faff')+';color:'+(renewal==='auto'?'#fff':'var(--text2)')+'">\u81ea\u52a8\u7eed\u671f</button>'
     +'</div></div>'
-    +'<div style="'+G+'">'+lbl('📝 备注',false)
+    +'<div style="'+G+'">'+lbl('备注',false)
     +'<textarea id="subNoteIn" placeholder="\u6dfb\u52a0\u5907\u6ce8\uff0c\u5982\u8d26\u53f7\u3001\u63d0\u9192\u7b49\u2026" style="'+IS+';height:40px;resize:none;overflow-y:auto" '+FE+'>'+(s?esc(s.note||''):draftNote)+'</textarea></div>'
     +'<div style="display:grid;grid-template-columns:1fr 2fr;gap:10px;padding-top:8px">'
     +'<button type="button" id="subCancelBtn" onclick="_subCancel()" style="padding:11px;border-radius:10px;border:1.5px solid #e2e8f0;background:transparent;color:var(--text2);font-size:.92rem;font-weight:500;cursor:pointer;transition:all 0.3s ease;font-family:inherit">\u53d6\u6d88</button>'
