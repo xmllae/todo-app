@@ -126,8 +126,8 @@ function _subOpenTimePicker(){var inp=document.getElementById('subTimePicker');i
 function _subSetDate(v,fromCalc){
   window._subDateVal=v;
   if(!fromCalc){window._subCalcDone=false;_subUpdateCalcBtn();}
-  var dc=document.getElementById('subDateChip');
-  if(dc&&v){dc.style.background='linear-gradient(135deg,#818cf8,#6366f1)';dc.style.color='#fff';dc.style.borderColor='transparent';}
+  var di=document.getElementById('subDateInput');
+  if(di&&v){di.value=v.replace(/-/g,'/');di.style.color='var(--text)';di.style.fontWeight='600';}
   _subSyncHiddenDate();_subUpdateDaysLeft();
 }
 function _subSetTime(v){
@@ -139,10 +139,10 @@ function _subSetTime(v){
   }
   _subSyncHiddenDate();
 }
-function _subDateFocus(el){el.parentNode.style.boxShadow='0 0 0 2px rgba(99,102,241,.3)';}
-function _subDateBlur(el){el.parentNode.style.boxShadow='none';}
-function _subTimeFocus(el){el.parentNode.style.borderColor='#6366f1';el.parentNode.style.borderStyle='solid';}
-function _subTimeBlur(el){el.parentNode.style.borderStyle='dashed';el.parentNode.style.borderColor='#c7d2fe';}
+function _subDateFocus(el){var b=document.getElementById('subDateTimeBox');if(b){b.style.borderColor='#6c63ff';b.style.boxShadow='0 0 0 3px rgba(108,99,255,.1)';}}
+function _subDateBlur(el){var b=document.getElementById('subDateTimeBox');if(b){b.style.borderColor='#e2e8f0';b.style.boxShadow='none';}}
+function _subTimeFocus(el){var b=document.getElementById('subDateTimeBox');if(b){b.style.borderColor='#6c63ff';b.style.boxShadow='0 0 0 3px rgba(108,99,255,.1)';}}
+function _subTimeBlur(el){var b=document.getElementById('subDateTimeBox');if(b){b.style.borderColor='#e2e8f0';b.style.boxShadow='none';}}
 function _subDateInputChange(v){
   // Accept YYYY/MM/DD or YYYY-MM-DD
   var clean=v.replace(/\//g,'-').trim();
@@ -280,15 +280,17 @@ function openSubModal(id){
     +'<input id="subDateIn" type="hidden" value="'+ds+'T00:00">'
     +'<input id="subDatePicker" type="date" value="'+ds+'" style="position:absolute;opacity:0;pointer-events:none;width:0;height:0" onchange="_subSetDate(this.value)">'
     +'<input id="subTimePicker" type="time" style="position:absolute;opacity:0;pointer-events:none;width:0;height:0" onchange="_subSetTime(this.value)">'
-    +'<div style="display:flex;gap:8px;flex-wrap:wrap">'
-    +'<div style="display:flex;align-items:center;gap:6px;padding:6px 10px 6px 14px;border-radius:20px;background:'+(window._subDateVal||ds?'linear-gradient(135deg,#818cf8,#6366f1)':'#f0f0f8')+';border:1.5px solid transparent;transition:all 0.2s;min-width:0">'
-    +'<input id="subDateInput" type="text" value="'+(ds?ds.replace(/-/g,'/'):'')+'" placeholder="YYYY/MM/DD" maxlength="10" style="background:transparent;border:none;outline:none;font-size:.88rem;font-weight:600;color:'+(ds?'#fff':'#94a3b8')+';font-family:inherit;width:100px;cursor:text" oninput="_subDateInputChange(this.value)" onfocus="_subDateFocus(this)" onblur="_subDateBlur(this)">'
-    +'<button type="button" onclick="_subOpenDatePicker()" style="background:none;border:none;cursor:pointer;padding:0;opacity:.7;color:'+(ds?'#fff':'#94a3b8')+';font-size:.8rem;line-height:1" title="打开日历">▾</button>'
+    +'<style>#subDateTimeBox{display:flex;align-items:stretch;border:1.5px solid #e2e8f0;border-radius:12px;overflow:hidden;height:44px;transition:border-color .2s,box-shadow .2s;background:var(--inp-bg)}#subDateTimeBox:hover{border-color:#818cf8;box-shadow:0 0 0 3px rgba(129,140,248,.12)}#subDateSide,#subTimeSide{display:flex;align-items:center;gap:6px;padding:0 12px;cursor:text;transition:background .15s;flex:1}#subDateSide:hover,#subTimeSide:hover{background:rgba(129,140,248,.07)}#subDateSide{border-right:1px solid #e2e8f0}#subTimeSide{flex:0 0 auto}</style>'
+    +'<div id="subDateTimeBox">'
+    +'<div id="subDateSide" onclick="document.getElementById(\'subDateInput\').focus()">'
+    +'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'
+    +'<input id="subDateInput" type="text" value="'+(ds?ds.replace(/-/g,'/'):'')+'" placeholder="YYYY/MM/DD" maxlength="10" style="border:none;outline:none;font-size:.88rem;font-weight:600;color:'+(ds?'var(--text)':'#b4c0d8')+';font-family:inherit;width:96px;background:transparent;cursor:text" oninput="_subDateInputChange(this.value)" onfocus="_subDateFocus(this)" onblur="_subDateBlur(this)">'
+    +'<button type="button" onclick="_subOpenDatePicker()" style="background:none;border:none;cursor:pointer;padding:2px 4px;color:#818cf8;font-size:.78rem;line-height:1;flex-shrink:0;opacity:.7" title="\u6253\u5f00\u65e5\u5386">\u25be</button>'
     +'</div>'
-    +'<div style="display:flex;align-items:center;gap:6px;padding:6px 10px 6px 14px;border-radius:20px;border:1.5px dashed #c7d2fe;background:transparent;transition:all 0.2s;min-width:0" id="subTimeChipWrap">'
-    +'⏰'
-    +'<input id="subTimeInput" type="text" placeholder="HH:MM" maxlength="5" style="background:transparent;border:none;outline:none;font-size:.88rem;color:#94a3b8;font-family:inherit;width:52px;cursor:text" oninput="_subTimeInputAuto(this);_subTimeInputChange(this.value)" onfocus="_subTimeFocus(this)" onblur="_subTimeBlur(this)">'
-    +'<span id="subTimeClear" onclick="_subClearTime()" style="display:none;cursor:pointer;color:#94a3b8;font-size:.75rem;line-height:1">\u2715</span>'
+    +'<div id="subTimeSide" onclick="document.getElementById(\'subTimeInput\').focus()">'
+    +'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'
+    +'<input id="subTimeInput" type="text" placeholder="\u65f6\u95f4" maxlength="5" style="border:none;outline:none;font-size:.88rem;color:#b4c0d8;font-family:inherit;width:44px;background:transparent;cursor:text" oninput="_subTimeInputAuto(this);_subTimeInputChange(this.value)" onfocus="_subTimeFocus(this)" onblur="_subTimeBlur(this)">'
+    +'<span id="subTimeClear" onclick="_subClearTime()" style="display:none;cursor:pointer;color:#94a3b8;font-size:.72rem;line-height:1;flex-shrink:0">\u2715</span>'
     +'</div>'
     +'</div>'
     +'<div id="subDaysInline" style="display:none;margin-top:6px;font-size:.78rem;font-weight:500;padding:3px 10px;border-radius:20px;transition:background .3s,color .3s;background:'+initHintBg+';color:'+initHintColor+'">'+initHint+'</div>'
