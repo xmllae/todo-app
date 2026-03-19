@@ -3,6 +3,7 @@
 var _subDraft = null;
 
 function _subSetCycle(v){
+  window._subCalcDone=false;_subUpdateCalcBtn();
   _subCycle=v;
   document.querySelectorAll('.sub-cycle-btn').forEach(b=>{
     const on=b.dataset.v===v;
@@ -74,25 +75,109 @@ function _subSaveDraft(){
   _subDraft={name:nameEl.value||'',expireDate:dateEl?dateEl.value:'',cost,cycle:_subCycle,note,customDays,renewal:window._subRenewalVal||'manual'};
 }
 
+function _subCancel(){if(confirm('\u786e\u5b9a\u53d6\u6d88\uff1f\u5df2\u586b\u5199\u5185\u5bb9\u5c06\u88ab\u6e05\u7a7a')){_subClearDraft();clM();}}
+function _subSaveClick(e,id){
+  var r=document.createElement('span');
+  var btn=e.currentTarget;
+  var rect=btn.getBoundingClientRect();
+  r.style='position:absolute;border-radius:50%;background:rgba(255,255,255,.6);transform:scale(0);animation:subRipple .6s linear;pointer-events:none;width:100px;height:100px;left:'+((e.clientX-rect.left-50))+'px;top:'+((e.clientY-rect.top-50))+'px';
+  btn.appendChild(r);
+  setTimeout(function(){r.remove();},700);
+  btn.classList.add('loading');btn.disabled=true;
+  setTimeout(function(){saveSub(id);},120);
+}
 function _subClearDraft(){ _subDraft=null; }
+function _subUpdateProgress(){
+  var name=(document.getElementById('subNameIn')||{}).value||'';
+  var date=(document.getElementById('subDateIn')||{}).value||'';
+  var cost=(document.getElementById('subCostIn')||{}).value||'';
+  var filled=(name.trim()?1:0)+(date?1:0)+(cost?1:0);
+  var pct=Math.round(filled/3*100);
+  var bar=document.getElementById('subProgress');
+  var lbl=document.getElementById('subProgressLbl');
+  if(bar)bar.style.width=pct+'%';
+  if(lbl)lbl.textContent=filled+' / 3 必填项';
+}
 function _subCalcDate(){
   var cd=new Date();
   var days=_subCycle==='month'?30:_subCycle==='quarter'?90:_subCycle==='year'?365:(_subCycle==='custom'?parseInt((document.getElementById('subCustomDaysIn')||{}).value)||30:30);
   cd.setDate(cd.getDate()+days);
   var p=function(n){return String(n).padStart(2,'0');};
-  var el=document.getElementById('subDateIn');
-  if(el) el.value=cd.getFullYear()+'-'+p(cd.getMonth()+1)+'-'+p(cd.getDate())+'T00:00';
-  _subUpdateDaysLeft();
+  var datePart=cd.getFullYear()+'-'+p(cd.getMonth()+1)+'-'+p(cd.getDate());
+  window._subCalcDone=true;
+  _subSetDate(datePart, true);
+  var dp=document.getElementById('subDatePicker');if(dp)dp.value=datePart;
+  var di=document.getElementById('subDateInput');if(di)di.value=datePart.replace(/-/g,'/');
+  _subUpdateCalcBtn();
+}
+function _subUpdateCalcBtn(){
   var btn=document.getElementById('subCalcBtn');
-  if(btn){
-    var orig=btn.textContent;
-    btn.textContent='✓ 已推算';
-    btn.style.background='linear-gradient(135deg,#22c55e,#16a34a)';
-    btn.style.color='#fff';
-    btn.style.borderColor='transparent';
-    setTimeout(function(){btn.textContent=orig;btn.style.background='transparent';btn.style.color='var(--acc)';btn.style.borderColor='var(--acc)';},1600);
+  if(!btn) return;
+  if(window._subCalcDone){btn.textContent='✓ 已推算';btn.style.color='#22c55e';}
+  else{btn.textContent='推算到期';btn.style.color='#818cf8';}
+}
+function _subSyncHiddenDate(){
+  var el=document.getElementById('subDateIn');if(!el)return;
+  var d=window._subDateVal||'';var t=window._subTimeVal||'';
+  el.value=d+(t?'T'+t:'T00:00');
+}
+function _subOpenDatePicker(){var inp=document.getElementById('subDatePicker');if(inp)inp.showPicker?inp.showPicker():inp.click();}
+function _subOpenTimePicker(){var inp=document.getElementById('subTimePicker');if(inp)inp.showPicker?inp.showPicker():inp.click();}
+function _subSetDate(v,fromCalc){
+  window._subDateVal=v;
+  if(!fromCalc){window._subCalcDone=false;_subUpdateCalcBtn();}
+  var dc=document.getElementById('subDateChip');
+  if(dc&&v){dc.style.background='linear-gradient(135deg,#818cf8,#6366f1)';dc.style.color='#fff';dc.style.borderColor='transparent';}
+  _subSyncHiddenDate();_subUpdateDaysLeft();
+}
+function _subSetTime(v){
+  window._subTimeVal=v;
+  var tc=document.getElementById('subTimeChip');
+  if(tc){
+    if(v){tc.innerHTML='⏰ '+v+' <span onclick="event.stopPropagation();_subClearTime()" style="margin-left:4px;cursor:pointer;opacity:.7">✕</span>';tc.style.background='linear-gradient(135deg,#818cf8,#6366f1)';tc.style.color='#fff';tc.style.border='none';}
+    else{tc.innerHTML='⏰ + 添加时间';tc.style.background='transparent';tc.style.color='#94a3b8';tc.style.border='1.5px dashed #c7d2fe';}
+  }
+  _subSyncHiddenDate();
+}
+function _subDateFocus(el){el.parentNode.style.boxShadow='0 0 0 2px rgba(99,102,241,.3)';}
+function _subDateBlur(el){el.parentNode.style.boxShadow='none';}
+function _subTimeFocus(el){el.parentNode.style.borderColor='#6366f1';el.parentNode.style.borderStyle='solid';}
+function _subTimeBlur(el){el.parentNode.style.borderStyle='dashed';el.parentNode.style.borderColor='#c7d2fe';}
+function _subDateInputChange(v){
+  // Accept YYYY/MM/DD or YYYY-MM-DD
+  var clean=v.replace(/\//g,'-').trim();
+  var ok=/^\d{4}-\d{2}-\d{2}$/.test(clean);
+  var inp=document.getElementById('subDateInput');
+  if(ok){
+    var d=new Date(clean);
+    ok=!isNaN(d.getTime());
+  }
+  if(ok&&inp){inp.style.borderColor='#6366f1';inp.style.boxShadow='0 0 0 3px rgba(99,102,241,.15)';}
+  else if(inp){inp.style.borderColor='#ef4444';inp.style.boxShadow='0 0 0 2px rgba(239,68,68,.15)';}
+  if(ok) _subSetDate(clean,false);
+}
+function _subTimeInputChange(v){
+  var clean=v.trim();
+  // Auto-format: "9" -> "09:", "930" -> "09:30"
+  clean=clean.replace(/[^0-9:]/g,'');
+  var ok=/^([01]?\d|2[0-3]):[0-5]\d$/.test(clean);
+  var inp=document.getElementById('subTimeInput');
+  if(ok&&inp){inp.style.borderColor='#6366f1';window._subTimeVal=clean;_subSyncHiddenDate();_subUpdateTimeChip();}
+  else if(inp&&clean){inp.style.borderColor='#ef4444';}
+  else if(inp){inp.style.borderColor='transparent';window._subTimeVal='';_subSyncHiddenDate();_subUpdateTimeChip();}
+}
+function _subTimeInputAuto(inp){
+  var v=inp.value.replace(/[^0-9]/g,'');
+  if(v.length>=2&&!inp.value.includes(':')){
+    inp.value=v.substring(0,2)+':'+v.substring(2,4);
   }
 }
+function _subUpdateTimeChip(){
+  // update clear btn visibility
+  var clr=document.getElementById('subTimeClear');
+  if(clr)clr.style.display=window._subTimeVal?'inline':'none';
+}
+
 
 function openSubModal(id){
   const s=id?subscriptions.find(x=>x.id===id):null;
@@ -106,6 +191,7 @@ function openSubModal(id){
   const dd=new Date();dd.setDate(dd.getDate()+defaultDays);
   const pad2=n=>String(n).padStart(2,'0');const _td=new Date();const todayStr=_td.getFullYear()+'-'+pad2(_td.getMonth()+1)+'-'+pad2(_td.getDate());
   const ds=(s?s.expireDate:(draft&&draft.expireDate?draft.expireDate:todayStr)).substring(0,10);
+  window._subDateVal=ds;window._subTimeVal='';
 
   const cycles=[['month','\u6708\u4ed8'],['quarter','\u5b63\u4ed8'],['year','\u5e74\u4ed8'],['custom','\u81ea\u5b9a\u4e49']];
   const IS='width:100%;border:1.5px solid #e2e8f0;border-radius:10px;padding:10px 14px;font-size:.9rem;color:var(--text);background:#f8faff;outline:none;transition:all 0.3s ease;font-family:inherit;box-sizing:border-box'
@@ -161,6 +247,10 @@ function openSubModal(id){
     +'#subNoteIn::-webkit-scrollbar{display:none}#subNoteIn{scrollbar-width:none}'
     +'#subCostIn::-webkit-inner-spin-button,#subCostIn::-webkit-outer-spin-button{display:none}#subCostIn{-moz-appearance:textfield}'
     +'#subCustomDaysIn::-webkit-inner-spin-button,#subCustomDaysIn::-webkit-outer-spin-button{display:none}#subCustomDaysIn{-moz-appearance:textfield}'
+    +'@keyframes subSpin{to{transform:rotate(360deg)}}'
+    +'input:focus,textarea:focus{border-color:#6c63ff!important;box-shadow:0 0 0 3px rgba(108,99,255,.1)!important}'
+    +'.sub-divider{height:1px;background:linear-gradient(to right,transparent,#e8eaf6,transparent);margin:4px 0 16px}'
+    +'#subSaveBtn .btn-spinner{display:none}#subSaveBtn.loading .btn-text{display:none}#subSaveBtn.loading .btn-spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:subSpin .7s linear infinite;vertical-align:middle}'
     +'</style>'
     +'<div id="subForm">'
     +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1.5px solid var(--task-bd)">'
@@ -176,6 +266,7 @@ function openSubModal(id){
     +'<div id="subNameErr" style="display:none;color:#ef4444;font-size:.78rem;font-weight:600;margin-top:5px">\u26a0\ufe0f \u8bf7\u586b\u5199\u670d\u52a1\u540d\u79f0</div>'
     +'</div>'
     +'<div style="'+G+'">'+lbl('🔄 订阅周期',true)
+    +'<div class="sub-divider"></div>'
     +'<div style="display:flex;flex-wrap:wrap;gap:8px">'+cyBtns2+'</div>'
     +'<div id="subCustomDaysWrap" style="display:'+(showCustom?'flex':'none')+';align-items:center;gap:8px;margin-top:10px;padding:10px 14px;border:1.5px dashed #818cf8;border-radius:10px;background:#f5f3ff">'
     +'<input id="subCustomDaysIn" type="number" value="'+editCustomDays+'" placeholder="30" min="1" step="1" style="width:72px;border:1.5px solid #818cf8;border-radius:10px;padding:8px 10px;font-size:.9rem;color:#6366f1;font-weight:700;text-align:center;background:#ede9fe;outline:none;font-family:inherit;box-sizing:border-box" '+FE+' oninput="_subUpdateDateFromDays()">'
@@ -183,14 +274,26 @@ function openSubModal(id){
     +'<span id="subCustomDatePreview" style="font-size:.75rem;color:#6366f1;font-weight:600;margin-left:6px;white-space:nowrap">'+(function(){if(!showCustom||!editCustomDays)return '';var _d=new Date();_d.setDate(_d.getDate()+parseInt(editCustomDays));var _p=function(n){return String(n).padStart(2,'0');};return '到期 '+_d.getFullYear()+'/'+_p(_d.getMonth()+1)+'/'+_p(_d.getDate());})()+'</span></div>'
     +'</div>'
     // Expiry date - separate field
-    +'<div style="'+G+'">'+lbl('📅 到期日期',true)
+    +'<div class="sub-divider"></div>'
+    +'<div style="'+G+'">'+'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px"><label style="display:flex;align-items:center;gap:5px;font-size:.76rem;font-weight:700;color:#334155;letter-spacing:.3px;text-transform:uppercase">📅 到期日期<span style="color:#ef4444;margin-left:1px">*</span></label><button type="button" id="subCalcBtn" onclick="_subCalcDate()" style="font-size:.74rem;color:#818cf8;background:none;border:none;cursor:pointer;font-family:inherit;padding:0;font-weight:600">推算到期</button></div>'
 
-    +'<div style="display:flex;align-items:center;gap:8px">'
-    +'<input id="subDateIn" type="datetime-local" value="'+ds+'T00:00" style="'+IS+'" '+FE+' oninput="_subUpdateDaysLeft()">'
-    +'<button type="button" id="subCalcBtn" onclick="_subCalcDate()" style="white-space:nowrap;flex-shrink:0;padding:8px 12px;border-radius:8px;border:1.5px solid var(--acc);background:transparent;color:var(--acc);font-size:.8rem;font-weight:600;cursor:pointer;font-family:inherit;transition:background .2s,color .2s">\u63a8\u7b97\u5230\u671f</button>'
+    +'<input id="subDateIn" type="hidden" value="'+ds+'T00:00">'
+    +'<input id="subDatePicker" type="date" value="'+ds+'" style="position:absolute;opacity:0;pointer-events:none;width:0;height:0" onchange="_subSetDate(this.value)">'
+    +'<input id="subTimePicker" type="time" style="position:absolute;opacity:0;pointer-events:none;width:0;height:0" onchange="_subSetTime(this.value)">'
+    +'<div style="display:flex;gap:8px;flex-wrap:wrap">'
+    +'<div style="display:flex;align-items:center;gap:6px;padding:6px 10px 6px 14px;border-radius:20px;background:'+(window._subDateVal||ds?'linear-gradient(135deg,#818cf8,#6366f1)':'#f0f0f8')+';border:1.5px solid transparent;transition:all 0.2s;min-width:0">'
+    +'<input id="subDateInput" type="text" value="'+(ds?ds.replace(/-/g,'/'):'')+'" placeholder="YYYY/MM/DD" maxlength="10" style="background:transparent;border:none;outline:none;font-size:.88rem;font-weight:600;color:'+(ds?'#fff':'#94a3b8')+';font-family:inherit;width:100px;cursor:text" oninput="_subDateInputChange(this.value)" onfocus="_subDateFocus(this)" onblur="_subDateBlur(this)">'
+    +'<button type="button" onclick="_subOpenDatePicker()" style="background:none;border:none;cursor:pointer;padding:0;opacity:.7;color:'+(ds?'#fff':'#94a3b8')+';font-size:.8rem;line-height:1" title="打开日历">▾</button>'
+    +'</div>'
+    +'<div style="display:flex;align-items:center;gap:6px;padding:6px 10px 6px 14px;border-radius:20px;border:1.5px dashed #c7d2fe;background:transparent;transition:all 0.2s;min-width:0" id="subTimeChipWrap">'
+    +'⏰'
+    +'<input id="subTimeInput" type="text" placeholder="HH:MM" maxlength="5" style="background:transparent;border:none;outline:none;font-size:.88rem;color:#94a3b8;font-family:inherit;width:52px;cursor:text" oninput="_subTimeInputAuto(this);_subTimeInputChange(this.value)" onfocus="_subTimeFocus(this)" onblur="_subTimeBlur(this)">'
+    +'<span id="subTimeClear" onclick="_subClearTime()" style="display:none;cursor:pointer;color:#94a3b8;font-size:.75rem;line-height:1">\u2715</span>'
+    +'</div>'
     +'</div>'
     +'<div id="subDaysInline" style="display:none;margin-top:6px;font-size:.78rem;font-weight:500;padding:3px 10px;border-radius:20px;transition:background .3s,color .3s;background:'+initHintBg+';color:'+initHintColor+'">'+initHint+'</div>'
     +'</div></div>'
+    +'<div class="sub-divider"></div>'
         +'<div style="margin-top:16px;'+G+'">'+lbl('💰 费用',true)
     +'<div style="position:relative">'
     +'<span style="position:absolute;left:0;top:0;bottom:0;width:40px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#818cf8,#6366f1);border-radius:9px 0 0 9px;font-size:.88rem;font-weight:700;color:#fff;pointer-events:none">\u00a5</span>'
@@ -203,8 +306,8 @@ function openSubModal(id){
     +'<div style="'+G+'">'+lbl('📝 备注',false)
     +'<textarea id="subNoteIn" placeholder="\u6dfb\u52a0\u5907\u6ce8\uff0c\u5982\u8d26\u53f7\u3001\u63d0\u9192\u7b49\u2026" style="'+IS+';height:40px;resize:none;overflow-y:auto" '+FE+'>'+(s?esc(s.note||''):draftNote)+'</textarea></div>'
     +'<div style="display:grid;grid-template-columns:1fr 2fr;gap:10px;padding-top:8px">'
-    +'<button type="button" id="subCancelBtn" onclick="clM()" style="padding:11px;border-radius:10px;border:1.5px solid #e2e8f0;background:transparent;color:var(--text2);font-size:.92rem;font-weight:500;cursor:pointer;transition:all 0.3s ease;font-family:inherit">\u53d6\u6d88</button>'
-    +'<button type="button" id="subSaveBtn" onclick="(function(e){var r=document.createElement(\'span\');r.style=\'position:absolute;border-radius:50%;background:rgba(255,255,255,.6);transform:scale(0);animation:subRipple .6s linear;pointer-events:none;width:100px;height:100px;left:\'+((e.clientX-e.currentTarget.getBoundingClientRect().left-50))+\'px;top:\'+((e.clientY-e.currentTarget.getBoundingClientRect().top-50))+\'px\';e.currentTarget.appendChild(r);setTimeout(function(){r.remove();},700);saveSub('+(s?s.id:0)+');})(event)" style="padding:11px;border-radius:10px;border:none;background:linear-gradient(135deg,#818cf8,#6366f1);color:#fff;font-size:.92rem;font-weight:700;cursor:pointer;transition:all 0.3s ease;font-family:inherit;box-shadow:0 4px 14px rgba(99,102,241,.35);letter-spacing:.3px;position:relative;overflow:hidden">'+(s?'\u4fdd\u5b58\u4fee\u6539':'\u4fdd\u5b58')+'</button>'
+    +'<button type="button" id="subCancelBtn" onclick="_subCancel()" style="padding:11px;border-radius:10px;border:1.5px solid #e2e8f0;background:transparent;color:var(--text2);font-size:.92rem;font-weight:500;cursor:pointer;transition:all 0.3s ease;font-family:inherit">\u53d6\u6d88</button>'
+    +'<button type="button" id="subSaveBtn" onclick="_subSaveClick(event,'+(s?s.id:0)+')" style="padding:11px;border-radius:10px;border:none;background:linear-gradient(135deg,#818cf8,#6366f1);color:#fff;font-size:.92rem;font-weight:700;cursor:pointer;transition:all 0.3s ease;font-family:inherit;box-shadow:0 4px 14px rgba(99,102,241,.35);letter-spacing:.3px;position:relative;overflow:hidden"><span class="btn-text">'+(s?'\u4fdd\u5b58\u4fee\u6539':'\u4fdd\u5b58')+'</span><span class="btn-spinner"></span></button>'
     +'</div></div>';
 
   document.getElementById('mBody').innerHTML=h;
@@ -226,7 +329,7 @@ function saveSub(id){
   const renewal=window._subRenewalVal||'manual';
   if(!name||!expireDate){if(!name){var _ne=document.getElementById('subNameErr');var _ni=document.getElementById('subNameIn');if(_ne){_ne.style.display='block';_ne.style.animation='none';setTimeout(function(){_ne.style.animation='subNameShake .4s ease';},10);}if(_ni){_ni.scrollIntoView({behavior:'smooth',block:'center'});_ni.focus();}}return;}
   subscriptions=JSON.parse(localStorage.getItem('tuole_subs')||'[]');
-  const entry={name,expireDate,cost,cycle:_subCycle,note,renewal,customDays:_subCycle==='custom'?customDays:undefined};
+  const entry={name,expireDate,expireTime:window._subTimeVal||'',cost,cycle:_subCycle,note,renewal,customDays:_subCycle==='custom'?customDays:undefined};
   if(!id){entry.id=Date.now();subscriptions.push(entry);}
   else{
     const idx=subscriptions.findIndex(x=>x.id===id);
@@ -236,10 +339,10 @@ function saveSub(id){
   localStorage.setItem('tuole_subs',JSON.stringify(subscriptions));
   _subClearDraft();
   clM();
-  const mb=document.getElementById('mBody');
+  var mb=document.getElementById('mBody');
   if(mb){mb.style.maxWidth='';mb.style.width='';mb.style.borderRadius='';mb.style.padding='';mb.style.textAlign='';mb.style.boxSizing='';}
   rSubscriptions();
-  toast('\u2705 \u5df2\u4fdd\u5b58');
+  toast('✅ 已保存');
 }
 
 function editSub(id){openSubModal(id);}

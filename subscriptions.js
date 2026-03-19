@@ -1,4 +1,4 @@
-﻿let subscriptions = [];
+let subscriptions = [];
 let _subCycle = 'month';
 var _subSearch = '';
 var _subSort = 'days';
@@ -213,7 +213,7 @@ function rSubList() {
       tbl += '<div class="sub-row" style="display:grid;grid-template-columns:' + COL + ';align-items:center;padding:0 14px;min-height:52px;' + bt + (sel ? 'background:rgba(99,102,241,.07);' : '') + '">';
       tbl += '<div><input type="checkbox" ' + (sel ? 'checked' : '') + ' onchange="_subToggleOne(' + s.id + ',this.checked)" style="cursor:pointer;width:14px;height:14px"></div>';
       tbl += '<div style="min-width:0;padding-right:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.9rem;font-weight:600;color:var(--text)">' + nm + '</div>';
-      tbl += '<div style="text-align:center;font-size:.81rem;color:var(--text2)">' + s.expireDate + '</div>';
+      tbl += '<div style="text-align:center;font-size:.81rem;color:var(--text2)">' + s.expireDate + (s.expireTime ? '<br><span style="font-size:.72rem;color:#94a3b8">' + s.expireTime + '</span>' : '') + '</div>';
       tbl += '<div style="text-align:center"><span class="' + (al ? 'sub-shake' : '') + '" style="display:inline-block;padding:2px 9px;border-radius:20px;background:' + c.bg + ';color:' + c.text + ';font-size:.77rem;font-weight:700;border:1px solid ' + c.border + '">' + (al ? '\u26a0\ufe0f ' : '') + dl + '</span></div>';
       tbl += '<div style="text-align:center;font-size:.81rem;color:var(--text2)">' + _clb(s.cycle, s.customDays) + '</div>';
       tbl += '<div style="text-align:right;font-size:.86rem;font-weight:600;color:var(--text)">\u00a5' + (+s.cost).toFixed(2) + '</div>';
@@ -243,7 +243,7 @@ function rSubList() {
       cards += '<div style="flex:1;min-width:0">';
       cards += '<div style="font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + nm + '</div>';
       cards += '<div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">';
-      cards += '<span style="font-size:.78rem;color:var(--text3)">' + s.expireDate + '</span>';
+      cards += '<span style="font-size:.78rem;color:var(--text3)">' + s.expireDate + (s.expireTime ? ' <span style="color:#94a3b8">' + s.expireTime + '</span>' : '') + '</span>';
       cards += '<span style="font-size:.78rem;color:var(--text3)">\u00b7 ' + _clb(s.cycle, s.customDays) + '</span>';
       cards += '<span style="font-size:.82rem;font-weight:600;color:var(--text)">\u00b7 \u00a5' + (+s.cost).toFixed(2) + '</span>';
       cards += '</div></div>';
