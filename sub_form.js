@@ -162,7 +162,7 @@ function _subCalcDate(){
 function _subUpdateCalcBtn(){
   var btn=document.getElementById('subCalcBtn');
   if(!btn) return;
-  if(window._subCalcDone){btn.textContent='✓ 已推算';btn.style.color='#22c55e';}
+  if(window._subCalcDone){btn.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-.15em;margin-right:3px"><polyline points="20 6 9 17 4 12"/></svg> 已推算';btn.style.color='#22c55e';}
   else{btn.textContent='推算到期';btn.style.color='#818cf8';}
 }
 function _subSyncHiddenDate(){

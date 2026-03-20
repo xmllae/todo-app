@@ -50,7 +50,7 @@ function ensureSubMode() {
   var h = '';
   h += '<div class="task-card">';
   h += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:10px">';
-  h += '<h3 style="margin:0;font-size:1.2rem;font-weight:700">\u23f0 \u8ba2\u9605\u7ba1\u7406</h3>';
+  h += '<h3 style="margin:0;font-size:1.2rem;font-weight:700"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-.15em;margin-right:6px"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>\u8ba2\u9605\u7ba1\u7406</h3>';
   h += '<button onclick="openSubModal()" style="background:var(--acc);border:none;color:#fff;padding:9px 18px;border-radius:10px;cursor:pointer;font-size:.9rem;font-weight:600;white-space:nowrap;box-shadow:0 4px 12px rgba(99,102,241,0.35);transition:all 150ms ease" onmouseenter="this.style.transform=\'translateY(-1px)\';this.style.boxShadow=\'0 6px 18px rgba(99,102,241,0.45)\'" onmouseleave="this.style.transform=\'\';this.style.boxShadow=\'0 4px 12px rgba(99,102,241,0.35)\'">+ \u6dfb\u52a0</button>';
   h += '</div>';
   h += '<div id="subStats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px"></div>';
