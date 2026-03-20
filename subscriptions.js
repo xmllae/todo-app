@@ -108,6 +108,7 @@ function _subBatchDel() {
   if (!confirm('\u786e\u8ba4\u5220\u9664 ' + _subSelected.size + ' \u9879\uff1f\n' + names.join('\u3001'))) return;
   subscriptions = subscriptions.filter(function(s){ return !_subSelected.has(s.id); });
   localStorage.setItem('tuole_subs', JSON.stringify(subscriptions));
+  if (typeof save === 'function') save();
   _subSelected.clear();
   rSubscriptions();
   toast('\ud83d\uddd1\ufe0f \u5df2\u5220\u9664');
@@ -120,6 +121,7 @@ function delSub(id) {
   if (!confirm('\u786e\u8ba4\u5220\u9664\u300c' + name + '\u300d\uff1f')) return;
   subscriptions = subscriptions.filter(function(x){ return x.id !== id; });
   localStorage.setItem('tuole_subs', JSON.stringify(subscriptions));
+  if (typeof save === 'function') save();
   _subSelected.delete(id);
   rSubscriptions();
   toast('\ud83d\uddd1\ufe0f \u5df2\u5220\u9664');
@@ -387,6 +389,7 @@ function _subRenewOne(id) {
   else base.setMonth(base.getMonth() + 1);
   s.expireDate = base.toISOString().slice(0, 10);
   localStorage.setItem('tuole_subs', JSON.stringify(subscriptions));
+  if (typeof save === 'function') save();
   rSubscriptions();
   toast('\u2705 \u5df2\u7eed\u671f\uff1a' + esc(s.name));
 }
@@ -473,6 +476,7 @@ function _subBatchDel() {
   if (!confirm('\u786e\u8ba4\u5220\u9664\u6240\u9009 ' + _subSelected.size + ' \u6761\u8ba2\u9605\uff1f\n' + names.join('\u3001'))) return;
   subscriptions = subscriptions.filter(function(s){ return !_subSelected.has(s.id); });
   localStorage.setItem('tuole_subs', JSON.stringify(subscriptions));
+  if (typeof save === 'function') save();
   _subSelected.clear();
   rSubscriptions();
   toast('\ud83d\uddd1\ufe0f \u5df2\u6279\u91cf\u5220\u9664');
@@ -494,6 +498,7 @@ function _subBatchRenew() {
     updated++;
   });
   localStorage.setItem('tuole_subs', JSON.stringify(subscriptions));
+  if (typeof save === 'function') save();
   _subSelected.clear();
   rSubscriptions();
   toast('\u2705 \u5df2\u6279\u91cf\u7eed\u671f ' + updated + ' \u6761\u8ba2\u9605');
