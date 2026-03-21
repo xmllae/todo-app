@@ -21,11 +21,15 @@ var _subSelected = new Set();
   css += '.sub-act-btns button{min-width:44px;overflow:visible;white-space:nowrap;}';
   css += '@keyframes subSlideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}';
   css += '.sub-batch-bar{animation:subSlideDown .18s ease;}';
-  css += '.sub-tab{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border:none;background:transparent;cursor:pointer;font-size:.85rem;color:var(--text3);border-bottom:2px solid transparent;transition:all .15s;position:relative;font-family:inherit;}';
-  css += '.sub-tab.active{color:#6366f1;font-weight:700;border-bottom-color:#6366f1;}';
+  css += '.sub-tab-bar{display:flex;gap:2px;align-items:stretch;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:10px;padding:6px 10px;background:var(--card);border:1.5px solid var(--task-bd);border-radius:999px;box-shadow:var(--sh);scrollbar-width:none;-ms-overflow-style:none;}';
+  css += '.sub-tab-bar::-webkit-scrollbar{display:none;}';
+  css += '.sub-tab{display:inline-flex;align-items:center;gap:6px;padding:8px 12px 6px;border:none;background:transparent;cursor:pointer;font-size:.85rem;color:var(--text2);border-bottom:2px solid transparent;transition:color .15s,border-color .15s;position:relative;font-family:inherit;white-space:nowrap;flex-shrink:0;}';
+  css += '.sub-tab.active{color:var(--acc);font-weight:700;border-bottom-color:var(--acc);}';
   css += '.sub-tab:hover:not(.active){color:var(--text);}';
-  css += '.sub-tab-badge{display:inline-block;min-width:16px;height:16px;border-radius:8px;background:#e0e7ff;color:#6366f1;font-size:.6rem;font-weight:700;text-align:center;line-height:16px;padding:0 4px;}';
-  css += '.sub-tab.active .sub-tab-badge{background:#6366f1;color:#fff;}';
+  css += '.sub-tab-badge{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:999px;font-size:.62rem;font-weight:700;line-height:1;box-sizing:border-box;}';
+  css += '.sub-tab-badge--zero{background:var(--hov);color:var(--text3);}';
+  css += '.sub-tab-badge--has{background:var(--acc);color:#fff;}';
+  css += '.sub-tab.active .sub-tab-badge--zero,.sub-tab.active .sub-tab-badge--has{background:var(--acc);color:#fff;}';
   css += '.sub-row-actions{display:none;}';
   css += '.sub-row-actions.open{display:flex!important;}';
   css += '.sub-tooltip-wrap .sub-tip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1e293b;color:#f1f5f9;font-size:.72rem;padding:5px 10px;border-radius:8px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s;z-index:50;line-height:1.4;text-align:center;max-width:200px;white-space:normal;width:max-content;}';
@@ -40,10 +44,10 @@ var _subSelected = new Set();
   css += '.sub-toolbar{flex-direction:row!important;gap:6px!important;padding:8px 0!important;flex-wrap:wrap;align-items:center;}';
   css += '.sub-toolbar input{flex:1;min-width:150px;padding:7px 10px!important;font-size:.8rem!important;border-radius:8px!important;}';
   css += '.sub-toolbar select{flex:1;min-width:120px;padding:7px 10px!important;font-size:.8rem!important;border-radius:8px!important;}';
-  css += '.sub-tab-bar{display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:10px;padding-bottom:2px;flex-wrap:nowrap;}';
-  css += '.sub-tab{padding:6px 10px!important;font-size:.75rem!important;border-radius:6px!important;background:var(--hov);border:none!important;white-space:nowrap;flex-shrink:0;}';
-  css += '.sub-tab.active{background:var(--acc);color:#fff!important;border-bottom:none!important;font-weight:700;}';
-  css += '.sub-tab-badge{font-size:.6rem!important;min-width:16px!important;height:16px!important;line-height:16px!important;margin-left:2px;}';
+  css += '.sub-tab-bar{padding:5px 8px!important;margin-bottom:10px!important;}';
+  css += '.sub-tab{padding:6px 10px 5px!important;font-size:.75rem!important;background:transparent!important;border-bottom:2px solid transparent!important;border-radius:0!important;white-space:nowrap;flex-shrink:0;}';
+  css += '.sub-tab.active{background:transparent!important;color:var(--acc)!important;border-bottom-color:var(--acc)!important;font-weight:700;}';
+  css += '.sub-tab-badge{min-width:18px!important;height:18px!important;font-size:.58rem!important;padding:0 5px!important;}';
   css += '.sub-card{padding:10px!important;border-radius:10px!important;margin-bottom:0;}';
   css += '.sub-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}';
   css += '.sub-card-title{font-size:.9rem!important;font-weight:600!important;}';
@@ -236,9 +240,9 @@ function rSubList() {
   _allSubs.forEach(function(s){var d=calcDaysLeft(s.expireDate);if(d<=0)cntExp++;else if(d<=7)cntSoon++;else cntNorm++;});
   // Batch bar rendered inside table after header row
   // Tabs
-  toolbar+='<div style="display:flex;border-bottom:1.5px solid var(--task-bd);margin-bottom:10px">';
+  toolbar+='<div class="sub-tab-bar">';
   var tabs=[['all','\u5168\u90e8',cntAll],['expired','\u5df2\u5230\u671f',cntExp],['soon','\u5373\u5c06\u5230\u671f',cntSoon],['normal','\u6b63\u5e38',cntNorm]];
-  tabs.forEach(function(t){toolbar+='<button class="sub-tab' + (t[0]===_subTabFilter?' active':'') + '" onclick="_subSetTab(\''+t[0]+'\')"\u003e'+t[1]+' <span class="sub-tab-badge">'+t[2]+'</span></button>';});
+  tabs.forEach(function(t){var bc=t[2]>0?' sub-tab-badge--has':' sub-tab-badge--zero';toolbar+='<button class="sub-tab' + (t[0]===_subTabFilter?' active':'') + '" onclick="_subSetTab(\''+t[0]+'\')"\u003e'+t[1]+' <span class="sub-tab-badge'+bc+'">'+t[2]+'</span></button>';});
   toolbar+='</div>';
   // Search + sort
   toolbar+='<div class="sub-toolbar" style="display:flex;gap:12px;margin-bottom:12px;align-items:center;width:100%">';
