@@ -58,17 +58,26 @@ var _subSelected = new Set();
   css += '.sub-card-actions button{padding:4px 8px!important;font-size:.7rem!important;border-radius:6px!important;}';
   css += '}';
   css += '@media(min-width:641px){.sub-card-list{display:none!important;}.sub-table-wrap{display:block!important;}}';
+  css += '#subscriptionsMode .task-card.sub-mode-card{min-height:auto;flex:0 1 auto;}';
   st.textContent = css;
   document.head.appendChild(st);
 })()
 
 function ensureSubMode() {
-  if (document.getElementById('subscriptionsMode')) return;
+  var appShell = document.querySelector('#appMain .app');
+  var mount = appShell || document.getElementById('appMain');
+  var existing = document.getElementById('subscriptionsMode');
+  if (existing) {
+    if (mount && existing.parentNode !== mount) mount.appendChild(existing);
+    var _tc = existing.querySelector('.task-card');
+    if (_tc && !_tc.classList.contains('sub-mode-card')) _tc.classList.add('sub-mode-card');
+    return;
+  }
   var d = document.createElement('div');
   d.id = 'subscriptionsMode';
   d.className = 'hidden';
   var h = '';
-  h += '<div class="task-card">';
+  h += '<div class="task-card sub-mode-card">';
   h += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">';
   h += '<h3 style="margin:0;font-size:1.1rem;font-weight:700"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-.15em;margin-right:6px"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>\u8ba2\u9605\u7ba1\u7406</h3>';
   h += '<button onclick="openSubModal()" style="background:var(--acc);border:none;color:#fff;padding:8px 16px;border-radius:10px;cursor:pointer;font-size:.85rem;font-weight:600;white-space:nowrap;box-shadow:0 2px 8px rgba(99,102,241,0.3);transition:all 150ms ease" onmouseenter="this.style.transform=\'translateY(-1px)\';this.style.boxShadow=\'0 4px 12px rgba(99,102,241,0.4)\'" onmouseleave="this.style.transform=\'\';this.style.boxShadow=\'0 2px 8px rgba(99,102,241,0.3)\'">+ \u6dfb\u52a0</button>';
@@ -78,7 +87,7 @@ function ensureSubMode() {
   h += '<div id="subList"></div>';
   h += '</div>';
   d.innerHTML = h;
-  document.getElementById('appMain').appendChild(d);
+  mount.appendChild(d);
 }
 
 // applyMode is defined in index.html and already handles the subscriptions mode.
