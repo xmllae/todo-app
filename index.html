@@ -334,16 +334,38 @@ function rFilterBar() {
   var fcDon = filterCount('done');
   var pendOn = FMulti.size === 1 && FMulti.has('pending');
   var doneOn = FMulti.size === 1 && FMulti.has('done');
-  taskFilter.innerHTML =
-    '<div class="filter-seg" role="tablist" aria-label="任务筛选">' +
-    '<button type="button" role="tab" class="filter-seg-btn' + (pendOn ? ' is-active' : '') + '" aria-selected="' + (pendOn ? 'true' : 'false') + '" onclick="setF(\'pending\')">' +
-    '<span class="filter-seg-label">待办</span>' +
-    '<span class="filter-seg-badge' + (pendOn ? ' filter-seg-badge--on' : '') + '">' + fcPen + '</span>' +
-    '</button>' +
-    '<button type="button" role="tab" class="filter-seg-btn' + (doneOn ? ' is-active' : '') + '" aria-selected="' + (doneOn ? 'true' : 'false') + '" onclick="setF(\'done\')">' +
-    '<span class="filter-seg-label">已完成</span>' +
-    '<span class="filter-seg-badge' + (doneOn ? ' filter-seg-badge--on' : '') + '">' + fcDon + '</span>' +
-    '</button></div>';
+  var segEl = taskFilter.querySelector('.filter-seg');
+  var segBtnArr = [];
+  if (segEl) {
+    for (var _si = 0; _si < segEl.children.length; _si++) {
+      var _ch = segEl.children[_si];
+      if (_ch && _ch.tagName === 'BUTTON' && _ch.classList && _ch.classList.contains('filter-seg-btn')) segBtnArr.push(_ch);
+    }
+  }
+  if (segEl && segBtnArr.length === 2) {
+    function patchFilterSegBtn(btn, on, cnt) {
+      btn.classList.toggle('is-active', on);
+      btn.setAttribute('aria-selected', on ? 'true' : 'false');
+      var bd = btn.querySelector('.filter-seg-badge');
+      if (bd) {
+        bd.textContent = String(cnt);
+        bd.classList.toggle('filter-seg-badge--on', on);
+      }
+    }
+    patchFilterSegBtn(segBtnArr[0], pendOn, fcPen);
+    patchFilterSegBtn(segBtnArr[1], doneOn, fcDon);
+  } else {
+    taskFilter.innerHTML =
+      '<div class="filter-seg" role="tablist" aria-label="任务筛选">' +
+      '<button type="button" role="tab" class="filter-seg-btn' + (pendOn ? ' is-active' : '') + '" aria-selected="' + (pendOn ? 'true' : 'false') + '" onclick="setF(\'pending\')">' +
+      '<span class="filter-seg-label">待办</span>' +
+      '<span class="filter-seg-badge' + (pendOn ? ' filter-seg-badge--on' : '') + '">' + fcPen + '</span>' +
+      '</button>' +
+      '<button type="button" role="tab" class="filter-seg-btn' + (doneOn ? ' is-active' : '') + '" aria-selected="' + (doneOn ? 'true' : 'false') + '" onclick="setF(\'done\')">' +
+      '<span class="filter-seg-label">已完成</span>' +
+      '<span class="filter-seg-badge' + (doneOn ? ' filter-seg-badge--on' : '') + '">' + fcDon + '</span>' +
+      '</button></div>';
+  }
 
   var ADV = [
     { html: '全部', value: 'all' },
