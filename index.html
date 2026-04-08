@@ -114,15 +114,15 @@ body{font-family:inherit;background:var(--bg);min-height:100vh;height:100%;color
 .sub-task-pill-btn.sub-task-pill--done{color:#6366f1;opacity:.9}
 .task-expand-area--tabbed{padding:0;overflow:visible}
 .task-item:has(.task-expand-area--tabbed){padding-bottom:0}
-.task-expand-area--tabbed.task-expand-area--open .task-expand-drop{padding-bottom:10px}
+.task-expand-area--tabbed.task-expand-area--open .task-expand-drop{padding-bottom:4px}
 .task-expand-drop{max-height:0;opacity:0;overflow:visible;transition:max-height .28s cubic-bezier(0.4,0,0.2,1),opacity .22s ease;border-top:none;padding:0;background:transparent}
 .task-expand-area--open .task-expand-drop{max-height:min(1200px,85vh);opacity:1;border-top:1px solid var(--task-bd);background:color-mix(in srgb,#64748b 5.5%,#fff);box-shadow:inset 0 2px 4px rgba(0,0,0,.02)}
 .dark .task-expand-area--open .task-expand-drop{background:color-mix(in srgb,#94a3b8 10%,var(--card));box-shadow:inset 0 2px 4px rgba(0,0,0,.18)}
 .task-expand-area--open:not(.task-expand-area--tabbed)>.exp-bg-wrap{border-top:1px solid var(--task-bd);background:color-mix(in srgb,#64748b 5.5%,#fff);box-shadow:inset 0 2px 4px rgba(0,0,0,.02)}
 .dark .task-expand-area--open:not(.task-expand-area--tabbed)>.exp-bg-wrap{background:color-mix(in srgb,#94a3b8 10%,var(--card));box-shadow:inset 0 2px 4px rgba(0,0,0,.18)}
-.task-exp-tabs{display:flex;flex-wrap:wrap;align-items:flex-end;gap:0;padding:0 16px 0 46px;margin-bottom:8px;border-bottom:1px solid #e2e8f0;background:transparent}
+.task-exp-tabs{display:flex;flex-wrap:wrap;align-items:flex-end;gap:0;padding:0 16px 0 46px;margin-bottom:2px;border-bottom:1px solid #e2e8f0;background:transparent}
 .dark .task-exp-tabs{border-bottom-color:var(--task-bd)}
-.task-exp-tab{display:inline-flex;align-items:center;gap:6px;padding:8px 0;margin:0;margin-right:24px;border:none;border-bottom:2px solid transparent;background:transparent;font:inherit;font-size:14px;font-weight:500;color:#6b7280;cursor:pointer;position:relative;top:1px;transition:color .15s ease,border-color .15s ease;border-radius:0;-webkit-tap-highlight-color:transparent}
+.task-exp-tab{display:inline-flex;align-items:center;gap:6px;padding:5px 0 6px;margin:0;margin-right:24px;border:none;border-bottom:2px solid transparent;background:transparent;font:inherit;font-size:14px;font-weight:500;color:#6b7280;cursor:pointer;position:relative;top:1px;transition:color .15s ease,border-color .15s ease;border-radius:0;-webkit-tap-highlight-color:transparent}
 .task-exp-tab:last-child{margin-right:0}
 .task-exp-tab:hover{color:#4b5563}
 .dark .task-exp-tab{color:var(--text3)}
@@ -135,7 +135,7 @@ body{font-family:inherit;background:var(--bg);min-height:100vh;height:100%;color
 .dark .task-exp-tab-panels{background:transparent}
 .task-exp-panel{display:none}
 .task-exp-panel--visible{display:block}
-.task-exp-sub-bg{padding:10px 16px 8px 46px}
+.task-exp-sub-bg{padding:4px 16px 4px 46px}
 .task-exp-details-stack .task-detail-card{margin:0;padding:10px 16px 14px;background:transparent;border:none;border-radius:0;box-shadow:none}
 .dark .task-exp-details-stack .task-detail-card{background:transparent;border:none;box-shadow:none}
 .task-exp-details-stack .exp-meta-row,.task-exp-details-stack .exp-adv-details{margin-left:14px;margin-right:14px}
@@ -179,7 +179,7 @@ body{font-family:inherit;background:var(--bg);min-height:100vh;height:100%;color
 .subtask-add--tabbed .subtask-add-ico{font-size:1.1rem;font-weight:600;margin-right:4px;opacity:.65}
 .sub-add-wrap{position:relative;padding-top:2px;margin-top:2px}
 .sub-add-wrap--tabbed{padding-top:2px;margin-top:0}
-.sub-add-trigger{display:flex;align-items:center;width:100%;box-sizing:border-box;padding:6px 8px;margin-left:-8px;border:none;border-radius:8px;background:transparent;font:inherit;font-size:14px;font-weight:500;line-height:1.35;color:#334155;cursor:pointer;text-align:left;transition:color .15s,background .15s;-webkit-tap-highlight-color:transparent}
+.sub-add-trigger{display:flex;align-items:center;width:100%;box-sizing:border-box;padding:4px 8px 3px;margin-left:-8px;border:none;border-radius:8px;background:transparent;font:inherit;font-size:14px;font-weight:500;line-height:1.35;color:#334155;cursor:pointer;text-align:left;transition:color .15s,background .15s;-webkit-tap-highlight-color:transparent}
 .sub-add-trigger:hover{color:#4f46e5;background:#eef2ff}
 .dark .sub-add-trigger{color:var(--text)}
 .dark .sub-add-trigger:hover{color:#a5b4fc;background:color-mix(in srgb,#6366f1 16%,transparent)}
