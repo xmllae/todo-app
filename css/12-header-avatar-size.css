@@ -1,0 +1,52 @@
+.site-header-inner{
+  --header-avatar-size: 36px;
+  --header-avatar-icon-size: 20px;
+  --header-avatar-hit-size: 40px;
+  --header-status-dot-size: 13px;
+  --header-status-dot-ring: 1.5px;
+}
+
+.site-header-inner .user-btn{
+  min-width: var(--header-avatar-hit-size);
+  min-height: var(--header-avatar-hit-size);
+  padding: 2px;
+}
+
+.site-header-inner .user-avatar{
+  width: var(--header-avatar-size);
+  height: var(--header-avatar-size);
+}
+
+.site-header-inner #headerAvatar svg{
+  width: var(--header-avatar-icon-size);
+  height: var(--header-avatar-icon-size);
+}
+
+.site-header-inner .user-status-dot{
+  width: var(--header-status-dot-size);
+  height: var(--header-status-dot-size);
+  right: -1px;
+  bottom: -1px;
+  border-width: var(--header-status-dot-ring);
+}
+
+.site-header-inner .user-status-dot--error,
+.site-header-inner .user-status-dot--offline{
+  background: #e25572;
+  box-shadow: 0 0 0 1px rgba(226,85,114,.22);
+}
+
+.dark .site-header-inner .user-status-dot--error,
+.dark .site-header-inner .user-status-dot--offline{
+  background: #f07f9b;
+  box-shadow: 0 0 0 1px rgba(240,127,155,.28);
+}
+
+@media (max-width: 640px){
+  .site-header-inner{
+    --header-avatar-size: 34px;
+    --header-avatar-icon-size: 19px;
+    --header-avatar-hit-size: 38px;
+    --header-status-dot-size: 12px;
+  }
+}
