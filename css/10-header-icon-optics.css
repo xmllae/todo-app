@@ -1,0 +1,16 @@
+.site-header-inner{
+  --header-outline-stroke-boost: 0.18px;
+  --header-search-optical-scale: 0.94;
+  --header-search-optical-shift-y: 0.25px;
+}
+
+.site-header-inner .mode-btn .nav-ph-ico.ph,
+.site-header-inner .header-utility-ico.ph{
+  transform-origin: center;
+  text-rendering: geometricPrecision;
+  -webkit-text-stroke: var(--header-outline-stroke-boost) currentColor;
+}
+
+.site-header-inner .header-utility-ico.ph-magnifying-glass{
+  transform: translateY(var(--header-search-optical-shift-y)) scale(var(--header-search-optical-scale));
+}
