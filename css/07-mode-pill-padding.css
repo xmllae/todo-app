@@ -1,6 +1,15 @@
 .site-header-inner .mode-toggle{
   --mode-active-pad-x: 0px;
-  --mode-active-inset-y: 2px;
+  --mode-shell-pad-y: 1px;
+  --mode-active-inset-y: 1px;
+  --mode-btn-pad-y: 10px;
+  padding-top: var(--mode-shell-pad-y);
+  padding-bottom: var(--mode-shell-pad-y);
+}
+
+.site-header-inner .mode-btn{
+  padding-top: var(--mode-btn-pad-y);
+  padding-bottom: var(--mode-btn-pad-y);
 }
 
 .site-header-inner .mode-toggle .mode-toggle-active-bg{
@@ -11,6 +20,8 @@
 @media (max-width: 640px){
   .site-header-inner .mode-toggle{
     --mode-active-pad-x: 0px;
-    --mode-active-inset-y: 3px;
+    --mode-shell-pad-y: 2px;
+    --mode-active-inset-y: 2px;
+    --mode-btn-pad-y: 9px;
   }
 }
