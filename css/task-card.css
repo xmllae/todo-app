@@ -1,0 +1,118 @@
+/**
+ * task-card.css
+ * 包含: .task-card, .task-main-col, .task-mode-layout...
+ * 北京时间 2026-04-10
+ * 由 tools/split-css.js 自动生成
+ */
+
+.task-card {
+    background:var(--card);border-radius:16px;padding:13px 17px;box-shadow:var(--sh);min-height:75vh;display:flex;flex-direction:column;transition:background .3s;flex:1;min-height:0;overflow-x:hidden}
+
+.task-card:has(.list-panel) {
+    overflow-x:visible}
+
+.task-card {
+    flex:1;min-height:0}
+
+.task-card>.date-nav {
+    margin-left:-17px;margin-right:-17px;width:calc(100% + 34px);box-sizing:border-box;padding-left:10px;padding-right:17px}
+
+.task-card>.date-nav {
+    margin-left:-17px;margin-right:-17px;width:calc(100% + 34px);box-sizing:border-box;padding-left:10px;padding-right:17px}
+
+.task-card>.date-nav,#kanbanMode>.task-card>.date-nav {
+    margin-left:-10px!important;margin-right:-10px!important;width:calc(100% + 20px)!important;padding-left:10px!important;padding-right:4px!important;box-sizing:border-box!important}
+
+.task-card,.stg-card,.stats-card {
+    padding:14px 10px;border-radius:14px}
+
+.task-card>.list-panel {
+    margin-left:-10px!important;margin-right:-10px!important;width:calc(100% + 20px)!important;max-width:none!important}
+
+.task-main-col>.task-card:has(.list-panel) {
+    overflow-x:visible}
+
+.task-main-col {
+    flex:1;min-width:0;display:flex;flex-direction:column;min-height:0}
+
+.task-main-col>.task-card {
+    flex:1;min-height:0}
+
+.task-main-col>.task-card>.date-nav {
+    margin-left:-17px;margin-right:-17px;width:calc(100% + 34px);box-sizing:border-box;padding-left:10px;padding-right:17px}
+
+.task-main-col>.task-card>.date-nav,#kanbanMode>.task-card>.date-nav {
+    margin-left:-10px!important;margin-right:-10px!important;width:calc(100% + 20px)!important;padding-left:10px!important;padding-right:4px!important;box-sizing:border-box!important}
+
+.task-mode-layout {
+    display:flex;flex-direction:row;flex:1;min-height:0;align-items:stretch;gap:10px}
+
+.task-mode-layout {
+    flex-direction:column;gap:12px}
+
+.task-dash-col {
+    width:248px;flex-shrink:0;display:flex;flex-direction:column;gap:14px;align-self:stretch;min-height:0;overflow:hidden;box-sizing:border-box}
+
+.task-dash-col .dash-overview+.dash-focus {
+    margin-top:4px}
+
+.task-dash-col .dash-card.dash-overview {
+    flex-shrink:1;min-height:0;overflow:hidden;display:flex;flex-direction:column}
+
+.task-dash-col .dash-card.dash-overview .dash-ring-wrap {
+    flex-shrink:1;min-height:0}
+
+.task-dash-col .dash-card.dash-focus {
+    flex:1 1 0;min-height:0;overflow:hidden;display:flex;flex-direction:column}
+
+.task-dash-col .dash-card.dash-focus .ft-ring-wrap {
+    flex-shrink:1;min-height:0}
+
+.task-dash-col {
+    width:100%;max-height:none;position:static;top:auto;overflow:visible;order:2;padding-bottom:0}
+
+.task-dash-col .dash-card.dash-overview {
+    flex-shrink:0;overflow:visible}
+
+.task-dash-col .dash-card.dash-overview {
+    display:block}
+
+.task-dash-col .dash-card.dash-focus {
+    flex:none;overflow:visible;display:flex;flex-direction:column}
+
+.dash-card.dash-overview {
+    flex-shrink:1;min-height:0;overflow:hidden;display:flex;flex-direction:column}
+
+.dash-card.dash-overview .dash-ring-wrap {
+    flex-shrink:1;min-height:0}
+
+.dash-card.dash-focus {
+    flex:1 1 0;min-height:0;overflow:hidden;display:flex;flex-direction:column}
+
+.dash-card.dash-focus .ft-ring-wrap {
+    flex-shrink:1;min-height:0}
+
+.dash-card {
+    background:var(--card);border-radius:12px;padding:10px 12px 12px;box-shadow:var(--sh);border:1px solid var(--task-bd);box-sizing:border-box}
+
+.dash-card.dash-dragging {
+    opacity:.55}
+
+.dash-card.drag-dash-over {
+    outline:2px dashed var(--acc,#818cf8);outline-offset:-4px}
+
+.dash-card.dash-week {
+    flex-shrink:0;padding-bottom:8px;box-sizing:border-box}
+
+.dash-card.dash-week .dash-hd {
+    margin-bottom:6px}
+
+.dash-card.dash-overview {
+    flex-shrink:0;overflow:visible}
+
+.dash-card.dash-overview {
+    display:block}
+
+.dash-card.dash-focus {
+    flex:none;overflow:visible;display:flex;flex-direction:column}
+

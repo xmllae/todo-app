@@ -1,0 +1,27 @@
+/**
+ * animations.css
+ * 包含: @keyframes
+ * 北京时间 2026-04-10
+ * 由 tools/split-css.js 自动生成
+ */
+
+@keyframes lsPulse {
+    0%,100% {
+    transform:scale(1)}
+
+@keyframes taskToggleTxtGray {
+    0% {
+    color:var(--text)}
+
+@keyframes taskStrikeLtr {
+    from {
+    transform:translateY(-50%) scaleX(0)}
+
+@keyframes chk-ring-ripple {
+    0% {
+    box-shadow:0 0 0 0 rgba(148,163,184,.32)}
+
+@keyframes chk-ring-ripple-prio {
+    0% {
+    box-shadow:0 0 0 0 rgba(239,68,68,.38)}
+

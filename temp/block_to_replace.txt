@@ -1,6 +1,0 @@
-﻿if (typeof taskMoreMenuId === 'undefined' || taskMoreMenuId == null) return;
-    if (e.target.closest && (e.target.closest('.task-more-wrap') || e.target.closest('.task-more-float'))) return;
-    if (typeof closeTaskMoreFloat === 'function') closeTaskMoreFloat();
-    taskMoreMenuId = null;
-    if (typeof rT === 'function') rT();
-  }

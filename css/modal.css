@@ -1,0 +1,58 @@
+/**
+ * modal.css
+ * 包含: .modal-bg, .modal, .modal-actions...
+ * 北京时间 2026-04-10
+ * 由 tools/split-css.js 自动生成
+ */
+
+.modal-bg {
+    position:fixed;inset:0;background:var(--ov);display:none;align-items:center;justify-content:center;z-index:999;backdrop-filter:blur(3px);padding:16px;overflow-y:auto}
+
+.modal-bg.show {
+    display:flex}
+
+.modal-bg {
+    position:fixed;inset:0;background:var(--ov);display:none;align-items:center;justify-content:center;z-index:999;backdrop-filter:blur(3px);padding:16px;overflow-y:auto}
+
+.modal-bg.show {
+    display:flex}
+
+.modal {
+    background:var(--card);border-radius:18px;padding:26px;max-width:460px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.15);max-height:90vh;overflow-y:auto}
+
+.modal-actions {
+    display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+
+.modal-actions button {
+    padding:9px 24px;border-radius:10px;border:none;cursor:pointer;font-size:.9rem;transition:all .2s}
+
+.modal:has(.m-sheet-wrap) {
+    text-align:left;padding:22px 20px 18px;border-radius:20px;max-width:min(400px,92vw)}
+
+.modal-actions {
+    display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+
+.modal-actions button {
+    padding:9px 24px;border-radius:10px;border:none;cursor:pointer;font-size:.9rem;transition:all .2s}
+
+.mbtn-a {
+    background:var(--acc);color:#fff}
+
+.mbtn-a:hover {
+    opacity:.9}
+
+.mbtn-c {
+    background:var(--hov);color:var(--text3)}
+
+.mbtn-c:hover {
+    background:var(--inp-bd)}
+
+.copy-field {
+    margin-bottom:14px;text-align:left}
+
+.copy-field label {
+    font-size:.84rem;color:var(--text3);display:block;margin-bottom:5px;font-weight:500}
+
+.copy-field input,.copy-field select {
+    width:100%;border:1.5px solid var(--inp-bd);border-radius:10px;padding:10px 13px;font-size:.95rem;color:var(--text);outline:0;background:var(--inp-bg)}
+
