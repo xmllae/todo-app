@@ -25,12 +25,14 @@ function getPathMode(path){const normalized=path.replace(/\/+$/,"");return ROUTE
 function moveModeToggleIndicator(btn, noAnim){
     const wrap=document.getElementById("modeToggle"),bg=document.getElementById("modeToggleActiveBg");
     if(!wrap||!bg||!btn)return;
+    const wrapStyles=getComputedStyle(wrap);
+    const activePadX=parseFloat(wrapStyles.getPropertyValue("--mode-active-pad-x"))||0;
     if(noAnim){
         bg.classList.add("no-transition");
         bg.offsetHeight;
     }
-    bg.style.width=btn.offsetWidth+"px";
-    bg.style.transform="translateX("+btn.offsetLeft+"px)";
+    bg.style.width=btn.offsetWidth+activePadX*2+"px";
+    bg.style.transform="translateX("+(btn.offsetLeft-activePadX)+"px)";
     bg.style.opacity="1";
     if(noAnim){
         bg.offsetHeight;

@@ -1,0 +1,16 @@
+.site-header-inner .mode-toggle{
+  --mode-active-pad-x: 0px;
+  --mode-active-inset-y: 2px;
+}
+
+.site-header-inner .mode-toggle .mode-toggle-active-bg{
+  top: var(--mode-active-inset-y);
+  bottom: var(--mode-active-inset-y);
+}
+
+@media (max-width: 640px){
+  .site-header-inner .mode-toggle{
+    --mode-active-pad-x: 0px;
+    --mode-active-inset-y: 3px;
+  }
+}
