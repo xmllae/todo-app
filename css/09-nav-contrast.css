@@ -1,0 +1,7 @@
+.site-header-inner{
+  --nav-idle-fg: #595959;
+}
+
+.site-header-inner .mode-btn:not(.active){
+  color: var(--nav-idle-fg);
+}
