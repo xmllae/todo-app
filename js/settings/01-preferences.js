@@ -1,0 +1,8 @@
+// ?????????????????????
+let prioTplPickerOpen = null;
+function rPrioColorSettings(){return null;}
+function toggleDeadline(){showDeadline=!showDeadline;document.getElementById("deadlineToggle").classList.toggle("on",showDeadline);rT();save();toast(showDeadline?"⏰ 截止时间已开启":"⏰ 截止时间已关闭")}
+function setDefaultSort(mode){mode=normalizeSortMode(mode);defaultSortMode=mode;lastSort=mode;save();const names={created:"创建时间",deadline:"截止日期",priority:"优先级"};toast("🔀 默认排序: "+(names[mode]||mode));var ds=document.getElementById("defaultSortSel");if(ds)ds.value=mode}
+function toggleAutoSort(){autoSortEnabled=!autoSortEnabled;document.getElementById("autoSortToggle").classList.toggle("on",autoSortEnabled);rT();save();toast(autoSortEnabled?"🔀 自动排序已开启":"🔀 自动排序已关闭")}
+function sortDisplayList(arr,mode){mode=normalizeSortMode(mode);return arr.sort((a,b)=>{if(a.done&&!b.done)return 1;if(!a.done&&b.done)return-1;if(mode==="priority"){const PH2={high:0,medium:1,normal:1,low:2};const pa=PH2[a.priority]??1,pb=PH2[b.priority]??1;if(pa!==pb)return pa-pb;return(b.created||0)-(a.created||0)}if(mode==="created")return(b.created||0)-(a.created||0);if(mode==="deadline"){const ka=deadlineSortKey(a),kb=deadlineSortKey(b);if(ka==null&&kb==null)return(b.created||0)-(a.created||0);if(ka==null)return 1;if(kb==null)return-1;if(ka!==kb)return ka-kb;return(b.created||0)-(a.created||0)}return(b.created||0)-(a.created||0)})}
+function hydrateSortModes(){defaultSortMode=normalizeSortMode(defaultSortMode);lastSort=normalizeSortMode(lastSort);var o={};Object.keys(sortStates||{}).forEach(function(k){o[k]=normalizeSortMode(sortStates[k])});sortStates=o;var ds=document.getElementById("defaultSortSel");if(ds)ds.value=defaultSortMode}

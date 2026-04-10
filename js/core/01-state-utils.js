@@ -1,4 +1,4 @@
-// ????????????????????
+// ???????????????
 document.addEventListener("dragstart",function(e){if(e.target.closest("header")){e.preventDefault();return false}},false);
 document.addEventListener("dragover",function(e){if(e.target.closest("header")){e.preventDefault();return false}},false);
 document.addEventListener("drop",function(e){if(e.target.closest("header")){e.preventDefault();return false}},false);
