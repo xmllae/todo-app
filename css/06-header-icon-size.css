@@ -1,0 +1,23 @@
+.site-header-inner{
+  --header-icon-size: 18px;
+}
+
+.site-header-inner .mode-btn .nav-ph-ico,
+.site-header-inner .header-utility-ico{
+  width: var(--header-icon-size);
+  height: var(--header-icon-size);
+  min-width: var(--header-icon-size);
+  min-height: var(--header-icon-size);
+  font-size: var(--header-icon-size);
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.site-header-inner #darkBtn .dark-btn-ico{
+  width: var(--header-icon-size);
+  height: var(--header-icon-size);
+}
