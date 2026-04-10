@@ -1,0 +1,61 @@
+/* ?????????????????? */
+.task-exp-tab:hover{color:#4b5563}
+.dark .task-exp-tab{color:var(--text3)}
+.task-exp-tab--active{color:#4f46e5;border-bottom-color:#4f46e5}
+.dark .task-exp-tab--active{color:#a5b4fc;border-bottom-color:#818cf8}
+.task-exp-tab-ico{flex-shrink:0;opacity:.88}
+.task-exp-tab--active .task-exp-tab-ico{opacity:1;color:inherit}
+.task-exp-tab .exp-ico{width:16px;height:16px;flex-shrink:0}
+.task-exp-tab-panels{background:transparent;padding-bottom:0;overflow:visible}
+.dark .task-exp-tab-panels{background:transparent}
+.task-exp-panel{display:none}
+.task-exp-panel--visible{display:block}
+.task-exp-sub-bg{padding:4px 16px 4px 46px}
+.list-panel .task-exp-tabs{padding-left:62px}
+.list-panel.list-panel--multi .task-exp-tabs{padding-left:86px}
+.list-panel .task-exp-sub-bg{padding-left:50px}
+.list-panel.list-panel--multi .task-exp-sub-bg{padding-left:74px}
+.list-panel .task-expand-area .subtask-item{margin-left:0;padding:6px 10px 6px 10px}
+.list-panel .task-expand-area .sub-add-trigger{margin-left:0;padding:4px 8px 3px 10px}
+.list-panel .task-expand-area .sub-add-form{margin-left:0;padding:6px 8px 6px 10px}
+.list-panel .task-expand-area .subtask-list{gap:4px}
+.list-panel .task-exp-details-stack .task-detail-card{padding:10px 16px 14px 84px}
+.list-panel.list-panel--multi .task-exp-details-stack .task-detail-card{padding:10px 16px 14px 108px}
+.list-panel .task-exp-details-stack .exp-meta-row,.list-panel .task-exp-details-stack .exp-adv-details{margin-left:0;margin-right:14px}
+.list-panel .task-exp-details-stack .task-detail-extras{padding:0 14px 12px 0}
+.task-exp-details-stack .task-detail-card{margin:0;padding:10px 16px 14px;background:transparent;border:none;border-radius:0;box-shadow:none}
+.dark .task-exp-details-stack .task-detail-card{background:transparent;border:none;box-shadow:none}
+.task-exp-details-stack .exp-meta-row,.task-exp-details-stack .exp-adv-details{margin-left:14px;margin-right:14px}
+.task-exp-details-stack .task-detail-extras{padding:0 14px 12px}
+.task-exp-details-stack .task-detail-extras .task-detail-dur-row{margin-top:0;margin-bottom:0;padding:10px 0;border-top:1px solid color-mix(in srgb,var(--task-bd) 40%,transparent)}
+.task-detail-sect--note{margin-bottom:18px}
+.task-detail-hd{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:.88rem;font-weight:700;color:var(--text2)}
+.task-detail-hd .exp-ico{width:17px;height:17px;flex-shrink:0;color:#64748b;opacity:.95}
+.dark .task-detail-hd .exp-ico{color:#94a3b8}
+.task-detail-textarea{display:block;width:100%;min-height:108px;box-sizing:border-box;padding:12px 14px;border:1.5px solid var(--inp-bd);border-radius:14px;font:inherit;font-size:.88rem;line-height:1.5;color:var(--text);background:var(--card);resize:vertical;outline:0;transition:border-color .15s,box-shadow .15s}
+.task-detail-textarea:focus{border-color:color-mix(in srgb,#6366f1 45%,var(--inp-bd));box-shadow:0 0 0 3px color-mix(in srgb,#6366f1 12%,transparent)}
+.task-detail-textarea::placeholder{color:var(--text3);opacity:.75}
+.task-detail-split{display:grid;grid-template-columns:1fr 1fr;gap:16px 20px;margin-bottom:18px;align-items:start}
+@media(max-width:520px){.task-detail-split{grid-template-columns:1fr}}
+.task-detail-col{min-width:0}
+.task-detail-tags{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.task-detail-tag{padding:5px 12px;border-radius:999px;font-size:.78rem;font-weight:600;border:1.5px solid var(--inp-bd);background:var(--card);color:var(--text2);cursor:pointer;transition:background .15s,border-color .15s,transform .1s;-webkit-tap-highlight-color:transparent;font-family:inherit}
+.task-detail-tag:hover{filter:brightness(.98)}
+.task-detail-tag--on{color:var(--text)}
+.task-detail-tag-add{padding:5px 12px;border-radius:999px;font-size:.78rem;font-weight:600;border:1.5px dashed color-mix(in srgb,var(--inp-bd) 85%,#94a3b8);background:transparent;color:var(--text3);cursor:pointer;font-family:inherit;transition:color .15s,border-color .15s,background .15s}
+.task-detail-tag-add:hover{color:var(--acc);border-color:var(--acc-bd);background:var(--acc-bg)}
+.task-detail-prio-row{display:flex;flex-wrap:wrap;gap:8px}
+.task-detail-prio-btn{min-width:44px;padding:7px 14px;border-radius:10px;font-size:.82rem;font-weight:700;border:1.5px solid var(--inp-bd);background:var(--card);color:var(--text2);cursor:pointer;transition:all .15s ease;font-family:inherit;-webkit-tap-highlight-color:transparent}
+.task-detail-prio-btn:hover{border-color:color-mix(in srgb,var(--text) 18%,var(--inp-bd));color:var(--text)}
+.task-detail-prio-btn--on.task-detail-prio-btn--hi{background:color-mix(in srgb,#ef4444 12%,var(--card));border-color:#fecaca;color:#dc2626}
+.task-detail-prio-btn--on.task-detail-prio-btn--mid{background:color-mix(in srgb,var(--text) 6%,var(--card));border-color:var(--inp-bd);color:var(--text)}
+.task-detail-prio-btn--on.task-detail-prio-btn--lo{background:color-mix(in srgb,#3b82f6 10%,var(--card));border-color:#bfdbfe;color:#2563eb}
+.dark .task-detail-prio-btn--on.task-detail-prio-btn--hi{background:color-mix(in srgb,#ef4444 18%,transparent);border-color:#f87171;color:#fecaca}
+.dark .task-detail-prio-btn--on.task-detail-prio-btn--lo{background:color-mix(in srgb,#3b82f6 22%,transparent);border-color:#60a5fa;color:#bfdbfe}
+.task-detail-sect--color{margin-top:2px}
+.task-detail-swatches{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding-top:2px}
+.task-detail-swatch{width:32px;height:32px;border-radius:50%;border:2px solid transparent;padding:0;cursor:pointer;box-sizing:border-box;background:var(--td-sw,var(--card));transition:transform .12s ease,box-shadow .15s;-webkit-tap-highlight-color:transparent;box-shadow:0 1px 3px rgba(15,23,42,.08)}
+.task-detail-swatch:hover{transform:scale(1.06)}
+.task-detail-swatch--clear{background:var(--card);border:2px solid var(--inp-bd);position:relative}
+.task-detail-swatch--clear::after{content:'';position:absolute;inset:6px;border-radius:50%;background:linear-gradient(135deg,transparent 45%,var(--text3) 45%,var(--text3) 55%,transparent 55%)}
+.task-detail-swatch--on{box-shadow:0 0 0 2px var(--card),0 0 0 4px #6366f1}

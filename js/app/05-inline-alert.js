@@ -1,0 +1,12 @@
+// ????????????????
+(function(){var _origRT=rT,_fbSch=null;rT=function(){_origRT.apply(this,arguments);if(typeof rFilterBar!=="function")return;if(_fbSch!=null)clearTimeout(_fbSch);_fbSch=setTimeout(function(){_fbSch=null;rFilterBar()},0)}})();
+document.addEventListener("focusout",function(e){var tIn=document.getElementById("tIn");if(!tIn)return;setTimeout(function(){var active=document.activeElement;var addBox=tIn.closest?tIn.closest(".add-embed-wrap"):null;var inAddBox=addBox&&addBox.contains(active);if(!inAddBox&&!tIn.value.trim()){hideAddTaskInline()}},150)});
+(function(){var hold=document.getElementById("addTaskInlineHold");if(!hold)return;hold.addEventListener("keydown",function(e){if(e.key!=="Escape")return;if(hold.classList.contains("hidden"))return;e.preventDefault();cancelAddTask()})})();
+function _subAlertGetSettings(){return JSON.parse(localStorage.getItem("tuole_subAlert")||'{"enabled":true,"delay":"always","dismissedAt":null}')}
+function _subAlertSave(s){localStorage.setItem("tuole_subAlert",JSON.stringify(s))}
+function toggleSubAlert(){var s=_subAlertGetSettings();s.enabled=!s.enabled;_subAlertSave(s);var tog=document.getElementById("subAlertToggle");var opts=document.getElementById("subAlertOptions");if(tog){tog.classList.toggle("on",s.enabled)}if(opts){opts.style.display=s.enabled?"block":"none"}if(s.enabled){window._subBannerDismissed=false;if(typeof rSubscriptions==="function")rSubscriptions()}}
+function setSubAlertDelay(v){var s=_subAlertGetSettings();s.delay=v;s.dismissedAt=null;_subAlertSave(s);window._subBannerDismissed=false;if(typeof rSubscriptions==="function")rSubscriptions()}
+function _subAlertShouldShow(){var s=_subAlertGetSettings();if(!s.enabled)return false;if(s.delay==="never")return false;if(s.delay==="always")return true;if(!s.dismissedAt)return true;var days=+s.delay;var diff=(Date.now()-s.dismissedAt)/(1e3*60*60*24);return diff>=days}
+function _subAlertDismiss(){var s=_subAlertGetSettings();s.dismissedAt=Date.now();_subAlertSave(s);window._subBannerDismissed=true;var banner=document.getElementById("subBanner");if(banner)banner.innerHTML=""}
+function initSubAlertSettings(){var s=_subAlertGetSettings();var tog=document.getElementById("subAlertToggle");var opts=document.getElementById("subAlertOptions");var sel=document.getElementById("subAlertDelaySel");if(tog)tog.classList.toggle("on",s.enabled);if(opts)opts.style.display=s.enabled?"block":"none";if(sel)sel.value=s.delay||"always"}
+init();
