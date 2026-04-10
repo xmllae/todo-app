@@ -54,11 +54,19 @@
 ```
 d:\todo-app-main\
 ├── index.html                    # 主应用（已更新）
-├── subscriptions.js              # 订阅模块脚本（新增）
-├── SUBSCRIPTIONS_README.md       # 详细文档（新增）
-├── SUBSCRIPTIONS_GUIDE.html      # 功能演示（新增）
-├── QUICK_REFERENCE.md            # 快速参考（新增）
-└── IMPLEMENTATION_SUMMARY.md     # 本文件
+├── js/                          # 前端脚本模块目录
+│   ├── subscriptions.js          # 订阅模块脚本（新增）
+│   └── sub_form.js              # 订阅表单脚本（新增）
+├── functions/                   # 后端函数目录
+│   └── api/                     # API 接口
+├── docs/                        # 文档目录
+│   ├── SUBSCRIPTIONS_README.md  # 详细文档
+│   ├── SUBSCRIPTIONS_GUIDE.html # 功能演示
+│   ├── QUICK_REFERENCE.md       # 快速参考
+│   └── IMPLEMENTATION_SUMMARY.md # 实现总结
+├── patches/                    # 补丁和临时修改文件
+├── temp/                       # 开发临时文件
+└── tools/                      # 工具脚本
 ```
 
 ## 🎯 核心特性

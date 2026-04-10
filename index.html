@@ -240,7 +240,7 @@ body{font-family:inherit;background:var(--bg);min-height:100vh;height:100%;color
 <div class="undo-bar" id="undoBar"><span id="undoDesc"></span><button class="undo-btn" onclick="doUndo()">↩️ 撤销</button><button class="undo-close" onclick="hideUndo()"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
 <div class="toast" id="toast"></div>
 
-<script src='subscriptions.js'></script><script src='sub_form.js'></script>
+<script src='js/subscriptions.js'></script><script src='js/sub_form.js'></script>
 <script>
 // 禁用导航栏拖动
 document.addEventListener('dragstart',function(e){if(e.target.closest('header')){e.preventDefault();return false}},false);
