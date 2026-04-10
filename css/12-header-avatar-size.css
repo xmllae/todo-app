@@ -2,7 +2,7 @@
   --header-avatar-size: 36px;
   --header-avatar-icon-size: 20px;
   --header-avatar-hit-size: 40px;
-  --header-status-dot-size: 13px;
+  --header-status-dot-size: 12px;
   --header-status-dot-ring: 1.5px;
 }
 
@@ -47,6 +47,6 @@
     --header-avatar-size: 34px;
     --header-avatar-icon-size: 19px;
     --header-avatar-hit-size: 38px;
-    --header-status-dot-size: 12px;
+    --header-status-dot-size: 11px;
   }
 }
