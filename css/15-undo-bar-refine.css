@@ -1,0 +1,111 @@
+.undo-bar{
+  gap:10px;
+  min-height:46px;
+  padding:11px 14px 11px 16px;
+  border-radius:15px;
+  background:rgba(15,23,42,.94);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:
+    0 14px 36px rgba(15,23,42,.20),
+    0 3px 12px rgba(15,23,42,.12);
+  backdrop-filter:blur(12px);
+}
+
+.dark .undo-bar{
+  background:rgba(248,250,252,.95);
+  color:#0f172a;
+  border-color:rgba(15,23,42,.08);
+  box-shadow:
+    0 16px 38px rgba(2,6,23,.18),
+    0 3px 12px rgba(2,6,23,.08);
+}
+
+.undo-bar #undoDesc{
+  color:rgba(241,245,249,.92);
+  font-size:.88rem;
+  font-weight:500;
+  letter-spacing:-.012em;
+  line-height:1.22;
+  margin-right:2px;
+}
+
+.dark .undo-bar #undoDesc{
+  color:rgba(15,23,42,.82);
+}
+
+.undo-bar .undo-btn{
+  background:transparent;
+  border:none;
+  border-radius:0;
+  box-shadow:none;
+  padding:0;
+  color:#6fb1ff;
+  font-size:0;
+  font-weight:600;
+  letter-spacing:-.01em;
+  line-height:1;
+  cursor:pointer;
+  transition:color .16s ease, opacity .16s ease;
+}
+
+.undo-bar .undo-btn::after{
+  content:"\64A4\9500";
+  font-size:.85rem;
+  font-weight:600;
+}
+
+.undo-bar .undo-btn:hover{
+  background:transparent;
+  color:#a7d0ff;
+}
+
+.undo-bar .undo-btn:focus-visible{
+  outline:none;
+  color:#cfe5ff;
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+
+.dark .undo-bar .undo-btn{
+  color:#2563eb;
+}
+
+.dark .undo-bar .undo-btn:hover{
+  color:#3b82f6;
+}
+
+.dark .undo-bar .undo-btn:focus-visible{
+  color:#1d4ed8;
+}
+
+.undo-bar .undo-close{
+  background:transparent;
+  border:none;
+  width:18px;
+  height:18px;
+  padding:0;
+  margin-left:2px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  color:rgba(255,255,255,.44);
+  transition:color .16s ease, opacity .16s ease;
+}
+
+.undo-bar .undo-close svg{
+  width:10px;
+  height:10px;
+}
+
+.undo-bar .undo-close:hover{
+  background:transparent;
+  color:rgba(255,255,255,.72);
+}
+
+.dark .undo-bar .undo-close{
+  color:rgba(15,23,42,.4);
+}
+
+.dark .undo-bar .undo-close:hover{
+  color:rgba(15,23,42,.64);
+}
