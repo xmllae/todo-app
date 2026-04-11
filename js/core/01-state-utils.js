@@ -81,7 +81,7 @@ function dispS(s){const p=s.split("-");return`${+p[1]}/${+p[2]}`}
 function parseDS(s){const p=s.split("-");return new Date(+p[0],+p[1]-1,+p[2])}
 function fmtDs(m){if(!m)return"";if(m<60)return m+"m";const h=Math.floor(m/60),r=m%60;return r?h+"h"+r+"m":h+"h"}
 function esc(t){const d=document.createElement("div");d.textContent=t;return d.innerHTML}
-function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove("show"),2500)}
+function toast(msg,variant){const t=document.getElementById("toast");if(!t)return;t.textContent=msg;t.className="toast";if(variant)t.classList.add("toast--"+variant);void t.offsetWidth;t.classList.add("show");clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove("show"),2500)}
 function pushUndo(desc){undoStack.push({desc:desc,snapshot:JSON.parse(JSON.stringify(T))});if(undoStack.length>30)undoStack.shift();showUndo(desc)}
 function showUndo(desc){document.getElementById("undoDesc").textContent=desc;document.getElementById("undoBar").classList.add("show");clearTimeout(undoTimer);undoTimer=setTimeout(hideUndo,6e3)}
 function hideUndo(){document.getElementById("undoBar").classList.remove("show")}
