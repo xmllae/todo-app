@@ -25,6 +25,7 @@ function initDrawer() {
     });
 
     patchTaskRenderSync();
+    enhanceTaskRowInteractions();
     syncTaskDetailPanel();
 }
 
@@ -34,6 +35,7 @@ function patchTaskRenderSync() {
     const originalRenderTasks = window.rT;
     window.rT = function() {
         const result = originalRenderTasks.apply(this, arguments);
+        enhanceTaskRowInteractions();
         syncTaskDetailPanel();
         return result;
     };
@@ -64,13 +66,99 @@ function syncTaskDetailSelectionState() {
     document.querySelectorAll('#tList .task-item--detail-active').forEach(function(node) {
         node.classList.remove('task-item--detail-active');
     });
+    document.querySelectorAll('#tList .task-detail-trigger').forEach(function(button) {
+        button.classList.remove('is-active');
+        button.setAttribute('aria-pressed', 'false');
+        button.setAttribute('title', '查看详情');
+        button.setAttribute('aria-label', '查看详情');
+    });
 
     if (drawerActiveTaskId == null) return;
 
     const activeItem = document.querySelector('#tList .task-item[data-id="' + drawerActiveTaskId + '"]');
     if (activeItem) {
         activeItem.classList.add('task-item--detail-active');
+        const trigger = activeItem.querySelector('.task-detail-trigger');
+        if (trigger) {
+            trigger.classList.add('is-active');
+            trigger.setAttribute('aria-pressed', 'true');
+            trigger.setAttribute('title', '收起详情');
+            trigger.setAttribute('aria-label', '收起详情');
+        }
     }
+}
+
+function enhanceTaskRowInteractions() {
+    document.querySelectorAll('#tList .task-item').forEach(function(item) {
+        const title = item.querySelector('.task-row-center .txt');
+        if (title && title.getAttribute('ondblclick')) {
+            title.classList.add('txt--editable');
+            if (!title.getAttribute('title')) {
+                title.setAttribute('title', '双击修改标题');
+            }
+        } else if (title) {
+            title.classList.remove('txt--editable');
+            if (title.getAttribute('title') === '双击修改标题') {
+                title.removeAttribute('title');
+            }
+        }
+
+        if (item.classList.contains('archived-item')) return;
+
+        const actions = item.querySelector('.task-actions');
+        const moreWrap = actions && actions.querySelector('.task-more-wrap');
+        const taskId = item.getAttribute('data-id');
+        if (!actions || !moreWrap || !taskId || actions.querySelector('.task-detail-trigger')) return;
+
+        actions.insertBefore(createTaskDetailTrigger(taskId), moreWrap);
+    });
+
+    syncTaskDetailSelectionState();
+}
+
+function clearTaskRowHoverSuspension(taskId) {
+    if (taskId == null) return;
+    const item = document.querySelector('#tList .task-item[data-id="' + taskId + '"]');
+    if (item) {
+        item.classList.remove('task-item--hover-suspended');
+    }
+}
+
+function releaseTaskRowInteractionState(taskId) {
+    if (taskId == null) return;
+
+    const item = document.querySelector('#tList .task-item[data-id="' + taskId + '"]');
+    if (!item) return;
+
+    const activeEl = document.activeElement;
+    if (activeEl && item.contains(activeEl) && typeof activeEl.blur === 'function') {
+        activeEl.blur();
+    }
+
+    if (!item.matches(':hover')) {
+        item.classList.remove('task-item--hover-suspended');
+        return;
+    }
+
+    item.classList.add('task-item--hover-suspended');
+    item.addEventListener('pointerleave', function handlePointerLeave() {
+        item.classList.remove('task-item--hover-suspended');
+    }, { once: true });
+}
+
+function createTaskDetailTrigger(taskId) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'act-btn task-detail-trigger';
+    button.setAttribute('title', '查看详情');
+    button.setAttribute('aria-label', '查看详情');
+    button.setAttribute('aria-pressed', 'false');
+    button.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h10"/><path d="M9 12h10"/><path d="M9 18h6"/><path d="M5 6h.01"/><path d="M5 12h.01"/><path d="M5 18h.01"/></svg>';
+    button.addEventListener('click', function(event) {
+        event.stopPropagation();
+        openTaskDrawer(Number(taskId));
+    });
+    return button;
 }
 
 function refreshTaskViews(options) {
@@ -137,6 +225,7 @@ function openTaskDrawer(taskId) {
     const taskChanged = drawerActiveTaskId !== taskId;
     drawerActiveTaskId = taskId;
     clearPendingTaskDetailClose(refs.content);
+    clearTaskRowHoverSuspension(taskId);
 
     setTaskDetailOpenState(true);
     renderDrawerContent(task);
@@ -158,6 +247,7 @@ function closeTaskDetail() {
         return;
     }
 
+    const closingTaskId = drawerActiveTaskId;
     drawerActiveTaskId = null;
     drawerExpandedSubtasks.clear();
     clearPendingTaskDetailClose(refs.content);
@@ -166,6 +256,7 @@ function closeTaskDetail() {
     refs.content.classList.add('fade-out');
     setTaskDetailOpenState(false);
     syncTaskDetailSelectionState();
+    releaseTaskRowInteractionState(closingTaskId);
 
     taskDetailCloseTimer = window.setTimeout(function() {
         if (drawerActiveTaskId !== null) return;
