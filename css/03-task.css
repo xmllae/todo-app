@@ -71,10 +71,10 @@
 .list-panel .task-item.ft-focus-task{--task-row-corner-left:-7px}
 .task-item>.task-row{position:relative;overflow:visible}
 .task-row-corners{position:absolute;top:var(--task-row-corner-top,-8px);right:var(--task-row-corner-right,-12px);bottom:var(--task-row-corner-bottom,-8px);left:var(--task-row-corner-left,-10px);pointer-events:none;z-index:2}
-.task-row-corner{position:absolute;width:12px;height:12px;opacity:0;color:color-mix(in srgb,var(--acc) 84%,#6366f1);transition:opacity .2s ease,transform .24s cubic-bezier(.22,1,.36,1)}
+.task-row-corner{position:absolute;width:15px;height:15px;opacity:0;color:color-mix(in srgb,var(--acc) 80%,#6366f1);transition:opacity .2s ease,transform .2s cubic-bezier(.22,1,.36,1)}
 .dark .task-row-corner{color:color-mix(in srgb,var(--acc2) 88%,#c4b5fd)}
-.task-row-corner--tl{top:2px;left:2px;border-top:2px solid currentColor;border-left:2px solid currentColor;transform:translate(-5px,-5px)}
-.task-row-corner--tr{top:2px;right:2px;border-top:2px solid currentColor;border-right:2px solid currentColor;transform:translate(5px,-5px)}
-.task-row-corner--bl{bottom:2px;left:2px;border-bottom:2px solid currentColor;border-left:2px solid currentColor;transform:translate(-5px,5px)}
-.task-row-corner--br{bottom:2px;right:2px;border-bottom:2px solid currentColor;border-right:2px solid currentColor;transform:translate(5px,5px)}
+.task-row-corner--tl{top:0;left:0;border-top:1.5px solid currentColor;border-left:1.5px solid currentColor;transform:translate(-2px,-2px)}
+.task-row-corner--tr{top:0;right:0;border-top:1.5px solid currentColor;border-right:1.5px solid currentColor;transform:translate(2px,-2px)}
+.task-row-corner--bl{bottom:0;left:0;border-bottom:1.5px solid currentColor;border-left:1.5px solid currentColor;transform:translate(-2px,2px)}
+.task-row-corner--br{bottom:0;right:0;border-bottom:1.5px solid currentColor;border-right:1.5px solid currentColor;transform:translate(2px,2px)}
 .list-panel .task-item:hover .task-row-corner,.list-panel .task-item:focus-within .task-row-corner{opacity:1;transform:translate(0,0)}
