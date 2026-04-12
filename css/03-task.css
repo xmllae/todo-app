@@ -59,3 +59,22 @@
 .task-detail-swatch--clear{background:var(--card);border:2px solid var(--inp-bd);position:relative}
 .task-detail-swatch--clear::after{content:'';position:absolute;inset:6px;border-radius:50%;background:linear-gradient(135deg,transparent 45%,var(--text3) 45%,var(--text3) 55%,transparent 55%)}
 .task-detail-swatch--on{box-shadow:0 0 0 2px var(--card),0 0 0 4px #6366f1}
+
+.list-panel .task-item:hover{background:transparent;box-shadow:none}
+.dark .list-panel .task-item:hover{background:transparent;border-bottom-color:rgba(255,255,255,.1);box-shadow:none}
+.list-panel .task-item.task-main-checked:hover{background:color-mix(in srgb,var(--acc) 4%,var(--card))}
+.dark .list-panel .task-item.task-main-checked:hover{background:color-mix(in srgb,var(--acc2) 8%,transparent);border-bottom-color:rgba(255,255,255,.1)}
+.list-panel .task-item.ft-focus-task:hover{background:color-mix(in srgb,var(--acc) 10%,var(--card))!important}
+.dark .list-panel .task-item.ft-focus-task:hover{background:color-mix(in srgb,var(--acc) 18%,transparent)!important}
+
+.list-panel .task-item{--task-row-corner-top:-8px;--task-row-corner-right:-12px;--task-row-corner-bottom:-8px;--task-row-corner-left:-10px}
+.list-panel .task-item.ft-focus-task{--task-row-corner-left:-7px}
+.task-item>.task-row{position:relative;overflow:visible}
+.task-row-corners{position:absolute;top:var(--task-row-corner-top,-8px);right:var(--task-row-corner-right,-12px);bottom:var(--task-row-corner-bottom,-8px);left:var(--task-row-corner-left,-10px);pointer-events:none;z-index:2}
+.task-row-corner{position:absolute;width:12px;height:12px;opacity:0;color:color-mix(in srgb,var(--acc) 84%,#6366f1);transition:opacity .2s ease,transform .24s cubic-bezier(.22,1,.36,1)}
+.dark .task-row-corner{color:color-mix(in srgb,var(--acc2) 88%,#c4b5fd)}
+.task-row-corner--tl{top:2px;left:2px;border-top:2px solid currentColor;border-left:2px solid currentColor;transform:translate(-5px,-5px)}
+.task-row-corner--tr{top:2px;right:2px;border-top:2px solid currentColor;border-right:2px solid currentColor;transform:translate(5px,-5px)}
+.task-row-corner--bl{bottom:2px;left:2px;border-bottom:2px solid currentColor;border-left:2px solid currentColor;transform:translate(-5px,5px)}
+.task-row-corner--br{bottom:2px;right:2px;border-bottom:2px solid currentColor;border-right:2px solid currentColor;transform:translate(5px,5px)}
+.list-panel .task-item:hover .task-row-corner,.list-panel .task-item:focus-within .task-row-corner{opacity:1;transform:translate(0,0)}
