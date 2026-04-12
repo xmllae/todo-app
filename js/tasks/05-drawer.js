@@ -111,6 +111,52 @@ function enhanceTaskRowInteractions() {
         if (!actions || !moreWrap || !taskId || actions.querySelector('.task-detail-trigger')) return;
 
         actions.insertBefore(createTaskDetailTrigger(taskId), moreWrap);
+
+        // ── 背景点击监听器（共用排除逻辑）──────────────────────────────
+        // stopPropagation 只阻止事件冒泡到父元素，不影响同一元素上的其他监听器。
+        // 因此需要在 .task-item 和 .task-row-center 两处各绑一次：
+        //   · .task-item      ← 覆盖 task-row / task-strike-wrap 等外层背景
+        //   · .task-row-center ← onTaskRowCenterClick 调用了 stopPropagation，
+        //                        事件无法冒泡到 task-item，必须在此直接监听
+        function isBgClick(e, boundary) {
+            var node = e.target;
+            while (node && node !== boundary) {
+                var tag = node.tagName;
+                if (tag === 'BUTTON' || tag === 'INPUT' || tag === 'TEXTAREA' ||
+                    tag === 'SELECT' || tag === 'A' || tag === 'LABEL') return false;
+                if (node.classList.contains('task-actions'))      return false;
+                if (node.classList.contains('task-ck-slot'))      return false;
+                if (node.classList.contains('chk-ring'))          return false;
+                if (node.classList.contains('task-rail'))         return false;
+                if (node.classList.contains('task-inline-meta'))  return false;
+                if (node.classList.contains('sub-task-pill-btn')) return false;
+                if (node.classList.contains('task-expand-area'))  return false;
+                if (node.classList.contains('exp-bg-wrap'))       return false;
+                if (node.classList.contains('txt'))               return false;
+                if (node.classList.contains('time-plain'))        return false;
+                if (node.classList.contains('time-edit'))         return false;
+                node = node.parentNode;
+            }
+            return true;
+        }
+
+        // 1) task-item 级别：覆盖 task-row、task-strike-wrap 等外层背景
+        if (!item._bgClickBound) {
+            item._bgClickBound = true;
+            item.addEventListener('click', function(e) {
+                if (isBgClick(e, item)) openTaskDrawer(Number(taskId));
+            });
+        }
+
+        // 2) task-row-center 级别：onTaskRowCenterClick 调用了 stopPropagation，
+        //    时间右侧空白区的点击无法冒泡到 task-item，需在此捕获
+        var rowCenter = item.querySelector('.task-row-center');
+        if (rowCenter && !rowCenter._bgClickBound) {
+            rowCenter._bgClickBound = true;
+            rowCenter.addEventListener('click', function(e) {
+                if (isBgClick(e, rowCenter)) openTaskDrawer(Number(taskId));
+            });
+        }
     });
 
     syncTaskDetailSelectionState();

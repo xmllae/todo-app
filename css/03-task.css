@@ -79,6 +79,17 @@
 .task-row-corner--br{bottom:0;right:0;border-bottom:2px solid currentColor;border-right:2px solid currentColor;border-bottom-right-radius:2px;transform:translate(3px,3px)}
 .list-panel .task-item:hover .task-row-corner,.list-panel .task-item:focus-within .task-row-corner,.list-panel .task-item.task-item--detail-active .task-row-corner{opacity:1;transform:translate(0,0)}
 
+/* 背景区域显示手型，暗示可点击打开详情 */
+.list-panel .task-item:not(.archived-item) .task-row,
+.list-panel .task-item:not(.archived-item) .task-strike-wrap,
+.list-panel .task-item:not(.archived-item) .task-strike-content,
+.list-panel .task-item:not(.archived-item) .task-row-center{cursor:pointer}
+/* 无子任务时时间列也属于背景区域，与行背景一体 */
+.list-panel .task-item:not(.archived-item) .task-time-col--no-sub{cursor:pointer}
+/* 标题文字保持文本光标（双击可编辑） */
+.list-panel .task-row-center .txt{cursor:default}
+/* 时间文字保持 pointer（单击进入时间编辑） */
+.list-panel .task-row-center .time-plain{cursor:pointer}
 .list-panel .task-row-center .txt--editable{cursor:text;transition:color .18s ease}
 .list-panel .task-row-center .txt--editable:hover,.list-panel .task-item:focus-within .task-row-center .txt--editable{color:color-mix(in srgb,var(--text) 88%,var(--acc) 12%)}
 .task-detail-trigger{color:var(--text3);transition:color .18s ease,background-color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease}
