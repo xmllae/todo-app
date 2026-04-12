@@ -135,15 +135,9 @@ function releaseTaskRowInteractionState(taskId) {
         activeEl.blur();
     }
 
-    if (!item.matches(':hover')) {
-        item.classList.remove('task-item--hover-suspended');
-        return;
-    }
-
-    item.classList.add('task-item--hover-suspended');
-    item.addEventListener('pointerleave', function handlePointerLeave() {
-        item.classList.remove('task-item--hover-suspended');
-    }, { once: true });
+    // Closing the drawer should return the row to its natural hover state.
+    // If the pointer is still over the task, keep the corner accents visible.
+    item.classList.remove('task-item--hover-suspended');
 }
 
 function createTaskDetailTrigger(taskId) {
