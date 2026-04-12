@@ -6,7 +6,7 @@ let drawerActiveTaskId = null;
 let drawerExpandedSubtasks = new Set();
 let taskDetailRenderPatched = false;
 let taskDetailCloseTimer = null;
-const TASK_DETAIL_CLOSE_DELAY = 400;
+const TASK_DETAIL_CLOSE_DELAY = 460;
 
 document.addEventListener('DOMContentLoaded', function() {
     initDrawer();
