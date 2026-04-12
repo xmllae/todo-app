@@ -108,9 +108,11 @@ function enhanceTaskRowInteractions() {
         const actions = item.querySelector('.task-actions');
         const moreWrap = actions && actions.querySelector('.task-more-wrap');
         const taskId = item.getAttribute('data-id');
-        if (!actions || !moreWrap || !taskId || actions.querySelector('.task-detail-trigger')) return;
+        if (!actions || !moreWrap || !taskId) return;
 
-        actions.insertBefore(createTaskDetailTrigger(taskId), moreWrap);
+        if (!actions.querySelector('.task-detail-trigger')) {
+            actions.insertBefore(createTaskDetailTrigger(taskId), moreWrap);
+        }
 
         // ── 背景点击监听器（共用排除逻辑）──────────────────────────────
         // stopPropagation 只阻止事件冒泡到父元素，不影响同一元素上的其他监听器。
@@ -140,11 +142,26 @@ function enhanceTaskRowInteractions() {
             return true;
         }
 
+        function handleBackgroundClick(e, boundary) {
+            if (e.__taskDetailBgHandled) return;
+            if (!isBgClick(e, boundary)) return;
+            e.__taskDetailBgHandled = true;
+            openTaskDrawer(Number(taskId));
+        }
+
         // 1) task-item 级别：覆盖 task-row、task-strike-wrap 等外层背景
         if (!item._bgClickBound) {
             item._bgClickBound = true;
             item.addEventListener('click', function(e) {
-                if (isBgClick(e, item)) openTaskDrawer(Number(taskId));
+                handleBackgroundClick(e, item);
+            });
+        }
+
+        var taskRow = item.querySelector('.task-row');
+        if (taskRow && !taskRow._bgClickBound) {
+            taskRow._bgClickBound = true;
+            taskRow.addEventListener('click', function(e) {
+                handleBackgroundClick(e, taskRow);
             });
         }
 
@@ -154,7 +171,23 @@ function enhanceTaskRowInteractions() {
         if (rowCenter && !rowCenter._bgClickBound) {
             rowCenter._bgClickBound = true;
             rowCenter.addEventListener('click', function(e) {
-                if (isBgClick(e, rowCenter)) openTaskDrawer(Number(taskId));
+                handleBackgroundClick(e, rowCenter);
+            });
+        }
+
+        var strikeWrap = item.querySelector('.task-strike-wrap');
+        if (strikeWrap && !strikeWrap._bgClickBound) {
+            strikeWrap._bgClickBound = true;
+            strikeWrap.addEventListener('click', function(e) {
+                handleBackgroundClick(e, strikeWrap);
+            });
+        }
+
+        var inlineMeta = item.querySelector('.task-inline-meta');
+        if (inlineMeta && !inlineMeta._bgClickBound) {
+            inlineMeta._bgClickBound = true;
+            inlineMeta.addEventListener('click', function(e) {
+                handleBackgroundClick(e, inlineMeta);
             });
         }
     });

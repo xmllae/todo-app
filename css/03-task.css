@@ -80,10 +80,12 @@
 .list-panel .task-item:hover .task-row-corner,.list-panel .task-item:focus-within .task-row-corner,.list-panel .task-item.task-item--detail-active .task-row-corner{opacity:1;transform:translate(0,0)}
 
 /* 背景区域显示手型，暗示可点击打开详情 */
+.list-panel .task-item:not(.archived-item),
 .list-panel .task-item:not(.archived-item) .task-row,
 .list-panel .task-item:not(.archived-item) .task-strike-wrap,
 .list-panel .task-item:not(.archived-item) .task-strike-content,
-.list-panel .task-item:not(.archived-item) .task-row-center{cursor:pointer}
+.list-panel .task-item:not(.archived-item) .task-row-center,
+.list-panel .task-item:not(.archived-item) .task-inline-meta{cursor:pointer}
 /* 无子任务时时间列也属于背景区域，与行背景一体 */
 .list-panel .task-item:not(.archived-item) .task-time-col--no-sub{cursor:pointer}
 /* 标题文字保持文本光标（双击可编辑） */
