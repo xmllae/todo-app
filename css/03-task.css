@@ -97,6 +97,9 @@
 .task-detail-trigger:hover{color:var(--acc);transform:translateY(-1px)}
 .task-detail-trigger:focus-visible{outline:none;color:var(--acc);border-color:color-mix(in srgb,var(--acc) 34%,var(--inp-bd));box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 14%,transparent)}
 .task-detail-trigger.is-active,.task-item--detail-active .task-detail-trigger{color:var(--acc);background:color-mix(in srgb,var(--acc) 10%,var(--card));border-color:color-mix(in srgb,var(--acc) 28%,var(--inp-bd));box-shadow:0 10px 18px -18px color-mix(in srgb,var(--acc) 72%,transparent)}
+@media(hover:hover) and (pointer:fine){
+  .task-item.task-item--detail-active .task-actions{opacity:1}
+}
 .list-panel .task-item.task-item--hover-suspended:hover .task-row-corner,.list-panel .task-item.task-item--hover-suspended:focus-within .task-row-corner{opacity:0}
 .list-panel .task-item.task-item--detail-active.task-item--hover-suspended:hover .task-row-corner,.list-panel .task-item.task-item--detail-active.task-item--hover-suspended:focus-within .task-row-corner{opacity:1;transform:translate(0,0)}
 .list-panel .task-item.task-item--hover-suspended:hover .txt--editable,.list-panel .task-item.task-item--hover-suspended:focus-within .txt--editable{color:inherit}
