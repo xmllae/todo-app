@@ -25,7 +25,7 @@ function removeTime(id){const t=(T[sel]||[]).find(x=>x.id===id);if(t){t.planTime
 var _expandClickTimer=null,_expandDelayMs=220;
 function cancelDelayedToggleExpand(){if(_expandClickTimer){clearTimeout(_expandClickTimer);_expandClickTimer=null}}
 function scheduleToggleExpand(id){cancelDelayedToggleExpand();_expandClickTimer=setTimeout(function(){_expandClickTimer=null;toggleExpand(id)},_expandDelayMs)}
-function onTaskRowAsideClick(id){cancelDelayedToggleExpand();if(multiSelect)toggleMSel(id);else{const _tw=(T[sel]||[]).find(function(x){return x.id===id});if(_tw&&(_tw.subtasks||[]).length)return;toggleExpand(id)}}
+function onTaskRowAsideClick(id){cancelDelayedToggleExpand();if(multiSelect)toggleMSel(id);else{const _tw=(T[sel]||[]).find(function(x){return x.id===id});if(!_tw||!(_tw.subtasks||[]).length)return;toggleExpand(id)}}
 function onTaskRowCenterClick(e,id){e.stopPropagation();if(e.target.closest(".txt-edit"))return;if(e.target.closest(".txt")){cancelDelayedToggleExpand();if(multiSelect)toggleMSel(id);return}onTaskRowAsideClick(id)}
 function onTaskStrikeWrapPaddingClick(e,id){if(!multiSelect)return;var w=e.currentTarget;if(e.target!==w&&!e.target.classList.contains("task-strike-content"))return;e.stopPropagation();cancelDelayedToggleExpand();toggleMSel(id)}
 function onTaskItemMultiBackdrop(e,id){if(!multiSelect)return;var item=e.currentTarget,row=item.querySelector(".task-row");if(e.target!==item&&e.target!==row)return;e.stopPropagation();cancelDelayedToggleExpand();toggleMSel(id)}
