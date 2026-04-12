@@ -92,11 +92,12 @@
 .list-panel .task-row-center .time-plain{cursor:pointer}
 .list-panel .task-row-center .txt--editable{cursor:text;transition:color .18s ease}
 .list-panel .task-row-center .txt--editable:hover,.list-panel .task-item:focus-within .task-row-center .txt--editable{color:color-mix(in srgb,var(--text) 88%,var(--acc) 12%)}
-.task-detail-trigger{color:var(--text3);transition:color .18s ease,background-color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease}
-.task-detail-trigger svg{display:block}
-.task-detail-trigger:hover{color:var(--acc);transform:translateY(-1px)}
-.task-detail-trigger:focus-visible{outline:none;color:var(--acc);border-color:color-mix(in srgb,var(--acc) 34%,var(--inp-bd));box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 14%,transparent)}
-.task-detail-trigger.is-active,.task-item--detail-active .task-detail-trigger{color:var(--acc);background:color-mix(in srgb,var(--acc) 10%,var(--card));border-color:color-mix(in srgb,var(--acc) 28%,var(--inp-bd));box-shadow:0 10px 18px -18px color-mix(in srgb,var(--acc) 72%,transparent)}
+.task-detail-trigger,.task-more-btn{border:1px solid transparent;color:var(--text3);transition:color .18s ease,background-color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+.task-detail-trigger svg,.task-more-btn svg{display:block}
+.task-detail-trigger:hover,.task-more-btn:hover{color:var(--acc);background:color-mix(in srgb,var(--acc) 7%,var(--card));transform:translateY(-1px)}
+.task-detail-trigger:active,.task-more-btn:active{transform:translateY(0) scale(.97)}
+.task-detail-trigger:focus-visible,.task-more-btn:focus-visible{outline:none;color:var(--acc);background:color-mix(in srgb,var(--acc) 8%,var(--card));border-color:color-mix(in srgb,var(--acc) 34%,var(--inp-bd));box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 14%,transparent)}
+.task-detail-trigger.is-active,.task-item--detail-active .task-detail-trigger,.task-more-btn.is-open,.task-item--menu-open .task-more-btn{color:var(--acc);background:color-mix(in srgb,var(--acc) 10%,var(--card));border-color:color-mix(in srgb,var(--acc) 28%,var(--inp-bd));box-shadow:0 10px 18px -18px color-mix(in srgb,var(--acc) 72%,transparent)}
 @media(hover:hover) and (pointer:fine){
   .task-item.task-item--detail-active .task-actions{opacity:1}
 }
@@ -104,6 +105,7 @@
 .list-panel .task-item.task-item--detail-active.task-item--hover-suspended:hover .task-row-corner,.list-panel .task-item.task-item--detail-active.task-item--hover-suspended:focus-within .task-row-corner{opacity:1;transform:translate(0,0)}
 .list-panel .task-item.task-item--hover-suspended:hover .txt--editable,.list-panel .task-item.task-item--hover-suspended:focus-within .txt--editable{color:inherit}
 .dark .list-panel .task-row-center .txt--editable:hover,.dark .list-panel .task-item:focus-within .task-row-center .txt--editable{color:color-mix(in srgb,var(--text) 82%,var(--acc2) 18%)}
-.dark .task-detail-trigger:hover,.dark .task-detail-trigger:focus-visible,.dark .task-detail-trigger.is-active,.dark .task-item--detail-active .task-detail-trigger{color:var(--acc2)}
-.dark .task-detail-trigger:focus-visible{border-color:color-mix(in srgb,var(--acc2) 36%,var(--inp-bd));box-shadow:0 0 0 3px color-mix(in srgb,var(--acc2) 16%,transparent)}
-.dark .task-detail-trigger.is-active,.dark .task-item--detail-active .task-detail-trigger{background:color-mix(in srgb,var(--acc2) 14%,transparent);border-color:color-mix(in srgb,var(--acc2) 30%,var(--inp-bd))}
+.dark .task-detail-trigger:hover,.dark .task-more-btn:hover,.dark .task-detail-trigger:focus-visible,.dark .task-more-btn:focus-visible,.dark .task-detail-trigger.is-active,.dark .task-item--detail-active .task-detail-trigger,.dark .task-more-btn.is-open,.dark .task-item--menu-open .task-more-btn{color:var(--acc2)}
+.dark .task-detail-trigger:hover,.dark .task-more-btn:hover{background:color-mix(in srgb,var(--acc2) 10%,transparent)}
+.dark .task-detail-trigger:focus-visible,.dark .task-more-btn:focus-visible{border-color:color-mix(in srgb,var(--acc2) 36%,var(--inp-bd));box-shadow:0 0 0 3px color-mix(in srgb,var(--acc2) 16%,transparent)}
+.dark .task-detail-trigger.is-active,.dark .task-item--detail-active .task-detail-trigger,.dark .task-more-btn.is-open,.dark .task-item--menu-open .task-more-btn{background:color-mix(in srgb,var(--acc2) 14%,transparent);border-color:color-mix(in srgb,var(--acc2) 30%,var(--inp-bd))}
