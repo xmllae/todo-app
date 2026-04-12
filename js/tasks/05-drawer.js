@@ -5,6 +5,8 @@
 let drawerActiveTaskId = null;
 let drawerExpandedSubtasks = new Set();
 let taskDetailRenderPatched = false;
+let taskDetailCloseTimer = null;
+const TASK_DETAIL_CLOSE_DELAY = 320;
 
 document.addEventListener('DOMContentLoaded', function() {
     initDrawer();
@@ -121,6 +123,11 @@ function openTaskDrawer(taskId) {
     const refs = getTaskDetailRefs();
     if (!refs.panel || !refs.content || !refs.mainCol) return;
 
+    if (drawerActiveTaskId === taskId && refs.panel.classList.contains('task-detail-panel--open')) {
+        closeTaskDetail();
+        return;
+    }
+
     const task = findTaskById(taskId);
     if (!task) {
         closeTaskDetail();
@@ -129,6 +136,7 @@ function openTaskDrawer(taskId) {
 
     const taskChanged = drawerActiveTaskId !== taskId;
     drawerActiveTaskId = taskId;
+    clearPendingTaskDetailClose(refs.content);
 
     setTaskDetailOpenState(true);
     renderDrawerContent(task);
@@ -144,18 +152,28 @@ function openTaskDrawer(taskId) {
 
 function closeTaskDetail() {
     const refs = getTaskDetailRefs();
+    if (!refs.panel || !refs.content) {
+        drawerActiveTaskId = null;
+        drawerExpandedSubtasks.clear();
+        return;
+    }
 
     drawerActiveTaskId = null;
     drawerExpandedSubtasks.clear();
-    setTaskDetailOpenState(false);
+    clearPendingTaskDetailClose(refs.content);
 
-    if (refs.content) {
+    refs.content.classList.remove('fade-in');
+    refs.content.classList.add('fade-out');
+    setTaskDetailOpenState(false);
+    syncTaskDetailSelectionState();
+
+    taskDetailCloseTimer = window.setTimeout(function() {
+        if (drawerActiveTaskId !== null) return;
         refs.content.classList.remove('fade-in', 'fade-out');
         refs.content.innerHTML = '';
         refs.content.scrollTop = 0;
-    }
-
-    syncTaskDetailSelectionState();
+        taskDetailCloseTimer = null;
+    }, TASK_DETAIL_CLOSE_DELAY);
 }
 
 function closeDrawer() {
@@ -180,10 +198,22 @@ function syncTaskDetailPanel() {
     }
 
     setTaskDetailOpenState(true);
+    clearPendingTaskDetailClose(refs.content);
     renderDrawerContent(task);
     refs.content.classList.remove('fade-out');
     refs.content.classList.add('fade-in');
     syncTaskDetailSelectionState();
+}
+
+function clearPendingTaskDetailClose(content) {
+    if (taskDetailCloseTimer !== null) {
+        window.clearTimeout(taskDetailCloseTimer);
+        taskDetailCloseTimer = null;
+    }
+
+    if (content) {
+        content.classList.remove('fade-out');
+    }
 }
 
 function renderDrawerContent(task) {

@@ -3,7 +3,7 @@
    ========================================= */
 
 #taskMode .task-main-col {
-    --task-detail-gap: 12px;
+    --task-detail-gap: 0px;
     --task-detail-width: clamp(320px, 38%, 420px);
     box-sizing: border-box;
     position: relative;
@@ -22,15 +22,22 @@
 }
 
 #taskMode .task-main-col > .task-card {
+    position: relative;
+    z-index: 1;
     min-width: 0;
     max-width: 100%;
     width: 100%;
     transition: width 0.32s cubic-bezier(0.22, 1, 0.36, 1),
-                transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+                transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+                border-radius 0.28s ease,
+                box-shadow 0.28s ease;
 }
 
 #taskMode .task-main-col.task-main-col--detail-open > .task-card {
-    transform: translateX(-6px);
+    transform: translateX(0);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.05);
 }
 
 .task-detail-panel {
@@ -38,12 +45,12 @@
     top: 0;
     right: 0;
     bottom: 0;
-    width: calc(var(--task-detail-width) + var(--task-detail-gap));
+    width: var(--task-detail-width);
     min-width: 0;
     min-height: 0;
     display: flex;
     align-items: stretch;
-    padding-left: var(--task-detail-gap);
+    padding-left: 0;
     opacity: 0;
     transform: translateX(28px);
     pointer-events: none;
@@ -52,21 +59,42 @@
     z-index: 3;
 }
 
+.task-detail-panel::before {
+    content: "";
+    position: absolute;
+    top: 16px;
+    bottom: 16px;
+    left: 0;
+    width: 1px;
+    background: color-mix(in srgb, var(--task-bd) 78%, transparent);
+    opacity: 0;
+    transition: opacity 0.22s ease;
+    z-index: 1;
+}
+
 .task-detail-panel--open {
     opacity: 1;
     transform: translateX(0);
     pointer-events: auto;
 }
 
+.task-detail-panel--open::before {
+    opacity: 1;
+}
+
 .task-detail-inner {
+    position: relative;
     width: 100%;
     min-height: 0;
     display: flex;
     flex-direction: column;
-    background: var(--card);
+    background: linear-gradient(180deg,
+        color-mix(in srgb, var(--card) 96%, #f8fafc),
+        var(--card) 26%);
     border: 1px solid var(--task-bd);
-    border-radius: 16px;
-    box-shadow: var(--sh);
+    border-left: none;
+    border-radius: 0 16px 16px 0;
+    box-shadow: 0 18px 38px rgba(15, 23, 42, 0.06);
     overflow: hidden;
 }
 
@@ -87,6 +115,9 @@
 
     #taskMode .task-main-col.task-main-col--detail-open > .task-card {
         transform: none;
+        border-top-right-radius: 16px;
+        border-bottom-right-radius: 16px;
+        box-shadow: var(--sh);
     }
 
     .task-detail-panel {
@@ -103,6 +134,10 @@
                     margin-top 0.2s ease;
     }
 
+    .task-detail-panel::before {
+        display: none;
+    }
+
     .task-detail-panel--open {
         max-height: 60vh;
         margin-top: 12px;
@@ -111,6 +146,9 @@
     }
 
     .task-detail-inner {
+        border-left: 1px solid var(--task-bd);
+        border-radius: 16px;
+        box-shadow: var(--sh);
         max-height: 60vh;
     }
 }
@@ -120,44 +158,47 @@
    ========================================= */
 
 .drawer-header {
-    padding: 16px 20px;
+    padding: 18px 22px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--inp-bd);
-    background: var(--card);
+    border-bottom: 1px solid color-mix(in srgb, var(--inp-bd) 78%, transparent);
+    background: linear-gradient(180deg,
+        color-mix(in srgb, var(--card) 94%, #f8fafc),
+        var(--card));
     flex-shrink: 0;
 }
 
 .drawer-header-title {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--text3);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--text);
 }
 
 .drawer-header-actions {
     display: flex;
-    gap: 4px;
+    gap: 6px;
 }
 
 .drawer-header-btn {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: none;
+    border: 1px solid transparent;
     background: transparent;
     color: var(--text3);
-    border-radius: 6px;
+    border-radius: 10px;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
 .drawer-header-btn:hover {
-    background: var(--hov);
+    background: color-mix(in srgb, var(--hov) 82%, #fff);
+    border-color: color-mix(in srgb, var(--inp-bd) 88%, transparent);
     color: var(--text);
 }
 
@@ -168,12 +209,19 @@
 
 .drawer-content {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
     min-height: 0;
     overflow-y: auto;
-    padding: 20px;
+    padding: 22px 22px 20px;
     opacity: 0;
     transition: opacity 0.2s ease;
-    background: var(--card);
+    background: linear-gradient(180deg,
+        color-mix(in srgb, var(--card) 96%, #fbfcff),
+        color-mix(in srgb, var(--card) 92%, #f8fafc) 42%,
+        var(--card));
+    scrollbar-gutter: stable;
 }
 
 .drawer-content.fade-in {
@@ -184,20 +232,31 @@
     opacity: 0;
 }
 
+.drawer-content > * {
+    flex-shrink: 0;
+}
+
 /* =========================================
    Detail Content
    ========================================= */
 
 .drawer-task-title {
     display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 24px;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 0;
+    padding: 16px 18px;
+    border-radius: 18px;
+    border: 1px solid color-mix(in srgb, var(--acc-bd) 36%, var(--task-bd));
+    background: linear-gradient(180deg,
+        color-mix(in srgb, var(--acc) 6%, var(--card)),
+        color-mix(in srgb, var(--acc) 2%, var(--card)));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
 }
 
 .drawer-task-check {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -205,7 +264,7 @@
     cursor: pointer;
     transition: color 0.2s ease;
     flex-shrink: 0;
-    margin-top: 2px;
+    margin-top: 0;
 }
 
 .drawer-task-check:hover,
@@ -215,16 +274,16 @@
 
 .drawer-task-title-text {
     flex: 1;
-    font-size: 1.125rem;
-    font-weight: 600;
+    font-size: 1.2rem;
+    font-weight: 700;
     color: var(--text);
-    line-height: 1.5;
+    line-height: 1.4;
     outline: none;
     border: none;
     background: transparent;
-    padding: 4px 8px;
+    padding: 6px 8px;
     margin: -4px -8px;
-    border-radius: 6px;
+    border-radius: 10px;
     transition: background 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -240,29 +299,35 @@
 .drawer-attrs {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    margin-bottom: 20px;
+    gap: 6px;
+    margin-bottom: 0;
+    padding: 14px;
+    border: 1px solid color-mix(in srgb, var(--task-bd) 82%, transparent);
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--card) 78%, var(--inp-bg));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.56);
 }
 
 .drawer-attr-row {
     display: flex;
     align-items: center;
-    padding: 8px 10px;
-    border-radius: 8px;
+    padding: 10px 12px;
+    border-radius: 12px;
     cursor: pointer;
     transition: background 0.15s ease;
 }
 
 .drawer-attr-row:hover {
-    background: var(--hov);
+    background: color-mix(in srgb, var(--hov) 82%, #fff);
 }
 
 .drawer-attr-label {
-    width: 88px;
+    width: 92px;
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 0.8125rem;
+    font-size: 0.78rem;
+    font-weight: 600;
     color: var(--text3);
     flex-shrink: 0;
 }
@@ -275,7 +340,7 @@
 .drawer-attr-value {
     flex: 1;
     min-width: 0;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     font-weight: 500;
     color: var(--text);
     display: flex;
@@ -339,9 +404,7 @@
 }
 
 .drawer-divider {
-    border: none;
-    border-top: 1px solid var(--inp-bd);
-    margin: 20px 0;
+    display: none;
 }
 
 /* =========================================
@@ -349,16 +412,21 @@
    ========================================= */
 
 .drawer-subtasks {
-    margin-bottom: 24px;
+    margin-bottom: 0;
+    padding: 14px;
+    border: 1px solid color-mix(in srgb, var(--task-bd) 82%, transparent);
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--card) 78%, var(--inp-bg));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.56);
 }
 
 .drawer-subtasks-header {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 12px;
-    font-size: 0.8125rem;
-    font-weight: 600;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    font-weight: 700;
     color: var(--text);
 }
 
@@ -369,34 +437,36 @@
 }
 
 .drawer-subtasks-count {
+    margin-left: auto;
     font-size: 0.75rem;
     font-weight: 500;
     color: var(--text3);
     background: var(--inp-bg);
-    padding: 2px 8px;
-    border-radius: 10px;
+    padding: 4px 9px;
+    border-radius: 999px;
 }
 
 .drawer-subtasks-list {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 6px;
 }
 
 .subtask-row {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 8px 10px;
-    border-radius: 8px;
+    padding: 10px 12px;
+    border-radius: 12px;
     cursor: pointer;
     transition: all 0.15s ease;
-    border: 1px solid transparent;
+    border: 1px solid color-mix(in srgb, var(--task-bd) 72%, transparent);
+    background: color-mix(in srgb, var(--card) 88%, transparent);
 }
 
 .subtask-row:hover {
-    background: var(--hov);
-    border-color: var(--inp-bd);
+    background: color-mix(in srgb, var(--hov) 80%, #fff);
+    border-color: color-mix(in srgb, var(--inp-bd) 92%, transparent);
 }
 
 .subtask-check {
@@ -438,16 +508,19 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 8px 10px;
+    padding: 10px 12px;
     color: var(--text3);
     cursor: pointer;
-    border-radius: 8px;
+    border: 1px dashed color-mix(in srgb, var(--inp-bd) 92%, transparent);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--card) 82%, var(--inp-bg));
     transition: all 0.15s ease;
     margin-top: 4px;
 }
 
 .subtask-add-btn:hover {
-    background: var(--hov);
+    background: color-mix(in srgb, var(--hov) 80%, #fff);
+    border-style: solid;
     color: var(--text2);
 }
 
@@ -465,7 +538,12 @@
    ========================================= */
 
 .drawer-notes {
-    margin-bottom: 24px;
+    margin-bottom: 0;
+    padding: 14px;
+    border: 1px solid color-mix(in srgb, var(--task-bd) 82%, transparent);
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--card) 78%, var(--inp-bg));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.56);
 }
 
 .drawer-notes-header {
@@ -473,8 +551,8 @@
     align-items: center;
     gap: 8px;
     margin-bottom: 12px;
-    font-size: 0.8125rem;
-    font-weight: 600;
+    font-size: 0.9rem;
+    font-weight: 700;
     color: var(--text);
 }
 
@@ -486,23 +564,25 @@
 
 .drawer-notes-textarea {
     width: 100%;
-    min-height: 100px;
-    padding: 12px;
+    min-height: 132px;
+    padding: 14px 15px;
     border: 1px solid var(--inp-bd);
-    border-radius: 8px;
-    background: var(--inp-bg);
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--card) 82%, var(--inp-bg));
     color: var(--text);
     font-size: 0.875rem;
     font-family: inherit;
     line-height: 1.6;
     resize: vertical;
     outline: none;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .drawer-notes-textarea:focus {
     border-color: var(--acc-bd);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    background: var(--card);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12),
+                0 10px 24px rgba(99, 102, 241, 0.08);
 }
 
 .drawer-notes-textarea::placeholder {
@@ -514,19 +594,28 @@
    ========================================= */
 
 .drawer-footer {
+    position: sticky;
+    bottom: 0;
     padding-top: 16px;
-    margin-top: 8px;
+    padding-bottom: 2px;
+    margin-top: auto;
     border-top: 1px solid var(--inp-bd);
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
+    background: linear-gradient(180deg,
+        rgba(255, 255, 255, 0),
+        color-mix(in srgb, var(--card) 94%, #fff) 28%,
+        color-mix(in srgb, var(--card) 100%, #fff));
+    backdrop-filter: blur(14px);
 }
 
 .drawer-footer-btn {
     flex: 1 1 0;
-    min-width: 96px;
+    min-width: 108px;
+    min-height: 48px;
     padding: 10px 16px;
-    border-radius: 8px;
+    border-radius: 14px;
     font-size: 0.875rem;
     font-weight: 500;
     cursor: pointer;
@@ -536,13 +625,16 @@
     justify-content: center;
     gap: 6px;
     border: 1px solid var(--inp-bd);
-    background: var(--card);
+    background: color-mix(in srgb, var(--card) 92%, #fff);
     color: var(--text2);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
 }
 
 .drawer-footer-btn:hover {
-    background: var(--hov);
+    transform: translateY(-1px);
+    background: color-mix(in srgb, var(--hov) 78%, #fff);
     color: var(--text);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
 }
 
 .drawer-footer-btn.danger:hover {
@@ -556,11 +648,64 @@
     height: 16px;
 }
 
+.dark .task-detail-inner {
+    background: linear-gradient(180deg,
+        color-mix(in srgb, var(--card) 98%, #0f172a),
+        var(--card) 24%);
+    box-shadow: 0 20px 42px rgba(0, 0, 0, 0.42);
+}
+
+.dark .drawer-header {
+    background: linear-gradient(180deg,
+        color-mix(in srgb, var(--card) 96%, #0f172a),
+        var(--card));
+}
+
+.dark .drawer-task-title,
+.dark .drawer-attrs,
+.dark .drawer-subtasks,
+.dark .drawer-notes {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.dark .drawer-header-btn:hover,
+.dark .drawer-attr-row:hover,
+.dark .subtask-row:hover,
+.dark .subtask-add-btn:hover,
+.dark .drawer-footer-btn:hover {
+    background: color-mix(in srgb, var(--hov) 88%, transparent);
+}
+
+.dark .drawer-footer {
+    background: linear-gradient(180deg,
+        rgba(15, 23, 42, 0),
+        color-mix(in srgb, var(--card) 94%, #0f172a) 28%,
+        var(--card));
+}
+
+.dark .drawer-footer-btn {
+    box-shadow: none;
+}
+
 @media (max-width: 640px) {
     .drawer-header,
     .drawer-content {
         padding-left: 16px;
         padding-right: 16px;
+    }
+
+    .drawer-content {
+        gap: 14px;
+        padding-top: 18px;
+        padding-bottom: 18px;
+    }
+
+    .drawer-task-title,
+    .drawer-attrs,
+    .drawer-subtasks,
+    .drawer-notes {
+        padding: 12px;
+        border-radius: 14px;
     }
 
     .drawer-attr-row {
@@ -574,5 +719,11 @@
 
     .drawer-footer-btn {
         flex-basis: calc(50% - 4px);
+    }
+
+    .drawer-footer {
+        position: static;
+        padding-bottom: 0;
+        backdrop-filter: none;
     }
 }
