@@ -1,166 +1,202 @@
 /**
- * 右侧抽屉面板功能
- * Right Drawer Panel - Task Detail View
+ * Local task detail panel rendered inside the middle task column.
  */
 
-// ==================== 状态变量 ====================
-
-let drawerActiveTaskId = null;          // 当前抽屉显示的任务ID
-let drawerExpandedSubtasks = new Set();  // 展开的子任务ID集合
-
-// ==================== 初始化 ====================
+let drawerActiveTaskId = null;
+let drawerExpandedSubtasks = new Set();
+let taskDetailRenderPatched = false;
 
 document.addEventListener('DOMContentLoaded', function() {
     initDrawer();
 });
 
 function initDrawer() {
-    // 绑定关闭按钮事件
-    const closeBtn = document.getElementById('drawer-close-btn');
+    const closeBtn = document.getElementById('detail-close-btn');
     if (closeBtn) {
-        closeBtn.addEventListener('click', closeDrawer);
+        closeBtn.addEventListener('click', closeTaskDetail);
     }
 
-    // 点击遮罩层关闭
-    document.addEventListener('click', function(e) {
-        const drawer = document.getElementById('right-drawer');
-        if (drawer && drawer.classList.contains('drawer-open')) {
-            // 检查是否点击在抽屉外部
-            if (!drawer.contains(e.target)) {
-                closeDrawer();
-            }
-        }
-    });
-
-    // ESC 键关闭抽屉
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            const drawer = document.getElementById('right-drawer');
-            if (drawer && drawer.classList.contains('drawer-open')) {
-                closeDrawer();
-            }
+        if (e.key === 'Escape' && drawerActiveTaskId !== null) {
+            closeTaskDetail();
         }
+    });
+
+    patchTaskRenderSync();
+    syncTaskDetailPanel();
+}
+
+function patchTaskRenderSync() {
+    if (taskDetailRenderPatched || typeof window.rT !== 'function') return;
+
+    const originalRenderTasks = window.rT;
+    window.rT = function() {
+        const result = originalRenderTasks.apply(this, arguments);
+        syncTaskDetailPanel();
+        return result;
+    };
+
+    taskDetailRenderPatched = true;
+}
+
+function getTaskDetailRefs() {
+    return {
+        panel: document.getElementById('taskDetailPanel'),
+        content: document.getElementById('taskDetailContent'),
+        mainCol: document.querySelector('#taskMode .task-main-col'),
+        taskMode: document.getElementById('taskMode')
+    };
+}
+
+function setTaskDetailOpenState(isOpen) {
+    const refs = getTaskDetailRefs();
+    if (refs.panel) {
+        refs.panel.classList.toggle('task-detail-panel--open', isOpen);
+    }
+    if (refs.mainCol) {
+        refs.mainCol.classList.toggle('task-main-col--detail-open', isOpen);
+    }
+}
+
+function syncTaskDetailSelectionState() {
+    document.querySelectorAll('#tList .task-item--detail-active').forEach(function(node) {
+        node.classList.remove('task-item--detail-active');
+    });
+
+    if (drawerActiveTaskId == null) return;
+
+    const activeItem = document.querySelector('#tList .task-item[data-id="' + drawerActiveTaskId + '"]');
+    if (activeItem) {
+        activeItem.classList.add('task-item--detail-active');
+    }
+}
+
+function refreshTaskViews(options) {
+    const next = options || {};
+
+    if (next.calendar && typeof rCal === 'function') {
+        rCal();
+    }
+
+    if (typeof rT === 'function') {
+        rT();
+    } else {
+        syncTaskDetailPanel();
+    }
+
+    if (next.kanban && typeof rKanban === 'function') {
+        rKanban();
+    }
+}
+
+function persistTaskDetailChanges(task, options) {
+    if (!task) return;
+
+    if (typeof syncToRule === 'function') {
+        syncToRule(task);
+    }
+
+    save();
+    refreshTaskViews(options);
+}
+
+function isTaskVisibleInCurrentDate(taskId) {
+    return !!(T[sel] || []).some(function(task) {
+        return task.id === taskId;
     });
 }
 
-// ==================== 打开抽屉 ====================
-
-/**
- * 打开任务详情抽屉
- * @param {number} taskId - 任务ID
- */
-function openTaskDrawer(taskId) {
-    const drawer = document.getElementById('right-drawer');
-    const content = document.getElementById('drawer-content');
-    if (!drawer || !content) return;
-
-    // 获取任务数据
-    const task = findTaskById(taskId);
-    if (!task) {
-        console.error('任务不存在:', taskId);
-        return;
-    }
-
-    // 保存当前任务ID
-    drawerActiveTaskId = taskId;
-
-    // 渲染抽屉内容
-    renderDrawerContent(task);
-
-    // 淡出当前内容
-    content.classList.remove('fade-in');
-    content.classList.add('fade-out');
-
-    // 展开抽屉
-    drawer.classList.remove('drawer-closed');
-    drawer.classList.add('drawer-open');
-
-    // 延迟淡入新内容
-    setTimeout(function() {
-        content.classList.remove('fade-out');
-        content.classList.add('fade-in');
-    }, 200);
-
-    // 禁止背景滚动
-    document.body.style.overflow = 'hidden';
-}
-
-/**
- * 根据ID查找任务
- * @param {number} taskId - 任务ID
- * @returns {Object|null} 任务对象
- */
 function findTaskById(taskId) {
-    // 遍历所有日期的任务
     for (const dateStr in T) {
-        const task = T[dateStr].find(function(t) {
-            return t.id === taskId;
+        const tasks = T[dateStr] || [];
+        const task = tasks.find(function(item) {
+            return item.id === taskId;
         });
-        if (task) {
-            return task;
-        }
+        if (task) return task;
     }
     return null;
 }
 
-// ==================== 关闭抽屉 ====================
+function openTaskDrawer(taskId) {
+    const refs = getTaskDetailRefs();
+    if (!refs.panel || !refs.content || !refs.mainCol) return;
 
-/**
- * 关闭任务详情抽屉
- */
-function closeDrawer() {
-    const drawer = document.getElementById('right-drawer');
-    const content = document.getElementById('drawer-content');
-    if (!drawer) return;
-
-    // 淡出内容
-    if (content) {
-        content.classList.remove('fade-in');
-        content.classList.add('fade-out');
+    const task = findTaskById(taskId);
+    if (!task) {
+        closeTaskDetail();
+        return;
     }
 
-    // 收起抽屉
-    drawer.classList.remove('drawer-open');
-    drawer.classList.add('drawer-closed');
+    const taskChanged = drawerActiveTaskId !== taskId;
+    drawerActiveTaskId = taskId;
 
-    // 延迟清除任务ID和内容
-    setTimeout(function() {
-        drawerActiveTaskId = null;
-        if (content) {
-            content.innerHTML = '';
-        }
-    }, 350);
+    setTaskDetailOpenState(true);
+    renderDrawerContent(task);
+    refs.content.classList.remove('fade-out');
+    refs.content.classList.add('fade-in');
 
-    // 恢复背景滚动
-    document.body.style.overflow = '';
+    if (taskChanged) {
+        refs.content.scrollTop = 0;
+    }
+
+    syncTaskDetailSelectionState();
 }
 
-// ==================== 渲染抽屉内容 ====================
+function closeTaskDetail() {
+    const refs = getTaskDetailRefs();
 
-/**
- * 渲染抽屉内容
- * @param {Object} task - 任务对象
- */
+    drawerActiveTaskId = null;
+    drawerExpandedSubtasks.clear();
+    setTaskDetailOpenState(false);
+
+    if (refs.content) {
+        refs.content.classList.remove('fade-in', 'fade-out');
+        refs.content.innerHTML = '';
+        refs.content.scrollTop = 0;
+    }
+
+    syncTaskDetailSelectionState();
+}
+
+function closeDrawer() {
+    closeTaskDetail();
+}
+
+function syncTaskDetailPanel() {
+    const refs = getTaskDetailRefs();
+    if (!refs.panel || !refs.content || !refs.mainCol) return;
+
+    if (drawerActiveTaskId == null) {
+        setTaskDetailOpenState(false);
+        syncTaskDetailSelectionState();
+        return;
+    }
+
+    const taskModeVisible = refs.taskMode && !refs.taskMode.classList.contains('hidden');
+    const task = findTaskById(drawerActiveTaskId);
+    if (!taskModeVisible || !task || !isTaskVisibleInCurrentDate(drawerActiveTaskId)) {
+        closeTaskDetail();
+        return;
+    }
+
+    setTaskDetailOpenState(true);
+    renderDrawerContent(task);
+    refs.content.classList.remove('fade-out');
+    refs.content.classList.add('fade-in');
+    syncTaskDetailSelectionState();
+}
+
 function renderDrawerContent(task) {
-    const content = document.getElementById('drawer-content');
+    const content = document.getElementById('taskDetailContent');
     if (!content) return;
 
-    // 生成优先级颜色
     const priorityClass = getPriorityClass(task.priority);
     const priorityText = getPriorityText(task.priority);
-
-    // 生成子任务HTML
     const subtasksHtml = renderSubtasksList(task);
-
-    // 生成标签HTML
     const tagsHtml = renderTagsList(task);
-
-    // 生成备注HTML
     const notesHtml = renderNotesArea(task);
 
-    // 渲染内容
     content.innerHTML = `
-        <!-- 任务标题区域 -->
         <div class="drawer-task-title">
             <div class="drawer-task-check ${task.done ? 'checked' : ''}"
                  onclick="toggleTaskDoneFromDrawer(${task.id})"
@@ -176,9 +212,7 @@ function renderDrawerContent(task) {
                    onkeydown="if(event.key==='Enter'){event.target.blur()}">
         </div>
 
-        <!-- 属性列表 -->
         <div class="drawer-attrs">
-            <!-- 时间 -->
             <div class="drawer-attr-row" onclick="event.stopPropagation();openTimePickerInDrawer(${task.id})">
                 <div class="drawer-attr-label">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -187,12 +221,9 @@ function renderDrawerContent(task) {
                     </svg>
                     时间
                 </div>
-                <div class="drawer-attr-value">
-                    ${task.planTime || '全天'}
-                </div>
+                <div class="drawer-attr-value">${task.planTime || '全天'}</div>
             </div>
 
-            <!-- 优先级 -->
             <div class="drawer-attr-row" onclick="event.stopPropagation();openPriorityPickerInDrawer(${task.id})">
                 <div class="drawer-attr-label">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -206,7 +237,6 @@ function renderDrawerContent(task) {
                 </div>
             </div>
 
-            <!-- 耗时 -->
             <div class="drawer-attr-row" onclick="event.stopPropagation();openDurationPickerInDrawer(${task.id})">
                 <div class="drawer-attr-label">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -214,14 +244,13 @@ function renderDrawerContent(task) {
                         <path d="M12 8v4l2.5 2.5"/>
                         <path d="M9 3h6"/>
                     </svg>
-                    耗时
+                    时长
                 </div>
                 <div class="drawer-attr-value">
                     ${task.duration ? `<span class="time-badge">${task.duration} 分钟</span>` : '<span style="color:var(--text3)">未设置</span>'}
                 </div>
             </div>
 
-            <!-- 标签 -->
             ${tagsHtml ? `
             <div class="drawer-attr-row" onclick="event.stopPropagation()">
                 <div class="drawer-attr-label">
@@ -231,16 +260,13 @@ function renderDrawerContent(task) {
                     </svg>
                     标签
                 </div>
-                <div class="drawer-attr-value">
-                    ${tagsHtml}
-                </div>
+                <div class="drawer-attr-value">${tagsHtml}</div>
             </div>
             ` : ''}
         </div>
 
         <hr class="drawer-divider">
 
-        <!-- 子任务区域 -->
         <div class="drawer-subtasks">
             <div class="drawer-subtasks-header">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -266,10 +292,8 @@ function renderDrawerContent(task) {
             </div>
         </div>
 
-        <!-- 备注区域 -->
         ${notesHtml}
 
-        <!-- 底部操作栏 -->
         <div class="drawer-footer">
             <button class="drawer-footer-btn" onclick="event.stopPropagation();openRepeatInDrawer(${task.id})">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -296,13 +320,6 @@ function renderDrawerContent(task) {
     `;
 }
 
-// ==================== 子任务渲染 ====================
-
-/**
- * 渲染子任务列表
- * @param {Object} task - 任务对象
- * @returns {string} HTML字符串
- */
 function renderSubtasksList(task) {
     const subtasks = task.subtasks || [];
     if (subtasks.length === 0) return '';
@@ -322,23 +339,12 @@ function renderSubtasksList(task) {
     }).join('');
 }
 
-/**
- * 获取子任务完成数量
- * @param {Object} task - 任务对象
- * @returns {number} 已完成的子任务数量
- */
 function getSubtaskDoneCount(task) {
-    const subtasks = task.subtasks || [];
-    return subtasks.filter(function(s) { return s.done; }).length;
+    return (task.subtasks || []).filter(function(subtask) {
+        return subtask.done;
+    }).length;
 }
 
-// ==================== 标签渲染 ====================
-
-/**
- * 渲染标签列表
- * @param {Object} task - 任务对象
- * @returns {string} HTML字符串
- */
 function renderTagsList(task) {
     const tagIds = task.tags || [];
     if (tagIds.length === 0) return '';
@@ -354,13 +360,6 @@ function renderTagsList(task) {
     }).join('');
 }
 
-// ==================== 备注渲染 ====================
-
-/**
- * 渲染备注区域
- * @param {Object} task - 任务对象
- * @returns {string} HTML字符串
- */
 function renderNotesArea(task) {
     return `
         <div class="drawer-notes">
@@ -382,24 +381,19 @@ function renderNotesArea(task) {
     `;
 }
 
-// ==================== 操作函数 ====================
-
-/**
- * 切换任务完成状态
- */
 function toggleTaskDoneFromDrawer(taskId) {
     const task = findTaskById(taskId);
     if (!task) return;
 
     task.done = !task.done;
-    saveData();
-    renderDrawerContent(task);
-    rT(); // 刷新主列表
+    task.status = task.done ? 'done' : 'todo';
+    if (!task.done) {
+        task.archived = false;
+    }
+
+    persistTaskDetailChanges(task, { calendar: true, kanban: true });
 }
 
-/**
- * 保存任务标题
- */
 function saveDrawerTitle(taskId) {
     const input = document.getElementById('drawer-task-title-input');
     if (!input) return;
@@ -410,14 +404,10 @@ function saveDrawerTitle(taskId) {
     const newText = input.value.trim();
     if (newText && newText !== task.text) {
         task.text = newText;
-        saveData();
-        rT(); // 刷新主列表
+        persistTaskDetailChanges(task, { kanban: true });
     }
 }
 
-/**
- * 保存任务备注
- */
 function saveDrawerNotes(taskId) {
     const textarea = document.getElementById('drawer-notes-input');
     if (!textarea) return;
@@ -428,54 +418,43 @@ function saveDrawerNotes(taskId) {
     const newNote = textarea.value.trim();
     if (newNote !== (task.note || '')) {
         task.note = newNote;
-        saveData();
+        persistTaskDetailChanges(task, { kanban: true });
     }
 }
 
-/**
- * 切换子任务完成状态
- */
 function toggleSubtaskInDrawer(taskId, subtaskId) {
     const task = findTaskById(taskId);
     if (!task) return;
 
-    const subtask = (task.subtasks || []).find(function(s) { return s.id === subtaskId; });
+    const subtask = (task.subtasks || []).find(function(item) {
+        return item.id === subtaskId;
+    });
     if (!subtask) return;
 
     subtask.done = !subtask.done;
-    saveData();
-    renderDrawerContent(task);
-    rT(); // 刷新主列表
+    persistTaskDetailChanges(task, { kanban: true });
 }
 
-/**
- * 在抽屉中打开添加子任务
- */
 function openAddSubtaskInDrawer(taskId) {
     const task = findTaskById(taskId);
     if (!task) return;
 
-    const newText = prompt('输入子任务内容:');
-    if (newText && newText.trim()) {
-        if (!task.subtasks) task.subtasks = [];
+    const newText = prompt('输入子任务内容');
+    if (!newText || !newText.trim()) return;
 
-        task.subtasks.push({
-            id: Date.now(),
-            text: newText.trim(),
-            done: false
-        });
-
-        saveData();
-        renderDrawerContent(task);
-        rT(); // 刷新主列表
+    if (!task.subtasks) {
+        task.subtasks = [];
     }
+
+    task.subtasks.push({
+        id: Date.now(),
+        text: newText.trim(),
+        done: false
+    });
+
+    persistTaskDetailChanges(task, { kanban: true });
 }
 
-// ==================== 辅助函数 ====================
-
-/**
- * 获取优先级CSS类
- */
 function getPriorityClass(priority) {
     switch (priority) {
         case 'high': return 'high';
@@ -486,9 +465,6 @@ function getPriorityClass(priority) {
     }
 }
 
-/**
- * 获取优先级显示文本
- */
 function getPriorityText(priority) {
     switch (priority) {
         case 'high': return '高';
@@ -499,27 +475,18 @@ function getPriorityText(priority) {
     }
 }
 
-/**
- * 获取圆形图标SVG
- */
 function getCircleIconSvg() {
     return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="10"/>
     </svg>`;
 }
 
-/**
- * 获取勾选图标SVG
- */
 function getCheckIconSvg() {
     return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="20 6 9 17 4 12"/>
     </svg>`;
 }
 
-/**
- * HTML转义
- */
 function escapeHtml(text) {
     if (!text) return '';
     const div = document.createElement('div');
@@ -527,111 +494,89 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// ==================== 占位函数（后续扩展） ====================
-
-/**
- * 打开时间选择器（在抽屉中）
- */
 function openTimePickerInDrawer(taskId) {
     const task = findTaskById(taskId);
     if (!task) return;
 
-    const newTime = prompt('输入计划时间 (HH:MM格式):', task.planTime || '');
+    const newTime = prompt('输入计划时间 (HH:MM)', task.planTime || '');
     if (newTime !== null) {
         task.planTime = newTime || '';
-        saveData();
-        renderDrawerContent(task);
-        rT();
+        persistTaskDetailChanges(task, { kanban: true });
     }
 }
 
-/**
- * 打开优先级选择器（在抽屉中）
- */
 function openPriorityPickerInDrawer(taskId) {
     const task = findTaskById(taskId);
     if (!task) return;
 
     const priorities = [
-        { value: 'high', label: '高' },
-        { value: 'medium', label: '中' },
-        { value: 'normal', label: '正常' },
-        { value: 'low', label: '低' }
+        { value: 'high', label: '0. 高' },
+        { value: 'medium', label: '1. 中' },
+        { value: 'normal', label: '2. 正常' },
+        { value: 'low', label: '3. 低' }
     ];
 
     const current = task.priority || 'normal';
-    const currentIndex = priorities.findIndex(function(p) { return p.value === current; });
+    const currentIndex = priorities.findIndex(function(item) {
+        return item.value === current;
+    });
 
     const newPriority = prompt(
-        '选择优先级:\n' + priorities.map(function(p, i) {
-            return (i === currentIndex ? '▶ ' : '  ') + p.label;
+        '选择优先级\n' + priorities.map(function(item, index) {
+            return (index === currentIndex ? '当前 ' : '    ') + item.label;
         }).join('\n'),
-        currentIndex
+        String(Math.max(currentIndex, 0))
     );
 
-    if (newPriority !== null && newPriority !== '') {
-        const index = parseInt(newPriority);
-        if (index >= 0 && index < priorities.length) {
-            task.priority = priorities[index].value;
-            saveData();
-            renderDrawerContent(task);
-            rT();
-        }
+    if (newPriority === null || newPriority === '') return;
+
+    const index = parseInt(newPriority, 10);
+    if (index >= 0 && index < priorities.length) {
+        task.priority = priorities[index].value;
+        persistTaskDetailChanges(task, { kanban: true });
     }
 }
 
-/**
- * 打开耗时输入（在抽屉中）
- */
 function openDurationPickerInDrawer(taskId) {
     const task = findTaskById(taskId);
     if (!task) return;
 
-    const newDuration = prompt('输入预计耗时 (分钟):', task.duration || '30');
-    if (newDuration !== null) {
-        const duration = parseInt(newDuration);
-        if (!isNaN(duration) && duration >= 0) {
-            task.duration = duration;
-            saveData();
-            renderDrawerContent(task);
-            rT();
-        }
+    const newDuration = prompt('输入预计时长 (分钟)', task.duration || '30');
+    if (newDuration === null) return;
+
+    const duration = parseInt(newDuration, 10);
+    if (!isNaN(duration) && duration >= 0) {
+        task.duration = duration;
+        persistTaskDetailChanges(task, { kanban: true });
     }
 }
 
-/**
- * 打开重复设置（在抽屉中）
- */
 function openRepeatInDrawer(taskId) {
-    toast('重复功能开发中...');
+    if (typeof openCustomRepeatModal === 'function') {
+        openCustomRepeatModal(taskId);
+        return;
+    }
+    toast('重复规则功能暂不可用');
 }
 
-/**
- * 切换冻结状态（在抽屉中）
- */
 function toggleFreezeInDrawer(taskId) {
     const task = findTaskById(taskId);
     if (!task) return;
 
     task.frozen = !task.frozen;
-    saveData();
-    renderDrawerContent(task);
-    rT();
+    persistTaskDetailChanges(task, { kanban: true });
     toast(task.frozen ? '任务已冻结' : '任务已解冻');
 }
 
-/**
- * 删除任务（在抽屉中）
- */
 function deleteTaskInDrawer(taskId) {
     if (confirm('确定要删除这个任务吗？')) {
         del(taskId);
-        closeDrawer();
+        closeTaskDetail();
     }
 }
 
-// ==================== 导出（供外部调用） ====================
-
-// 将 openTaskDrawer 暴露到全局
 window.openTaskDrawer = openTaskDrawer;
+window.openTaskDetail = openTaskDrawer;
 window.closeDrawer = closeDrawer;
+window.closeTaskDetail = closeTaskDetail;
+window.syncTaskDetailPanel = syncTaskDetailPanel;
