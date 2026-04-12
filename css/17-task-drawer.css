@@ -1,0 +1,538 @@
+/* =========================================
+   右侧抽屉面板样式
+   Task Drawer Panel Styles
+   ========================================= */
+
+/* 抽屉容器基础样式 */
+#right-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 0;
+    overflow: hidden;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    will-change: width;
+}
+
+/* 过渡动画 */
+.drawer-transition {
+    transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                border-width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 关闭状态 - 宽度为0，无边框 */
+.drawer-closed {
+    width: 0 !important;
+    border-left-width: 0 !important;
+}
+
+/* 打开状态 - 宽度 420px，有左侧边框 */
+.drawer-open {
+    width: 420px !important;
+    border-left-width: 1px !important;
+}
+
+/* 抽屉内部固定宽度容器 */
+.drawer-inner {
+    width: 420px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--card);
+}
+
+/* 抽屉头部 */
+.drawer-header {
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--inp-bd);
+    background: var(--card);
+    flex-shrink: 0;
+}
+
+.drawer-header-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text3);
+}
+
+.drawer-header-actions {
+    display: flex;
+    gap: 4px;
+}
+
+/* 抽屉头部按钮 */
+.drawer-header-btn {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: var(--text3);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.drawer-header-btn:hover {
+    background: var(--hov);
+    color: var(--text);
+}
+
+.drawer-header-btn.close:hover {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+/* 抽屉内容区域 */
+.drawer-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.25s ease 0.1s;
+}
+
+.drawer-content.fade-in {
+    opacity: 1;
+}
+
+/* 内容淡出状态 */
+.drawer-content.fade-out {
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+/* =========================================
+   任务详情内容样式
+   ========================================= */
+
+/* 任务大标题区域 */
+.drawer-task-title {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.drawer-task-check {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text3);
+    cursor: pointer;
+    transition: color 0.2s ease;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.drawer-task-check:hover {
+    color: #22c55e;
+}
+
+.drawer-task-check.checked {
+    color: #22c55e;
+}
+
+.drawer-task-title-text {
+    flex: 1;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.5;
+    outline: none;
+    border: none;
+    background: transparent;
+    padding: 4px 8px;
+    margin: -4px -8px;
+    border-radius: 6px;
+    transition: background 0.2s ease;
+}
+
+.drawer-task-title-text:hover {
+    background: var(--hov);
+}
+
+.drawer-task-title-text:focus {
+    background: var(--hov);
+    box-shadow: 0 0 0 2px var(--acc-bd);
+}
+
+/* 属性列表 */
+.drawer-attrs {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 20px;
+}
+
+.drawer-attr-row {
+    display: flex;
+    align-items: center;
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.drawer-attr-row:hover {
+    background: var(--hov);
+}
+
+.drawer-attr-label {
+    width: 88px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8125rem;
+    color: var(--text3);
+    flex-shrink: 0;
+}
+
+.drawer-attr-label svg {
+    width: 16px;
+    height: 16px;
+}
+
+.drawer-attr-value {
+    flex: 1;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* 优先级颜色指示器 */
+.priority-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.priority-dot.high { background: #ef4444; }
+.priority-dot.medium { background: #f59e0b; }
+.priority-dot.normal { background: #3b82f6; }
+.priority-dot.low { background: #94a3b8; }
+
+/* 耗时标签 */
+.time-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--inp-bg);
+    color: var(--text2);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    border: 1px solid var(--inp-bd);
+}
+
+/* 标签列表 */
+.drawer-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.drawer-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    background: var(--hov);
+    color: var(--text2);
+    border: 1px solid var(--inp-bd);
+}
+
+/* 分割线 */
+.drawer-divider {
+    border: none;
+    border-top: 1px solid var(--inp-bd);
+    margin: 20px 0;
+}
+
+/* =========================================
+   子任务区域样式
+   ========================================= */
+
+.drawer-subtasks {
+    margin-bottom: 24px;
+}
+
+.drawer-subtasks-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.drawer-subtasks-header svg {
+    width: 16px;
+    height: 16px;
+    color: var(--text3);
+}
+
+.drawer-subtasks-count {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text3);
+    background: var(--inp-bg);
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.drawer-subtasks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+/* 子任务项 */
+.subtask-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: 1px solid transparent;
+}
+
+.subtask-row:hover {
+    background: var(--hov);
+    border-color: var(--inp-bd);
+}
+
+.subtask-check {
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--inp-bd);
+    border-radius: 50%;
+    color: transparent;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.subtask-check:hover {
+    border-color: #22c55e;
+}
+
+.subtask-check.done {
+    background: #22c55e;
+    border-color: #22c55e;
+    color: white;
+}
+
+.subtask-text {
+    flex: 1;
+    font-size: 0.875rem;
+    color: var(--text);
+    transition: color 0.2s ease;
+}
+
+.subtask-text.done {
+    color: var(--text3);
+    text-decoration: line-through;
+}
+
+/* 添加子任务按钮 */
+.subtask-add-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    color: var(--text3);
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.15s ease;
+    margin-top: 4px;
+}
+
+.subtask-add-btn:hover {
+    background: var(--hov);
+    color: var(--text2);
+}
+
+.subtask-add-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.subtask-add-btn span {
+    font-size: 0.875rem;
+}
+
+/* =========================================
+   备注区域样式
+   ========================================= */
+
+.drawer-notes {
+    margin-bottom: 24px;
+}
+
+.drawer-notes-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.drawer-notes-header svg {
+    width: 16px;
+    height: 16px;
+    color: var(--text3);
+}
+
+.drawer-notes-textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 12px;
+    border: 1px solid var(--inp-bd);
+    border-radius: 8px;
+    background: var(--inp-bg);
+    color: var(--text);
+    font-size: 0.875rem;
+    font-family: inherit;
+    line-height: 1.6;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.drawer-notes-textarea:focus {
+    border-color: var(--acc-bd);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.drawer-notes-textarea::placeholder {
+    color: var(--text3);
+}
+
+/* =========================================
+   抽屉底部操作栏
+   ========================================= */
+
+.drawer-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--inp-bd);
+    background: var(--card);
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.drawer-footer-btn {
+    flex: 1;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: 1px solid var(--inp-bd);
+    background: var(--card);
+    color: var(--text2);
+}
+
+.drawer-footer-btn:hover {
+    background: var(--hov);
+    color: var(--text);
+}
+
+.drawer-footer-btn.danger:hover {
+    background: #fef2f2;
+    color: #dc2626;
+    border-color: #fecaca;
+}
+
+.drawer-footer-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* =========================================
+   暗色主题适配
+   ========================================= */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --drawer-bg: var(--card);
+    }
+}
+
+/* 暗色主题下抽屉背景 */
+[data-theme="dark"] #right-drawer {
+    background: #1f2937;
+    border-left-color: #374151;
+}
+
+[data-theme="dark"] .drawer-header {
+    background: #1f2937;
+    border-bottom-color: #374151;
+}
+
+[data-theme="dark"] .drawer-footer {
+    background: #1f2937;
+    border-top-color: #374151;
+}
+
+[data-theme="dark"] .drawer-content {
+    background: #1f2937;
+}
+
+[data-theme="dark"] .subtask-row:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .drawer-attr-row:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .drawer-footer-btn.danger:hover {
+    background: rgba(220, 38, 38, 0.1);
+}
+
+/* =========================================
+   响应式适配
+   ========================================= */
+
+@media (max-width: 768px) {
+    .drawer-open {
+        width: 100vw !important;
+    }
+
+    .drawer-inner {
+        width: 100vw;
+    }
+}
