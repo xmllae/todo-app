@@ -391,11 +391,15 @@ function renderDrawerContent(task) {
     const notesHtml = renderNotesArea(task);
 
     content.innerHTML = `
-        <div class="drawer-task-title">
-            <div class="drawer-task-check ${task.done ? 'checked' : ''}"
+        <div class="drawer-task-title ${task.done ? 'drawer-task-title--done' : ''}">
+            <div class="task-ck-slot task-ck-ring ${task.priority === 'high' ? 'task-ck-ring--prio-high' : ''} ${task.done ? 'task-ck-ring--done' : ''}"
                  onclick="toggleTaskDoneFromDrawer(${task.id})"
                  title="${task.done ? '标记为未完成' : '标记为已完成'}">
-                ${task.done ? getCheckIconSvg() : getCircleIconSvg()}
+                <div class="tc-check">
+                    <div class="chk-ring ${task.done ? 'checked' : ''}">
+                        ${task.done ? '<svg class="chk-ring-ico" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.15 12.35 10.95 16.05 17.1 8.2" stroke="currentColor" stroke-width="2.55" stroke-linecap="round" stroke-linejoin="round"/></svg>' : ''}
+                    </div>
+                </div>
             </div>
             <input type="text"
                    class="drawer-task-title-text"
@@ -568,9 +572,13 @@ function renderSubtasksList(task) {
         return `
             <div class="subtask-row"
                  data-subtask-id="${sub.id}">
-                <div class="subtask-check ${isDone ? 'done' : ''}"
+                <div class="subtask-check task-ck-slot ${isDone ? 'task-ck-ring--done' : ''}"
                      onclick="event.stopPropagation();toggleSubtaskInDrawer(${task.id}, ${sub.id})">
-                    ${isDone ? getCheckIconSvg() : ''}
+                    <div class="tc-check">
+                        <div class="chk-ring ${isDone ? 'checked' : ''}">
+                            ${isDone ? '<svg class="chk-ring-ico" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.15 12.35 10.95 16.05 17.1 8.2" stroke="currentColor" stroke-width="2.55" stroke-linecap="round" stroke-linejoin="round"/></svg>' : ''}
+                        </div>
+                    </div>
                 </div>
                 <span class="subtask-text ${isDone ? 'done' : ''}"
                       onclick="event.stopPropagation();toggleSubtaskInDrawer(${task.id}, ${sub.id})">${escapeHtml(sub.text)}</span>
@@ -639,6 +647,28 @@ function toggleTaskDoneFromDrawer(taskId) {
         task.archived = false;
     }
 
+    // Update title styling
+    const titleEl = document.querySelector('.drawer-task-title');
+    const checkSlot = document.querySelector('.drawer-task-check-slot');
+    const chkRing = document.querySelector('.drawer-task-check-slot .chk-ring');
+    const titleInput = document.getElementById('drawer-task-title-input');
+
+    if (titleEl) {
+        titleEl.classList.toggle('drawer-task-title--done', task.done);
+    }
+    if (checkSlot) {
+        checkSlot.classList.toggle('task-ck-ring--done', task.done);
+    }
+    if (chkRing) {
+        chkRing.classList.toggle('checked', task.done);
+        chkRing.innerHTML = task.done
+            ? '<svg class="chk-ring-ico" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.15 12.35 10.95 16.05 17.1 8.2" stroke="currentColor" stroke-width="2.55" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+            : '';
+    }
+    if (titleInput) {
+        titleInput.classList.toggle('drawer-task-title--done', task.done);
+    }
+
     persistTaskDetailChanges(task, { calendar: true, kanban: true });
 }
 
@@ -680,6 +710,28 @@ function toggleSubtaskInDrawer(taskId, subtaskId) {
     if (!subtask) return;
 
     subtask.done = !subtask.done;
+
+    // Update checkbox visual
+    const subtaskRow = document.querySelector(`.subtask-row[data-subtask-id="${subtaskId}"]`);
+    if (subtaskRow) {
+        const checkSlot = subtaskRow.querySelector('.subtask-check');
+        const chkRing = subtaskRow.querySelector('.chk-ring');
+        const textSpan = subtaskRow.querySelector('.subtask-text');
+
+        if (checkSlot) {
+            checkSlot.classList.toggle('task-ck-ring--done', subtask.done);
+        }
+        if (chkRing) {
+            chkRing.classList.toggle('checked', subtask.done);
+            chkRing.innerHTML = subtask.done
+                ? '<svg class="chk-ring-ico" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.15 12.35 10.95 16.05 17.1 8.2" stroke="currentColor" stroke-width="2.55" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+                : '';
+        }
+        if (textSpan) {
+            textSpan.classList.toggle('done', subtask.done);
+        }
+    }
+
     persistTaskDetailChanges(task, { kanban: true });
 }
 
