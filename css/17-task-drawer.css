@@ -269,63 +269,118 @@
     padding: 8px 4px;
 }
 
-.drawer-task-check-slot {
+/* =========================================
+   Task Check Ring (Circle) - Drawer
+   ========================================= */
+
+/* Wrapper for the check ring */
+.task-detail-inner .task-ck-ring {
+    width: 22px;
+    height: 22px;
     flex-shrink: 0;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* Let global .task-ck-ring styles handle the checkbox visuals */
-/* High priority ring in drawer */
-.drawer-task-check-slot.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring {
+/* Inner container */
+.task-detail-inner .task-ck-ring .tc-check {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* The actual ring circle */
+.task-detail-inner .task-ck-ring .chk-ring {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid color-mix(in srgb, var(--inp-bd) 85%, #e5e7eb);
+    background: var(--card);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, .05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .25s;
+    font-size: 10px;
+    color: transparent;
+}
+
+.task-detail-inner .task-ck-ring .chk-ring .chk-ring-ico {
+    color: transparent;
+    transition: color .15s;
+}
+
+.task-detail-inner .task-ck-ring .chk-ring.hover-check .chk-ring-ico,
+.task-detail-inner .task-ck-ring .chk-ring:hover .chk-ring-ico {
+    color: var(--acc2);
+}
+
+.task-detail-inner .task-ck-ring .chk-ring:hover {
+    border-color: var(--acc2);
+    background: var(--acc-bg);
+}
+
+/* High priority ring */
+.task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring:hover .chk-ring-ico {
+    color: #ef4444;
+}
+
+/* High priority ring */
+.task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring {
     border-style: solid !important;
     border-width: 2.5px !important;
     border-color: #ef4444 !important;
     background: color-mix(in srgb, #ef4444 6%, var(--card)) !important;
+    box-shadow: none !important;
 }
 
-.dark .drawer-task-check-slot.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring {
-    background: color-mix(in srgb, #f87171 10%, var(--card)) !important;
-}
-
-.drawer-task-check-slot.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring:hover {
+.task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring:hover {
     border-color: color-mix(in srgb, #ef4444 82%, #450a0a) !important;
     background: color-mix(in srgb, #ef4444 11%, var(--card)) !important;
 }
 
-.dark .drawer-task-check-slot.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring:hover {
+.dark .task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring {
+    background: color-mix(in srgb, #f87171 10%, var(--card)) !important;
+}
+
+.dark .task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring:hover {
     border-color: #ef4444 !important;
     background: color-mix(in srgb, #ef4444 15%, var(--card)) !important;
 }
 
-/* Done state in drawer - same as task row */
-.drawer-task-check-slot.task-ck-ring--done .chk-ring {
+/* Done state - normal priority */
+.task-detail-inner .task-ck-ring.task-ck-ring--done .chk-ring {
     background: #22c55e !important;
     border-color: #22c55e !important;
-    box-shadow: 0 1px 3px rgba(34, 197, 94, 0.3) !important;
 }
 
-.drawer-task-check-slot.task-ck-ring--done .chk-ring:hover {
+.task-detail-inner .task-ck-ring.task-ck-ring--done .chk-ring:hover {
     background: #16a34a !important;
     border-color: #16a34a !important;
 }
 
-.drawer-task-check-slot.task-ck-ring--done .chk-ring.checked {
+.task-detail-inner .task-ck-ring.task-ck-ring--done .chk-ring.checked {
     background: #22c55e !important;
     border-color: transparent !important;
 }
 
-.drawer-task-check-slot.task-ck-ring--done .chk-ring svg {
+.task-detail-inner .task-ck-ring .chk-ring svg,
+.task-detail-inner .task-ck-ring.task-ck-ring--done .chk-ring svg {
     color: #fff;
 }
 
-/* High priority done in drawer */
-.drawer-task-check-slot.task-ck-ring--prio-high.task-ck-ring--done .chk-ring {
+/* High priority done state */
+.task-detail-inner .task-ck-ring.task-ck-ring--prio-high.task-ck-ring--done .chk-ring {
     background: #ef4444 !important;
     border-color: transparent !important;
     box-shadow: 0 1px 4px rgba(220, 38, 38, .28) !important;
 }
 
-.dark .drawer-task-check-slot.task-ck-ring--prio-high.task-ck-ring--done .chk-ring {
+.dark .task-detail-inner .task-ck-ring.task-ck-ring--prio-high.task-ck-ring--done .chk-ring {
     background: #ef4444 !important;
     box-shadow: 0 1px 5px rgba(239, 68, 68, .32) !important;
 }
@@ -528,24 +583,59 @@
     border-color: var(--inp-bd);
 }
 
-/* Subtask check - uses global task-ck-slot styles */
+/* Subtask check - uses same ring styles */
 .subtask-check.task-ck-slot {
     width: 22px;
     height: 22px;
     flex-shrink: 0;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.subtask-check.task-ck-slot .tc-check {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .subtask-check.task-ck-slot .chk-ring {
     width: 22px;
     height: 22px;
-    box-shadow: none;
+    border-radius: 50%;
+    border: 1.5px solid color-mix(in srgb, var(--inp-bd) 85%, #e5e7eb);
+    background: var(--card);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, .05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .25s;
+    font-size: 10px;
+    color: transparent;
+}
+
+.subtask-check.task-ck-slot .chk-ring .chk-ring-ico {
+    color: transparent;
+    transition: color .15s;
+}
+
+.subtask-check.task-ck-slot .chk-ring.hover-check .chk-ring-ico,
+.subtask-check.task-ck-slot .chk-ring:hover .chk-ring-ico {
+    color: var(--acc2);
+}
+
+.subtask-check.task-ck-slot .chk-ring:hover {
+    border-color: var(--acc2);
+    background: var(--acc-bg);
 }
 
 .subtask-check.task-ck-slot.task-ck-ring--done .chk-ring {
     background: #22c55e !important;
     border-color: #22c55e !important;
-    box-shadow: none !important;
+    box-shadow: 0 1px 3px rgba(34, 197, 94, 0.3) !important;
 }
 
 .subtask-check.task-ck-slot.task-ck-ring--done .chk-ring:hover {

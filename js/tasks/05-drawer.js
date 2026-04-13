@@ -394,10 +394,12 @@ function renderDrawerContent(task) {
         <div class="drawer-task-title ${task.done ? 'drawer-task-title--done' : ''}">
             <div class="task-ck-slot task-ck-ring ${task.priority === 'high' ? 'task-ck-ring--prio-high' : ''} ${task.done ? 'task-ck-ring--done' : ''}"
                  onclick="toggleTaskDoneFromDrawer(${task.id})"
-                 title="${task.done ? '标记为未完成' : '标记为已完成'}">
+                 title="${task.done ? '标记为未完成' : '标记为已完成'}"
+                 onmouseenter="handleCheckRingHover(this, true)"
+                 onmouseleave="handleCheckRingHover(this, false)">
                 <div class="tc-check">
                     <div class="chk-ring ${task.done ? 'checked' : ''}">
-                        ${task.done ? '<svg class="chk-ring-ico" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.15 12.35 10.95 16.05 17.1 8.2" stroke="currentColor" stroke-width="2.55" stroke-linecap="round" stroke-linejoin="round"/></svg>' : ''}
+                        <svg class="chk-ring-ico" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.15 12.35 10.95 16.05 17.1 8.2" stroke="currentColor" stroke-width="2.55" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </div>
                 </div>
             </div>
@@ -573,10 +575,12 @@ function renderSubtasksList(task) {
             <div class="subtask-row"
                  data-subtask-id="${sub.id}">
                 <div class="subtask-check task-ck-slot ${isDone ? 'task-ck-ring--done' : ''}"
-                     onclick="event.stopPropagation();toggleSubtaskInDrawer(${task.id}, ${sub.id})">
+                     onclick="event.stopPropagation();toggleSubtaskInDrawer(${task.id}, ${sub.id})"
+                     onmouseenter="handleSubtaskCheckHover(this, true)"
+                     onmouseleave="handleSubtaskCheckHover(this, false)">
                     <div class="tc-check">
                         <div class="chk-ring ${isDone ? 'checked' : ''}">
-                            ${isDone ? '<svg class="chk-ring-ico" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.15 12.35 10.95 16.05 17.1 8.2" stroke="currentColor" stroke-width="2.55" stroke-linecap="round" stroke-linejoin="round"/></svg>' : ''}
+                            <svg class="chk-ring-ico" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.15 12.35 10.95 16.05 17.1 8.2" stroke="currentColor" stroke-width="2.55" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </div>
                     </div>
                 </div>
@@ -649,8 +653,8 @@ function toggleTaskDoneFromDrawer(taskId) {
 
     // Update title styling
     const titleEl = document.querySelector('.drawer-task-title');
-    const checkSlot = document.querySelector('.drawer-task-check-slot');
-    const chkRing = document.querySelector('.drawer-task-check-slot .chk-ring');
+    const checkSlot = document.querySelector('.task-ck-ring');
+    const chkRing = document.querySelector('.task-ck-ring .chk-ring');
     const titleInput = document.getElementById('drawer-task-title-input');
 
     if (titleEl) {
@@ -658,12 +662,18 @@ function toggleTaskDoneFromDrawer(taskId) {
     }
     if (checkSlot) {
         checkSlot.classList.toggle('task-ck-ring--done', task.done);
+        // Update hover handlers based on done state
+        if (task.done) {
+            checkSlot.onmouseenter = null;
+            checkSlot.onmouseleave = null;
+        } else {
+            checkSlot.onmouseenter = function() { handleCheckRingHover(this, true); };
+            checkSlot.onmouseleave = function() { handleCheckRingHover(this, false); };
+        }
     }
     if (chkRing) {
         chkRing.classList.toggle('checked', task.done);
-        chkRing.innerHTML = task.done
-            ? '<svg class="chk-ring-ico" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.15 12.35 10.95 16.05 17.1 8.2" stroke="currentColor" stroke-width="2.55" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-            : '';
+        chkRing.innerHTML = '<svg class="chk-ring-ico" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.15 12.35 10.95 16.05 17.1 8.2" stroke="currentColor" stroke-width="2.55" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     }
     if (titleInput) {
         titleInput.classList.toggle('drawer-task-title--done', task.done);
@@ -720,12 +730,18 @@ function toggleSubtaskInDrawer(taskId, subtaskId) {
 
         if (checkSlot) {
             checkSlot.classList.toggle('task-ck-ring--done', subtask.done);
+            // Update hover handlers
+            if (subtask.done) {
+                checkSlot.onmouseenter = null;
+                checkSlot.onmouseleave = null;
+            } else {
+                checkSlot.onmouseenter = function() { handleSubtaskCheckHover(this, true); };
+                checkSlot.onmouseleave = function() { handleSubtaskCheckHover(this, false); };
+            }
         }
         if (chkRing) {
             chkRing.classList.toggle('checked', subtask.done);
-            chkRing.innerHTML = subtask.done
-                ? '<svg class="chk-ring-ico" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.15 12.35 10.95 16.05 17.1 8.2" stroke="currentColor" stroke-width="2.55" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-                : '';
+            chkRing.classList.remove('hover-check');
         }
         if (textSpan) {
             textSpan.classList.toggle('done', subtask.done);
@@ -815,6 +831,34 @@ function getPriorityText(priority) {
         case 'normal': return '正常';
         case 'low': return '低';
         default: return '正常';
+    }
+}
+
+function handleCheckRingHover(element, isEntering) {
+    const chkRing = element.querySelector('.chk-ring');
+    if (!chkRing) return;
+
+    // Don't show checkmark if already done
+    if (chkRing.classList.contains('checked')) return;
+
+    if (isEntering) {
+        chkRing.classList.add('hover-check');
+    } else {
+        chkRing.classList.remove('hover-check');
+    }
+}
+
+function handleSubtaskCheckHover(element, isEntering) {
+    const chkRing = element.querySelector('.chk-ring');
+    if (!chkRing) return;
+
+    // Don't show checkmark if already done
+    if (chkRing.classList.contains('checked')) return;
+
+    if (isEntering) {
+        chkRing.classList.add('hover-check');
+    } else {
+        chkRing.classList.remove('hover-check');
     }
 }
 
