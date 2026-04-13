@@ -407,7 +407,7 @@ function renderDrawerContent(task) {
         </div>
 
         <div class="drawer-attrs">
-            <div class="drawer-attr-row" onclick="event.stopPropagation();openTimePickerInDrawer(${task.id})">
+            <div class="drawer-attr-row drawer-attr-row--inline">
                 <div class="drawer-attr-label">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10"/>
@@ -415,10 +415,17 @@ function renderDrawerContent(task) {
                     </svg>
                     时间
                 </div>
-                <div class="drawer-attr-value">${task.planTime || '全天'}</div>
+                <div class="drawer-attr-value">
+                    <input type="time"
+                           class="drawer-inline-input drawer-time-input"
+                           id="drawer-time-input-${task.id}"
+                           value="${task.planTime || ''}"
+                           onclick="event.stopPropagation()"
+                           onchange="saveDrawerTime(${task.id})">
+                </div>
             </div>
 
-            <div class="drawer-attr-row" onclick="event.stopPropagation();openPriorityPickerInDrawer(${task.id})">
+            <div class="drawer-attr-row drawer-attr-row--inline">
                 <div class="drawer-attr-label">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
@@ -426,12 +433,19 @@ function renderDrawerContent(task) {
                     优先级
                 </div>
                 <div class="drawer-attr-value">
-                    <span class="priority-dot ${priorityClass}"></span>
-                    ${priorityText}
+                    <select class="drawer-inline-select"
+                            id="drawer-priority-input-${task.id}"
+                            onclick="event.stopPropagation()"
+                            onchange="saveDrawerPriority(${task.id})">
+                        <option value="high" ${task.priority === 'high' ? 'selected' : ''}>高</option>
+                        <option value="medium" ${task.priority === 'medium' ? 'selected' : ''}>中</option>
+                        <option value="normal" ${!task.priority || task.priority === 'normal' ? 'selected' : ''}>正常</option>
+                        <option value="low" ${task.priority === 'low' ? 'selected' : ''}>低</option>
+                    </select>
                 </div>
             </div>
 
-            <div class="drawer-attr-row" onclick="event.stopPropagation();openDurationPickerInDrawer(${task.id})">
+            <div class="drawer-attr-row drawer-attr-row--inline">
                 <div class="drawer-attr-label">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10"/>
@@ -441,7 +455,16 @@ function renderDrawerContent(task) {
                     时长
                 </div>
                 <div class="drawer-attr-value">
-                    ${task.duration ? `<span class="time-badge">${task.duration} 分钟</span>` : '<span style="color:var(--text3)">未设置</span>'}
+                    <input type="number"
+                           class="drawer-inline-input drawer-duration-input"
+                           id="drawer-duration-input-${task.id}"
+                           value="${task.duration || ''}"
+                           min="0"
+                           max="480"
+                           placeholder="分钟"
+                           onclick="event.stopPropagation()"
+                           onchange="saveDrawerDuration(${task.id})">
+                    <span class="drawer-input-suffix">分钟</span>
                 </div>
             </div>
 
@@ -476,7 +499,26 @@ function renderDrawerContent(task) {
             </div>
             <div class="drawer-subtasks-list">
                 ${subtasksHtml}
-                <div class="subtask-add-btn" onclick="event.stopPropagation();openAddSubtaskInDrawer(${task.id})">
+                <div class="subtask-add-inline" id="subtask-add-inline-${task.id}" style="display:none">
+                    <input type="text"
+                           class="subtask-add-input"
+                           id="subtask-add-input-${task.id}"
+                           placeholder="输入子任务内容，按回车添加..."
+                           onclick="event.stopPropagation()"
+                           onkeydown="if(event.key==='Enter'){addSubtaskFromDrawer(${task.id});}if(event.key==='Escape'){hideSubtaskAddInline(${task.id})}">
+                    <button type="button" class="subtask-add-confirm-btn" onclick="addSubtaskFromDrawer(${task.id})" title="确认">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                    </button>
+                    <button type="button" class="subtask-add-cancel-btn" onclick="hideSubtaskAddInline(${task.id})" title="取消">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"/>
+                            <line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="subtask-add-btn" onclick="event.stopPropagation();showSubtaskAddInline(${task.id})">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="12" y1="5" x2="12" y2="19"/>
                         <line x1="5" y1="12" x2="19" y2="12"/>
@@ -630,11 +672,42 @@ function toggleSubtaskInDrawer(taskId, subtaskId) {
 }
 
 function openAddSubtaskInDrawer(taskId) {
+    // 已改为内嵌输入，此函数保留但不再使用
+}
+
+function showSubtaskAddInline(taskId) {
+    const inputWrap = document.getElementById('subtask-add-inline-' + taskId);
+    const addBtn = inputWrap && inputWrap.nextElementSibling;
+    const input = document.getElementById('subtask-add-input-' + taskId);
+
+    if (!inputWrap || !addBtn || !input) return;
+
+    inputWrap.style.display = 'flex';
+    addBtn.style.display = 'none';
+    input.focus();
+}
+
+function hideSubtaskAddInline(taskId) {
+    const inputWrap = document.getElementById('subtask-add-inline-' + taskId);
+    const addBtn = inputWrap && inputWrap.nextElementSibling;
+    const input = document.getElementById('subtask-add-input-' + taskId);
+
+    if (!inputWrap || !addBtn || !input) return;
+
+    inputWrap.style.display = 'none';
+    addBtn.style.display = 'flex';
+    input.value = '';
+}
+
+function addSubtaskFromDrawer(taskId) {
+    const input = document.getElementById('subtask-add-input-' + taskId);
+    if (!input) return;
+
+    const newText = input.value.trim();
+    if (!newText) return;
+
     const task = findTaskById(taskId);
     if (!task) return;
-
-    const newText = prompt('输入子任务内容');
-    if (!newText || !newText.trim()) return;
 
     if (!task.subtasks) {
         task.subtasks = [];
@@ -642,10 +715,12 @@ function openAddSubtaskInDrawer(taskId) {
 
     task.subtasks.push({
         id: Date.now(),
-        text: newText.trim(),
+        text: newText,
         done: false
     });
 
+    input.value = '';
+    hideSubtaskAddInline(taskId);
     persistTaskDetailChanges(task, { kanban: true });
 }
 
@@ -689,59 +764,63 @@ function escapeHtml(text) {
 }
 
 function openTimePickerInDrawer(taskId) {
+    // 已改为内嵌输入，此函数保留但不再使用
+}
+
+function saveDrawerTime(taskId) {
+    const input = document.getElementById('drawer-time-input-' + taskId);
+    if (!input) return;
+
     const task = findTaskById(taskId);
     if (!task) return;
 
-    const newTime = prompt('输入计划时间 (HH:MM)', task.planTime || '');
-    if (newTime !== null) {
-        task.planTime = newTime || '';
+    const newTime = input.value.trim();
+    if (newTime !== (task.planTime || '')) {
+        task.planTime = newTime;
         persistTaskDetailChanges(task, { kanban: true });
     }
 }
 
 function openPriorityPickerInDrawer(taskId) {
+    // 已改为内嵌输入，此函数保留但不再使用
+}
+
+function saveDrawerPriority(taskId) {
+    const select = document.getElementById('drawer-priority-input-' + taskId);
+    if (!select) return;
+
     const task = findTaskById(taskId);
     if (!task) return;
 
-    const priorities = [
-        { value: 'high', label: '0. 高' },
-        { value: 'medium', label: '1. 中' },
-        { value: 'normal', label: '2. 正常' },
-        { value: 'low', label: '3. 低' }
-    ];
-
-    const current = task.priority || 'normal';
-    const currentIndex = priorities.findIndex(function(item) {
-        return item.value === current;
-    });
-
-    const newPriority = prompt(
-        '选择优先级\n' + priorities.map(function(item, index) {
-            return (index === currentIndex ? '当前 ' : '    ') + item.label;
-        }).join('\n'),
-        String(Math.max(currentIndex, 0))
-    );
-
-    if (newPriority === null || newPriority === '') return;
-
-    const index = parseInt(newPriority, 10);
-    if (index >= 0 && index < priorities.length) {
-        task.priority = priorities[index].value;
+    const newPriority = select.value;
+    if (newPriority !== (task.priority || 'normal')) {
+        task.priority = newPriority;
         persistTaskDetailChanges(task, { kanban: true });
     }
 }
 
 function openDurationPickerInDrawer(taskId) {
+    // 已改为内嵌输入，此函数保留但不再使用
+}
+
+function saveDrawerDuration(taskId) {
+    const input = document.getElementById('drawer-duration-input-' + taskId);
+    if (!input) return;
+
     const task = findTaskById(taskId);
     if (!task) return;
 
-    const newDuration = prompt('输入预计时长 (分钟)', task.duration || '30');
-    if (newDuration === null) return;
-
-    const duration = parseInt(newDuration, 10);
-    if (!isNaN(duration) && duration >= 0) {
-        task.duration = duration;
-        persistTaskDetailChanges(task, { kanban: true });
+    const newDuration = parseInt(input.value, 10);
+    if (!isNaN(newDuration) && newDuration >= 0) {
+        if (task.duration !== newDuration) {
+            task.duration = newDuration;
+            persistTaskDetailChanges(task, { kanban: true });
+        }
+    } else if (input.value === '') {
+        if (task.duration) {
+            task.duration = undefined;
+            persistTaskDetailChanges(task, { kanban: true });
+        }
     }
 }
 
