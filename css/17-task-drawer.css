@@ -433,35 +433,134 @@
 .drawer-priority-btn {
     display: flex;
     align-items: center;
-    padding: 6px 8px;
-    border: none;
-    background: transparent;
+    justify-content: space-between;
+    gap: 12px;
+    min-width: 170px;
+    padding: 10px 12px;
+    border: 1px solid color-mix(in srgb, var(--task-bd) 64%, transparent);
+    background:
+        linear-gradient(180deg, color-mix(in srgb, var(--card) 94%, #ffffff) 0%, color-mix(in srgb, var(--card) 100%, #eef2f7) 100%);
     cursor: pointer;
-    border-radius: 8px;
-    transition: background 0.15s;
+    border-radius: 14px;
+    box-shadow:
+        0 8px 24px rgba(15, 23, 42, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.78);
+    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
 }
 
 .drawer-priority-btn:hover {
-    background: var(--hov);
+    transform: translateY(-1px);
+    border-color: color-mix(in srgb, var(--acc-bd) 38%, var(--task-bd));
+    box-shadow:
+        0 12px 28px rgba(15, 23, 42, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.drawer-priority-btn-copy {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.drawer-priority-btn-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+    min-width: 0;
+}
+
+.drawer-priority-btn-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--text);
+}
+
+.drawer-priority-btn-note {
+    font-size: 0.72rem;
+    line-height: 1.1;
+    color: var(--text3);
+}
+
+.drawer-priority-preview-ring {
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    flex-shrink: 0;
+    position: relative;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78);
+}
+
+.drawer-priority-preview-ring::after {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border-radius: 999px;
+    background: transparent;
+    transition: background 0.18s ease;
+}
+
+.drawer-priority-preview-ring--high {
+    border: 2px solid #ef4444;
+    background: color-mix(in srgb, #ef4444 10%, var(--card));
+}
+
+.drawer-priority-preview-ring--high::after {
+    background: color-mix(in srgb, #ef4444 88%, white 12%);
+}
+
+.drawer-priority-preview-ring--normal {
+    border: 1.7px solid color-mix(in srgb, var(--inp-bd) 88%, #d8dee8);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--card) 96%, #ffffff), color-mix(in srgb, var(--card) 92%, #edf2f7));
+}
+
+.drawer-priority-btn.is-high {
+    border-color: color-mix(in srgb, #ef4444 30%, var(--task-bd));
+    background:
+        linear-gradient(180deg, color-mix(in srgb, #ef4444 10%, var(--card)) 0%, color-mix(in srgb, #ef4444 4%, var(--card)) 100%);
+}
+
+.drawer-priority-btn.is-high .drawer-priority-btn-label {
+    color: #b91c1c;
+}
+
+.drawer-priority-btn.is-normal {
+    border-color: color-mix(in srgb, var(--task-bd) 72%, transparent);
 }
 
 .drawer-priority-arrow {
-    width: 16px;
-    height: 16px;
+    width: 15px;
+    height: 15px;
     color: var(--text3);
+    flex-shrink: 0;
+    transition: transform 0.18s ease, color 0.18s ease;
+}
+
+.drawer-priority-dropdown.is-open .drawer-priority-arrow,
+.drawer-priority-btn:hover .drawer-priority-arrow {
+    color: var(--text2);
+}
+
+.drawer-priority-dropdown.is-open .drawer-priority-arrow {
+    transform: rotate(180deg);
 }
 
 .drawer-priority-menu {
     position: absolute;
     top: 100%;
     right: 0;
-    margin-top: 4px;
-    background: var(--card);
-    border: 1px solid var(--inp-bd);
-    border-radius: 12px;
-    padding: 6px;
-    min-width: 140px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    margin-top: 10px;
+    background:
+        linear-gradient(180deg, color-mix(in srgb, var(--card) 98%, #ffffff) 0%, color-mix(in srgb, var(--card) 100%, #eef2f7) 100%);
+    border: 1px solid color-mix(in srgb, var(--task-bd) 66%, transparent);
+    border-radius: 18px;
+    padding: 8px;
+    min-width: 236px;
+    box-shadow:
+        0 22px 50px rgba(15, 23, 42, 0.16),
+        0 4px 14px rgba(15, 23, 42, 0.08);
     z-index: 100;
     display: none;
 }
@@ -473,22 +572,107 @@
 .drawer-priority-option {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    border-radius: 8px;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 14px;
     cursor: pointer;
-    transition: background 0.15s;
-    font-size: 0.88rem;
+    transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, color 0.18s ease;
+    font-size: 0.9rem;
+    font-weight: 600;
     color: var(--text2);
+    border: 1px solid transparent;
+    background: transparent;
+    user-select: none;
+}
+
+.drawer-priority-ring {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.drawer-priority-ring circle {
+    transition: fill 0.18s ease, stroke 0.18s ease, stroke-width 0.18s ease;
+}
+
+.drawer-priority-ring--high circle {
+    fill: color-mix(in srgb, #ef4444 10%, var(--card));
+    stroke: #ef4444;
+    stroke-width: 2.4;
+}
+
+.drawer-priority-option:not(.selected) .drawer-priority-ring--high circle {
+    fill: color-mix(in srgb, #ef4444 6%, var(--card));
+}
+
+.drawer-priority-ring:not(.drawer-priority-ring--high) circle {
+    fill: color-mix(in srgb, var(--card) 94%, #ffffff);
+    stroke: color-mix(in srgb, var(--inp-bd) 88%, #d8dee8);
+    stroke-width: 1.9;
 }
 
 .drawer-priority-option:hover {
-    background: var(--hov);
+    transform: translateY(-1px);
+    background: color-mix(in srgb, var(--card) 84%, var(--hov));
+    border-color: color-mix(in srgb, var(--acc-bd) 18%, var(--task-bd));
 }
 
 .drawer-priority-option.selected {
-    background: var(--acc-bg);
-    color: var(--acc);
+    background: color-mix(in srgb, var(--card) 92%, #ffffff);
+    color: var(--text);
+    border-color: color-mix(in srgb, var(--task-bd) 70%, transparent);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.85),
+        0 10px 24px rgba(15, 23, 42, 0.08);
+}
+
+.drawer-priority-option.selected[data-priority="high"] {
+    border-color: color-mix(in srgb, #ef4444 28%, var(--task-bd));
+    background: linear-gradient(180deg, color-mix(in srgb, #ef4444 10%, var(--card)) 0%, color-mix(in srgb, #ef4444 4%, var(--card)) 100%);
+}
+
+.drawer-priority-option.selected[data-priority="high"] span:last-child {
+    color: #b91c1c;
+}
+
+.drawer-priority-option.selected[data-priority="normal"] {
+    background: linear-gradient(180deg, color-mix(in srgb, var(--card) 98%, #ffffff) 0%, color-mix(in srgb, var(--card) 92%, #edf2f7) 100%);
+}
+
+.dark .drawer-priority-btn,
+.dark .drawer-priority-menu,
+.dark .drawer-priority-option.selected[data-priority="normal"] {
+    box-shadow:
+        0 18px 44px rgba(2, 6, 23, 0.42),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.dark .drawer-priority-btn-note {
+    color: color-mix(in srgb, var(--text3) 88%, white 12%);
+}
+
+.dark .drawer-priority-ring:not(.drawer-priority-ring--high) circle {
+    fill: color-mix(in srgb, var(--card) 88%, #1e293b);
+    stroke: color-mix(in srgb, var(--inp-bd) 72%, #64748b);
+}
+
+@media (max-width: 640px) {
+    .drawer-priority-btn {
+        min-width: 148px;
+        padding: 9px 10px;
+    }
+
+    .drawer-priority-btn-note {
+        display: none;
+    }
+
+    .drawer-priority-menu {
+        min-width: 208px;
+    }
+
+    .drawer-priority-option {
+        padding: 11px 12px;
+    }
 }
 
 .drawer-task-check-slot.task-ck-ring--done ~ .drawer-task-title-text {

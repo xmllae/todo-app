@@ -393,12 +393,11 @@ function renderDrawerContent(task) {
     const content = document.getElementById('taskDetailContent');
     if (!content) return;
 
-    const priorityClass = getPriorityClass(task.priority);
-    const priorityText = getPriorityText(task.priority);
     const subtasksHtml = renderSubtasksList(task);
     const tagsHtml = renderTagsList(task);
     const notesHtml = renderNotesArea(task);
     const isDone = taskAppearsDoneInDrawer(task);
+    const normalizedPriority = task.priority === 'high' ? 'high' : 'normal';
 
     content.innerHTML = `
         <div class="drawer-task-title ${isDone ? 'drawer-task-title--done' : ''}">
@@ -588,6 +587,8 @@ function renderDrawerContent(task) {
             checkSlot.onmouseleave = function() { handleCheckRingHover(this, false); };
         }
     }
+
+    updateDrawerPriorityUI(normalizedPriority);
 }
 
 function renderSubtasksList(task) {
@@ -738,43 +739,75 @@ function togglePriorityDropdown(btn) {
     document.querySelectorAll('.drawer-priority-menu.open').forEach(m => {
         if (m !== menu) m.classList.remove('open');
     });
+    document.querySelectorAll('.drawer-priority-dropdown.is-open').forEach(d => {
+        if (d !== dropdown) d.classList.remove('is-open');
+    });
 
     menu.classList.toggle('open', !isOpen);
+    dropdown.classList.toggle('is-open', !isOpen);
 }
 
 function setDrawerPriority(taskId, priority) {
     const task = findTaskById(taskId);
     if (!task) return;
 
-    task.priority = priority;
+    const nextPriority = priority === 'high' ? 'high' : 'normal';
+    task.priority = nextPriority;
     persistTaskDetailChanges(task, { kanban: true });
 
     // Close dropdown
     document.querySelectorAll('.drawer-priority-menu.open').forEach(m => {
         m.classList.remove('open');
     });
+    document.querySelectorAll('.drawer-priority-dropdown.is-open').forEach(d => {
+        d.classList.remove('is-open');
+    });
 
     // Update UI
-    updateDrawerPriorityUI(priority);
+    updateDrawerPriorityUI(nextPriority);
+}
+
+function getDrawerPriorityPreviewHTML(priority) {
+    const isHigh = priority === 'high';
+    const label = isHigh ? '\u9ad8\u4f18\u5148\u7ea7' : '\u65e0\u4f18\u5148\u7ea7';
+    const note = isHigh ? '\u91cd\u70b9\u63d0\u9192' : '\u9ed8\u8ba4\u72b6\u6001';
+    const ringClass = isHigh ? 'drawer-priority-preview-ring drawer-priority-preview-ring--high' : 'drawer-priority-preview-ring drawer-priority-preview-ring--normal';
+
+    return `<span class="drawer-priority-btn-copy"><span class="${ringClass}" aria-hidden="true"></span><span class="drawer-priority-btn-text"><span class="drawer-priority-btn-label">${label}</span><span class="drawer-priority-btn-note">${note}</span></span></span><svg class="drawer-priority-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>`;
 }
 
 function updateDrawerPriorityUI(priority) {
     const dropdown = document.querySelector('.drawer-priority-dropdown');
     if (!dropdown) return;
 
+    const activePriority = priority === 'high' ? 'high' : 'normal';
+    dropdown.dataset.priority = activePriority;
+
+    const button = dropdown.querySelector('.drawer-priority-btn');
     const menu = dropdown.querySelector('.drawer-priority-menu');
     const options = menu.querySelectorAll('.drawer-priority-option');
 
+    if (button) {
+        button.innerHTML = getDrawerPriorityPreviewHTML(activePriority);
+        button.classList.toggle('is-high', activePriority === 'high');
+        button.classList.toggle('is-normal', activePriority === 'normal');
+        button.setAttribute('title', activePriority === 'high' ? '\u5f53\u524d\uff1a\u9ad8\u4f18\u5148\u7ea7' : '\u5f53\u524d\uff1a\u65e0\u4f18\u5148\u7ea7');
+        button.setAttribute('aria-label', activePriority === 'high' ? '\u5f53\u524d\u4e3a\u9ad8\u4f18\u5148\u7ea7\uff0c\u70b9\u51fb\u5207\u6362' : '\u5f53\u524d\u4e3a\u65e0\u4f18\u5148\u7ea7\uff0c\u70b9\u51fb\u5207\u6362');
+    }
+
     // Update selected option
-    options.forEach(opt => {
-        const isHigh = opt.onclick.toString().includes("'high'");
-        opt.classList.toggle('selected', (isHigh && priority === 'high') || (!isHigh && (priority === 'normal' || !priority)));
+    options.forEach((opt, index) => {
+        const optionPriority = index === 0 ? 'high' : 'normal';
+        const selected = optionPriority === activePriority;
+        opt.dataset.priority = optionPriority;
+        opt.classList.toggle('selected', selected);
+        opt.setAttribute('aria-pressed', selected ? 'true' : 'false');
     });
 
     // Update check ring in title
     const checkSlot = document.querySelector('.task-ck-ring');
     if (checkSlot) {
-        checkSlot.classList.toggle('task-ck-ring--prio-high', priority === 'high');
+        checkSlot.classList.toggle('task-ck-ring--prio-high', activePriority === 'high');
     }
 }
 
@@ -1059,6 +1092,9 @@ document.addEventListener('click', function(e) {
     if (!e.target.closest('.drawer-priority-dropdown')) {
         document.querySelectorAll('.drawer-priority-menu.open').forEach(m => {
             m.classList.remove('open');
+        });
+        document.querySelectorAll('.drawer-priority-dropdown.is-open').forEach(d => {
+            d.classList.remove('is-open');
         });
     }
 });
