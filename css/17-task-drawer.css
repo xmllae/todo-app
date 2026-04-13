@@ -326,30 +326,30 @@
 
 /* High priority ring */
 .task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring:hover .chk-ring-ico {
-    color: #ef4444;
+    color: var(--prio-high, #ef4444);
 }
 
 /* High priority ring */
 .task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring {
     border-style: solid !important;
     border-width: 2.5px !important;
-    border-color: #ef4444 !important;
-    background: color-mix(in srgb, #ef4444 6%, var(--card)) !important;
+    border-color: var(--prio-high, #ef4444) !important;
+    background: color-mix(in srgb, var(--prio-high, #ef4444) 6%, var(--card)) !important;
     box-shadow: none !important;
 }
 
 .task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring:hover {
-    border-color: color-mix(in srgb, #ef4444 82%, #450a0a) !important;
-    background: color-mix(in srgb, #ef4444 11%, var(--card)) !important;
+    border-color: color-mix(in srgb, var(--prio-high, #ef4444) 82%, #450a0a) !important;
+    background: color-mix(in srgb, var(--prio-high, #ef4444) 11%, var(--card)) !important;
 }
 
 .dark .task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring {
-    background: color-mix(in srgb, #f87171 10%, var(--card)) !important;
+    background: color-mix(in srgb, var(--prio-high, #f87171) 10%, var(--card)) !important;
 }
 
 .dark .task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring:hover {
-    border-color: #ef4444 !important;
-    background: color-mix(in srgb, #ef4444 15%, var(--card)) !important;
+    border-color: color-mix(in srgb, var(--prio-high, #ef4444) 90%, #fecaca) !important;
+    background: color-mix(in srgb, var(--prio-high, #ef4444) 14%, var(--card)) !important;
 }
 
 /* Done state - normal priority (match task row: gray color) */
@@ -384,12 +384,12 @@
 
 /* High priority done state */
 .task-detail-inner .task-ck-ring.task-ck-ring--prio-high.task-ck-ring--done .chk-ring {
-    background: #ef4444 !important;
+    background: var(--prio-high, #ef4444) !important;
     border-color: transparent !important;
 }
 
 .task-detail-inner .task-ck-ring.task-ck-ring--prio-high.task-ck-ring--done .chk-ring:hover {
-    background: #ef4444 !important;
+    background: var(--prio-high, #ef4444) !important;
     border-color: transparent !important;
 }
 
@@ -398,7 +398,8 @@
 }
 
 .dark .task-detail-inner .task-ck-ring.task-ck-ring--prio-high.task-ck-ring--done .chk-ring {
-    background: #ef4444 !important;
+    background: var(--prio-high, #ef4444) !important;
+    border-color: transparent !important;
 }
 
 .drawer-task-title-text {
@@ -494,21 +495,12 @@
 }
 
 .drawer-priority-preview-ring::after {
-    content: "";
-    position: absolute;
-    inset: 4px;
-    border-radius: 999px;
-    background: transparent;
-    transition: background 0.18s ease;
+    content: none;
 }
 
 .drawer-priority-preview-ring--high {
-    border: 2px solid #ef4444;
-    background: color-mix(in srgb, #ef4444 10%, var(--card));
-}
-
-.drawer-priority-preview-ring--high::after {
-    background: color-mix(in srgb, #ef4444 88%, white 12%);
+    border: 2px solid var(--prio-high, #ef4444);
+    background: color-mix(in srgb, var(--prio-high, #ef4444) 6%, var(--card));
 }
 
 .drawer-priority-preview-ring--normal {
@@ -517,13 +509,13 @@
 }
 
 .drawer-priority-btn.is-high {
-    border-color: color-mix(in srgb, #ef4444 30%, var(--task-bd));
+    border-color: color-mix(in srgb, var(--prio-high, #ef4444) 28%, var(--task-bd));
     background:
-        linear-gradient(180deg, color-mix(in srgb, #ef4444 10%, var(--card)) 0%, color-mix(in srgb, #ef4444 4%, var(--card)) 100%);
+        linear-gradient(180deg, color-mix(in srgb, var(--prio-high, #ef4444) 10%, var(--card)) 0%, color-mix(in srgb, var(--prio-high, #ef4444) 4%, var(--card)) 100%);
 }
 
 .drawer-priority-btn.is-high .drawer-priority-btn-label {
-    color: #b91c1c;
+    color: color-mix(in srgb, var(--prio-high, #ef4444) 72%, var(--text));
 }
 
 .drawer-priority-btn.is-normal {
@@ -596,13 +588,13 @@
 }
 
 .drawer-priority-ring--high circle {
-    fill: color-mix(in srgb, #ef4444 10%, var(--card));
-    stroke: #ef4444;
+    fill: color-mix(in srgb, var(--prio-high, #ef4444) 10%, var(--card));
+    stroke: var(--prio-high, #ef4444);
     stroke-width: 2.4;
 }
 
 .drawer-priority-option:not(.selected) .drawer-priority-ring--high circle {
-    fill: color-mix(in srgb, #ef4444 6%, var(--card));
+    fill: color-mix(in srgb, var(--prio-high, #ef4444) 6%, var(--card));
 }
 
 .drawer-priority-ring:not(.drawer-priority-ring--high) circle {
@@ -627,12 +619,12 @@
 }
 
 .drawer-priority-option.selected[data-priority="high"] {
-    border-color: color-mix(in srgb, #ef4444 28%, var(--task-bd));
-    background: linear-gradient(180deg, color-mix(in srgb, #ef4444 10%, var(--card)) 0%, color-mix(in srgb, #ef4444 4%, var(--card)) 100%);
+    border-color: color-mix(in srgb, var(--prio-high, #ef4444) 28%, var(--task-bd));
+    background: linear-gradient(180deg, color-mix(in srgb, var(--prio-high, #ef4444) 10%, var(--card)) 0%, color-mix(in srgb, var(--prio-high, #ef4444) 4%, var(--card)) 100%);
 }
 
 .drawer-priority-option.selected[data-priority="high"] span:last-child {
-    color: #b91c1c;
+    color: color-mix(in srgb, var(--prio-high, #ef4444) 72%, var(--text));
 }
 
 .drawer-priority-option.selected[data-priority="normal"] {
