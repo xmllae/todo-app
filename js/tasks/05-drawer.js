@@ -380,6 +380,15 @@ function clearPendingTaskDetailClose(content) {
     }
 }
 
+function taskAppearsDoneInDrawer(task) {
+    if (!task) return false;
+    if (task.done) return true;
+    if (typeof _togVisualPendingIds !== 'undefined' && _togVisualPendingIds && typeof _togVisualPendingIds.has === 'function') {
+        return _togVisualPendingIds.has(task.id);
+    }
+    return false;
+}
+
 function renderDrawerContent(task) {
     const content = document.getElementById('taskDetailContent');
     if (!content) return;
@@ -389,16 +398,17 @@ function renderDrawerContent(task) {
     const subtasksHtml = renderSubtasksList(task);
     const tagsHtml = renderTagsList(task);
     const notesHtml = renderNotesArea(task);
+    const isDone = taskAppearsDoneInDrawer(task);
 
     content.innerHTML = `
-        <div class="drawer-task-title ${task.done ? 'drawer-task-title--done' : ''}">
-            <div class="task-ck-slot task-ck-ring ${task.priority === 'high' ? 'task-ck-ring--prio-high' : ''} ${task.done ? 'task-ck-ring--done' : ''}"
+        <div class="drawer-task-title ${isDone ? 'drawer-task-title--done' : ''}">
+            <div class="task-ck-slot task-ck-ring ${task.priority === 'high' ? 'task-ck-ring--prio-high' : ''} ${isDone ? 'task-ck-ring--done' : ''}"
                  onclick="toggleTaskDoneFromDrawer(${task.id})"
                  title="${task.done ? '标记为未完成' : '标记为已完成'}"
                  onmouseenter="handleCheckRingHover(this, true)"
                  onmouseleave="handleCheckRingHover(this, false)">
                 <div class="tc-check">
-                    <div class="chk-ring ${task.done ? 'checked' : ''}">
+                    <div class="chk-ring ${isDone ? 'checked' : ''}">
                         <svg class="chk-ring-ico" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.15 12.35 10.95 16.05 17.1 8.2" stroke="currentColor" stroke-width="2.55" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </div>
                 </div>
@@ -563,6 +573,18 @@ function renderDrawerContent(task) {
             </button>
         </div>
     `;
+
+    const checkSlot = content.querySelector('.drawer-task-title .task-ck-ring');
+    if (checkSlot) {
+        checkSlot.title = isDone ? '\u6807\u8bb0\u4e3a\u672a\u5b8c\u6210' : '\u6807\u8bb0\u4e3a\u5df2\u5b8c\u6210';
+        if (isDone) {
+            checkSlot.onmouseenter = null;
+            checkSlot.onmouseleave = null;
+        } else {
+            checkSlot.onmouseenter = function() { handleCheckRingHover(this, true); };
+            checkSlot.onmouseleave = function() { handleCheckRingHover(this, false); };
+        }
+    }
 }
 
 function renderSubtasksList(task) {
@@ -644,6 +666,11 @@ function renderNotesArea(task) {
 function toggleTaskDoneFromDrawer(taskId) {
     const task = findTaskById(taskId);
     if (!task) return;
+
+    if (typeof _togVisualPendingIds !== 'undefined' && _togVisualPendingIds && _togVisualPendingIds.has(taskId) && typeof tog === 'function') {
+        tog(taskId);
+        return;
+    }
 
     task.done = !task.done;
     task.status = task.done ? 'done' : 'todo';

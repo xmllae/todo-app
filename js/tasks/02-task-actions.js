@@ -1,5 +1,6 @@
 // ?????????????????????
 function taskRingAppearsDone(t){if(!t)return false;if(_togVisualPendingIds.has(t.id))return true;const subs=t.subtasks||[];const subD=subs.filter(s=>s.done).length;const subT=subs.length;const subAllDone=subT===0||subD===subT;return!!(t.done&&subAllDone)}
+function syncTaskDetailPanelIfNeeded(){if(typeof syncTaskDetailPanel==="function")syncTaskDetailPanel()}
 function _clearTogDoneTimer(){if(_togDoneTimer){clearTimeout(_togDoneTimer);_togDoneTimer=null}}
 function _clearTogCollapseFallback(){if(_togCollapseFallbackTimer){clearTimeout(_togCollapseFallbackTimer);_togCollapseFallbackTimer=null}if(window._togCollapseFinalizeTimer){clearTimeout(window._togCollapseFinalizeTimer);window._togCollapseFinalizeTimer=null}}
 function _detachTogCollapseTransition(){if(window._togCollapseEl&&window._togCollapseHandler){try{window._togCollapseEl.removeEventListener("transitionend",window._togCollapseHandler)}catch(e){}window._togCollapseEl=null;window._togCollapseHandler=null}}
@@ -8,11 +9,76 @@ function flushPendingTogIfAny(){if(_togPendingDoneId==null)return;_togCollapseGe
 function _captureTaskListItemRects(list){var r={};if(!list)return r;try{list.querySelectorAll(".task-item").forEach(function(n){var id=n.getAttribute("data-id");if(id)r[id]=n.getBoundingClientRect()})}catch(e){}return r}
 function _flipUpFromOldRects(list,rects){if(!list||!rects)return;try{var items=list.querySelectorAll(".task-item");items.forEach(function(n){var id=n.getAttribute("data-id");var o=rects[id];if(!o)return;var r2=n.getBoundingClientRect();var dy=o.top-r2.top;if(Math.abs(dy)<1)return;n.style.willChange="transform";n.style.transform="translateY("+dy+"px)";n.style.transition="none";void n.getBoundingClientRect();n.style.transition="transform 220ms cubic-bezier(0.22,1,0.36,1)";n.style.transform="translateY(0)";setTimeout(function(){try{n.style.transform="";n.style.transition="";n.style.willChange="auto"}catch(x){}},260)})}catch(e){}}
 function _animateRemoveAndFlip(list,el,id,rects){var sc=list;var st=sc?sc.scrollTop:0;var collapsingH=0;if(el){try{collapsingH=el.getBoundingClientRect().height}catch(x){}}el.style.overflow="hidden";el.style.transition="height 300ms cubic-bezier(0.22,1,0.36,1),opacity 200ms ease";el.style.height=collapsingH+"px";el.style.maxHeight=collapsingH+"px";el.style.opacity="1";requestAnimationFrame(function(){requestAnimationFrame(function(){if(el)try{el.style.height="0";el.style.opacity="0"}catch(x){}})})}
-function collapseTaskRowThenCommit(id){_clearTogCollapseFallback();_detachTogCollapseTransition();const gen=++_togCollapseGen;const el=document.querySelector('#tList .task-item[data-id="'+id+'"]')||document.querySelector('.task-item[data-id="'+id+'"]');const sc=document.getElementById("tList");let settled=false;function finalize(){if(settled)return;settled=true;if(window._togCollapseFinalizeTimer){clearTimeout(window._togCollapseFinalizeTimer);window._togCollapseFinalizeTimer=null}_detachTogCollapseTransition();if(gen!==_togCollapseGen)return;if(_togPendingDoneId===null||_togPendingDoneId!==id)return;_togPendingDoneId=null;window._chkRippleTaskId=null;if(el){try{el.remove()}catch(x){}}const dt=T[sel]||[];const na=dt.filter(t=>!t.archived);const arch=dt.filter(t=>t.archived);const tot=na.length;const adn=arch.length;_commitTogPendingAt(id);rCal();const dn=na.filter(t=>t.done).length;const dfp=dn+adn;const pct=tot+adn>0?Math.round(dfp/(tot+adn)*100):0;let fl=na.filter(t=>passesFMulti(t));if(FTag)fl=fl.filter(t=>(t.tags||[]).includes(FTag));if(typeof rFilterBar==="function")rFilterBar();if(typeof renderTaskDash==="function")renderTaskDash(pct,tot+adn,dfp,na,fl,sel);if(typeof rKanban==="function")rKanban();save()}if(!el){finalize();return}const durMs=340;const ease="cubic-bezier(0.22,1,0.36,1)";const h=Math.ceil(el.getBoundingClientRect().height);el.style.boxSizing="border-box";el.style.overflow="hidden";el.style.willChange="max-height,padding-top,padding-bottom,border-bottom-width,opacity";el.style.transition="none";el.style.maxHeight=h+"px";el.style.opacity="1";void el.offsetHeight;el.style.transition="max-height "+durMs+"ms "+ease+",padding-top "+durMs+"ms "+ease+",padding-bottom "+durMs+"ms "+ease+",border-bottom-width "+durMs+"ms "+ease+",opacity "+durMs+"ms "+ease;window._togCollapseEl=el;window._togCollapseHandler=function(ev){if(ev.target!==el||ev.propertyName!=="max-height")return;finalize()};el.addEventListener("transitionend",window._togCollapseHandler);requestAnimationFrame(function(){requestAnimationFrame(function(){if(gen!==_togCollapseGen)return;el.style.maxHeight="0";el.style.paddingTop="0";el.style.paddingBottom="0";el.style.borderBottomWidth="0";el.style.opacity="0";el.style.pointerEvents="none"})});window._togCollapseFinalizeTimer=setTimeout(function(){window._togCollapseFinalizeTimer=null;finalize()},durMs+120)}
+function collapseTaskRowThenCommit(id){_clearTogCollapseFallback();_detachTogCollapseTransition();const gen=++_togCollapseGen;const el=document.querySelector('#tList .task-item[data-id="'+id+'"]')||document.querySelector('.task-item[data-id="'+id+'"]');const sc=document.getElementById("tList");let settled=false;function finalize(){if(settled)return;settled=true;if(window._togCollapseFinalizeTimer){clearTimeout(window._togCollapseFinalizeTimer);window._togCollapseFinalizeTimer=null}_detachTogCollapseTransition();if(gen!==_togCollapseGen)return;if(_togPendingDoneId===null||_togPendingDoneId!==id)return;_togPendingDoneId=null;window._chkRippleTaskId=null;if(el){try{el.remove()}catch(x){}}const dt=T[sel]||[];const na=dt.filter(t=>!t.archived);const arch=dt.filter(t=>t.archived);const tot=na.length;const adn=arch.length;_commitTogPendingAt(id);syncTaskDetailPanelIfNeeded();rCal();const dn=na.filter(t=>t.done).length;const dfp=dn+adn;const pct=tot+adn>0?Math.round(dfp/(tot+adn)*100):0;let fl=na.filter(t=>passesFMulti(t));if(FTag)fl=fl.filter(t=>(t.tags||[]).includes(FTag));if(typeof rFilterBar==="function")rFilterBar();if(typeof renderTaskDash==="function")renderTaskDash(pct,tot+adn,dfp,na,fl,sel);if(typeof rKanban==="function")rKanban();save()}if(!el){finalize();return}const durMs=340;const ease="cubic-bezier(0.22,1,0.36,1)";const h=Math.ceil(el.getBoundingClientRect().height);el.style.boxSizing="border-box";el.style.overflow="hidden";el.style.willChange="max-height,padding-top,padding-bottom,border-bottom-width,opacity";el.style.transition="none";el.style.maxHeight=h+"px";el.style.opacity="1";void el.offsetHeight;el.style.transition="max-height "+durMs+"ms "+ease+",padding-top "+durMs+"ms "+ease+",padding-bottom "+durMs+"ms "+ease+",border-bottom-width "+durMs+"ms "+ease+",opacity "+durMs+"ms "+ease;window._togCollapseEl=el;window._togCollapseHandler=function(ev){if(ev.target!==el||ev.propertyName!=="max-height")return;finalize()};el.addEventListener("transitionend",window._togCollapseHandler);requestAnimationFrame(function(){requestAnimationFrame(function(){if(gen!==_togCollapseGen)return;el.style.maxHeight="0";el.style.paddingTop="0";el.style.paddingBottom="0";el.style.borderBottomWidth="0";el.style.opacity="0";el.style.pointerEvents="none"})});window._togCollapseFinalizeTimer=setTimeout(function(){window._togCollapseFinalizeTimer=null;finalize()},durMs+120)}
 function playCheckSound(done){try{if(!window._auCtx)window._auCtx=new(window.AudioContext||window.webkitAudioContext);var ctx=window._auCtx;if(ctx.state==="suspended")ctx.resume();var t0=ctx.currentTime;var o=ctx.createOscillator(),g=ctx.createGain();o.type="triangle";o.connect(g);g.connect(ctx.destination);if(done){o.frequency.setValueAtTime(523,t0);o.frequency.exponentialRampToValueAtTime(784,t0+.08);o.frequency.exponentialRampToValueAtTime(1047,t0+.17);g.gain.setValueAtTime(1e-4,t0);g.gain.exponentialRampToValueAtTime(.09,t0+.02);g.gain.exponentialRampToValueAtTime(1e-4,t0+.34)}else{o.frequency.setValueAtTime(440,t0);o.frequency.exponentialRampToValueAtTime(311,t0+.1);g.gain.setValueAtTime(1e-4,t0);g.gain.exponentialRampToValueAtTime(.065,t0+.018);g.gain.exponentialRampToValueAtTime(1e-4,t0+.24)}o.start(t0);o.stop(t0+.42)}catch(e){}}
 function finishDelayedTog(){_clearTogDoneTimer();if(_togPendingDoneId==null)return;const tid=_togPendingDoneId;const el=document.querySelector('#tList .task-item[data-id="'+tid+'"]')||document.querySelector('.task-item[data-id="'+tid+'"]');if(el&&el.isConnected){el.classList.remove("task-toggle-anim");el.classList.add("task-main-checked","task-row-done")}collapseTaskRowThenCommit(tid)}
 function tog(id){try{const docSel=window.getSelection&&window.getSelection();if(docSel&&docSel.removeAllRanges)docSel.removeAllRanges()}catch(e){}const t=(T[sel]||[]).find(x=>x.id===id);if(!t)return;if(!t.done&&_togVisualPendingIds.has(id)){_togCollapseGen++;_clearTogDoneTimer();_clearTogCollapseFallback();_detachTogCollapseTransition();_togPendingDoneId=null;_togVisualPendingIds.delete(id);window._chkRippleTaskId=null;const el=document.querySelector('#tList .task-item[data-id="'+id+'"]')||document.querySelector('.task-item[data-id="'+id+'"]');if(el){const ring=el.querySelector(".task-ck-slot .chk-ring")||el.querySelector(".chk-ring");const wrap=ring&&ring.closest(".task-ck-ring");if(ring){ring.classList.remove("checked","chk-ring--ripple");if(wrap)wrap.classList.remove("task-ck-ring--done")}el.classList.remove("task-main-checked","task-row-done","task-toggle-anim")}else{rT()}save();return}if(t.done){playCheckSound(false);_togCollapseGen++;_clearTogDoneTimer();_clearTogCollapseFallback();_detachTogCollapseTransition();if(_togPendingDoneId===id)_togPendingDoneId=null;_togVisualPendingIds.delete(id);pushUndo("切换完成");t.done=false;t.status="todo";t.archived=false;window._chkRippleTaskId=null;rCal();rT();if(typeof rKanban==="function")rKanban();save();return}flushPendingTogIfAny();_togVisualPendingIds.add(id);_togPendingDoneId=id;window._chkRippleTaskId=id;playCheckSound(true);_togDoneTimer=setTimeout(finishDelayedTog,520);const el=document.querySelector('#tList .task-item[data-id="'+id+'"]')||document.querySelector('.task-item[data-id="'+id+'"]');if(el){const ring=el.querySelector(".task-ck-slot .chk-ring")||el.querySelector(".chk-ring");const wrap=ring&&ring.closest(".task-ck-ring");if(ring){ring.classList.remove("chk-ring--ripple");void ring.offsetHeight;ring.classList.add("checked","chk-ring--ripple");if(wrap)wrap.classList.add("task-ck-ring--done")}el.classList.add("task-toggle-anim")}else{rT()}}
 function del(id){pushUndo("删除");T[sel]=T[sel].filter(x=>x.id!==id);if(!T[sel].length)delete T[sel];rCal();rT();save();toast("🗑️ 已删除")}
+function tog(id){
+try{const docSel=window.getSelection&&window.getSelection();if(docSel&&docSel.removeAllRanges)docSel.removeAllRanges()}catch(e){}
+const t=(T[sel]||[]).find(x=>x.id===id);
+if(!t)return;
+if(!t.done&&_togVisualPendingIds.has(id)){
+_togCollapseGen++;
+_clearTogDoneTimer();
+_clearTogCollapseFallback();
+_detachTogCollapseTransition();
+_togPendingDoneId=null;
+_togVisualPendingIds.delete(id);
+window._chkRippleTaskId=null;
+const el=document.querySelector('#tList .task-item[data-id="'+id+'"]')||document.querySelector('.task-item[data-id="'+id+'"]');
+if(el){
+const ring=el.querySelector(".task-ck-slot .chk-ring")||el.querySelector(".chk-ring");
+const wrap=ring&&ring.closest(".task-ck-ring");
+if(ring){
+ring.classList.remove("checked","chk-ring--ripple");
+if(wrap)wrap.classList.remove("task-ck-ring--done")
+}
+el.classList.remove("task-main-checked","task-row-done","task-toggle-anim")
+}else{rT()}
+syncTaskDetailPanelIfNeeded();
+save();
+return
+}
+if(t.done){
+playCheckSound(false);
+_togCollapseGen++;
+_clearTogDoneTimer();
+_clearTogCollapseFallback();
+_detachTogCollapseTransition();
+if(_togPendingDoneId===id)_togPendingDoneId=null;
+_togVisualPendingIds.delete(id);
+pushUndo("切换完成");
+t.done=false;
+t.status="todo";
+t.archived=false;
+window._chkRippleTaskId=null;
+rCal();
+rT();
+if(typeof rKanban==="function")rKanban();
+save();
+return
+}
+flushPendingTogIfAny();
+_togVisualPendingIds.add(id);
+_togPendingDoneId=id;
+window._chkRippleTaskId=id;
+playCheckSound(true);
+_togDoneTimer=setTimeout(finishDelayedTog,520);
+const el=document.querySelector('#tList .task-item[data-id="'+id+'"]')||document.querySelector('.task-item[data-id="'+id+'"]');
+if(el){
+const ring=el.querySelector(".task-ck-slot .chk-ring")||el.querySelector(".chk-ring");
+const wrap=ring&&ring.closest(".task-ck-ring");
+if(ring){
+ring.classList.remove("chk-ring--ripple");
+void ring.offsetHeight;
+ring.classList.add("checked","chk-ring--ripple");
+if(wrap)wrap.classList.add("task-ck-ring--done")
+}
+el.classList.add("task-toggle-anim")
+}else{rT()}
+syncTaskDetailPanelIfNeeded()
+}
 function startEdit(id){cancelDelayedToggleExpand();editingId=id;editingTimeId=null;expandedId=null;subAddComposingId=null;rT();setTimeout(()=>{const inp=document.querySelector(".txt-edit");if(inp){inp.focus();inp.setSelectionRange(inp.value.length,inp.value.length)}},30)}
 function saveEdit(id){const inp=document.querySelector(".txt-edit");if(!inp)return;const txt=inp.value.trim();const t=(T[sel]||[]).find(x=>x.id===id);if(t&&txt){t.text=txt;syncToRule(t)}editingId=null;rT();save()}
 function cancelEdit(){editingId=null;rT()}
