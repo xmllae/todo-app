@@ -266,12 +266,7 @@
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 14px 16px;
-    border-radius: 14px;
-    background: linear-gradient(135deg,
-        color-mix(in srgb, var(--acc) 8%, var(--card)),
-        color-mix(in srgb, var(--acc) 3%, var(--card)));
-    border: 1.5px solid color-mix(in srgb, var(--acc-bd) 40%, transparent);
+    padding: 8px 4px;
 }
 
 .drawer-task-check {
