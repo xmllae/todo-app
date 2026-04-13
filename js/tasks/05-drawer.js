@@ -406,129 +406,132 @@ function renderDrawerContent(task) {
                    onkeydown="if(event.key==='Enter'){event.target.blur()}">
         </div>
 
-        <div class="drawer-attrs">
-            <div class="drawer-attr-row drawer-attr-row--inline">
-                <div class="drawer-attr-label">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"/>
-                        <polyline points="12 6 12 12 16 14"/>
-                    </svg>
-                    时间
-                </div>
-                <div class="drawer-attr-value">
-                    <input type="time"
-                           class="drawer-inline-input drawer-time-input"
-                           id="drawer-time-input-${task.id}"
-                           value="${task.planTime || ''}"
-                           onclick="event.stopPropagation()"
-                           onchange="saveDrawerTime(${task.id})">
-                </div>
-            </div>
-
-            <div class="drawer-attr-row drawer-attr-row--inline">
-                <div class="drawer-attr-label">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-                    </svg>
-                    优先级
-                </div>
-                <div class="drawer-attr-value">
-                    <select class="drawer-inline-select"
-                            id="drawer-priority-input-${task.id}"
-                            onclick="event.stopPropagation()"
-                            onchange="saveDrawerPriority(${task.id})">
-                        <option value="high" ${task.priority === 'high' ? 'selected' : ''}>高</option>
-                        <option value="medium" ${task.priority === 'medium' ? 'selected' : ''}>中</option>
-                        <option value="normal" ${!task.priority || task.priority === 'normal' ? 'selected' : ''}>正常</option>
-                        <option value="low" ${task.priority === 'low' ? 'selected' : ''}>低</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="drawer-attr-row drawer-attr-row--inline">
-                <div class="drawer-attr-label">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"/>
-                        <path d="M12 8v4l2.5 2.5"/>
-                        <path d="M9 3h6"/>
-                    </svg>
-                    时长
-                </div>
-                <div class="drawer-attr-value">
-                    <input type="number"
-                           class="drawer-inline-input drawer-duration-input"
-                           id="drawer-duration-input-${task.id}"
-                           value="${task.duration || ''}"
-                           min="0"
-                           max="480"
-                           placeholder="分钟"
-                           onclick="event.stopPropagation()"
-                           onchange="saveDrawerDuration(${task.id})">
-                    <span class="drawer-input-suffix">分钟</span>
-                </div>
-            </div>
-
-            ${tagsHtml ? `
-            <div class="drawer-attr-row" onclick="event.stopPropagation()">
-                <div class="drawer-attr-label">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
-                        <line x1="7" y1="7" x2="7.01" y2="7"/>
-                    </svg>
-                    标签
-                </div>
-                <div class="drawer-attr-value">${tagsHtml}</div>
-            </div>
-            ` : ''}
-        </div>
-
-        <hr class="drawer-divider">
-
-        <div class="drawer-subtasks">
-            <div class="drawer-subtasks-header">
+        <div class="drawer-row drawer-row--time">
+            <div class="drawer-row-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="8" y1="6" x2="21" y2="6"/>
-                    <line x1="8" y1="12" x2="21" y2="12"/>
-                    <line x1="8" y1="18" x2="21" y2="18"/>
-                    <line x1="3" y1="6" x2="3.01" y2="6"/>
-                    <line x1="3" y1="12" x2="3.01" y2="12"/>
-                    <line x1="3" y1="18" x2="3.01" y2="18"/>
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
                 </svg>
-                子任务
-                ${(task.subtasks || []).length > 0 ? `<span class="drawer-subtasks-count">${getSubtaskDoneCount(task)}/${task.subtasks.length}</span>` : ''}
             </div>
-            <div class="drawer-subtasks-list">
-                ${subtasksHtml}
-                <div class="subtask-add-inline" id="subtask-add-inline-${task.id}" style="display:none">
-                    <input type="text"
-                           class="subtask-add-input"
-                           id="subtask-add-input-${task.id}"
-                           placeholder="输入子任务内容，按回车添加..."
-                           onclick="event.stopPropagation()"
-                           onkeydown="if(event.key==='Enter'){addSubtaskFromDrawer(${task.id});}if(event.key==='Escape'){hideSubtaskAddInline(${task.id})}">
-                    <button type="button" class="subtask-add-confirm-btn" onclick="addSubtaskFromDrawer(${task.id})" title="确认">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="20 6 9 17 4 12"/>
-                        </svg>
-                    </button>
-                    <button type="button" class="subtask-add-cancel-btn" onclick="hideSubtaskAddInline(${task.id})" title="取消">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="18" y1="6" x2="6" y2="18"/>
-                            <line x1="6" y1="6" x2="18" y2="18"/>
-                        </svg>
-                    </button>
-                </div>
-                <div class="subtask-add-btn" onclick="event.stopPropagation();showSubtaskAddInline(${task.id})">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="12" y1="5" x2="12" y2="19"/>
-                        <line x1="5" y1="12" x2="19" y2="12"/>
+            <label class="drawer-row-label">时间</label>
+            <input type="time"
+                   class="drawer-row-input"
+                   id="drawer-time-input-${task.id}"
+                   value="${task.planTime || ''}"
+                   onclick="event.stopPropagation()"
+                   onchange="saveDrawerTime(${task.id})">
+        </div>
+
+        <div class="drawer-row drawer-row--priority">
+            <div class="drawer-row-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                </svg>
+            </div>
+            <label class="drawer-row-label">优先级</label>
+            <select class="drawer-row-select"
+                    id="drawer-priority-input-${task.id}"
+                    onclick="event.stopPropagation()"
+                    onchange="saveDrawerPriority(${task.id})">
+                <option value="high" ${task.priority === 'high' ? 'selected' : ''}>高</option>
+                <option value="medium" ${task.priority === 'medium' ? 'selected' : ''}>中</option>
+                <option value="normal" ${!task.priority || task.priority === 'normal' ? 'selected' : ''}>正常</option>
+                <option value="low" ${task.priority === 'low' ? 'selected' : ''}>低</option>
+            </select>
+        </div>
+
+        <div class="drawer-row drawer-row--duration">
+            <div class="drawer-row-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 8v4l2.5 2.5"/>
+                    <path d="M9 3h6"/>
+                </svg>
+            </div>
+            <label class="drawer-row-label">时长</label>
+            <input type="number"
+                   class="drawer-row-input drawer-row-input--short"
+                   id="drawer-duration-input-${task.id}"
+                   value="${task.duration || ''}"
+                   min="0"
+                   max="480"
+                   placeholder="分钟"
+                   onclick="event.stopPropagation()"
+                   onchange="saveDrawerDuration(${task.id})">
+            <span class="drawer-row-suffix">分钟</span>
+        </div>
+
+        ${tagsHtml ? `
+        <div class="drawer-row drawer-row--tags">
+            <div class="drawer-row-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                    <line x1="7" y1="7" x2="7.01" y2="7"/>
+                </svg>
+            </div>
+            <label class="drawer-row-label">标签</label>
+            <div class="drawer-row-value">${tagsHtml}</div>
+        </div>
+        ` : ''}
+
+        <div class="drawer-section-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="8" y1="6" x2="21" y2="6"/>
+                <line x1="8" y1="12" x2="21" y2="12"/>
+                <line x1="8" y1="18" x2="21" y2="18"/>
+                <line x1="3" y1="6" x2="3.01" y2="6"/>
+                <line x1="3" y1="12" x2="3.01" y2="12"/>
+                <line x1="3" y1="18" x2="3.01" y2="18"/>
+            </svg>
+            <span>子任务</span>
+            ${(task.subtasks || []).length > 0 ? `<span class="drawer-section-count">${getSubtaskDoneCount(task)}/${task.subtasks.length}</span>` : ''}
+        </div>
+
+        <div class="drawer-subtasks-list">
+            ${subtasksHtml}
+            <div class="subtask-add-inline" id="subtask-add-inline-${task.id}" style="display:none">
+                <input type="text"
+                       class="subtask-add-input"
+                       id="subtask-add-input-${task.id}"
+                       placeholder="输入子任务内容，按回车添加..."
+                       onclick="event.stopPropagation()"
+                       onkeydown="if(event.key==='Enter'){addSubtaskFromDrawer(${task.id});}if(event.key==='Escape'){hideSubtaskAddInline(${task.id})}">
+                <button type="button" class="subtask-add-confirm-btn" onclick="addSubtaskFromDrawer(${task.id})" title="确认">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
                     </svg>
-                    <span>添加子任务...</span>
-                </div>
+                </button>
+                <button type="button" class="subtask-add-cancel-btn" onclick="hideSubtaskAddInline(${task.id})" title="取消">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="subtask-add-btn" onclick="event.stopPropagation();showSubtaskAddInline(${task.id})">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                <span>添加子任务</span>
             </div>
         </div>
 
-        ${notesHtml}
+        <div class="drawer-section-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+            <span>备注</span>
+        </div>
+
+        <textarea class="drawer-notes-textarea"
+                  id="drawer-notes-input"
+                  placeholder="添加任务备注..."
+                  onclick="event.stopPropagation()"
+                  onblur="saveDrawerNotes(${task.id})">${escapeHtml(task.note || '')}</textarea>
 
         <div class="drawer-footer">
             <button class="drawer-footer-btn" onclick="event.stopPropagation();openRepeatInDrawer(${task.id})">
@@ -564,12 +567,21 @@ function renderSubtasksList(task) {
         const isDone = sub.done;
         return `
             <div class="subtask-row"
-                 data-subtask-id="${sub.id}"
-                 onclick="event.stopPropagation();toggleSubtaskInDrawer(${task.id}, ${sub.id})">
-                <div class="subtask-check ${isDone ? 'done' : ''}">
+                 data-subtask-id="${sub.id}">
+                <div class="subtask-check ${isDone ? 'done' : ''}"
+                     onclick="event.stopPropagation();toggleSubtaskInDrawer(${task.id}, ${sub.id})">
                     ${isDone ? getCheckIconSvg() : ''}
                 </div>
-                <span class="subtask-text ${isDone ? 'done' : ''}">${escapeHtml(sub.text)}</span>
+                <span class="subtask-text ${isDone ? 'done' : ''}"
+                      onclick="event.stopPropagation();toggleSubtaskInDrawer(${task.id}, ${sub.id})">${escapeHtml(sub.text)}</span>
+                <button type="button" class="subtask-delete-btn"
+                        onclick="event.stopPropagation();deleteSubtaskInDrawer(${task.id}, ${sub.id})"
+                        title="删除子任务">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
             </div>
         `;
     }).join('');
@@ -668,6 +680,16 @@ function toggleSubtaskInDrawer(taskId, subtaskId) {
     if (!subtask) return;
 
     subtask.done = !subtask.done;
+    persistTaskDetailChanges(task, { kanban: true });
+}
+
+function deleteSubtaskInDrawer(taskId, subtaskId) {
+    const task = findTaskById(taskId);
+    if (!task) return;
+
+    task.subtasks = (task.subtasks || []).filter(function(item) {
+        return item.id !== subtaskId;
+    });
     persistTaskDetailChanges(task, { kanban: true });
 }
 
