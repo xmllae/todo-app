@@ -69,8 +69,8 @@ function syncTaskDetailSelectionState() {
     document.querySelectorAll('#tList .task-detail-trigger').forEach(function(button) {
         button.classList.remove('is-active');
         button.setAttribute('aria-pressed', 'false');
-        button.setAttribute('title', '查看详情');
-        button.setAttribute('aria-label', '查看详情');
+        button.setAttribute('title', '\u67e5\u770b\u8be6\u60c5');
+        button.setAttribute('aria-label', '\u67e5\u770b\u8be6\u60c5');
     });
 
     if (drawerActiveTaskId == null) return;
@@ -82,8 +82,8 @@ function syncTaskDetailSelectionState() {
         if (trigger) {
             trigger.classList.add('is-active');
             trigger.setAttribute('aria-pressed', 'true');
-            trigger.setAttribute('title', '收起详情');
-            trigger.setAttribute('aria-label', '收起详情');
+            trigger.setAttribute('title', '\u6536\u8d77\u8be6\u60c5');
+            trigger.setAttribute('aria-label', '\u6536\u8d77\u8be6\u60c5');
         }
     }
 }
@@ -94,11 +94,11 @@ function enhanceTaskRowInteractions() {
         if (title && title.getAttribute('ondblclick')) {
             title.classList.add('txt--editable');
             if (!title.getAttribute('title')) {
-                title.setAttribute('title', '双击修改标题');
+                title.setAttribute('title', '\u53cc\u51fb\u4fee\u6539\u6807\u9898');
             }
         } else if (title) {
             title.classList.remove('txt--editable');
-            if (title.getAttribute('title') === '双击修改标题') {
+            if (title.getAttribute('title') === '\u53cc\u51fb\u4fee\u6539\u6807\u9898') {
                 title.removeAttribute('title');
             }
         }
@@ -114,12 +114,12 @@ function enhanceTaskRowInteractions() {
             actions.insertBefore(createTaskDetailTrigger(taskId), moreWrap);
         }
 
-        // ── 背景点击监听器（共用排除逻辑）──────────────────────────────
-        // stopPropagation 只阻止事件冒泡到父元素，不影响同一元素上的其他监听器。
-        // 因此需要在 .task-item 和 .task-row-center 两处各绑一次：
-        //   · .task-item      ← 覆盖 task-row / task-strike-wrap 等外层背景
-        //   · .task-row-center ← onTaskRowCenterClick 调用了 stopPropagation，
-        //                        事件无法冒泡到 task-item，必须在此直接监听
+        // 鈹€鈹€ 鑳屾櫙鐐瑰嚮鐩戝惉鍣紙鍏辩敤鎺掗櫎閫昏緫锛夆攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+        // stopPropagation 鍙樆姝簨浠跺啋娉″埌鐖跺厓绱狅紝涓嶅奖鍝嶅悓涓€鍏冪礌涓婄殑鍏朵粬鐩戝惉鍣ㄣ€?
+        // 鍥犳闇€瑕佸湪 .task-item 鍜?.task-row-center 涓ゅ鍚勭粦涓€娆★細
+        //   路 .task-item      鈫?瑕嗙洊 task-row / task-strike-wrap 绛夊灞傝儗鏅?
+        //   路 .task-row-center 鈫?onTaskRowCenterClick 璋冪敤浜?stopPropagation锛?
+        //                        浜嬩欢鏃犳硶鍐掓场鍒?task-item锛屽繀椤诲湪姝ょ洿鎺ョ洃鍚?
         function isBgClick(e, boundary) {
             var node = e.target;
             while (node && node !== boundary) {
@@ -149,7 +149,7 @@ function enhanceTaskRowInteractions() {
             openTaskDrawer(Number(taskId));
         }
 
-        // 1) task-item 级别：覆盖 task-row、task-strike-wrap 等外层背景
+        // 1) task-item 绾у埆锛氳鐩?task-row銆乼ask-strike-wrap 绛夊灞傝儗鏅?
         if (!item._bgClickBound) {
             item._bgClickBound = true;
             item.addEventListener('click', function(e) {
@@ -165,8 +165,8 @@ function enhanceTaskRowInteractions() {
             });
         }
 
-        // 2) task-row-center 级别：onTaskRowCenterClick 调用了 stopPropagation，
-        //    时间右侧空白区的点击无法冒泡到 task-item，需在此捕获
+        // 2) task-row-center 绾у埆锛歰nTaskRowCenterClick 璋冪敤浜?stopPropagation锛?
+        //    鏃堕棿鍙充晶绌虹櫧鍖虹殑鐐瑰嚮鏃犳硶鍐掓场鍒?task-item锛岄渶鍦ㄦ鎹曡幏
         var rowCenter = item.querySelector('.task-row-center');
         if (rowCenter && !rowCenter._bgClickBound) {
             rowCenter._bgClickBound = true;
@@ -223,8 +223,8 @@ function createTaskDetailTrigger(taskId) {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'act-btn task-detail-trigger';
-    button.setAttribute('title', '查看详情');
-    button.setAttribute('aria-label', '查看详情');
+    button.setAttribute('title', '\u67e5\u770b\u8be6\u60c5');
+    button.setAttribute('aria-label', '\u67e5\u770b\u8be6\u60c5');
     button.setAttribute('aria-pressed', 'false');
     button.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h10"/><path d="M9 12h10"/><path d="M9 18h6"/><path d="M5 6h.01"/><path d="M5 12h.01"/><path d="M5 18h.01"/></svg>';
     button.addEventListener('click', function(event) {
@@ -395,15 +395,18 @@ function renderDrawerContent(task) {
 
     const subtasksHtml = renderSubtasksList(task);
     const tagsHtml = renderTagsList(task);
-    const notesHtml = renderNotesArea(task);
     const isDone = taskAppearsDoneInDrawer(task);
     const normalizedPriority = task.priority === 'high' ? 'high' : 'normal';
+    const scheduleState = getDrawerScheduleState(task);
+    const schedulePrimary = getDrawerSchedulePrimaryText(scheduleState);
+    const scheduleSecondary = getDrawerScheduleSecondaryText(scheduleState);
+    const scheduleBadge = getDrawerScheduleBadgeText(scheduleState);
 
     content.innerHTML = `
         <div class="drawer-task-title ${isDone ? 'drawer-task-title--done' : ''}">
             <div class="task-ck-slot task-ck-ring ${task.priority === 'high' ? 'task-ck-ring--prio-high' : ''} ${isDone ? 'task-ck-ring--done' : ''}"
                  onclick="toggleTaskDoneFromDrawer(${task.id})"
-                 title="${task.done ? '标记为未完成' : '标记为已完成'}"
+                 title="${task.done ? '\u6807\u8bb0\u4e3a\u672a\u5b8c\u6210' : '\u6807\u8bb0\u4e3a\u5df2\u5b8c\u6210'}"
                  onmouseenter="handleCheckRingHover(this, true)"
                  onmouseleave="handleCheckRingHover(this, false)">
                 <div class="tc-check">
@@ -420,7 +423,7 @@ function renderDrawerContent(task) {
                    onblur="saveDrawerTitle(${task.id})"
                    onkeydown="if(event.key==='Enter'){event.target.blur()}">
             <div class="drawer-priority-dropdown" onclick="event.stopPropagation()">
-                <button class="drawer-priority-btn" onclick="togglePriorityDropdown(this)" title="选择优先级">
+                <button class="drawer-priority-btn" onclick="togglePriorityDropdown(this)" title="\u9009\u62e9\u4f18\u5148\u7ea7">
                     <svg class="drawer-priority-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="6 9 12 15 18 9"/>
                     </svg>
@@ -430,53 +433,98 @@ function renderDrawerContent(task) {
                         <svg class="drawer-priority-ring drawer-priority-ring--high" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="#ef4444"/>
                         </svg>
-                        <span>高优先级</span>
+                        <span>\u9ad8\u4f18\u5148\u7ea7</span>
                     </div>
                     <div class="drawer-priority-option ${!task.priority || task.priority === 'normal' ? 'selected' : ''}" onclick="setDrawerPriority(${task.id}, 'normal')">
                         <svg class="drawer-priority-ring" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
                         </svg>
-                        <span>无优先级</span>
+                        <span>\u65e0\u4f18\u5148\u7ea7</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="drawer-row drawer-row--time">
-            <div class="drawer-row-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"/>
-                    <polyline points="12 6 12 12 16 14"/>
-                </svg>
+        <div class="drawer-schedule-card" onclick="event.stopPropagation()">
+            <div class="drawer-schedule-head">
+                <div class="drawer-schedule-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="8.5"/>
+                        <path d="M12 7.8v4.4l3 1.8"/>
+                        <path d="M7 3.5h10"/>
+                    </svg>
+                </div>
+                <div class="drawer-schedule-copy">
+                    <span class="drawer-schedule-eyebrow">\u65f6\u95f4\u89c4\u5212</span>
+                    <span class="drawer-schedule-primary">${schedulePrimary}</span>
+                    <span class="drawer-schedule-secondary">${scheduleSecondary}</span>
+                </div>
+                <span class="drawer-schedule-badge ${scheduleState.spillsNextDay ? 'drawer-schedule-badge--overnight' : ''}">${scheduleBadge}</span>
             </div>
-            <label class="drawer-row-label">时间</label>
-            <input type="time"
-                   class="drawer-row-input"
-                   id="drawer-time-input-${task.id}"
-                   value="${task.planTime || ''}"
-                   onclick="event.stopPropagation()"
-                   onchange="saveDrawerTime(${task.id})">
-        </div>
-
-        <div class="drawer-row drawer-row--duration">
-            <div class="drawer-row-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M12 8v4l2.5 2.5"/>
-                    <path d="M9 3h6"/>
-                </svg>
+            <div class="drawer-schedule-grid">
+                <label class="drawer-schedule-field">
+                    <span class="drawer-schedule-field-label">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        \u5f00\u59cb\u65f6\u95f4
+                    </span>
+                    <input type="time"
+                           class="drawer-schedule-input"
+                           id="drawer-start-time-input-${task.id}"
+                           value="${task.planTime || ''}"
+                           onclick="event.stopPropagation()"
+                           onchange="saveDrawerStartTime(${task.id})">
+                </label>
+                <label class="drawer-schedule-field">
+                    <span class="drawer-schedule-field-label">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 12a8 8 0 1 1-2.34-5.66"/>
+                            <polyline points="20 4 20 10 14 10"/>
+                            <path d="M12 8v4l2.5 2.5"/>
+                        </svg>
+                        \u7ed3\u675f\u65f6\u95f4
+                    </span>
+                    <input type="time"
+                           class="drawer-schedule-input"
+                           id="drawer-end-time-input-${task.id}"
+                           value="${scheduleState.endTime}"
+                           onclick="event.stopPropagation()"
+                           onchange="saveDrawerEndTime(${task.id})">
+                </label>
+                <label class="drawer-schedule-field drawer-schedule-field--duration">
+                    <span class="drawer-schedule-field-label">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                        \u9884\u8ba1\u8017\u65f6
+                    </span>
+                    <div class="drawer-schedule-duration-wrap">
+                        <input type="number"
+                               class="drawer-schedule-input drawer-schedule-input--duration"
+                               id="drawer-duration-input-${task.id}"
+                               value="${scheduleState.durationMinutes !== null ? scheduleState.durationMinutes : ''}"
+                               min="0"
+                               max="1440"
+                               step="5"
+                               inputmode="numeric"
+                               placeholder="\u5206\u949f"
+                               onclick="event.stopPropagation()"
+                               onchange="saveDrawerDuration(${task.id})">
+                        <span class="drawer-schedule-unit">\u5206\u949f</span>
+                    </div>
+                </label>
             </div>
-            <label class="drawer-row-label">时长</label>
-            <input type="number"
-                   class="drawer-row-input drawer-row-input--short"
-                   id="drawer-duration-input-${task.id}"
-                   value="${task.duration || ''}"
-                   min="0"
-                   max="480"
-                   placeholder="分钟"
-                   onclick="event.stopPropagation()"
-                   onchange="saveDrawerDuration(${task.id})">
-            <span class="drawer-row-suffix">分钟</span>
+            <div class="drawer-schedule-tip">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 3a9 9 0 1 0 9 9"/>
+                    <path d="M12 7v5l3 3"/>
+                    <path d="M17 3h4v4"/>
+                </svg>
+                <span>\u4fee\u6539\u7ed3\u675f\u65f6\u95f4\u4f1a\u81ea\u52a8\u56de\u7b97\u9884\u8ba1\u8017\u65f6\uff0c\u4fee\u6539\u9884\u8ba1\u8017\u65f6\u4f1a\u81ea\u52a8\u63a8\u7b97\u7ed3\u675f\u65f6\u95f4\u3002</span>
+            </div>
         </div>
 
         ${tagsHtml ? `
@@ -487,7 +535,7 @@ function renderDrawerContent(task) {
                     <line x1="7" y1="7" x2="7.01" y2="7"/>
                 </svg>
             </div>
-            <label class="drawer-row-label">标签</label>
+            <label class="drawer-row-label">\u6807\u7b7e</label>
             <div class="drawer-row-value">${tagsHtml}</div>
         </div>
         ` : ''}
@@ -501,7 +549,7 @@ function renderDrawerContent(task) {
                 <line x1="3" y1="12" x2="3.01" y2="12"/>
                 <line x1="3" y1="18" x2="3.01" y2="18"/>
             </svg>
-            <span>子任务</span>
+            <span>\u5b50\u4efb\u52a1</span>
             ${(task.subtasks || []).length > 0 ? `<span class="drawer-section-count">${getSubtaskDoneCount(task)}/${task.subtasks.length}</span>` : ''}
         </div>
 
@@ -511,15 +559,15 @@ function renderDrawerContent(task) {
                 <input type="text"
                        class="subtask-add-input"
                        id="subtask-add-input-${task.id}"
-                       placeholder="输入子任务内容，按回车添加..."
+                       placeholder="\u8f93\u5165\u5b50\u4efb\u52a1\u5185\u5bb9\uff0c\u6309\u56de\u8f66\u6dfb\u52a0..."
                        onclick="event.stopPropagation()"
                        onkeydown="if(event.key==='Enter'){addSubtaskFromDrawer(${task.id});}if(event.key==='Escape'){hideSubtaskAddInline(${task.id})}">
-                <button type="button" class="subtask-add-confirm-btn" onclick="addSubtaskFromDrawer(${task.id})" title="确认">
+                <button type="button" class="subtask-add-confirm-btn" onclick="addSubtaskFromDrawer(${task.id})" title="\u786e\u8ba4">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="20 6 9 17 4 12"/>
                     </svg>
                 </button>
-                <button type="button" class="subtask-add-cancel-btn" onclick="hideSubtaskAddInline(${task.id})" title="取消">
+                <button type="button" class="subtask-add-cancel-btn" onclick="hideSubtaskAddInline(${task.id})" title="\u53d6\u6d88">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18"/>
                         <line x1="6" y1="6" x2="18" y2="18"/>
@@ -531,7 +579,7 @@ function renderDrawerContent(task) {
                     <line x1="12" y1="5" x2="12" y2="19"/>
                     <line x1="5" y1="12" x2="19" y2="12"/>
                 </svg>
-                <span>添加子任务</span>
+                <span>\u6dfb\u52a0\u5b50\u4efb\u52a1</span>
             </div>
         </div>
 
@@ -542,12 +590,12 @@ function renderDrawerContent(task) {
                 <line x1="16" y1="13" x2="8" y2="13"/>
                 <line x1="16" y1="17" x2="8" y2="17"/>
             </svg>
-            <span>备注</span>
+            <span>\u5907\u6ce8</span>
         </div>
 
         <textarea class="drawer-notes-textarea"
                   id="drawer-notes-input"
-                  placeholder="添加任务备注..."
+                  placeholder="\u6dfb\u52a0\u4efb\u52a1\u5907\u6ce8..."
                   onclick="event.stopPropagation()"
                   onblur="saveDrawerNotes(${task.id})">${escapeHtml(task.note || '')}</textarea>
 
@@ -558,20 +606,20 @@ function renderDrawerContent(task) {
                     <path d="M1 20v-6h6"/>
                     <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
                 </svg>
-                重复
+                \u91cd\u590d
             </button>
             <button class="drawer-footer-btn" onclick="event.stopPropagation();toggleFreezeInDrawer(${task.id})">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                 </svg>
-                ${task.frozen ? '解冻' : '冻结'}
+                ${task.frozen ? '\u89e3\u51bb' : '\u51bb\u7ed3'}
             </button>
             <button class="drawer-footer-btn danger" onclick="event.stopPropagation();deleteTaskInDrawer(${task.id})">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="3 6 5 6 21 6"/>
                     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
                 </svg>
-                删除
+                \u5220\u9664
             </button>
         </div>
     `;
@@ -614,7 +662,7 @@ function renderSubtasksList(task) {
                       onclick="event.stopPropagation();toggleSubtaskInDrawer(${task.id}, ${sub.id})">${escapeHtml(sub.text)}</span>
                 <button type="button" class="subtask-delete-btn"
                         onclick="event.stopPropagation();deleteSubtaskInDrawer(${task.id}, ${sub.id})"
-                        title="删除子任务">
+                        title="\u5220\u9664\u5b50\u4efb\u52a1">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18"/>
                         <line x1="6" y1="6" x2="18" y2="18"/>
@@ -656,11 +704,11 @@ function renderNotesArea(task) {
                     <line x1="16" y1="13" x2="8" y2="13"/>
                     <line x1="16" y1="17" x2="8" y2="17"/>
                 </svg>
-                备注
+                \u5907\u6ce8
             </div>
             <textarea class="drawer-notes-textarea"
                       id="drawer-notes-input"
-                      placeholder="添加任务备注..."
+                      placeholder="\u6dfb\u52a0\u4efb\u52a1\u5907\u6ce8..."
                       onclick="event.stopPropagation()"
                       onblur="saveDrawerNotes(${task.id})">${escapeHtml(task.note || '')}</textarea>
         </div>
@@ -877,7 +925,7 @@ function deleteSubtaskInDrawer(taskId, subtaskId) {
 }
 
 function openAddSubtaskInDrawer(taskId) {
-    // 已改为内嵌输入，此函数保留但不再使用
+    // 宸叉敼涓哄唴宓岃緭鍏ワ紝姝ゅ嚱鏁颁繚鐣欎絾涓嶅啀浣跨敤
 }
 
 function showSubtaskAddInline(taskId) {
@@ -941,11 +989,11 @@ function getPriorityClass(priority) {
 
 function getPriorityText(priority) {
     switch (priority) {
-        case 'high': return '高';
-        case 'medium': return '中';
-        case 'normal': return '正常';
-        case 'low': return '低';
-        default: return '正常';
+        case 'high': return '\u9ad8';
+        case 'medium': return '\u4e2d';
+        case 'normal': return '\u6b63\u5e38';
+        case 'low': return '\u4f4e';
+        default: return '\u6b63\u5e38';
     }
 }
 
@@ -996,12 +1044,118 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-function openTimePickerInDrawer(taskId) {
-    // 已改为内嵌输入，此函数保留但不再使用
+function parseDrawerTimeToMinutes(value) {
+    const normalized = String(value || '').trim();
+    const match = normalized.match(/^(\d{1,2}):(\d{2})$/);
+    if (!match) return null;
+
+    const hours = Number(match[1]);
+    const minutes = Number(match[2]);
+    if (!Number.isFinite(hours) || !Number.isFinite(minutes)) return null;
+    if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) return null;
+
+    return hours * 60 + minutes;
 }
 
-function saveDrawerTime(taskId) {
-    const input = document.getElementById('drawer-time-input-' + taskId);
+function formatDrawerMinutesToTime(totalMinutes) {
+    if (!Number.isFinite(totalMinutes)) return '';
+
+    const normalized = ((Math.trunc(totalMinutes) % 1440) + 1440) % 1440;
+    const hours = Math.floor(normalized / 60);
+    const minutes = normalized % 60;
+
+    return String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0');
+}
+
+function getDrawerDurationMinutes(task) {
+    const parsed = parseInt(task && task.duration, 10);
+    if (!Number.isFinite(parsed) || parsed < 0) return null;
+    return parsed;
+}
+
+function clampDrawerDuration(minutes) {
+    if (!Number.isFinite(minutes)) return 0;
+    return Math.max(0, Math.min(1440, Math.trunc(minutes)));
+}
+
+function formatDrawerDurationText(minutes) {
+    if (!Number.isFinite(minutes) || minutes < 0) return '';
+    if (minutes === 0) return '\u0030 \u5206\u949f';
+
+    const hours = Math.floor(minutes / 60);
+    const restMinutes = minutes % 60;
+
+    if (hours && restMinutes) {
+        return hours + ' \u5c0f\u65f6 ' + restMinutes + ' \u5206\u949f';
+    }
+    if (hours) {
+        return hours + ' \u5c0f\u65f6';
+    }
+    return restMinutes + ' \u5206\u949f';
+}
+
+function getDrawerScheduleState(task) {
+    const startTime = String(task && task.planTime || '').trim();
+    const startMinutes = parseDrawerTimeToMinutes(startTime);
+    const durationMinutes = getDrawerDurationMinutes(task);
+
+    if (startMinutes === null || durationMinutes === null) {
+        return {
+            startTime: startTime,
+            durationMinutes: durationMinutes,
+            endTime: '',
+            spillsNextDay: false
+        };
+    }
+
+    const totalEndMinutes = startMinutes + durationMinutes;
+
+    return {
+        startTime: startTime,
+        durationMinutes: durationMinutes,
+        endTime: formatDrawerMinutesToTime(totalEndMinutes),
+        spillsNextDay: totalEndMinutes >= 1440
+    };
+}
+
+function getDrawerSchedulePrimaryText(state) {
+    if (state.startTime && state.endTime) {
+        return state.startTime + ' - ' + state.endTime;
+    }
+    if (state.startTime) {
+        return '\u5f00\u59cb\u4e8e ' + state.startTime;
+    }
+    if (state.durationMinutes !== null) {
+        return '\u9884\u8ba1 ' + formatDrawerDurationText(state.durationMinutes);
+    }
+    return '\u5b89\u6392\u4eca\u5929\u7684\u8282\u594f';
+}
+
+function getDrawerScheduleSecondaryText(state) {
+    if (state.startTime && state.endTime) {
+        return '\u9884\u8ba1\u8017\u65f6 ' + formatDrawerDurationText(state.durationMinutes) + (state.spillsNextDay ? ' \u00b7 \u6b21\u65e5\u7ed3\u675f' : '');
+    }
+    if (state.startTime) {
+        return '\u8bbe\u7f6e\u7ed3\u675f\u65f6\u95f4\u6216\u9884\u8ba1\u8017\u65f6\u540e\u4f1a\u81ea\u52a8\u540c\u6b65';
+    }
+    if (state.durationMinutes !== null) {
+        return '\u8865\u5145\u5f00\u59cb\u65f6\u95f4\u540e\u4f1a\u81ea\u52a8\u63a8\u7b97\u7ed3\u675f\u65f6\u95f4';
+    }
+    return '\u5f00\u59cb\u65f6\u95f4\u3001\u7ed3\u675f\u65f6\u95f4\u4e0e\u9884\u8ba1\u8017\u65f6\u4f1a\u81ea\u52a8\u8054\u52a8';
+}
+
+function getDrawerScheduleBadgeText(state) {
+    if (state.spillsNextDay) return '\u6b21\u65e5\u7ed3\u675f';
+    if (state.durationMinutes !== null) return '\u81ea\u52a8\u8054\u52a8';
+    return '\u5f85\u5b89\u6392';
+}
+
+function openTimePickerInDrawer(taskId) {
+    // 宸叉敼涓哄唴宓岃緭鍏ワ紝姝ゅ嚱鏁颁繚鐣欎絾涓嶅啀浣跨敤
+}
+
+function saveDrawerStartTime(taskId) {
+    const input = document.getElementById('drawer-start-time-input-' + taskId) || document.getElementById('drawer-time-input-' + taskId);
     if (!input) return;
 
     const task = findTaskById(taskId);
@@ -1014,8 +1168,12 @@ function saveDrawerTime(taskId) {
     }
 }
 
+function saveDrawerTime(taskId) {
+    saveDrawerStartTime(taskId);
+}
+
 function openPriorityPickerInDrawer(taskId) {
-    // 已改为内嵌输入，此函数保留但不再使用
+    // 宸叉敼涓哄唴宓岃緭鍏ワ紝姝ゅ嚱鏁颁繚鐣欎絾涓嶅啀浣跨敤
 }
 
 function saveDrawerPriority(taskId) {
@@ -1033,7 +1191,7 @@ function saveDrawerPriority(taskId) {
 }
 
 function openDurationPickerInDrawer(taskId) {
-    // 已改为内嵌输入，此函数保留但不再使用
+    // 宸叉敼涓哄唴宓岃緭鍏ワ紝姝ゅ嚱鏁颁繚鐣欎絾涓嶅啀浣跨敤
 }
 
 function saveDrawerDuration(taskId) {
@@ -1043,17 +1201,69 @@ function saveDrawerDuration(taskId) {
     const task = findTaskById(taskId);
     if (!task) return;
 
-    const newDuration = parseInt(input.value, 10);
-    if (!isNaN(newDuration) && newDuration >= 0) {
-        if (task.duration !== newDuration) {
-            task.duration = newDuration;
-            persistTaskDetailChanges(task, { kanban: true });
-        }
-    } else if (input.value === '') {
-        if (task.duration) {
+    const rawValue = input.value.trim();
+
+    if (rawValue === '') {
+        if (getDrawerDurationMinutes(task) !== null) {
             task.duration = undefined;
             persistTaskDetailChanges(task, { kanban: true });
         }
+        return;
+    }
+
+    const parsedDuration = parseInt(rawValue, 10);
+    if (!Number.isFinite(parsedDuration) || parsedDuration < 0) {
+        syncTaskDetailPanel();
+        return;
+    }
+
+    const nextDuration = clampDrawerDuration(parsedDuration);
+    if (getDrawerDurationMinutes(task) !== nextDuration) {
+        task.duration = nextDuration;
+        persistTaskDetailChanges(task, { kanban: true });
+    } else if (String(nextDuration) !== rawValue) {
+        input.value = String(nextDuration);
+    }
+}
+
+function saveDrawerEndTime(taskId) {
+    const input = document.getElementById('drawer-end-time-input-' + taskId);
+    if (!input) return;
+
+    const task = findTaskById(taskId);
+    if (!task) return;
+
+    const nextEndTime = input.value.trim();
+    if (!nextEndTime) {
+        if (getDrawerDurationMinutes(task) !== null) {
+            task.duration = undefined;
+            persistTaskDetailChanges(task, { kanban: true });
+        }
+        return;
+    }
+
+    const startMinutes = parseDrawerTimeToMinutes(task.planTime || '');
+    if (startMinutes === null) {
+        toast('\u8bf7\u5148\u8bbe\u7f6e\u5f00\u59cb\u65f6\u95f4');
+        syncTaskDetailPanel();
+        return;
+    }
+
+    const endMinutes = parseDrawerTimeToMinutes(nextEndTime);
+    if (endMinutes === null) return;
+
+    let durationMinutes = endMinutes - startMinutes;
+    if (durationMinutes < 0) {
+        durationMinutes += 1440;
+    }
+
+    durationMinutes = clampDrawerDuration(durationMinutes);
+
+    if (getDrawerDurationMinutes(task) !== durationMinutes) {
+        task.duration = durationMinutes;
+        persistTaskDetailChanges(task, { kanban: true });
+    } else {
+        syncTaskDetailPanel();
     }
 }
 
@@ -1062,7 +1272,7 @@ function openRepeatInDrawer(taskId) {
         openCustomRepeatModal(taskId);
         return;
     }
-    toast('重复规则功能暂不可用');
+    toast('\u91cd\u590d\u89c4\u5219\u529f\u80fd\u6682\u4e0d\u53ef\u7528');
 }
 
 function toggleFreezeInDrawer(taskId) {
@@ -1071,11 +1281,11 @@ function toggleFreezeInDrawer(taskId) {
 
     task.frozen = !task.frozen;
     persistTaskDetailChanges(task, { kanban: true });
-    toast(task.frozen ? '任务已冻结' : '任务已解冻');
+    toast(task.frozen ? '\u4efb\u52a1\u5df2\u51bb\u7ed3' : '\u4efb\u52a1\u5df2\u89e3\u51bb');
 }
 
 function deleteTaskInDrawer(taskId) {
-    if (confirm('确定要删除这个任务吗？')) {
+    if (confirm('\u786e\u5b9a\u8981\u5220\u9664\u8fd9\u4e2a\u4efb\u52a1\u5417\uff1f')) {
         del(taskId);
         closeTaskDetail();
     }
