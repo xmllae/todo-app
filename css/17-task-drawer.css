@@ -352,25 +352,25 @@
     background: color-mix(in srgb, #ef4444 15%, var(--card)) !important;
 }
 
-/* Done state - normal priority */
+/* Done state - normal priority (match task row: gray color) */
 .task-detail-inner .task-ck-ring.task-ck-ring--done .chk-ring {
-    background: #22c55e !important;
-    border-color: #22c55e !important;
+    background: #94a3b8 !important;
+    border-color: #94a3b8 !important;
 }
 
 .task-detail-inner .task-ck-ring.task-ck-ring--done .chk-ring:hover {
-    background: #22c55e !important;
-    border-color: #22c55e !important;
+    background: #94a3b8 !important;
+    border-color: #94a3b8 !important;
 }
 
 .task-detail-inner .task-ck-ring.task-ck-ring--done .chk-ring.checked {
-    background: #22c55e !important;
-    border-color: transparent !important;
+    background: #94a3b8 !important;
+    border-color: #94a3b8 !important;
 }
 
 .task-detail-inner .task-ck-ring.task-ck-ring--done .chk-ring:hover.checked {
-    background: #22c55e !important;
-    border-color: transparent !important;
+    background: #94a3b8 !important;
+    border-color: #94a3b8 !important;
 }
 
 .task-detail-inner .task-ck-ring .chk-ring svg,
@@ -649,13 +649,13 @@
 }
 
 .subtask-check.task-ck-slot.task-ck-ring--done .chk-ring {
-    background: #22c55e !important;
-    border-color: #22c55e !important;
+    background: #94a3b8 !important;
+    border-color: #94a3b8 !important;
 }
 
 .subtask-check.task-ck-slot.task-ck-ring--done .chk-ring:hover {
-    background: #22c55e !important;
-    border-color: #22c55e !important;
+    background: #94a3b8 !important;
+    border-color: #94a3b8 !important;
 }
 
 .subtask-check.task-ck-slot.task-ck-ring--done .chk-ring:hover .chk-ring-ico {
