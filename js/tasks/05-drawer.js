@@ -420,6 +420,27 @@ function renderDrawerContent(task) {
                    onclick="event.stopPropagation()"
                    onblur="saveDrawerTitle(${task.id})"
                    onkeydown="if(event.key==='Enter'){event.target.blur()}">
+            <div class="drawer-priority-dropdown" onclick="event.stopPropagation()">
+                <button class="drawer-priority-btn" onclick="togglePriorityDropdown(this)" title="选择优先级">
+                    <svg class="drawer-priority-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </button>
+                <div class="drawer-priority-menu">
+                    <div class="drawer-priority-option ${task.priority === 'high' ? 'selected' : ''}" onclick="setDrawerPriority(${task.id}, 'high')">
+                        <svg class="drawer-priority-ring drawer-priority-ring--high" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="#ef4444"/>
+                        </svg>
+                        <span>高优先级</span>
+                    </div>
+                    <div class="drawer-priority-option ${!task.priority || task.priority === 'normal' ? 'selected' : ''}" onclick="setDrawerPriority(${task.id}, 'normal')">
+                        <svg class="drawer-priority-ring" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                        <span>无优先级</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="drawer-row drawer-row--time">
@@ -436,24 +457,6 @@ function renderDrawerContent(task) {
                    value="${task.planTime || ''}"
                    onclick="event.stopPropagation()"
                    onchange="saveDrawerTime(${task.id})">
-        </div>
-
-        <div class="drawer-row drawer-row--priority">
-            <div class="drawer-row-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-                </svg>
-            </div>
-            <label class="drawer-row-label">优先级</label>
-            <select class="drawer-row-select"
-                    id="drawer-priority-input-${task.id}"
-                    onclick="event.stopPropagation()"
-                    onchange="saveDrawerPriority(${task.id})">
-                <option value="high" ${task.priority === 'high' ? 'selected' : ''}>高</option>
-                <option value="medium" ${task.priority === 'medium' ? 'selected' : ''}>中</option>
-                <option value="normal" ${!task.priority || task.priority === 'normal' ? 'selected' : ''}>正常</option>
-                <option value="low" ${task.priority === 'low' ? 'selected' : ''}>低</option>
-            </select>
         </div>
 
         <div class="drawer-row drawer-row--duration">
@@ -706,6 +709,9 @@ function toggleTaskDoneFromDrawer(taskId) {
         titleInput.classList.toggle('drawer-task-title--done', task.done);
     }
 
+    // Update priority ring if needed
+    updateDrawerPriorityUI(task.priority);
+
     persistTaskDetailChanges(task, { calendar: true, kanban: true });
 }
 
@@ -720,6 +726,55 @@ function saveDrawerTitle(taskId) {
     if (newText && newText !== task.text) {
         task.text = newText;
         persistTaskDetailChanges(task, { kanban: true });
+    }
+}
+
+function togglePriorityDropdown(btn) {
+    const dropdown = btn.closest('.drawer-priority-dropdown');
+    const menu = dropdown.querySelector('.drawer-priority-menu');
+    const isOpen = menu.classList.contains('open');
+
+    // Close all other dropdowns
+    document.querySelectorAll('.drawer-priority-menu.open').forEach(m => {
+        if (m !== menu) m.classList.remove('open');
+    });
+
+    menu.classList.toggle('open', !isOpen);
+}
+
+function setDrawerPriority(taskId, priority) {
+    const task = findTaskById(taskId);
+    if (!task) return;
+
+    task.priority = priority;
+    persistTaskDetailChanges(task, { kanban: true });
+
+    // Close dropdown
+    document.querySelectorAll('.drawer-priority-menu.open').forEach(m => {
+        m.classList.remove('open');
+    });
+
+    // Update UI
+    updateDrawerPriorityUI(priority);
+}
+
+function updateDrawerPriorityUI(priority) {
+    const dropdown = document.querySelector('.drawer-priority-dropdown');
+    if (!dropdown) return;
+
+    const menu = dropdown.querySelector('.drawer-priority-menu');
+    const options = menu.querySelectorAll('.drawer-priority-option');
+
+    // Update selected option
+    options.forEach(opt => {
+        const isHigh = opt.onclick.toString().includes("'high'");
+        opt.classList.toggle('selected', (isHigh && priority === 'high') || (!isHigh && (priority === 'normal' || !priority)));
+    });
+
+    // Update check ring in title
+    const checkSlot = document.querySelector('.task-ck-ring');
+    if (checkSlot) {
+        checkSlot.classList.toggle('task-ck-ring--prio-high', priority === 'high');
     }
 }
 
@@ -998,3 +1053,12 @@ window.openTaskDetail = openTaskDrawer;
 window.closeDrawer = closeDrawer;
 window.closeTaskDetail = closeTaskDetail;
 window.syncTaskDetailPanel = syncTaskDetailPanel;
+
+// Close priority dropdown when clicking outside
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.drawer-priority-dropdown')) {
+        document.querySelectorAll('.drawer-priority-menu.open').forEach(m => {
+            m.classList.remove('open');
+        });
+    }
+});

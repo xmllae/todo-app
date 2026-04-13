@@ -425,6 +425,72 @@
     box-shadow: 0 0 0 2px var(--acc-bd);
 }
 
+.drawer-priority-dropdown {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.drawer-priority-btn {
+    display: flex;
+    align-items: center;
+    padding: 6px 8px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.15s;
+}
+
+.drawer-priority-btn:hover {
+    background: var(--hov);
+}
+
+.drawer-priority-arrow {
+    width: 16px;
+    height: 16px;
+    color: var(--text3);
+}
+
+.drawer-priority-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 4px;
+    background: var(--card);
+    border: 1px solid var(--inp-bd);
+    border-radius: 12px;
+    padding: 6px;
+    min-width: 140px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    z-index: 100;
+    display: none;
+}
+
+.drawer-priority-menu.open {
+    display: block;
+}
+
+.drawer-priority-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+    font-size: 0.88rem;
+    color: var(--text2);
+}
+
+.drawer-priority-option:hover {
+    background: var(--hov);
+}
+
+.drawer-priority-option.selected {
+    background: var(--acc-bg);
+    color: var(--acc);
+}
+
 .drawer-task-check-slot.task-ck-ring--done ~ .drawer-task-title-text {
     color: var(--text3);
     text-decoration: line-through;
