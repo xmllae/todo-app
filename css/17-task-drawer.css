@@ -359,8 +359,8 @@
 }
 
 .task-detail-inner .task-ck-ring.task-ck-ring--done .chk-ring:hover {
-    background: #16a34a !important;
-    border-color: #16a34a !important;
+    background: #22c55e !important;
+    border-color: #22c55e !important;
 }
 
 .task-detail-inner .task-ck-ring.task-ck-ring--done .chk-ring.checked {
@@ -368,21 +368,37 @@
     border-color: transparent !important;
 }
 
+.task-detail-inner .task-ck-ring.task-ck-ring--done .chk-ring:hover.checked {
+    background: #22c55e !important;
+    border-color: transparent !important;
+}
+
 .task-detail-inner .task-ck-ring .chk-ring svg,
 .task-detail-inner .task-ck-ring.task-ck-ring--done .chk-ring svg {
-    color: #fff;
+    color: #fff !important;
+}
+
+.task-detail-inner .task-ck-ring.task-ck-ring--done .chk-ring:hover .chk-ring-ico {
+    color: #fff !important;
 }
 
 /* High priority done state */
 .task-detail-inner .task-ck-ring.task-ck-ring--prio-high.task-ck-ring--done .chk-ring {
     background: #ef4444 !important;
     border-color: transparent !important;
-    box-shadow: 0 1px 4px rgba(220, 38, 38, .28) !important;
+}
+
+.task-detail-inner .task-ck-ring.task-ck-ring--prio-high.task-ck-ring--done .chk-ring:hover {
+    background: #ef4444 !important;
+    border-color: transparent !important;
+}
+
+.task-detail-inner .task-ck-ring.task-ck-ring--prio-high.task-ck-ring--done .chk-ring:hover .chk-ring-ico {
+    color: #fff !important;
 }
 
 .dark .task-detail-inner .task-ck-ring.task-ck-ring--prio-high.task-ck-ring--done .chk-ring {
     background: #ef4444 !important;
-    box-shadow: 0 1px 5px rgba(239, 68, 68, .32) !important;
 }
 
 .drawer-task-title-text {
@@ -635,12 +651,15 @@
 .subtask-check.task-ck-slot.task-ck-ring--done .chk-ring {
     background: #22c55e !important;
     border-color: #22c55e !important;
-    box-shadow: 0 1px 3px rgba(34, 197, 94, 0.3) !important;
 }
 
 .subtask-check.task-ck-slot.task-ck-ring--done .chk-ring:hover {
-    background: #16a34a !important;
-    border-color: #16a34a !important;
+    background: #22c55e !important;
+    border-color: #22c55e !important;
+}
+
+.subtask-check.task-ck-slot.task-ck-ring--done .chk-ring:hover .chk-ring-ico {
+    color: #fff !important;
 }
 
 .subtask-check.task-ck-slot .chk-ring svg,
