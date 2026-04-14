@@ -1358,19 +1358,19 @@
 .subtask-add-btn {
     display: flex;
     align-items: center;
-    gap: 10px;
     justify-content: center;
-    padding: 13px 16px;
-    color: var(--text3);
+    gap: 12px;
+    width: 100%;
+    min-height: 72px;
+    padding: 18px 16px;
+    margin-top: 8px;
+    border: 2px dashed color-mix(in srgb, var(--inp-bd) 96%, #dbe3ee);
+    border-radius: 20px;
+    background: #fff;
+    color: color-mix(in srgb, var(--text3) 86%, #b6c0cf);
     cursor: pointer;
-    border: 1px dashed color-mix(in srgb, var(--inp-bd) 92%, transparent);
-    border-radius: 18px;
-    background: linear-gradient(180deg, color-mix(in srgb, var(--card) 86%, #ffffff) 0%, color-mix(in srgb, var(--inp-bg) 88%, #f8fafc) 100%);
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.86),
-        0 8px 18px rgba(15, 23, 42, 0.03);
-    transition: border-color 0.22s ease, background 0.24s ease, box-shadow 0.24s ease, transform 0.18s ease, color 0.2s ease;
-    margin-top: 6px;
+    user-select: none;
+    transition: border-color 0.22s ease, background-color 0.22s ease, color 0.22s ease;
 }
 
 .subtask-add-inline {
@@ -1450,38 +1450,41 @@
 }
 
 .subtask-add-btn:hover {
-    transform: translateY(-1px);
-    background: linear-gradient(180deg, color-mix(in srgb, var(--acc) 5%, #ffffff) 0%, color-mix(in srgb, var(--hov) 88%, #f8fbff) 100%);
+    background: color-mix(in srgb, var(--acc) 3%, #ffffff);
     border-style: solid;
-    border-color: color-mix(in srgb, var(--acc-bd) 26%, var(--inp-bd));
-    color: var(--text2);
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.92),
-        0 14px 28px rgba(15, 23, 42, 0.06);
+    border-color: color-mix(in srgb, var(--acc) 74%, #9aa5ff);
+    color: var(--acc);
 }
 
 .subtask-add-btn:active {
-    transform: translateY(0) scale(0.995);
+    background: color-mix(in srgb, var(--acc) 6%, #ffffff);
 }
 
 .subtask-add-btn:focus-visible {
     outline: none;
     border-style: solid;
-    border-color: var(--acc-bd);
-    background: linear-gradient(180deg, color-mix(in srgb, var(--acc) 6%, #ffffff) 0%, color-mix(in srgb, var(--hov) 90%, #f8fbff) 100%);
-    box-shadow:
-        0 0 0 4px color-mix(in srgb, var(--acc) 12%, transparent),
-        0 14px 30px rgba(15, 23, 42, 0.06);
+    border-color: color-mix(in srgb, var(--acc) 74%, #9aa5ff);
+    background: color-mix(in srgb, var(--acc) 3%, #ffffff);
+    color: var(--acc);
 }
 
 .subtask-add-btn svg {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    transform-origin: center;
+    transition: transform 0.22s ease;
 }
 
 .subtask-add-btn span {
-    font-size: 0.92rem;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1;
+}
+
+.subtask-add-btn:hover svg,
+.subtask-add-btn:focus-visible svg {
+    transform: rotate(90deg);
 }
 
 /* =========================================
@@ -1664,20 +1667,16 @@
 }
 
 .dark .subtask-add-btn {
-    background: linear-gradient(180deg, color-mix(in srgb, var(--card) 88%, #111827) 0%, color-mix(in srgb, var(--hov) 66%, #0f172a) 100%);
-    border-color: color-mix(in srgb, var(--inp-bd) 74%, transparent);
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.04),
-        0 10px 20px rgba(2, 6, 23, 0.18);
+    background: color-mix(in srgb, var(--card) 92%, #0f172a);
+    border-color: color-mix(in srgb, var(--inp-bd) 78%, #64748b);
+    color: color-mix(in srgb, var(--text2) 58%, var(--text3));
 }
 
 .dark .subtask-add-btn:hover,
 .dark .subtask-add-btn:focus-visible {
-    border-color: color-mix(in srgb, var(--acc2, var(--acc)) 28%, var(--inp-bd));
-    background: linear-gradient(180deg, color-mix(in srgb, var(--acc2, var(--acc)) 10%, #111827) 0%, color-mix(in srgb, var(--hov) 74%, #0f172a) 100%);
-    box-shadow:
-        0 0 0 4px color-mix(in srgb, var(--acc2, var(--acc)) 12%, transparent),
-        0 18px 34px rgba(2, 6, 23, 0.24);
+    border-color: color-mix(in srgb, var(--acc2, var(--acc)) 82%, #c7d2fe);
+    background: color-mix(in srgb, var(--acc2, var(--acc)) 10%, var(--card));
+    color: var(--acc2, var(--acc));
 }
 
 .dark .drawer-footer-btn {
