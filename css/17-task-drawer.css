@@ -563,7 +563,7 @@
 
 .drawer-priority-preview-ring--high {
     border: 2px solid var(--prio-high, #ef4444);
-    background: color-mix(in srgb, var(--prio-high, #ef4444) 6%, var(--card));
+    background: #fff1f2;
 }
 
 .drawer-priority-preview-ring--normal {
@@ -585,15 +585,18 @@
 }
 
 .drawer-priority-btn.is-high {
-    background: color-mix(in srgb, var(--prio-high, #ef4444) 8%, var(--drawer-surface-strong));
+    background: #fff1f2;
+    box-shadow:
+        0 10px 24px rgba(239, 68, 68, 0.07),
+        inset 0 1px 0 rgba(255, 255, 255, 0.84);
 }
 
 .drawer-priority-btn.is-high .drawer-priority-btn-label {
-    color: color-mix(in srgb, var(--prio-high, #ef4444) 72%, var(--text));
+    color: #b91c1c;
 }
 
 .drawer-priority-btn.is-high .drawer-priority-arrow-wrap {
-    background: color-mix(in srgb, var(--prio-high, #ef4444) 10%, var(--drawer-surface));
+    background: #ffe4e6;
 }
 
 .drawer-priority-btn.is-normal {
@@ -616,6 +619,16 @@
 .drawer-priority-dropdown.is-open .drawer-priority-arrow-wrap,
 .drawer-priority-btn:hover .drawer-priority-arrow-wrap {
     background: color-mix(in srgb, var(--drawer-surface-tint) 88%, #ffffff);
+}
+
+.drawer-priority-dropdown[data-priority="high"].is-open .drawer-priority-arrow,
+.drawer-priority-btn.is-high:hover .drawer-priority-arrow {
+    color: #dc2626;
+}
+
+.drawer-priority-dropdown[data-priority="high"].is-open .drawer-priority-arrow-wrap,
+.drawer-priority-btn.is-high:hover .drawer-priority-arrow-wrap {
+    background: #ffe4e6;
 }
 
 .drawer-priority-dropdown.is-open .drawer-priority-arrow {
@@ -674,13 +687,13 @@
 }
 
 .drawer-priority-ring--high circle {
-    fill: color-mix(in srgb, var(--prio-high, #ef4444) 10%, var(--card));
+    fill: #fff1f2;
     stroke: var(--prio-high, #ef4444);
     stroke-width: 2.4;
 }
 
 .drawer-priority-option:not(.selected) .drawer-priority-ring--high circle {
-    fill: color-mix(in srgb, var(--prio-high, #ef4444) 6%, var(--card));
+    fill: #fff7f7;
 }
 
 .drawer-priority-ring:not(.drawer-priority-ring--high) circle {
@@ -694,6 +707,10 @@
     background: color-mix(in srgb, var(--drawer-surface) 86%, var(--drawer-surface-soft));
 }
 
+.drawer-priority-option[data-priority="high"]:hover {
+    background: #fff1f2;
+}
+
 .drawer-priority-option.selected {
     background: color-mix(in srgb, #ffffff 72%, var(--drawer-surface));
     color: var(--text);
@@ -703,11 +720,11 @@
 }
 
 .drawer-priority-option.selected[data-priority="high"] {
-    background: color-mix(in srgb, var(--prio-high, #ef4444) 10%, var(--drawer-surface-strong));
+    background: #fff1f2;
 }
 
 .drawer-priority-option.selected[data-priority="high"] span:last-child {
-    color: color-mix(in srgb, var(--prio-high, #ef4444) 72%, var(--text));
+    color: #b91c1c;
 }
 
 .drawer-priority-option.selected[data-priority="normal"] {
@@ -727,6 +744,17 @@
     background: linear-gradient(180deg, color-mix(in srgb, var(--card) 94%, #111827) 0%, color-mix(in srgb, var(--hov) 62%, #0f172a) 100%);
 }
 
+.dark .drawer-priority-btn.is-high {
+    background: color-mix(in srgb, var(--prio-high, #ef4444) 18%, var(--card));
+    box-shadow:
+        0 14px 30px rgba(127, 29, 29, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.dark .drawer-priority-btn.is-high .drawer-priority-btn-label {
+    color: #fca5a5;
+}
+
 .dark .drawer-priority-arrow-wrap {
     background: color-mix(in srgb, var(--card) 78%, #0f172a);
     border-color: color-mix(in srgb, var(--inp-bd) 56%, transparent);
@@ -736,6 +764,17 @@
 .dark .drawer-priority-btn:hover .drawer-priority-arrow-wrap {
     border-color: color-mix(in srgb, var(--acc2, var(--acc)) 22%, var(--inp-bd));
     background: color-mix(in srgb, var(--hov) 72%, #111827);
+}
+
+.dark .drawer-priority-dropdown[data-priority="high"].is-open .drawer-priority-arrow,
+.dark .drawer-priority-btn.is-high:hover .drawer-priority-arrow {
+    color: #fca5a5;
+}
+
+.dark .drawer-priority-dropdown[data-priority="high"].is-open .drawer-priority-arrow-wrap,
+.dark .drawer-priority-btn.is-high:hover .drawer-priority-arrow-wrap {
+    border-color: transparent;
+    background: color-mix(in srgb, var(--prio-high, #ef4444) 22%, var(--card));
 }
 
 .dark .drawer-priority-btn-note {
