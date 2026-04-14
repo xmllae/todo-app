@@ -457,12 +457,13 @@ function renderDrawerContent(task) {
                                class="drawer-schedule-input drawer-schedule-input--time"
                                id="drawer-start-time-input-${task.id}"
                                value="${task.planTime || ''}"
-                               placeholder="09:30"
+                               placeholder="00:00"
                                inputmode="numeric"
                                maxlength="5"
                                spellcheck="false"
                                autocomplete="off"
                                onclick="event.stopPropagation()"
+                               oninput="handleDrawerTimeTyping(this)"
                                onkeydown="if(event.key==='Enter'){event.target.blur()}"
                                onchange="saveDrawerStartTime(${task.id})">
                         <span class="drawer-schedule-time-icon" aria-hidden="true">
@@ -486,12 +487,13 @@ function renderDrawerContent(task) {
                                class="drawer-schedule-input drawer-schedule-input--time"
                                id="drawer-end-time-input-${task.id}"
                                value="${scheduleState.endTime}"
-                               placeholder="09:30"
+                               placeholder="00:00"
                                inputmode="numeric"
                                maxlength="5"
                                spellcheck="false"
                                autocomplete="off"
                                onclick="event.stopPropagation()"
+                               oninput="handleDrawerTimeTyping(this)"
                                onkeydown="if(event.key==='Enter'){event.target.blur()}"
                                onchange="saveDrawerEndTime(${task.id})">
                         <span class="drawer-schedule-time-icon" aria-hidden="true">
@@ -1125,6 +1127,21 @@ function normalizeDrawerTimeTextInput(rawValue) {
     if (parsedMinutes === null) return null;
 
     return formatDrawerMinutesToTime(parsedMinutes);
+}
+
+function formatDrawerTimeTypingValue(rawValue) {
+    const digits = String(rawValue || '').replace(/\D/g, '').slice(0, 4);
+    if (!digits) return '';
+    if (digits.length <= 2) return digits;
+    return digits.slice(0, 2) + ':' + digits.slice(2);
+}
+
+function handleDrawerTimeTyping(input) {
+    if (!input) return;
+    const formatted = formatDrawerTimeTypingValue(input.value);
+    if (input.value !== formatted) {
+        input.value = formatted;
+    }
 }
 
 function getDrawerScheduleState(task) {
