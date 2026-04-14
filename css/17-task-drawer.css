@@ -86,16 +86,23 @@
 }
 
 .task-detail-inner {
+    --drawer-surface: #f8fafc;
+    --drawer-surface-strong: #f4f7fb;
+    --drawer-surface-soft: #f1f5f9;
+    --drawer-surface-tint: color-mix(in srgb, var(--acc) 5%, #f8fafc);
+    --drawer-surface-danger: color-mix(in srgb, #ef4444 6%, #f8fafc);
+    --drawer-elev-shadow: 0 8px 22px rgba(15, 23, 42, 0.045);
+    --drawer-elev-shadow-hover: 0 12px 28px rgba(15, 23, 42, 0.065);
     position: relative;
     width: 100%;
     min-height: 0;
     display: flex;
     flex-direction: column;
     background: var(--card);
-    border: 1px solid var(--task-bd);
+    border: none;
     border-radius: 20px;
-    box-shadow: -20px 0 28px -24px rgba(15, 23, 42, 0.2),
-                0 22px 48px rgba(15, 23, 42, 0.1);
+    box-shadow: -20px 0 28px -24px rgba(15, 23, 42, 0.16),
+                0 24px 52px rgba(15, 23, 42, 0.09);
     overflow: hidden;
     opacity: 0;
     transform: translateX(26px) scale(0.985);
@@ -487,22 +494,21 @@
     max-width: 100%;
     min-height: 44px;
     padding: 6px 8px 6px 10px;
-    border: 1px solid color-mix(in srgb, var(--task-bd) 74%, transparent);
-    background:
-        linear-gradient(180deg, color-mix(in srgb, var(--card) 98%, #ffffff) 0%, color-mix(in srgb, var(--card) 94%, #f8fafc) 100%);
+    border: none;
+    background: #f8fafc;
     cursor: pointer;
     border-radius: 999px;
     box-shadow:
-        0 6px 18px rgba(15, 23, 42, 0.06),
-        inset 0 1px 0 rgba(255, 255, 255, 0.82);
+        var(--drawer-elev-shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.78);
     transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, color 0.18s ease;
 }
 
 .drawer-priority-btn:hover {
     transform: translateY(-1px);
-    border-color: color-mix(in srgb, var(--acc-bd) 24%, var(--task-bd));
+    background: #f8fafc;
     box-shadow:
-        0 10px 22px rgba(15, 23, 42, 0.09),
+        var(--drawer-elev-shadow-hover),
         inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
@@ -562,7 +568,7 @@
 
 .drawer-priority-preview-ring--normal {
     border: 1.6px solid color-mix(in srgb, var(--inp-bd) 88%, #d8dee8);
-    background: linear-gradient(180deg, color-mix(in srgb, var(--card) 96%, #ffffff), color-mix(in srgb, var(--card) 92%, #edf2f7));
+    background: #ffffff;
 }
 
 .drawer-priority-arrow-wrap {
@@ -573,15 +579,13 @@
     justify-content: center;
     flex-shrink: 0;
     border-radius: 999px;
-    background: color-mix(in srgb, var(--card) 80%, #eef2f7);
-    border: 1px solid color-mix(in srgb, var(--inp-bd) 68%, transparent);
+    background: color-mix(in srgb, var(--drawer-surface-soft) 88%, #ffffff);
+    border: none;
     transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
 }
 
 .drawer-priority-btn.is-high {
-    border-color: color-mix(in srgb, var(--prio-high, #ef4444) 24%, var(--task-bd));
-    background:
-        linear-gradient(180deg, color-mix(in srgb, var(--prio-high, #ef4444) 10%, var(--card)) 0%, color-mix(in srgb, var(--prio-high, #ef4444) 3%, var(--card)) 100%);
+    background: color-mix(in srgb, var(--prio-high, #ef4444) 6%, #f8fafc);
 }
 
 .drawer-priority-btn.is-high .drawer-priority-btn-label {
@@ -589,12 +593,11 @@
 }
 
 .drawer-priority-btn.is-high .drawer-priority-arrow-wrap {
-    background: color-mix(in srgb, var(--prio-high, #ef4444) 10%, var(--card));
-    border-color: color-mix(in srgb, var(--prio-high, #ef4444) 20%, var(--task-bd));
+    background: color-mix(in srgb, var(--prio-high, #ef4444) 10%, var(--drawer-surface));
 }
 
 .drawer-priority-btn.is-normal {
-    border-color: color-mix(in srgb, var(--task-bd) 72%, transparent);
+    background: #f8fafc;
 }
 
 .drawer-priority-arrow {
@@ -612,8 +615,7 @@
 
 .drawer-priority-dropdown.is-open .drawer-priority-arrow-wrap,
 .drawer-priority-btn:hover .drawer-priority-arrow-wrap {
-    border-color: color-mix(in srgb, var(--acc-bd) 22%, var(--inp-bd));
-    background: color-mix(in srgb, var(--hov) 78%, #ffffff);
+    background: color-mix(in srgb, var(--drawer-surface-tint) 88%, #ffffff);
 }
 
 .drawer-priority-dropdown.is-open .drawer-priority-arrow {
@@ -625,17 +627,16 @@
     top: 100%;
     right: 0;
     margin-top: 8px;
-    background:
-        linear-gradient(180deg, color-mix(in srgb, var(--card) 99%, #ffffff) 0%, color-mix(in srgb, var(--card) 96%, #f8fafc) 100%);
-    border: 1px solid color-mix(in srgb, var(--task-bd) 72%, transparent);
+    background: #f8fafc;
+    border: none;
     border-radius: 16px;
     padding: 6px;
     width: 156px;
     min-width: 156px;
     max-width: min(156px, calc(100vw - 72px));
     box-shadow:
-        0 18px 40px rgba(15, 23, 42, 0.14),
-        0 4px 12px rgba(15, 23, 42, 0.06);
+        0 18px 40px rgba(15, 23, 42, 0.13),
+        0 4px 12px rgba(15, 23, 42, 0.05);
     z-index: 100;
     display: none;
     backdrop-filter: blur(12px);
@@ -657,7 +658,7 @@
     font-size: 0.84rem;
     font-weight: 600;
     color: var(--text2);
-    border: 1px solid transparent;
+    border: none;
     background: transparent;
     user-select: none;
 }
@@ -690,22 +691,19 @@
 
 .drawer-priority-option:hover {
     transform: none;
-    background: color-mix(in srgb, var(--card) 86%, var(--hov));
-    border-color: color-mix(in srgb, var(--acc-bd) 14%, var(--task-bd));
+    background: color-mix(in srgb, var(--drawer-surface) 86%, var(--drawer-surface-soft));
 }
 
 .drawer-priority-option.selected {
-    background: color-mix(in srgb, var(--card) 92%, #ffffff);
+    background: color-mix(in srgb, #ffffff 72%, var(--drawer-surface));
     color: var(--text);
-    border-color: color-mix(in srgb, var(--task-bd) 70%, transparent);
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.85),
-        0 8px 18px rgba(15, 23, 42, 0.06);
+        0 6px 16px rgba(15, 23, 42, 0.05);
 }
 
 .drawer-priority-option.selected[data-priority="high"] {
-    border-color: color-mix(in srgb, var(--prio-high, #ef4444) 28%, var(--task-bd));
-    background: linear-gradient(180deg, color-mix(in srgb, var(--prio-high, #ef4444) 10%, var(--card)) 0%, color-mix(in srgb, var(--prio-high, #ef4444) 4%, var(--card)) 100%);
+    background: color-mix(in srgb, var(--prio-high, #ef4444) 8%, #f8fafc);
 }
 
 .drawer-priority-option.selected[data-priority="high"] span:last-child {
@@ -713,7 +711,7 @@
 }
 
 .drawer-priority-option.selected[data-priority="normal"] {
-    background: linear-gradient(180deg, color-mix(in srgb, var(--card) 98%, #ffffff) 0%, color-mix(in srgb, var(--card) 92%, #edf2f7) 100%);
+    background: #f8fafc;
 }
 
 .dark .drawer-priority-btn,
@@ -801,13 +799,12 @@
 
 .drawer-schedule-time-box,
 .drawer-schedule-duration-row {
-    border: 1px solid color-mix(in srgb, var(--inp-bd) 74%, transparent);
-    background:
-        linear-gradient(180deg, color-mix(in srgb, var(--card) 98%, #ffffff) 0%, color-mix(in srgb, var(--card) 92%, #f4f7fb) 100%);
+    border: none;
+    background: #f8fafc;
     box-shadow:
-        0 10px 24px rgba(15, 23, 42, 0.06),
-        inset 0 1px 0 rgba(255, 255, 255, 0.84);
-    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+        var(--drawer-elev-shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.82);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
 }
 
 .drawer-schedule-time-box {
@@ -823,20 +820,18 @@
 .drawer-schedule-time-box:hover,
 .drawer-schedule-duration-row:hover {
     transform: translateY(-1px);
-    border-color: color-mix(in srgb, var(--acc-bd) 16%, var(--inp-bd));
+    background: #f8fafc;
     box-shadow:
-        0 14px 30px rgba(15, 23, 42, 0.08),
+        var(--drawer-elev-shadow-hover),
         inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .drawer-schedule-time-box:focus-within,
 .drawer-schedule-duration-row:focus-within {
-    border-color: var(--acc-bd);
-    background:
-        linear-gradient(180deg, color-mix(in srgb, var(--card) 100%, #ffffff) 0%, color-mix(in srgb, var(--card) 94%, #f6f9ff) 100%);
+    background: #f8fafc;
     box-shadow:
         0 0 0 4px color-mix(in srgb, var(--acc) 12%, transparent),
-        0 14px 30px rgba(15, 23, 42, 0.08),
+        var(--drawer-elev-shadow-hover),
         inset 0 1px 0 rgba(255, 255, 255, 0.92);
 }
 
@@ -890,9 +885,9 @@
     justify-content: center;
     flex-shrink: 0;
     color: color-mix(in srgb, var(--text3) 92%, #c5ccd7);
-    background: color-mix(in srgb, var(--card) 72%, #f1f4f9);
-    border: 1px solid color-mix(in srgb, var(--inp-bd) 66%, transparent);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.84);
+    background: color-mix(in srgb, var(--drawer-surface-soft) 90%, #ffffff);
+    border: none;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
     pointer-events: none;
 }
 
@@ -1020,15 +1015,15 @@
 .dark .drawer-schedule-time-box,
 .dark .drawer-schedule-duration-row {
     background:
-        linear-gradient(180deg, color-mix(in srgb, var(--card) 94%, #111827) 0%, color-mix(in srgb, var(--card) 88%, #0f172a) 100%);
+        linear-gradient(180deg, var(--drawer-surface) 0%, var(--drawer-surface-strong) 100%);
     box-shadow:
-        0 18px 36px rgba(2, 6, 23, 0.28),
+        0 16px 34px rgba(2, 6, 23, 0.24),
         inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .dark .drawer-schedule-time-icon {
-    background: color-mix(in srgb, var(--card) 80%, #111827);
-    border-color: color-mix(in srgb, var(--inp-bd) 56%, transparent);
+    background: color-mix(in srgb, var(--drawer-surface-soft) 88%, #0f172a);
+    border-color: transparent;
     color: color-mix(in srgb, var(--text3) 86%, white 14%);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
@@ -1190,21 +1185,37 @@
 .drawer-section-header {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     margin-top: 16px;
     margin-bottom: 7px;
 }
 
+.drawer-section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 14px 4px 4px;
+    border-radius: 12px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78);
+}
+
+.drawer-section-label--subtasks {
+    background: color-mix(in srgb, #4f46e5 9%, #f8fafc);
+}
+
+.drawer-section-label--notes {
+    background: color-mix(in srgb, #9333ea 8%, #f8fafc);
+}
+
 .drawer-section-icon {
-    width: 28px;
-    height: 28px;
+    width: 30px;
+    height: 30px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    border-radius: 8px;
-    color: #4f46e5;
-    background: #eef2ff;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.72);
 }
 
 .drawer-section-icon svg {
@@ -1214,12 +1225,12 @@
 
 .drawer-section-icon--subtasks {
     color: #4f46e5;
-    background: #eef2ff;
+    background: color-mix(in srgb, #4f46e5 12%, #ffffff);
 }
 
 .drawer-section-icon--notes {
     color: #9333ea;
-    background: #faf5ff;
+    background: color-mix(in srgb, #9333ea 10%, #ffffff);
 }
 
 .drawer-section-title {
@@ -1227,6 +1238,14 @@
     font-weight: 700;
     color: var(--text);
     line-height: 1.2;
+}
+
+.drawer-section-label--subtasks .drawer-section-title {
+    color: color-mix(in srgb, #4f46e5 20%, var(--text));
+}
+
+.drawer-section-label--notes .drawer-section-title {
+    color: color-mix(in srgb, #9333ea 18%, var(--text));
 }
 
 .drawer-section-count {
@@ -1238,10 +1257,9 @@
     font-weight: 700;
     line-height: 1;
     color: var(--text3);
-    background: linear-gradient(180deg, color-mix(in srgb, var(--card) 92%, #f8fafc) 0%, color-mix(in srgb, var(--inp-bg) 82%, #eef2f7) 100%);
-    border: 1px solid color-mix(in srgb, var(--inp-bd) 72%, transparent);
+    background: #f8fafc;
     text-align: center;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
 }
 
 /* Tags */
@@ -1274,13 +1292,14 @@
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.15s ease;
-    background: color-mix(in srgb, var(--card) 60%, transparent);
-    border: 1px solid color-mix(in srgb, var(--task-bd) 50%, transparent);
+    background: #f8fafc;
+    border: none;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.035);
 }
 
 .subtask-row:hover {
-    background: color-mix(in srgb, var(--hov) 70%, transparent);
-    border-color: var(--inp-bd);
+    background: color-mix(in srgb, #4f46e5 2%, #f8fafc);
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.05);
 }
 
 /* Subtask check - uses same ring styles */
@@ -1407,15 +1426,18 @@
     height: 42px;
     padding: 0 14px;
     margin-top: 0;
-    border: 2.5px dashed var(--inp-bd);
+    border: none;
     border-radius: 10px;
-    background: var(--card);
+    background: #f8fafc;
     color: var(--text3);
     font-size: 0.875rem;
     font-weight: 500;
     cursor: pointer;
     user-select: none;
-    transition: all 0.2s ease;
+    box-shadow:
+        var(--drawer-elev-shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.82);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
 }
 
 .subtask-add-inline {
@@ -1424,21 +1446,22 @@
     gap: 4px;
     height: 42px;
     padding: 0 8px 0 14px;
-    border: 1px solid color-mix(in srgb, var(--inp-bd) 86%, transparent);
+    border: none;
     border-radius: 10px;
-    background: color-mix(in srgb, var(--card) 98%, #ffffff);
+    background: #f8fafc;
     margin-top: 0;
     box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.88),
-        0 6px 18px rgba(15, 23, 42, 0.05);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        var(--drawer-elev-shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.82);
+    transition: box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .subtask-add-inline:focus-within {
-    border-color: color-mix(in srgb, var(--acc2, var(--acc)) 54%, var(--inp-bd));
+    background: #f8fafc;
     box-shadow:
         0 0 0 4px color-mix(in srgb, var(--acc) 10%, transparent),
-        0 10px 24px rgba(15, 23, 42, 0.08);
+        var(--drawer-elev-shadow-hover),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .subtask-add-input {
@@ -1518,22 +1541,25 @@
 }
 
 .subtask-add-btn:hover {
-    background: color-mix(in srgb, var(--acc) 3%, var(--card));
-    border-style: solid;
-    border-color: color-mix(in srgb, var(--acc) 74%, #9aa5ff);
+    background: #f8fafc;
     color: var(--acc);
+    box-shadow:
+        var(--drawer-elev-shadow-hover),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .subtask-add-btn:active {
-    background: color-mix(in srgb, var(--acc) 6%, var(--card));
+    background: #f8fafc;
 }
 
 .subtask-add-btn:focus-visible {
     outline: none;
-    border-style: solid;
-    border-color: color-mix(in srgb, var(--acc) 74%, #9aa5ff);
-    background: color-mix(in srgb, var(--acc) 3%, var(--card));
+    background: #f8fafc;
     color: var(--acc);
+    box-shadow:
+        0 0 0 4px color-mix(in srgb, var(--acc) 10%, transparent),
+        var(--drawer-elev-shadow-hover),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .subtask-add-btn svg {
@@ -1563,9 +1589,9 @@
     width: 100%;
     min-height: 120px;
     padding: 18px 18px;
-    border: 1px solid color-mix(in srgb, var(--inp-bd) 82%, transparent);
+    border: none;
     border-radius: 18px;
-    background: linear-gradient(180deg, color-mix(in srgb, var(--card) 82%, #ffffff) 0%, color-mix(in srgb, var(--inp-bg) 84%, #f8fafc) 100%);
+    background: #f8fafc;
     color: var(--text);
     font-size: 0.98rem;
     font-family: inherit;
@@ -1573,26 +1599,24 @@
     resize: vertical;
     outline: none;
     box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.88),
-        0 10px 24px rgba(15, 23, 42, 0.04);
-    transition: border-color 0.24s ease, box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), background 0.24s ease, transform 0.2s ease;
+        var(--drawer-elev-shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.82);
+    transition: box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), background 0.24s ease, transform 0.2s ease;
 }
 
 .drawer-notes-textarea:hover {
-    border-color: color-mix(in srgb, var(--acc-bd) 18%, var(--inp-bd));
-    background: linear-gradient(180deg, color-mix(in srgb, var(--card) 88%, #ffffff) 0%, color-mix(in srgb, var(--inp-bg) 88%, #f8fafc) 100%);
+    background: #f8fafc;
     box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.9),
-        0 12px 26px rgba(15, 23, 42, 0.05);
+        var(--drawer-elev-shadow-hover),
+        inset 0 1px 0 rgba(255, 255, 255, 0.88);
 }
 
 .drawer-notes-textarea:focus {
-    border-color: var(--acc-bd);
-    background: linear-gradient(180deg, color-mix(in srgb, var(--card) 96%, #ffffff) 0%, var(--card) 100%);
+    background: #f8fafc;
     box-shadow:
         0 0 0 4px color-mix(in srgb, var(--acc) 12%, transparent),
-        0 18px 36px rgba(15, 23, 42, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.92);
+        var(--drawer-elev-shadow-hover),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
     transform: translateY(-1px);
 }
 
@@ -1610,15 +1634,12 @@
     padding-top: 12px;
     padding-bottom: 2px;
     margin-top: auto;
-    border-top: 1px solid var(--inp-bd);
+    border-top: 1px solid color-mix(in srgb, var(--inp-bd) 44%, transparent);
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
-    background: linear-gradient(180deg,
-        rgba(255, 255, 255, 0),
-        color-mix(in srgb, var(--card) 94%, #fff) 28%,
-        color-mix(in srgb, var(--card) 100%, #fff));
-    backdrop-filter: blur(14px);
+    background: var(--card);
+    backdrop-filter: none;
 }
 
 .drawer-footer-btn {
@@ -1634,50 +1655,39 @@
     align-items: center;
     justify-content: center;
     gap: 7px;
-    border: 1px solid color-mix(in srgb, var(--inp-bd) 84%, transparent);
-    background: linear-gradient(180deg,
-        color-mix(in srgb, var(--card) 98%, #ffffff) 0%,
-        color-mix(in srgb, var(--card) 94%, #f8fafc) 100%);
+    border: none;
+    background: #f8fafc;
     color: #475569;
     box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.88),
-        0 4px 12px rgba(15, 23, 42, 0.05);
+        var(--drawer-elev-shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .drawer-footer-btn:hover {
     transform: translateY(-1px);
-    background: linear-gradient(180deg,
-        color-mix(in srgb, var(--card) 100%, #ffffff) 0%,
-        color-mix(in srgb, var(--hov) 68%, #f8fafc) 100%);
-    border-color: color-mix(in srgb, var(--acc-bd) 20%, var(--inp-bd));
+    background: color-mix(in srgb, #4f46e5 2%, #f8fafc);
     color: var(--text);
     box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.92),
-        0 8px 18px rgba(15, 23, 42, 0.075);
+        var(--drawer-elev-shadow-hover),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .drawer-footer-btn--danger {
     grid-column: auto;
     min-height: 44px;
     color: #dc2626;
-    border-color: color-mix(in srgb, #fecaca 88%, var(--inp-bd));
-    background: linear-gradient(180deg,
-        color-mix(in srgb, #fff5f5 96%, #ffffff) 0%,
-        color-mix(in srgb, #fee2e2 28%, #ffffff) 100%);
+    background: color-mix(in srgb, #ef4444 6%, #f8fafc);
     box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.9),
-        0 4px 12px rgba(239, 68, 68, 0.07);
+        0 8px 18px rgba(239, 68, 68, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.88);
 }
 
 .drawer-footer-btn--danger:hover {
-    background: linear-gradient(180deg,
-        color-mix(in srgb, #fff1f2 100%, #ffffff) 0%,
-        color-mix(in srgb, #fecdd3 34%, #ffffff) 100%);
+    background: color-mix(in srgb, #ef4444 10%, #f8fafc);
     color: #b91c1c;
-    border-color: #fca5a5;
     box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.92),
-        0 8px 18px rgba(239, 68, 68, 0.09);
+        0 10px 22px rgba(239, 68, 68, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .drawer-footer-btn--danger svg {
@@ -1691,6 +1701,13 @@
 }
 
 .dark .task-detail-inner {
+    --drawer-surface: color-mix(in srgb, var(--card) 86%, #111827);
+    --drawer-surface-strong: color-mix(in srgb, var(--card) 78%, #0f172a);
+    --drawer-surface-soft: color-mix(in srgb, var(--card) 70%, #0f172a);
+    --drawer-surface-tint: color-mix(in srgb, var(--acc2, var(--acc)) 12%, var(--card));
+    --drawer-surface-danger: color-mix(in srgb, #ef4444 14%, var(--card));
+    --drawer-elev-shadow: 0 10px 22px rgba(2, 6, 23, 0.18);
+    --drawer-elev-shadow-hover: 0 14px 28px rgba(2, 6, 23, 0.24);
     background: linear-gradient(180deg,
         color-mix(in srgb, var(--card) 98%, #0f172a),
         var(--card));
@@ -1750,37 +1767,33 @@
 }
 
 .dark .drawer-notes-textarea {
-    background: linear-gradient(180deg, color-mix(in srgb, var(--card) 90%, #111827) 0%, color-mix(in srgb, var(--hov) 68%, #0f172a) 100%);
-    border-color: color-mix(in srgb, var(--inp-bd) 72%, transparent);
+    background: linear-gradient(180deg, var(--drawer-surface) 0%, var(--drawer-surface-strong) 100%);
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.04),
-        0 14px 28px rgba(2, 6, 23, 0.2);
+        0 12px 26px rgba(2, 6, 23, 0.2);
 }
 
 .dark .drawer-notes-textarea:hover {
-    border-color: color-mix(in srgb, var(--acc2, var(--acc)) 24%, var(--inp-bd));
-    background: linear-gradient(180deg, color-mix(in srgb, var(--card) 92%, #111827) 0%, color-mix(in srgb, var(--hov) 72%, #111827) 100%);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--card) 92%, #111827) 0%, var(--drawer-surface-soft) 100%);
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.05),
         0 16px 30px rgba(2, 6, 23, 0.24);
 }
 
 .dark .subtask-add-btn {
-    background: color-mix(in srgb, var(--card) 92%, #0f172a);
-    border-color: color-mix(in srgb, var(--inp-bd) 78%, #64748b);
+    background: linear-gradient(180deg, var(--drawer-surface) 0%, var(--drawer-surface-strong) 100%);
     color: color-mix(in srgb, var(--text2) 58%, var(--text3));
 }
 
 .dark .subtask-add-inline {
-    border-color: color-mix(in srgb, var(--inp-bd) 78%, transparent);
-    background: color-mix(in srgb, var(--card) 94%, #111827);
+    background: linear-gradient(180deg, var(--drawer-surface) 0%, var(--drawer-surface-strong) 100%);
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.04),
         0 10px 20px rgba(2, 6, 23, 0.18);
 }
 
 .dark .subtask-add-inline:focus-within {
-    border-color: color-mix(in srgb, var(--acc2, var(--acc)) 54%, var(--inp-bd));
+    background: linear-gradient(180deg, color-mix(in srgb, var(--card) 94%, #111827) 0%, var(--drawer-surface-tint) 100%);
     box-shadow:
         0 0 0 4px color-mix(in srgb, var(--acc2, var(--acc)) 14%, transparent),
         0 14px 26px rgba(2, 6, 23, 0.22);
@@ -1793,16 +1806,14 @@
 
 .dark .subtask-add-btn:hover,
 .dark .subtask-add-btn:focus-visible {
-    border-color: color-mix(in srgb, var(--acc2, var(--acc)) 82%, #c7d2fe);
-    background: color-mix(in srgb, var(--acc2, var(--acc)) 10%, var(--card));
+    background: linear-gradient(180deg, color-mix(in srgb, var(--card) 94%, #111827) 0%, var(--drawer-surface-tint) 100%);
     color: var(--acc2, var(--acc));
 }
 
 .dark .drawer-footer-btn {
-    border-color: color-mix(in srgb, var(--inp-bd) 74%, transparent);
     background: linear-gradient(180deg,
-        color-mix(in srgb, var(--card) 94%, #111827) 0%,
-        color-mix(in srgb, var(--hov) 62%, #0f172a) 100%);
+        var(--drawer-surface) 0%,
+        var(--drawer-surface-strong) 100%);
     color: color-mix(in srgb, var(--text2) 90%, #e2e8f0);
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.04),
@@ -1810,18 +1821,16 @@
 }
 
 .dark .drawer-footer-btn:hover {
-    border-color: color-mix(in srgb, var(--acc2, var(--acc)) 24%, var(--inp-bd));
     background: linear-gradient(180deg,
-        color-mix(in srgb, var(--card) 96%, #111827) 0%,
-        color-mix(in srgb, var(--hov) 72%, #111827) 100%);
+        color-mix(in srgb, var(--card) 94%, #111827) 0%,
+        var(--drawer-surface-tint) 100%);
 }
 
 .dark .drawer-footer-btn--danger {
     color: #fda4af;
-    border-color: color-mix(in srgb, #ef4444 36%, var(--inp-bd));
     background: linear-gradient(180deg,
-        color-mix(in srgb, #7f1d1d 20%, var(--card)) 0%,
-        color-mix(in srgb, #450a0a 14%, var(--card)) 100%);
+        color-mix(in srgb, #7f1d1d 16%, var(--card)) 0%,
+        color-mix(in srgb, #450a0a 10%, var(--drawer-surface-danger)) 100%);
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.04),
         0 8px 18px rgba(69, 10, 10, 0.22);
@@ -1829,10 +1838,9 @@
 
 .dark .drawer-footer-btn--danger:hover {
     color: #fecdd3;
-    border-color: color-mix(in srgb, #fb7185 52%, var(--inp-bd));
     background: linear-gradient(180deg,
-        color-mix(in srgb, #881337 34%, var(--card)) 0%,
-        color-mix(in srgb, #4c0519 20%, var(--card)) 100%);
+        color-mix(in srgb, #881337 26%, var(--card)) 0%,
+        color-mix(in srgb, #4c0519 14%, var(--drawer-surface-danger)) 100%);
 }
 
 @media (max-width: 640px) {

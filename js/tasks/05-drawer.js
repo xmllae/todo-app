@@ -544,17 +544,19 @@ function renderDrawerContent(task) {
         ` : ''}
 
         <div class="drawer-section-header">
-            <span class="drawer-section-icon drawer-section-icon--subtasks" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M4.5 6.5 6 8l2.5-3"/>
-                    <path d="M4.5 12.5 6 14l2.5-3"/>
-                    <path d="M4.5 18.5 6 20l2.5-3"/>
-                    <path d="M11 7h8.5"/>
-                    <path d="M11 13h8.5"/>
-                    <path d="M11 19h8.5"/>
-                </svg>
-            </span>
-            <span class="drawer-section-title">\u5b50\u4efb\u52a1</span>
+            <div class="drawer-section-label drawer-section-label--subtasks">
+                <span class="drawer-section-icon drawer-section-icon--subtasks" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4.5 6.5 6 8l2.5-3"/>
+                        <path d="M4.5 12.5 6 14l2.5-3"/>
+                        <path d="M4.5 18.5 6 20l2.5-3"/>
+                        <path d="M11 7h8.5"/>
+                        <path d="M11 13h8.5"/>
+                        <path d="M11 19h8.5"/>
+                    </svg>
+                </span>
+                <span class="drawer-section-title">\u5b50\u4efb\u52a1</span>
+            </div>
             ${(task.subtasks || []).length > 0 ? `<span class="drawer-section-count">${getSubtaskDoneCount(task)}/${task.subtasks.length}</span>` : ''}
         </div>
 
@@ -589,14 +591,16 @@ function renderDrawerContent(task) {
         </div>
 
         <div class="drawer-section-header">
-            <span class="drawer-section-icon drawer-section-icon--notes" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="20" y1="7" x2="4" y2="7"/>
-                    <line x1="16" y1="12" x2="4" y2="12"/>
-                    <line x1="18" y1="17" x2="4" y2="17"/>
-                </svg>
-            </span>
-            <span class="drawer-section-title">\u5907\u6ce8</span>
+            <div class="drawer-section-label drawer-section-label--notes">
+                <span class="drawer-section-icon drawer-section-icon--notes" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="20" y1="7" x2="4" y2="7"/>
+                        <line x1="16" y1="12" x2="4" y2="12"/>
+                        <line x1="18" y1="17" x2="4" y2="17"/>
+                    </svg>
+                </span>
+                <span class="drawer-section-title">\u5907\u6ce8</span>
+            </div>
         </div>
 
         <textarea class="drawer-notes-textarea"
