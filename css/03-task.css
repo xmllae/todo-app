@@ -60,6 +60,7 @@
 .task-detail-swatch--clear::after{content:'';position:absolute;inset:6px;border-radius:50%;background:linear-gradient(135deg,transparent 45%,var(--text3) 45%,var(--text3) 55%,transparent 55%)}
 .task-detail-swatch--on{box-shadow:0 0 0 2px var(--card),0 0 0 4px #6366f1}
 
+.list-panel .task-item{background:var(--card);border-radius:12px;margin-bottom:6px;overflow:hidden}
 .list-panel .task-item:hover{background:color-mix(in srgb,var(--acc) 3%,transparent);box-shadow:none}
 .dark .list-panel .task-item:hover{background:color-mix(in srgb,var(--acc2) 8%,transparent);border-bottom-color:rgba(255,255,255,.1);box-shadow:none}
 .list-panel .task-item.task-main-checked:hover{background:color-mix(in srgb,var(--acc) 4%,var(--card))}

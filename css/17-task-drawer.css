@@ -112,7 +112,7 @@
 
 .task-item--detail-active {
     background: color-mix(in srgb, var(--acc) 6%, transparent) !important;
-    box-shadow: inset 2px 0 0 color-mix(in srgb, var(--acc) 72%, transparent);
+    box-shadow: inset 3px 0 0 color-mix(in srgb, var(--acc) 72%, transparent);
 }
 
 .dark .task-item--detail-active {
