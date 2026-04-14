@@ -1376,36 +1376,50 @@
 .subtask-add-inline {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 6px 10px;
-    border: 1.5px solid var(--inp-bd);
+    gap: 4px;
+    height: 42px;
+    padding: 0 8px 0 14px;
+    border: 1px solid color-mix(in srgb, var(--inp-bd) 86%, transparent);
     border-radius: 10px;
-    background: var(--inp-bg);
+    background: color-mix(in srgb, var(--card) 98%, #ffffff);
     margin-top: 6px;
-    min-height: 40px;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.88),
+        0 6px 18px rgba(15, 23, 42, 0.05);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.subtask-add-inline:focus-within {
+    border-color: color-mix(in srgb, var(--acc2, var(--acc)) 54%, var(--inp-bd));
+    box-shadow:
+        0 0 0 4px color-mix(in srgb, var(--acc) 10%, transparent),
+        0 10px 24px rgba(15, 23, 42, 0.08);
 }
 
 .subtask-add-input {
     flex: 1;
-    padding: 6px 8px;
+    min-width: 0;
+    padding: 0;
     border: none;
-    border-radius: 6px;
+    border-radius: 0;
     background: transparent;
     color: var(--text);
     font-size: 0.875rem;
+    line-height: 1.2;
     font-family: inherit;
     outline: none;
     transition: color 0.2s ease;
-    min-height: 24px;
+    min-height: 0;
+    box-shadow: none;
 }
 
 .subtask-add-input:focus {
-    border-color: var(--acc-bd);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+    border: none;
+    box-shadow: none;
 }
 
 .subtask-add-input::placeholder {
-    color: var(--text3);
+    color: color-mix(in srgb, var(--text3) 82%, #cbd5e1);
 }
 
 .subtask-add-confirm-btn {
@@ -1414,24 +1428,23 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid #a855f7;
-    border-radius: 4px;
-    background: #fff;
-    color: #a855f7;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    color: color-mix(in srgb, var(--text3) 90%, #94a3b8);
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
     flex-shrink: 0;
 }
 
 .subtask-add-confirm-btn:hover {
-    background: #f3e8ff;
-    border-color: #9333ea;
-    color: #9333ea;
+    background: color-mix(in srgb, var(--acc) 10%, transparent);
+    color: var(--acc);
 }
 
 .subtask-add-confirm-btn svg {
-    width: 14px;
-    height: 14px;
+    width: 15px;
+    height: 15px;
 }
 
 .subtask-add-cancel-btn {
@@ -1440,24 +1453,23 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid #dc2626;
-    border-radius: 4px;
-    background: #fff;
-    color: #000;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    color: color-mix(in srgb, var(--text3) 90%, #94a3b8);
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
     flex-shrink: 0;
 }
 
 .subtask-add-cancel-btn:hover {
-    background: #fef2f2;
-    border-color: #b91c1c;
-    color: #000;
+    background: color-mix(in srgb, #ef4444 10%, transparent);
+    color: #dc2626;
 }
 
 .subtask-add-cancel-btn svg {
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
 }
 
 .subtask-add-btn:hover {
@@ -1712,6 +1724,26 @@
     background: color-mix(in srgb, var(--card) 92%, #0f172a);
     border-color: color-mix(in srgb, var(--inp-bd) 78%, #64748b);
     color: color-mix(in srgb, var(--text2) 58%, var(--text3));
+}
+
+.dark .subtask-add-inline {
+    border-color: color-mix(in srgb, var(--inp-bd) 78%, transparent);
+    background: color-mix(in srgb, var(--card) 94%, #111827);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.04),
+        0 10px 20px rgba(2, 6, 23, 0.18);
+}
+
+.dark .subtask-add-inline:focus-within {
+    border-color: color-mix(in srgb, var(--acc2, var(--acc)) 54%, var(--inp-bd));
+    box-shadow:
+        0 0 0 4px color-mix(in srgb, var(--acc2, var(--acc)) 14%, transparent),
+        0 14px 26px rgba(2, 6, 23, 0.22);
+}
+
+.dark .subtask-add-confirm-btn,
+.dark .subtask-add-cancel-btn {
+    color: color-mix(in srgb, var(--text3) 88%, #cbd5e1);
 }
 
 .dark .subtask-add-btn:hover,
