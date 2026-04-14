@@ -606,7 +606,7 @@ function renderDrawerContent(task) {
                   onblur="saveDrawerNotes(${task.id})">${escapeHtml(task.note || '')}</textarea>
 
         <div class="drawer-footer">
-            <button class="drawer-footer-btn" onclick="event.stopPropagation();openRepeatInDrawer(${task.id})">
+            <button class="drawer-footer-btn drawer-footer-btn--repeat" onclick="event.stopPropagation();openRepeatInDrawer(${task.id})">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M23 4v6h-6"/>
                     <path d="M1 20v-6h6"/>
@@ -614,13 +614,13 @@ function renderDrawerContent(task) {
                 </svg>
                 \u91cd\u590d
             </button>
-            <button class="drawer-footer-btn" onclick="event.stopPropagation();toggleFreezeInDrawer(${task.id})">
+            <button class="drawer-footer-btn drawer-footer-btn--freeze" onclick="event.stopPropagation();toggleFreezeInDrawer(${task.id})">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                 </svg>
                 ${task.frozen ? '\u89e3\u51bb' : '\u51bb\u7ed3'}
             </button>
-            <button class="drawer-footer-btn danger" onclick="event.stopPropagation();deleteTaskInDrawer(${task.id})">
+            <button class="drawer-footer-btn drawer-footer-btn--danger danger" onclick="event.stopPropagation();deleteTaskInDrawer(${task.id})">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="3 6 5 6 21 6"/>
                     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
