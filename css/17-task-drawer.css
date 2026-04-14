@@ -548,27 +548,22 @@
     display: none;
 }
 
-.drawer-priority-preview-ring {
-    width: 15px;
-    height: 15px;
-    border-radius: 999px;
+.drawer-priority-preview-flag {
+    width: 17px;
+    height: 17px;
     flex-shrink: 0;
-    position: relative;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.68);
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
-.drawer-priority-preview-ring::after {
-    content: none;
+.drawer-priority-preview-flag--high {
+    color: #ef4444;
 }
 
-.drawer-priority-preview-ring--high {
-    border: 2px solid var(--prio-high, #ef4444);
-    background: #fff1f2;
-}
-
-.drawer-priority-preview-ring--normal {
-    border: 1.6px solid color-mix(in srgb, var(--inp-bd) 88%, #d8dee8);
-    background: #ffffff;
+.drawer-priority-preview-flag--normal {
+    color: #94a3b8;
 }
 
 .drawer-priority-arrow-wrap {
@@ -585,22 +580,52 @@
 }
 
 .drawer-priority-btn.is-high {
-    background: #fff1f2;
+    background: #fff5f5;
     box-shadow:
-        0 10px 24px rgba(239, 68, 68, 0.07),
-        inset 0 1px 0 rgba(255, 255, 255, 0.84);
+        inset 0 0 0 1px rgba(225, 29, 72, 0.32),
+        0 0 0 1px rgba(255, 228, 230, 0.72),
+        0 9px 22px rgba(185, 28, 28, 0.045),
+        inset 0 1px 0 rgba(255, 255, 255, 0.86);
+}
+
+.drawer-priority-btn.is-high:hover {
+    background: #fff0f1;
+    box-shadow:
+        inset 0 0 0 1px rgba(225, 29, 72, 0.42),
+        0 0 0 1px rgba(255, 205, 213, 0.86),
+        0 12px 26px rgba(185, 28, 28, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.88);
 }
 
 .drawer-priority-btn.is-high .drawer-priority-btn-label {
-    color: #b91c1c;
+    color: #be123c;
 }
 
 .drawer-priority-btn.is-high .drawer-priority-arrow-wrap {
-    background: #ffe4e6;
+    background: rgba(255, 228, 230, 0.78);
 }
 
 .drawer-priority-btn.is-normal {
     background: var(--drawer-surface-strong);
+    box-shadow:
+        inset 0 0 0 1px rgba(148, 163, 184, 0.32),
+        0 0 0 1px rgba(226, 232, 240, 0.72),
+        var(--drawer-elev-shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.drawer-priority-btn.is-normal:hover {
+    background: var(--drawer-surface-soft);
+    box-shadow:
+        inset 0 0 0 1px rgba(100, 116, 139, 0.36),
+        0 0 0 1px rgba(203, 213, 225, 0.86),
+        var(--drawer-elev-shadow-hover),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.drawer-priority-btn.is-normal .drawer-priority-btn-label,
+.drawer-priority-btn.is-normal .drawer-priority-preview-flag--normal {
+    color: #64748b;
 }
 
 .drawer-priority-arrow {
@@ -623,12 +648,22 @@
 
 .drawer-priority-dropdown[data-priority="high"].is-open .drawer-priority-arrow,
 .drawer-priority-btn.is-high:hover .drawer-priority-arrow {
-    color: #dc2626;
+    color: #be123c;
 }
 
 .drawer-priority-dropdown[data-priority="high"].is-open .drawer-priority-arrow-wrap,
 .drawer-priority-btn.is-high:hover .drawer-priority-arrow-wrap {
     background: #ffe4e6;
+}
+
+.drawer-priority-dropdown[data-priority="normal"].is-open .drawer-priority-arrow,
+.drawer-priority-btn.is-normal:hover .drawer-priority-arrow {
+    color: #64748b;
+}
+
+.drawer-priority-dropdown[data-priority="normal"].is-open .drawer-priority-arrow-wrap,
+.drawer-priority-btn.is-normal:hover .drawer-priority-arrow-wrap {
+    background: color-mix(in srgb, #94a3b8 13%, #ffffff);
 }
 
 .drawer-priority-dropdown.is-open .drawer-priority-arrow {
@@ -676,30 +711,30 @@
     user-select: none;
 }
 
-.drawer-priority-ring {
+.drawer-priority-flag {
     width: 20px;
     height: 20px;
     flex-shrink: 0;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
-.drawer-priority-ring circle {
-    transition: fill 0.18s ease, stroke 0.18s ease, stroke-width 0.18s ease;
+.drawer-priority-flag--high {
+    color: #ef4444;
 }
 
-.drawer-priority-ring--high circle {
-    fill: #fff1f2;
-    stroke: var(--prio-high, #ef4444);
-    stroke-width: 2.4;
+.drawer-priority-flag--normal {
+    color: #94a3b8;
 }
 
-.drawer-priority-option:not(.selected) .drawer-priority-ring--high circle {
-    fill: #fff7f7;
+.drawer-priority-option.selected .drawer-priority-flag--normal {
+    color: #64748b;
 }
 
-.drawer-priority-ring:not(.drawer-priority-ring--high) circle {
-    fill: color-mix(in srgb, var(--card) 94%, #ffffff);
-    stroke: color-mix(in srgb, var(--inp-bd) 88%, #d8dee8);
-    stroke-width: 1.9;
+.drawer-priority-option.selected .drawer-priority-flag--high {
+    color: #e11d48;
 }
 
 .drawer-priority-option:hover {
@@ -707,8 +742,14 @@
     background: color-mix(in srgb, var(--drawer-surface) 86%, var(--drawer-surface-soft));
 }
 
+.drawer-priority-option[data-priority="normal"]:hover {
+    background: var(--drawer-surface-soft);
+    box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.24);
+}
+
 .drawer-priority-option[data-priority="high"]:hover {
-    background: #fff1f2;
+    background: #fff5f5;
+    box-shadow: inset 0 0 0 1px rgba(225, 29, 72, 0.24);
 }
 
 .drawer-priority-option.selected {
@@ -720,15 +761,25 @@
 }
 
 .drawer-priority-option.selected[data-priority="high"] {
-    background: #fff1f2;
+    background: #fff5f5;
+    box-shadow:
+        inset 0 0 0 1px rgba(225, 29, 72, 0.34),
+        0 0 0 1px rgba(255, 228, 230, 0.7),
+        0 6px 16px rgba(185, 28, 28, 0.045),
+        inset 0 1px 0 rgba(255, 255, 255, 0.86);
 }
 
 .drawer-priority-option.selected[data-priority="high"] span:last-child {
-    color: #b91c1c;
+    color: #be123c;
 }
 
 .drawer-priority-option.selected[data-priority="normal"] {
     background: var(--drawer-surface-strong);
+    box-shadow:
+        inset 0 0 0 1px rgba(148, 163, 184, 0.34),
+        0 0 0 1px rgba(226, 232, 240, 0.7),
+        0 6px 16px rgba(15, 23, 42, 0.045),
+        inset 0 1px 0 rgba(255, 255, 255, 0.84);
 }
 
 .dark .drawer-priority-btn,
@@ -744,15 +795,44 @@
     background: linear-gradient(180deg, color-mix(in srgb, var(--card) 94%, #111827) 0%, color-mix(in srgb, var(--hov) 62%, #0f172a) 100%);
 }
 
+.dark .drawer-priority-btn.is-normal {
+    box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, #94a3b8 30%, transparent),
+        0 0 0 1px color-mix(in srgb, #64748b 12%, transparent),
+        0 14px 30px rgba(2, 6, 23, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.dark .drawer-priority-btn.is-normal:hover {
+    box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, #cbd5e1 34%, transparent),
+        0 0 0 1px color-mix(in srgb, #94a3b8 14%, transparent),
+        0 16px 34px rgba(2, 6, 23, 0.32),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
 .dark .drawer-priority-btn.is-high {
     background: color-mix(in srgb, var(--prio-high, #ef4444) 18%, var(--card));
     box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--prio-high, #ef4444) 36%, transparent),
+        0 0 0 1px color-mix(in srgb, var(--prio-high, #ef4444) 12%, transparent),
         0 14px 30px rgba(127, 29, 29, 0.22),
         inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .dark .drawer-priority-btn.is-high .drawer-priority-btn-label {
     color: #fca5a5;
+}
+
+.dark .drawer-priority-preview-flag--high,
+.dark .drawer-priority-flag--high,
+.dark .drawer-priority-option.selected .drawer-priority-flag--high {
+    color: #fb7185;
+}
+
+.dark .drawer-priority-preview-flag--normal,
+.dark .drawer-priority-flag--normal {
+    color: #94a3b8;
 }
 
 .dark .drawer-priority-arrow-wrap {
@@ -781,9 +861,25 @@
     color: color-mix(in srgb, var(--text3) 88%, white 12%);
 }
 
-.dark .drawer-priority-ring:not(.drawer-priority-ring--high) circle {
-    fill: color-mix(in srgb, var(--card) 88%, #1e293b);
-    stroke: color-mix(in srgb, var(--inp-bd) 72%, #64748b);
+.dark .drawer-priority-option[data-priority="high"]:hover,
+.dark .drawer-priority-option.selected[data-priority="high"] {
+    background: color-mix(in srgb, var(--prio-high, #ef4444) 16%, var(--card));
+    box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--prio-high, #ef4444) 34%, transparent),
+        0 0 0 1px color-mix(in srgb, var(--prio-high, #ef4444) 10%, transparent),
+        0 8px 18px rgba(127, 29, 29, 0.18);
+}
+
+.dark .drawer-priority-option[data-priority="normal"]:hover,
+.dark .drawer-priority-option.selected[data-priority="normal"] {
+    box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, #94a3b8 30%, transparent),
+        0 0 0 1px color-mix(in srgb, #64748b 10%, transparent),
+        0 8px 18px rgba(2, 6, 23, 0.2);
+}
+
+.dark .drawer-priority-option.selected[data-priority="high"] span:last-child {
+    color: #fca5a5;
 }
 
 @media (max-width: 640px) {
