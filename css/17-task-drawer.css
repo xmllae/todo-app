@@ -278,9 +278,7 @@
     padding: 16px 18px 18px;
     opacity: 0;
     transform: translateX(14px);
-    background: linear-gradient(180deg,
-        color-mix(in srgb, var(--acc) 3%, var(--card)) 0%,
-        var(--card) 88px);
+    background: var(--card);
     scrollbar-gutter: stable;
 }
 
