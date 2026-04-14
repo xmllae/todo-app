@@ -111,12 +111,35 @@
 }
 
 .task-item--detail-active {
+    position: relative;
     background: color-mix(in srgb, var(--acc) 6%, transparent) !important;
-    box-shadow: inset 3px 0 0 color-mix(in srgb, var(--acc) 72%, transparent);
+    box-shadow: none;
+}
+
+.list-panel .task-item.task-item--detail-active::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 8px;
+    width: 3px;
+    border-radius: 0 999px 999px 0;
+    background: linear-gradient(180deg,
+        color-mix(in srgb, var(--acc) 94%, #8b5cf6) 0%,
+        color-mix(in srgb, var(--acc2, var(--acc)) 88%, #7c3aed) 100%);
+    box-shadow: 0 0 14px -8px color-mix(in srgb, var(--acc) 58%, transparent);
+    pointer-events: none;
 }
 
 .dark .task-item--detail-active {
     background: color-mix(in srgb, var(--acc) 14%, transparent) !important;
+}
+
+.dark .list-panel .task-item.task-item--detail-active::before {
+    background: linear-gradient(180deg,
+        color-mix(in srgb, var(--acc2, var(--acc)) 92%, #c4b5fd) 0%,
+        color-mix(in srgb, var(--acc) 86%, #8b5cf6) 100%);
+    box-shadow: 0 0 16px -8px color-mix(in srgb, var(--acc2, var(--acc)) 52%, transparent);
 }
 
 @media (max-width: 960px) {
