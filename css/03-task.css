@@ -67,6 +67,7 @@
 .list-panel .task-item.ft-focus-task:hover{background:color-mix(in srgb,var(--acc) 10%,var(--card))!important}
 .dark .list-panel .task-item.ft-focus-task:hover{background:color-mix(in srgb,var(--acc) 18%,transparent)!important}
 
+/* 已移除四角围边装饰
 .list-panel .task-item{--task-row-corner-top:-6px;--task-row-corner-right:-10px;--task-row-corner-bottom:-6px;--task-row-corner-left:-8px}
 .list-panel .task-item.ft-focus-task{--task-row-corner-left:-5px}
 .task-item>.task-row{position:relative;overflow:visible}
@@ -78,6 +79,7 @@
 .task-row-corner--bl{bottom:0;left:0;border-bottom:2px solid currentColor;border-left:2px solid currentColor;border-bottom-left-radius:2px;transform:translate(-3px,3px)}
 .task-row-corner--br{bottom:0;right:0;border-bottom:2px solid currentColor;border-right:2px solid currentColor;border-bottom-right-radius:2px;transform:translate(3px,3px)}
 .list-panel .task-item:hover .task-row-corner,.list-panel .task-item:focus-within .task-row-corner,.list-panel .task-item.task-item--detail-active .task-row-corner{opacity:1;transform:translate(0,0)}
+*/
 
 /* 背景区域显示手型，暗示可点击打开详情 */
 .list-panel .task-item:not(.archived-item),
@@ -103,8 +105,6 @@
 @media(hover:hover) and (pointer:fine){
   .task-item.task-item--detail-active .task-actions{opacity:1}
 }
-.list-panel .task-item.task-item--hover-suspended:hover .task-row-corner,.list-panel .task-item.task-item--hover-suspended:focus-within .task-row-corner{opacity:0}
-.list-panel .task-item.task-item--detail-active.task-item--hover-suspended:hover .task-row-corner,.list-panel .task-item.task-item--detail-active.task-item--hover-suspended:focus-within .task-row-corner{opacity:1;transform:translate(0,0)}
 .list-panel .task-item.task-item--hover-suspended:hover .txt--editable,.list-panel .task-item.task-item--hover-suspended:focus-within .txt--editable{color:inherit}
 .dark .list-panel .task-row-center .txt--editable:hover,.dark .list-panel .task-item:focus-within .task-row-center .txt--editable{color:color-mix(in srgb,var(--text) 82%,var(--acc2) 18%)}
 .dark .task-detail-trigger:hover,.dark .task-more-btn:hover,.dark .task-detail-trigger:focus-visible,.dark .task-more-btn:focus-visible,.dark .task-detail-trigger.is-active,.dark .task-item--detail-active .task-detail-trigger,.dark .task-more-btn.is-open,.dark .task-item--menu-open .task-more-btn{color:var(--acc2)}
