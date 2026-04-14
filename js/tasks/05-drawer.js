@@ -544,17 +544,17 @@ function renderDrawerContent(task) {
         ` : ''}
 
         <div class="drawer-section-header">
-            <span class="drawer-section-icon" aria-hidden="true">
+            <span class="drawer-section-icon drawer-section-icon--subtasks" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="8" y1="6" x2="21" y2="6"/>
-                    <line x1="8" y1="12" x2="21" y2="12"/>
-                    <line x1="8" y1="18" x2="21" y2="18"/>
-                    <line x1="3" y1="6" x2="3.01" y2="6"/>
-                    <line x1="3" y1="12" x2="3.01" y2="12"/>
-                    <line x1="3" y1="18" x2="3.01" y2="18"/>
+                    <path d="M4.5 6.5 6 8l2.5-3"/>
+                    <path d="M4.5 12.5 6 14l2.5-3"/>
+                    <path d="M4.5 18.5 6 20l2.5-3"/>
+                    <path d="M11 7h8.5"/>
+                    <path d="M11 13h8.5"/>
+                    <path d="M11 19h8.5"/>
                 </svg>
             </span>
-            <span>\u5b50\u4efb\u52a1</span>
+            <span class="drawer-section-title">\u5b50\u4efb\u52a1</span>
             ${(task.subtasks || []).length > 0 ? `<span class="drawer-section-count">${getSubtaskDoneCount(task)}/${task.subtasks.length}</span>` : ''}
         </div>
 
@@ -591,13 +591,12 @@ function renderDrawerContent(task) {
         <div class="drawer-section-header">
             <span class="drawer-section-icon drawer-section-icon--notes" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                    <polyline points="14 2 14 8 20 8"/>
-                    <line x1="16" y1="13" x2="8" y2="13"/>
-                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <line x1="20" y1="7" x2="4" y2="7"/>
+                    <line x1="16" y1="12" x2="4" y2="12"/>
+                    <line x1="18" y1="17" x2="4" y2="17"/>
                 </svg>
             </span>
-            <span>\u5907\u6ce8</span>
+            <span class="drawer-section-title">\u5907\u6ce8</span>
         </div>
 
         <textarea class="drawer-notes-textarea"
