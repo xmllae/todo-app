@@ -1362,7 +1362,7 @@
     height: 42px;
     padding: 0 14px;
     margin-top: 6px;
-    border: 3.5px dashed var(--inp-bd);
+    border: 2.5px dashed var(--inp-bd);
     border-radius: 10px;
     background: var(--card);
     color: var(--text3);
