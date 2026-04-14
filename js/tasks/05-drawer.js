@@ -426,7 +426,7 @@ function renderDrawerContent(task) {
                    onblur="saveDrawerTitle(${task.id})"
                    onkeydown="if(event.key==='Enter'){event.target.blur()}">
             <div class="drawer-priority-dropdown" onclick="event.stopPropagation()">
-                <button class="drawer-priority-btn" onclick="togglePriorityDropdown(this)" title="\u9009\u62e9\u4f18\u5148\u7ea7">
+                <button type="button" class="drawer-priority-btn" onclick="togglePriorityDropdown(this)" title="\u9009\u62e9\u4f18\u5148\u7ea7">
                     <svg class="drawer-priority-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="6 9 12 15 18 9"/>
                     </svg>
@@ -824,8 +824,9 @@ function setDrawerPriority(taskId, priority) {
 function getDrawerPriorityPreviewHTML(priority) {
     const isHigh = priority === 'high';
     const label = isHigh ? '\u9ad8\u4f18\u5148\u7ea7' : '\u65e0\u4f18\u5148\u7ea7';
+    const ringClass = isHigh ? 'drawer-priority-preview-ring drawer-priority-preview-ring--high' : 'drawer-priority-preview-ring drawer-priority-preview-ring--normal';
 
-    return `<span class="drawer-priority-btn-copy"><span class="drawer-priority-btn-text"><span class="drawer-priority-btn-label">${label}</span></span></span><svg class="drawer-priority-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>`;
+    return `<span class="drawer-priority-btn-copy"><span class="${ringClass}" aria-hidden="true"></span><span class="drawer-priority-btn-text"><span class="drawer-priority-btn-label">${label}</span></span></span><span class="drawer-priority-arrow-wrap" aria-hidden="true"><svg class="drawer-priority-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>`;
 }
 
 function updateDrawerPriorityUI(priority) {
