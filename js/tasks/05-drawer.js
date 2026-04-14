@@ -463,7 +463,7 @@ function renderDrawerContent(task) {
                                spellcheck="false"
                                autocomplete="off"
                                onclick="event.stopPropagation()"
-                               oninput="handleDrawerTimeTyping(this)"
+                               oninput="handleDrawerTimeTyping(this, ${task.id}, 'start')"
                                onkeydown="if(event.key==='Enter'){event.target.blur()}"
                                onchange="saveDrawerStartTime(${task.id})">
                         <span class="drawer-schedule-time-icon" aria-hidden="true">
@@ -493,7 +493,7 @@ function renderDrawerContent(task) {
                                spellcheck="false"
                                autocomplete="off"
                                onclick="event.stopPropagation()"
-                               oninput="handleDrawerTimeTyping(this)"
+                               oninput="handleDrawerTimeTyping(this, ${task.id}, 'end')"
                                onkeydown="if(event.key==='Enter'){event.target.blur()}"
                                onchange="saveDrawerEndTime(${task.id})">
                         <span class="drawer-schedule-time-icon" aria-hidden="true">
@@ -1117,7 +1117,9 @@ function normalizeDrawerTimeTextInput(rawValue) {
 
     let candidate = trimmed;
 
-    if (/^\d{3,4}$/.test(trimmed)) {
+    if (/^\d{2}:?$/.test(trimmed)) {
+        candidate = String(trimmed.replace(':', '')).padStart(2, '0') + ':00';
+    } else if (/^\d{3,4}$/.test(trimmed)) {
         candidate = trimmed.length === 3
             ? ('0' + trimmed.charAt(0) + ':' + trimmed.slice(1))
             : (trimmed.slice(0, 2) + ':' + trimmed.slice(2));
@@ -1131,16 +1133,104 @@ function normalizeDrawerTimeTextInput(rawValue) {
 
 function formatDrawerTimeTypingValue(rawValue) {
     const digits = String(rawValue || '').replace(/\D/g, '').slice(0, 4);
-    if (!digits) return '';
-    if (digits.length <= 2) return digits;
-    return digits.slice(0, 2) + ':' + digits.slice(2);
+    if (!digits) return { value: '', selectMinutes: false, isComplete: false };
+    if (digits.length === 1) {
+        return { value: digits, selectMinutes: false, isComplete: false };
+    }
+    if (digits.length === 2) {
+        return { value: digits + ':00', selectMinutes: true, isComplete: true };
+    }
+    if (digits.length === 3) {
+        return { value: digits.slice(0, 2) + ':' + digits.slice(2), selectMinutes: false, isComplete: false };
+    }
+    return { value: digits.slice(0, 2) + ':' + digits.slice(2), selectMinutes: false, isComplete: true };
 }
 
-function handleDrawerTimeTyping(input) {
+function updateDrawerScheduleLivePreview(taskId) {
+    const task = findTaskById(taskId);
+    if (!task) return;
+
+    const startInput = document.getElementById('drawer-start-time-input-' + taskId);
+    const endInput = document.getElementById('drawer-end-time-input-' + taskId);
+    const durationInput = document.getElementById('drawer-duration-input-' + taskId);
+    const durationChip = document.querySelector('.drawer-schedule-duration-chip');
+    const durationRow = document.querySelector('.drawer-schedule-duration-row');
+    const durationSide = document.querySelector('.drawer-schedule-duration-side');
+    if (!durationInput || !durationChip || !durationRow || !durationSide) return;
+
+    const startTime = startInput ? normalizeDrawerTimeTextInput(startInput.value) : '';
+    const endTime = endInput ? normalizeDrawerTimeTextInput(endInput.value) : '';
+    const startMinutes = parseDrawerTimeToMinutes(startTime);
+    const endMinutes = parseDrawerTimeToMinutes(endTime);
+
+    let durationMinutes = getDrawerDurationMinutes(task);
+    let spillsNextDay = false;
+
+    if (startMinutes !== null && endMinutes !== null) {
+        durationMinutes = endMinutes - startMinutes;
+        if (durationMinutes < 0) {
+            durationMinutes += 1440;
+        }
+        durationMinutes = clampDrawerDuration(durationMinutes);
+        spillsNextDay = endMinutes < startMinutes || (startMinutes + durationMinutes) >= 1440;
+    } else if (durationInput.value.trim() !== '') {
+        const typedDuration = parseInt(durationInput.value.trim(), 10);
+        if (Number.isFinite(typedDuration) && typedDuration >= 0) {
+            durationMinutes = clampDrawerDuration(typedDuration);
+        }
+    } else if (startMinutes === null && endMinutes === null) {
+        durationMinutes = 0;
+    }
+
+    const shouldDefaultToZero = startMinutes === null && endMinutes === null && durationMinutes === null;
+    const resolvedDuration = shouldDefaultToZero ? 0 : durationMinutes;
+
+    if (resolvedDuration === null) {
+        if (document.activeElement !== durationInput) {
+            durationInput.value = '';
+        }
+        durationChip.textContent = '\u5f85\u8bbe\u7f6e';
+        durationChip.classList.remove('drawer-schedule-duration-chip--filled');
+        durationChip.classList.add('drawer-schedule-duration-chip--idle');
+    } else {
+        if (document.activeElement !== durationInput || (startMinutes !== null && endMinutes !== null)) {
+            durationInput.value = String(resolvedDuration);
+        }
+        durationChip.textContent = formatDrawerDurationBadgeText(resolvedDuration);
+        durationChip.classList.remove('drawer-schedule-duration-chip--idle');
+        durationChip.classList.add('drawer-schedule-duration-chip--filled');
+    }
+
+    durationRow.classList.toggle('drawer-schedule-duration-row--overnight', spillsNextDay);
+
+    let note = durationSide.querySelector('.drawer-schedule-duration-note');
+    if (spillsNextDay) {
+        if (!note) {
+            note = document.createElement('span');
+            note.className = 'drawer-schedule-duration-note';
+            durationSide.appendChild(note);
+        }
+        note.textContent = '\u6b21\u65e5\u7ed3\u675f';
+    } else if (note) {
+        note.remove();
+    }
+}
+
+function handleDrawerTimeTyping(input, taskId) {
     if (!input) return;
-    const formatted = formatDrawerTimeTypingValue(input.value);
-    if (input.value !== formatted) {
-        input.value = formatted;
+    const formatState = formatDrawerTimeTypingValue(input.value);
+    if (input.value !== formatState.value) {
+        input.value = formatState.value;
+    }
+
+    if (formatState.selectMinutes && typeof input.setSelectionRange === 'function') {
+        requestAnimationFrame(function() {
+            input.setSelectionRange(3, 5);
+        });
+    }
+
+    if (taskId != null) {
+        updateDrawerScheduleLivePreview(taskId);
     }
 }
 
