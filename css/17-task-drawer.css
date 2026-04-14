@@ -446,10 +446,10 @@
 
 .drawer-task-title-text {
     flex: 1;
-    font-size: 1.15rem;
+    font-size: 1.26rem;
     font-weight: 700;
     color: var(--text);
-    line-height: 1.4;
+    line-height: 1.35;
     outline: none;
     border: none;
     background: transparent;
@@ -823,7 +823,7 @@
 .drawer-schedule-input--time {
     flex: 1 1 auto;
     width: 100%;
-    font-size: 1.54rem;
+    font-size: 1.22rem;
     font-weight: 800;
     line-height: 1;
     letter-spacing: -0.03em;
@@ -903,7 +903,7 @@
 
 .drawer-schedule-input--duration {
     width: clamp(60px, 13vw, 82px);
-    font-size: 1.56rem;
+    font-size: 1.34rem;
     font-weight: 800;
     line-height: 1;
     letter-spacing: -0.04em;
@@ -926,7 +926,7 @@
 }
 
 .drawer-schedule-unit {
-    font-size: 0.9rem;
+    font-size: 0.84rem;
     font-weight: 500;
     color: var(--text3);
     white-space: nowrap;
@@ -943,7 +943,7 @@
 .drawer-schedule-duration-chip {
     padding: 9px 13px;
     border-radius: 12px;
-    font-size: 0.9rem;
+    font-size: 0.84rem;
     font-weight: 700;
     line-height: 1;
     white-space: nowrap;
