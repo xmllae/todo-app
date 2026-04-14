@@ -544,14 +544,16 @@ function renderDrawerContent(task) {
         ` : ''}
 
         <div class="drawer-section-header">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="8" y1="6" x2="21" y2="6"/>
-                <line x1="8" y1="12" x2="21" y2="12"/>
-                <line x1="8" y1="18" x2="21" y2="18"/>
-                <line x1="3" y1="6" x2="3.01" y2="6"/>
-                <line x1="3" y1="12" x2="3.01" y2="12"/>
-                <line x1="3" y1="18" x2="3.01" y2="18"/>
-            </svg>
+            <span class="drawer-section-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="8" y1="6" x2="21" y2="6"/>
+                    <line x1="8" y1="12" x2="21" y2="12"/>
+                    <line x1="8" y1="18" x2="21" y2="18"/>
+                    <line x1="3" y1="6" x2="3.01" y2="6"/>
+                    <line x1="3" y1="12" x2="3.01" y2="12"/>
+                    <line x1="3" y1="18" x2="3.01" y2="18"/>
+                </svg>
+            </span>
             <span>\u5b50\u4efb\u52a1</span>
             ${(task.subtasks || []).length > 0 ? `<span class="drawer-section-count">${getSubtaskDoneCount(task)}/${task.subtasks.length}</span>` : ''}
         </div>
@@ -587,18 +589,20 @@ function renderDrawerContent(task) {
         </div>
 
         <div class="drawer-section-header">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                <polyline points="14 2 14 8 20 8"/>
-                <line x1="16" y1="13" x2="8" y2="13"/>
-                <line x1="16" y1="17" x2="8" y2="17"/>
-            </svg>
+            <span class="drawer-section-icon drawer-section-icon--notes" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+            </span>
             <span>\u5907\u6ce8</span>
         </div>
 
         <textarea class="drawer-notes-textarea"
                   id="drawer-notes-input"
-                  placeholder="\u6dfb\u52a0\u4efb\u52a1\u5907\u6ce8..."
+                  placeholder="\u6dfb\u52a0\u4efb\u52a1\u8be6\u60c5\u3001\u94fe\u63a5\u6216\u5907\u5fd8\u5f55..."
                   onclick="event.stopPropagation()"
                   onblur="saveDrawerNotes(${task.id})">${escapeHtml(task.note || '')}</textarea>
 
