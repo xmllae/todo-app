@@ -429,14 +429,17 @@
 .drawer-priority-dropdown {
     position: relative;
     flex-shrink: 0;
+    max-width: 124px;
 }
 
 .drawer-priority-btn {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
-    min-width: 170px;
+    gap: 8px;
+    width: 124px;
+    min-width: 124px;
+    max-width: 124px;
     padding: 10px 12px;
     border: 1px solid color-mix(in srgb, var(--task-bd) 64%, transparent);
     background:
@@ -460,29 +463,35 @@
 .drawer-priority-btn-copy {
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: flex-start;
+    gap: 0;
     min-width: 0;
+    flex: 1;
 }
 
 .drawer-priority-btn-text {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 1px;
+    gap: 0;
     min-width: 0;
 }
 
 .drawer-priority-btn-label {
-    font-size: 0.9rem;
+    font-size: 0.84rem;
     font-weight: 700;
     line-height: 1.15;
     color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .drawer-priority-btn-note {
     font-size: 0.72rem;
     line-height: 1.1;
     color: var(--text3);
+    display: none;
 }
 
 .drawer-priority-preview-ring {
@@ -549,7 +558,9 @@
     border: 1px solid color-mix(in srgb, var(--task-bd) 66%, transparent);
     border-radius: 18px;
     padding: 8px;
-    min-width: 236px;
+    width: 156px;
+    min-width: 156px;
+    max-width: min(156px, calc(100vw - 64px));
     box-shadow:
         0 22px 50px rgba(15, 23, 42, 0.16),
         0 4px 14px rgba(15, 23, 42, 0.08);
@@ -564,8 +575,8 @@
 .drawer-priority-option {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 12px 14px;
+    gap: 10px;
+    padding: 10px 12px;
     border-radius: 14px;
     cursor: pointer;
     transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, color 0.18s ease;
@@ -650,20 +661,20 @@
 
 @media (max-width: 640px) {
     .drawer-priority-btn {
-        min-width: 148px;
+        width: 116px;
+        min-width: 116px;
+        max-width: 116px;
         padding: 9px 10px;
     }
 
-    .drawer-priority-btn-note {
-        display: none;
-    }
-
     .drawer-priority-menu {
-        min-width: 208px;
+        width: 148px;
+        min-width: 148px;
+        max-width: min(148px, calc(100vw - 40px));
     }
 
     .drawer-priority-option {
-        padding: 11px 12px;
+        padding: 10px 11px;
     }
 }
 

@@ -818,10 +818,8 @@ function setDrawerPriority(taskId, priority) {
 function getDrawerPriorityPreviewHTML(priority) {
     const isHigh = priority === 'high';
     const label = isHigh ? '\u9ad8\u4f18\u5148\u7ea7' : '\u65e0\u4f18\u5148\u7ea7';
-    const note = isHigh ? '\u91cd\u70b9\u63d0\u9192' : '\u9ed8\u8ba4\u72b6\u6001';
-    const ringClass = isHigh ? 'drawer-priority-preview-ring drawer-priority-preview-ring--high' : 'drawer-priority-preview-ring drawer-priority-preview-ring--normal';
 
-    return `<span class="drawer-priority-btn-copy"><span class="${ringClass}" aria-hidden="true"></span><span class="drawer-priority-btn-text"><span class="drawer-priority-btn-label">${label}</span><span class="drawer-priority-btn-note">${note}</span></span></span><svg class="drawer-priority-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>`;
+    return `<span class="drawer-priority-btn-copy"><span class="drawer-priority-btn-text"><span class="drawer-priority-btn-label">${label}</span></span></span><svg class="drawer-priority-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>`;
 }
 
 function updateDrawerPriorityUI(priority) {
