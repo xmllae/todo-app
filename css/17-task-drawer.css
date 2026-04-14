@@ -1357,42 +1357,46 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: 10px;
     width: 100%;
-    min-height: 72px;
-    padding: 18px 16px;
-    margin-top: 8px;
-    border: 2px dashed color-mix(in srgb, var(--inp-bd) 96%, #dbe3ee);
-    border-radius: 20px;
-    background: #fff;
-    color: color-mix(in srgb, var(--text3) 86%, #b6c0cf);
+    height: 42px;
+    padding: 0 14px;
+    margin-top: 6px;
+    border: 1.5px dashed var(--inp-bd);
+    border-radius: 10px;
+    background: var(--card);
+    color: var(--text3);
+    font-size: 0.875rem;
+    font-weight: 500;
     cursor: pointer;
     user-select: none;
-    transition: border-color 0.22s ease, background-color 0.22s ease, color 0.22s ease;
+    transition: all 0.2s ease;
 }
 
 .subtask-add-inline {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 12px;
-    border: 1px solid var(--inp-bd);
-    border-radius: 12px;
+    padding: 6px 10px;
+    border: 1.5px solid var(--inp-bd);
+    border-radius: 10px;
     background: var(--inp-bg);
-    margin-top: 4px;
+    margin-top: 6px;
+    min-height: 40px;
 }
 
 .subtask-add-input {
     flex: 1;
-    padding: 8px 10px;
-    border: 1px solid var(--inp-bd);
-    border-radius: 8px;
-    background: var(--card);
+    padding: 6px 8px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
     color: var(--text);
     font-size: 0.875rem;
     font-family: inherit;
     outline: none;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: color 0.2s ease;
+    min-height: 24px;
 }
 
 .subtask-add-input:focus {
@@ -1406,13 +1410,13 @@
 
 .subtask-add-confirm-btn,
 .subtask-add-cancel-btn {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     cursor: pointer;
     transition: all 0.15s ease;
     flex-shrink: 0;
@@ -1428,8 +1432,8 @@
 }
 
 .subtask-add-confirm-btn svg {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
 }
 
 .subtask-add-cancel-btn {
@@ -1443,39 +1447,39 @@
 }
 
 .subtask-add-cancel-btn svg {
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
 }
 
 .subtask-add-btn:hover {
-    background: color-mix(in srgb, var(--acc) 3%, #ffffff);
+    background: color-mix(in srgb, var(--acc) 3%, var(--card));
     border-style: solid;
     border-color: color-mix(in srgb, var(--acc) 74%, #9aa5ff);
     color: var(--acc);
 }
 
 .subtask-add-btn:active {
-    background: color-mix(in srgb, var(--acc) 6%, #ffffff);
+    background: color-mix(in srgb, var(--acc) 6%, var(--card));
 }
 
 .subtask-add-btn:focus-visible {
     outline: none;
     border-style: solid;
     border-color: color-mix(in srgb, var(--acc) 74%, #9aa5ff);
-    background: color-mix(in srgb, var(--acc) 3%, #ffffff);
+    background: color-mix(in srgb, var(--acc) 3%, var(--card));
     color: var(--acc);
 }
 
 .subtask-add-btn svg {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     flex-shrink: 0;
     transform-origin: center;
     transition: transform 0.22s ease;
 }
 
 .subtask-add-btn span {
-    font-size: 1rem;
+    font-size: 0.875rem;
     font-weight: 500;
     line-height: 1;
 }
