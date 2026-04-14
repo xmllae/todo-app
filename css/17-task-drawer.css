@@ -86,11 +86,11 @@
 }
 
 .task-detail-inner {
-    --drawer-surface: #f8fafc;
-    --drawer-surface-strong: #f4f7fb;
-    --drawer-surface-soft: #f1f5f9;
-    --drawer-surface-tint: color-mix(in srgb, var(--acc) 5%, #f8fafc);
-    --drawer-surface-danger: color-mix(in srgb, #ef4444 6%, #f8fafc);
+    --drawer-surface: #f6f9fc;
+    --drawer-surface-strong: #f2f6fb;
+    --drawer-surface-soft: #ecf2f8;
+    --drawer-surface-tint: color-mix(in srgb, var(--acc) 7%, var(--drawer-surface-strong));
+    --drawer-surface-danger: color-mix(in srgb, #ef4444 8%, var(--drawer-surface-strong));
     --drawer-elev-shadow: 0 8px 22px rgba(15, 23, 42, 0.045);
     --drawer-elev-shadow-hover: 0 12px 28px rgba(15, 23, 42, 0.065);
     position: relative;
@@ -466,13 +466,13 @@
     transition: background 0.2s ease;
 }
 
-.drawer-task-title-text:hover,
-.drawer-task-title-text:focus {
+.drawer-task-title-text:hover {
     background: var(--hov);
 }
 
 .drawer-task-title-text:focus {
-    box-shadow: 0 0 0 2px var(--acc-bd);
+    background: transparent;
+    box-shadow: none;
 }
 
 .drawer-priority-dropdown {
@@ -495,7 +495,7 @@
     min-height: 44px;
     padding: 6px 8px 6px 10px;
     border: none;
-    background: #f8fafc;
+    background: var(--drawer-surface-strong);
     cursor: pointer;
     border-radius: 999px;
     box-shadow:
@@ -506,7 +506,7 @@
 
 .drawer-priority-btn:hover {
     transform: translateY(-1px);
-    background: #f8fafc;
+    background: var(--drawer-surface-soft);
     box-shadow:
         var(--drawer-elev-shadow-hover),
         inset 0 1px 0 rgba(255, 255, 255, 0.9);
@@ -585,7 +585,7 @@
 }
 
 .drawer-priority-btn.is-high {
-    background: color-mix(in srgb, var(--prio-high, #ef4444) 6%, #f8fafc);
+    background: color-mix(in srgb, var(--prio-high, #ef4444) 8%, var(--drawer-surface-strong));
 }
 
 .drawer-priority-btn.is-high .drawer-priority-btn-label {
@@ -597,7 +597,7 @@
 }
 
 .drawer-priority-btn.is-normal {
-    background: #f8fafc;
+    background: var(--drawer-surface-strong);
 }
 
 .drawer-priority-arrow {
@@ -627,7 +627,7 @@
     top: 100%;
     right: 0;
     margin-top: 8px;
-    background: #f8fafc;
+    background: var(--drawer-surface-strong);
     border: none;
     border-radius: 16px;
     padding: 6px;
@@ -703,7 +703,7 @@
 }
 
 .drawer-priority-option.selected[data-priority="high"] {
-    background: color-mix(in srgb, var(--prio-high, #ef4444) 8%, #f8fafc);
+    background: color-mix(in srgb, var(--prio-high, #ef4444) 10%, var(--drawer-surface-strong));
 }
 
 .drawer-priority-option.selected[data-priority="high"] span:last-child {
@@ -711,7 +711,7 @@
 }
 
 .drawer-priority-option.selected[data-priority="normal"] {
-    background: #f8fafc;
+    background: var(--drawer-surface-strong);
 }
 
 .dark .drawer-priority-btn,
@@ -800,7 +800,7 @@
 .drawer-schedule-time-box,
 .drawer-schedule-duration-row {
     border: none;
-    background: #f8fafc;
+    background: var(--drawer-surface-strong);
     box-shadow:
         var(--drawer-elev-shadow),
         inset 0 1px 0 rgba(255, 255, 255, 0.82);
@@ -820,7 +820,7 @@
 .drawer-schedule-time-box:hover,
 .drawer-schedule-duration-row:hover {
     transform: translateY(-1px);
-    background: #f8fafc;
+    background: var(--drawer-surface-soft);
     box-shadow:
         var(--drawer-elev-shadow-hover),
         inset 0 1px 0 rgba(255, 255, 255, 0.9);
@@ -828,11 +828,10 @@
 
 .drawer-schedule-time-box:focus-within,
 .drawer-schedule-duration-row:focus-within {
-    background: #f8fafc;
+    background: var(--drawer-surface-strong);
     box-shadow:
-        0 0 0 4px color-mix(in srgb, var(--acc) 12%, transparent),
-        var(--drawer-elev-shadow-hover),
-        inset 0 1px 0 rgba(255, 255, 255, 0.92);
+        var(--drawer-elev-shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.82);
 }
 
 .drawer-schedule-time-label {
@@ -1021,6 +1020,15 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
+.dark .drawer-schedule-time-box:focus-within,
+.dark .drawer-schedule-duration-row:focus-within {
+    background:
+        linear-gradient(180deg, var(--drawer-surface) 0%, var(--drawer-surface-strong) 100%);
+    box-shadow:
+        0 16px 34px rgba(2, 6, 23, 0.24),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
 .dark .drawer-schedule-time-icon {
     background: color-mix(in srgb, var(--drawer-surface-soft) 88%, #0f172a);
     border-color: transparent;
@@ -1143,8 +1151,8 @@
 }
 
 .drawer-row-input:focus {
-    border-color: var(--acc-bd);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+    border-color: var(--inp-bd);
+    box-shadow: none;
 }
 
 .drawer-row-input--short {
@@ -1177,8 +1185,8 @@
 }
 
 .drawer-row-select:focus {
-    border-color: var(--acc-bd);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+    border-color: var(--inp-bd);
+    box-shadow: none;
 }
 
 /* Section Header */
@@ -1193,29 +1201,29 @@
 .drawer-section-label {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    padding: 4px 14px 4px 4px;
-    border-radius: 12px;
+    gap: 7px;
+    padding: 4px 12px 4px 4px;
+    border-radius: 9px;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78);
 }
 
 .drawer-section-label--subtasks {
-    background: color-mix(in srgb, #4f46e5 9%, #f8fafc);
+    background: #eef2ff;
 }
 
 .drawer-section-label--notes {
-    background: color-mix(in srgb, #9333ea 8%, #f8fafc);
+    background: #eef2ff;
 }
 
 .drawer-section-icon {
-    width: 30px;
-    height: 30px;
+    width: 18px;
+    height: 18px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.72);
+    border-radius: 0;
+    background: transparent;
 }
 
 .drawer-section-icon svg {
@@ -1225,12 +1233,10 @@
 
 .drawer-section-icon--subtasks {
     color: #4f46e5;
-    background: color-mix(in srgb, #4f46e5 12%, #ffffff);
 }
 
 .drawer-section-icon--notes {
-    color: #9333ea;
-    background: color-mix(in srgb, #9333ea 10%, #ffffff);
+    color: #4f46e5;
 }
 
 .drawer-section-title {
@@ -1245,7 +1251,7 @@
 }
 
 .drawer-section-label--notes .drawer-section-title {
-    color: color-mix(in srgb, #9333ea 18%, var(--text));
+    color: color-mix(in srgb, #4f46e5 20%, var(--text));
 }
 
 .drawer-section-count {
@@ -1257,7 +1263,7 @@
     font-weight: 700;
     line-height: 1;
     color: var(--text3);
-    background: #f8fafc;
+    background: var(--drawer-surface-strong);
     text-align: center;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
 }
@@ -1292,13 +1298,13 @@
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.15s ease;
-    background: #f8fafc;
+    background: var(--drawer-surface-strong);
     border: none;
     box-shadow: 0 4px 12px rgba(15, 23, 42, 0.035);
 }
 
 .subtask-row:hover {
-    background: color-mix(in srgb, #4f46e5 2%, #f8fafc);
+    background: color-mix(in srgb, #4f46e5 4%, var(--drawer-surface-soft));
     box-shadow: 0 8px 18px rgba(15, 23, 42, 0.05);
 }
 
@@ -1428,7 +1434,7 @@
     margin-top: 0;
     border: none;
     border-radius: 10px;
-    background: #f8fafc;
+    background: var(--drawer-surface-strong);
     color: var(--text3);
     font-size: 0.875rem;
     font-weight: 500;
@@ -1448,7 +1454,7 @@
     padding: 0 8px 0 14px;
     border: none;
     border-radius: 10px;
-    background: #f8fafc;
+    background: var(--drawer-surface-strong);
     margin-top: 0;
     box-shadow:
         var(--drawer-elev-shadow),
@@ -1457,11 +1463,10 @@
 }
 
 .subtask-add-inline:focus-within {
-    background: #f8fafc;
+    background: var(--drawer-surface-strong);
     box-shadow:
-        0 0 0 4px color-mix(in srgb, var(--acc) 10%, transparent),
-        var(--drawer-elev-shadow-hover),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        var(--drawer-elev-shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.82);
 }
 
 .subtask-add-input {
@@ -1541,7 +1546,7 @@
 }
 
 .subtask-add-btn:hover {
-    background: #f8fafc;
+    background: color-mix(in srgb, #4f46e5 4%, var(--drawer-surface-soft));
     color: var(--acc);
     box-shadow:
         var(--drawer-elev-shadow-hover),
@@ -1549,17 +1554,16 @@
 }
 
 .subtask-add-btn:active {
-    background: #f8fafc;
+    background: var(--drawer-surface-strong);
 }
 
 .subtask-add-btn:focus-visible {
     outline: none;
-    background: #f8fafc;
-    color: var(--acc);
+    background: var(--drawer-surface-strong);
+    color: var(--text3);
     box-shadow:
-        0 0 0 4px color-mix(in srgb, var(--acc) 10%, transparent),
-        var(--drawer-elev-shadow-hover),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        var(--drawer-elev-shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.82);
 }
 
 .subtask-add-btn svg {
@@ -1576,8 +1580,7 @@
     line-height: 1;
 }
 
-.subtask-add-btn:hover svg,
-.subtask-add-btn:focus-visible svg {
+.subtask-add-btn:hover svg {
     transform: rotate(90deg);
 }
 
@@ -1591,7 +1594,7 @@
     padding: 18px 18px;
     border: none;
     border-radius: 18px;
-    background: #f8fafc;
+    background: var(--drawer-surface-strong);
     color: var(--text);
     font-size: 0.98rem;
     font-family: inherit;
@@ -1605,19 +1608,18 @@
 }
 
 .drawer-notes-textarea:hover {
-    background: #f8fafc;
+    background: var(--drawer-surface-soft);
     box-shadow:
         var(--drawer-elev-shadow-hover),
         inset 0 1px 0 rgba(255, 255, 255, 0.88);
 }
 
 .drawer-notes-textarea:focus {
-    background: #f8fafc;
+    background: var(--drawer-surface-strong);
     box-shadow:
-        0 0 0 4px color-mix(in srgb, var(--acc) 12%, transparent),
-        var(--drawer-elev-shadow-hover),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9);
-    transform: translateY(-1px);
+        var(--drawer-elev-shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.82);
+    transform: none;
 }
 
 .drawer-notes-textarea::placeholder {
@@ -1656,7 +1658,7 @@
     justify-content: center;
     gap: 7px;
     border: none;
-    background: #f8fafc;
+    background: var(--drawer-surface-strong);
     color: #475569;
     box-shadow:
         var(--drawer-elev-shadow),
@@ -1665,7 +1667,7 @@
 
 .drawer-footer-btn:hover {
     transform: translateY(-1px);
-    background: color-mix(in srgb, #4f46e5 2%, #f8fafc);
+    background: color-mix(in srgb, #4f46e5 4%, var(--drawer-surface-soft));
     color: var(--text);
     box-shadow:
         var(--drawer-elev-shadow-hover),
@@ -1676,14 +1678,14 @@
     grid-column: auto;
     min-height: 44px;
     color: #dc2626;
-    background: color-mix(in srgb, #ef4444 6%, #f8fafc);
+    background: color-mix(in srgb, #ef4444 10%, var(--drawer-surface-strong));
     box-shadow:
         0 8px 18px rgba(239, 68, 68, 0.08),
         inset 0 1px 0 rgba(255, 255, 255, 0.88);
 }
 
 .drawer-footer-btn--danger:hover {
-    background: color-mix(in srgb, #ef4444 10%, #f8fafc);
+    background: color-mix(in srgb, #ef4444 14%, var(--drawer-surface-soft));
     color: #b91c1c;
     box-shadow:
         0 10px 22px rgba(239, 68, 68, 0.1),
@@ -1751,13 +1753,13 @@
 }
 
 .dark .drawer-section-icon {
-    background: rgba(79, 70, 229, 0.16);
+    background: transparent;
     color: #a5b4fc;
 }
 
 .dark .drawer-section-icon--notes {
-    background: rgba(147, 51, 234, 0.16);
-    color: #d8b4fe;
+    background: transparent;
+    color: #a5b4fc;
 }
 
 .dark .drawer-section-count {
@@ -1780,6 +1782,14 @@
         0 16px 30px rgba(2, 6, 23, 0.24);
 }
 
+.dark .drawer-notes-textarea:focus {
+    background: linear-gradient(180deg, var(--drawer-surface) 0%, var(--drawer-surface-strong) 100%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.04),
+        0 12px 26px rgba(2, 6, 23, 0.2);
+    transform: none;
+}
+
 .dark .subtask-add-btn {
     background: linear-gradient(180deg, var(--drawer-surface) 0%, var(--drawer-surface-strong) 100%);
     color: color-mix(in srgb, var(--text2) 58%, var(--text3));
@@ -1793,10 +1803,10 @@
 }
 
 .dark .subtask-add-inline:focus-within {
-    background: linear-gradient(180deg, color-mix(in srgb, var(--card) 94%, #111827) 0%, var(--drawer-surface-tint) 100%);
+    background: linear-gradient(180deg, var(--drawer-surface) 0%, var(--drawer-surface-strong) 100%);
     box-shadow:
-        0 0 0 4px color-mix(in srgb, var(--acc2, var(--acc)) 14%, transparent),
-        0 14px 26px rgba(2, 6, 23, 0.22);
+        inset 0 1px 0 rgba(255, 255, 255, 0.04),
+        0 10px 20px rgba(2, 6, 23, 0.18);
 }
 
 .dark .subtask-add-confirm-btn,
@@ -1804,10 +1814,15 @@
     color: color-mix(in srgb, var(--text3) 88%, #cbd5e1);
 }
 
-.dark .subtask-add-btn:hover,
-.dark .subtask-add-btn:focus-visible {
+.dark .subtask-add-btn:hover {
     background: linear-gradient(180deg, color-mix(in srgb, var(--card) 94%, #111827) 0%, var(--drawer-surface-tint) 100%);
     color: var(--acc2, var(--acc));
+}
+
+.dark .subtask-add-btn:focus-visible {
+    background: linear-gradient(180deg, var(--drawer-surface) 0%, var(--drawer-surface-strong) 100%);
+    color: color-mix(in srgb, var(--text2) 58%, var(--text3));
+    box-shadow: none;
 }
 
 .dark .drawer-footer-btn {
@@ -1845,9 +1860,9 @@
 
 @media (max-width: 640px) {
     .drawer-section-icon {
-        width: 28px;
-        height: 28px;
-        border-radius: 8px;
+        width: 18px;
+        height: 18px;
+        border-radius: 0;
     }
 
     .drawer-section-icon svg {
