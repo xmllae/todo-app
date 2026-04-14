@@ -453,11 +453,17 @@ function renderDrawerContent(task) {
                 <label class="drawer-schedule-time-box">
                     <span class="drawer-schedule-time-label">\u5f00\u59cb\u65f6\u95f4</span>
                     <div class="drawer-schedule-time-value">
-                        <input type="time"
+                        <input type="text"
                                class="drawer-schedule-input drawer-schedule-input--time"
                                id="drawer-start-time-input-${task.id}"
                                value="${task.planTime || ''}"
+                               placeholder="09:30"
+                               inputmode="numeric"
+                               maxlength="5"
+                               spellcheck="false"
+                               autocomplete="off"
                                onclick="event.stopPropagation()"
+                               onkeydown="if(event.key==='Enter'){event.target.blur()}"
                                onchange="saveDrawerStartTime(${task.id})">
                         <span class="drawer-schedule-time-icon" aria-hidden="true">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
@@ -476,11 +482,17 @@ function renderDrawerContent(task) {
                 <label class="drawer-schedule-time-box">
                     <span class="drawer-schedule-time-label">\u7ed3\u675f\u65f6\u95f4</span>
                     <div class="drawer-schedule-time-value">
-                        <input type="time"
+                        <input type="text"
                                class="drawer-schedule-input drawer-schedule-input--time"
                                id="drawer-end-time-input-${task.id}"
                                value="${scheduleState.endTime}"
+                               placeholder="09:30"
+                               inputmode="numeric"
+                               maxlength="5"
+                               spellcheck="false"
+                               autocomplete="off"
                                onclick="event.stopPropagation()"
+                               onkeydown="if(event.key==='Enter'){event.target.blur()}"
                                onchange="saveDrawerEndTime(${task.id})">
                         <span class="drawer-schedule-time-icon" aria-hidden="true">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
@@ -1097,12 +1109,31 @@ function formatDrawerDurationBadgeText(minutes) {
     return restMinutes + '\u5206\u949f';
 }
 
+function normalizeDrawerTimeTextInput(rawValue) {
+    const trimmed = String(rawValue || '').trim().replace(/\uFF1A/g, ':');
+    if (!trimmed) return '';
+
+    let candidate = trimmed;
+
+    if (/^\d{3,4}$/.test(trimmed)) {
+        candidate = trimmed.length === 3
+            ? ('0' + trimmed.charAt(0) + ':' + trimmed.slice(1))
+            : (trimmed.slice(0, 2) + ':' + trimmed.slice(2));
+    }
+
+    const parsedMinutes = parseDrawerTimeToMinutes(candidate);
+    if (parsedMinutes === null) return null;
+
+    return formatDrawerMinutesToTime(parsedMinutes);
+}
+
 function getDrawerScheduleState(task) {
     const startTime = String(task && task.planTime || '').trim();
     const startMinutes = parseDrawerTimeToMinutes(startTime);
-    const durationMinutes = getDrawerDurationMinutes(task);
+    const storedDurationMinutes = getDrawerDurationMinutes(task);
+    const durationMinutes = storedDurationMinutes === null && !startTime ? 0 : storedDurationMinutes;
 
-    if (startMinutes === null || durationMinutes === null) {
+    if (startMinutes === null || storedDurationMinutes === null) {
         return {
             startTime: startTime,
             durationMinutes: durationMinutes,
@@ -1164,7 +1195,14 @@ function saveDrawerStartTime(taskId) {
     const task = findTaskById(taskId);
     if (!task) return;
 
-    const newTime = input.value.trim();
+    const newTime = normalizeDrawerTimeTextInput(input.value);
+    if (newTime === null) {
+        toast('\u8bf7\u8f93\u5165\u6b63\u786e\u7684\u65f6\u95f4\uff0c\u4f8b\u5982 09:30');
+        syncTaskDetailPanel();
+        return;
+    }
+
+    input.value = newTime;
     if (newTime !== (task.planTime || '')) {
         task.planTime = newTime;
         persistTaskDetailChanges(task, { kanban: true });
@@ -1210,6 +1248,8 @@ function saveDrawerDuration(taskId) {
         if (getDrawerDurationMinutes(task) !== null) {
             task.duration = undefined;
             persistTaskDetailChanges(task, { kanban: true });
+        } else {
+            syncTaskDetailPanel();
         }
         return;
     }
@@ -1236,11 +1276,20 @@ function saveDrawerEndTime(taskId) {
     const task = findTaskById(taskId);
     if (!task) return;
 
-    const nextEndTime = input.value.trim();
+    const nextEndTime = normalizeDrawerTimeTextInput(input.value);
+    if (nextEndTime === null) {
+        toast('\u8bf7\u8f93\u5165\u6b63\u786e\u7684\u65f6\u95f4\uff0c\u4f8b\u5982 15:30');
+        syncTaskDetailPanel();
+        return;
+    }
+
+    input.value = nextEndTime;
     if (!nextEndTime) {
         if (getDrawerDurationMinutes(task) !== null) {
             task.duration = undefined;
             persistTaskDetailChanges(task, { kanban: true });
+        } else {
+            syncTaskDetailPanel();
         }
         return;
     }
