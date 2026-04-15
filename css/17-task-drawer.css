@@ -741,13 +741,14 @@
     top: 100%;
     right: 0;
     margin-top: 10px;
+    box-sizing: border-box;
     background: var(--drawer-surface-strong);
     border: none;
     border-radius: 16px;
     padding: 6px;
-    width: 156px;
-    min-width: 156px;
-    max-width: min(156px, calc(100vw - 72px));
+    width: 100%;
+    min-width: 100%;
+    max-width: none;
     box-shadow:
         0 18px 40px rgba(15, 23, 42, 0.13),
         0 4px 12px rgba(15, 23, 42, 0.05);
@@ -992,9 +993,9 @@
     }
 
     .drawer-priority-menu {
-        width: 144px;
-        min-width: 144px;
-        max-width: min(144px, calc(100vw - 36px));
+        width: 100%;
+        min-width: 100%;
+        max-width: none;
     }
 
     .drawer-priority-option {
