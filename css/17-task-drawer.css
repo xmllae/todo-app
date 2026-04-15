@@ -83,13 +83,13 @@
 }
 
 .task-detail-inner {
-    --drawer-surface: #f3f6fa;
-    --drawer-surface-strong: #eef3f8;
-    --drawer-surface-soft: #e6edf5;
-    --drawer-surface-tint: color-mix(in srgb, var(--acc) 7%, var(--drawer-surface-strong));
-    --drawer-surface-danger: color-mix(in srgb, #ef4444 8%, var(--drawer-surface-strong));
-    --drawer-elev-shadow: 0 8px 22px rgba(15, 23, 42, 0.038);
-    --drawer-elev-shadow-hover: 0 12px 28px rgba(15, 23, 42, 0.058);
+    --drawer-surface: #f8fafd;
+    --drawer-surface-strong: #f4f8fc;
+    --drawer-surface-soft: #edf3f9;
+    --drawer-surface-tint: color-mix(in srgb, var(--acc) 5%, var(--drawer-surface-strong));
+    --drawer-surface-danger: color-mix(in srgb, #ef4444 6%, var(--drawer-surface-strong));
+    --drawer-elev-shadow: 0 6px 18px rgba(15, 23, 42, 0.028);
+    --drawer-elev-shadow-hover: 0 9px 22px rgba(15, 23, 42, 0.042);
     position: relative;
     width: 100%;
     min-height: 0;
@@ -660,12 +660,12 @@
 }
 
 .drawer-priority-btn.is-high {
-    background: #fff1f2;
+    background: #fff8f8;
     box-shadow: none;
 }
 
 .drawer-priority-btn.is-high:hover {
-    background: #ffe4e6;
+    background: #fff1f3;
     box-shadow: none;
 }
 
@@ -682,12 +682,12 @@
 }
 
 .drawer-priority-btn.is-normal {
-    background: #f1f5f9;
+    background: #f8fafd;
     box-shadow: none;
 }
 
 .drawer-priority-btn.is-normal:hover {
-    background: #e9eff6;
+    background: #f1f6fb;
     box-shadow: none;
 }
 
@@ -1023,7 +1023,7 @@
     --drawer-schedule-inline-pad: 26px;
     position: relative;
     padding: 16px var(--drawer-schedule-inline-pad) 18px;
-    background: var(--drawer-surface-strong);
+    background: color-mix(in srgb, #ffffff 48%, var(--drawer-surface-strong));
     border: 0;
     border-radius: 18px;
     box-shadow:
@@ -1838,7 +1838,7 @@
     margin-top: 0;
     border: none;
     border-radius: 10px;
-    background: var(--drawer-surface-strong);
+    background: color-mix(in srgb, #ffffff 42%, var(--drawer-surface-strong));
     color: #64748b;
     font-size: 0.875rem;
     font-weight: 500;
@@ -1858,7 +1858,7 @@
     padding: 0 8px 0 14px;
     border: none;
     border-radius: 10px;
-    background: var(--drawer-surface-strong);
+    background: color-mix(in srgb, #ffffff 42%, var(--drawer-surface-strong));
     margin-top: 0;
     box-shadow:
         var(--drawer-elev-shadow),
@@ -1867,7 +1867,7 @@
 }
 
 .subtask-add-inline:focus-within {
-    background: var(--drawer-surface-strong);
+    background: color-mix(in srgb, #ffffff 42%, var(--drawer-surface-strong));
     box-shadow:
         var(--drawer-elev-shadow),
         inset 0 1px 0 rgba(255, 255, 255, 0.82);
@@ -1950,7 +1950,7 @@
 }
 
 .subtask-add-btn:hover {
-    background: color-mix(in srgb, #4f46e5 4%, var(--drawer-surface-soft));
+    background: color-mix(in srgb, #ffffff 34%, color-mix(in srgb, #4f46e5 3%, var(--drawer-surface-soft)));
     color: var(--acc);
     box-shadow:
         var(--drawer-elev-shadow-hover),
@@ -1958,12 +1958,12 @@
 }
 
 .subtask-add-btn:active {
-    background: var(--drawer-surface-strong);
+    background: color-mix(in srgb, #ffffff 42%, var(--drawer-surface-strong));
 }
 
 .subtask-add-btn:focus-visible {
     outline: none;
-    background: var(--drawer-surface-strong);
+    background: color-mix(in srgb, #ffffff 42%, var(--drawer-surface-strong));
     color: #64748b;
     box-shadow:
         var(--drawer-elev-shadow),
@@ -1998,7 +1998,7 @@
     padding: 18px 18px;
     border: none;
     border-radius: 18px;
-    background: var(--drawer-surface-strong);
+    background: color-mix(in srgb, #ffffff 42%, var(--drawer-surface-strong));
     color: var(--text);
     font-size: 0.98rem;
     font-family: inherit;
@@ -2012,14 +2012,14 @@
 }
 
 .drawer-notes-textarea:hover {
-    background: var(--drawer-surface-soft);
+    background: color-mix(in srgb, #ffffff 30%, var(--drawer-surface-soft));
     box-shadow:
         var(--drawer-elev-shadow-hover),
         inset 0 1px 0 rgba(255, 255, 255, 0.88);
 }
 
 .drawer-notes-textarea:focus {
-    background: var(--drawer-surface-strong);
+    background: color-mix(in srgb, #ffffff 42%, var(--drawer-surface-strong));
     box-shadow:
         var(--drawer-elev-shadow),
         inset 0 1px 0 rgba(255, 255, 255, 0.82);
