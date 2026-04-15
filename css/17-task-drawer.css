@@ -325,149 +325,167 @@
    Task Check Ring (Circle) - Drawer
    ========================================= */
 
-/* Wrapper for the check ring */
-.task-detail-inner .task-ck-ring {
-    width: 22px;
-    height: 22px;
+/* Match the drawer title check ring to the main task-row ring. */
+.task-detail-inner .drawer-task-title .task-ck-ring.task-ck-slot {
+    width: 38px;
+    min-width: 38px;
+    height: auto;
+    min-height: 0;
     align-self: center;
     flex-shrink: 0;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-sizing: border-box;
+    padding: 0;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    touch-action: manipulation;
 }
 
-/* Inner container */
-.task-detail-inner .task-ck-ring .tc-check {
-    width: 100%;
-    height: 100%;
+.task-detail-inner .drawer-task-title .task-ck-ring .tc-check {
+    width: 38px;
+    min-width: 38px;
+    height: auto;
+    min-height: 0;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
-/* The actual ring circle */
-.task-detail-inner .task-ck-ring .chk-ring {
+.task-detail-inner .drawer-task-title .task-ck-ring .chk-ring {
     width: 22px;
+    min-width: 22px;
     height: 22px;
+    min-height: 22px;
     border-radius: 50%;
-    border: 1.5px solid color-mix(in srgb, var(--inp-bd) 85%, #e5e7eb);
-    background: var(--card);
-    box-shadow: 0 1px 2px rgba(15, 23, 42, .05);
+    border: 2px solid #cbd5e1;
+    background: #fff;
+    box-shadow: none;
+    color: transparent;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all .25s;
+    flex-shrink: 0;
+    position: relative;
+    box-sizing: border-box;
     font-size: 10px;
-    color: transparent;
+    transition: all .22s ease;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    touch-action: manipulation;
 }
 
-.task-detail-inner .task-ck-ring .chk-ring .chk-ring-ico {
-    color: transparent;
+.dark .task-detail-inner .drawer-task-title .task-ck-ring .chk-ring {
+    border-color: #64748b;
+    background: var(--card);
+}
+
+.task-detail-inner .drawer-task-title .task-ck-ring .chk-ring .chk-ring-ico {
+    width: 15px;
+    height: 15px;
+    color: #fff;
     opacity: 0;
     transform: scale(.9);
     transition: opacity .2s ease, transform .2s ease, color .2s ease;
+    pointer-events: none;
+    display: block;
+    flex-shrink: 0;
+    overflow: visible;
 }
 
-.task-detail-inner .task-ck-ring .chk-ring.hover-check .chk-ring-ico,
-.task-detail-inner .task-ck-ring .chk-ring:hover .chk-ring-ico {
+.task-detail-inner .drawer-task-title .task-ck-ring:not(.task-ck-ring--archived):not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring:not(.checked) {
+    --task-row-ring-border: #aeb8c6;
+    --task-row-ring-bg: var(--card);
+    border-color: var(--task-row-ring-border) !important;
+    background: var(--task-row-ring-bg) !important;
+    box-shadow: none !important;
+}
+
+.dark .task-detail-inner .drawer-task-title .task-ck-ring:not(.task-ck-ring--archived):not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring:not(.checked) {
+    --task-row-ring-border: #6f7f92;
+    --task-row-ring-bg: var(--card);
+}
+
+.task-detail-inner .drawer-task-title .task-ck-ring:not(.task-ck-ring--archived):not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring:not(.checked):hover,
+.task-detail-inner .drawer-task-title .task-ck-ring:not(.task-ck-ring--archived):not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring:not(.checked).hover-check {
+    border-color: var(--task-row-ring-border) !important;
+    background: var(--task-row-ring-bg) !important;
+    box-shadow: none !important;
+}
+
+.task-detail-inner .drawer-task-title .task-ck-ring:not(.task-ck-ring--archived):not(.task-ck-ring--done) .chk-ring:not(.checked):hover .chk-ring-ico,
+.task-detail-inner .drawer-task-title .task-ck-ring:not(.task-ck-ring--archived):not(.task-ck-ring--done) .chk-ring:not(.checked).hover-check .chk-ring-ico {
     color: #64748b !important;
     opacity: 1;
     transform: scale(1.02);
 }
 
-.task-detail-inner .task-ck-ring:not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring.hover-check,
-.task-detail-inner .task-ck-ring:not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring:hover {
-    border-color: #94a3b8;
-    background: var(--card);
-    box-shadow: none;
-}
-
-.dark .task-detail-inner .task-ck-ring:not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring.hover-check .chk-ring-ico,
-.dark .task-detail-inner .task-ck-ring:not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring:hover .chk-ring-ico {
+.dark .task-detail-inner .drawer-task-title .task-ck-ring:not(.task-ck-ring--archived):not(.task-ck-ring--done) .chk-ring:not(.checked):hover .chk-ring-ico,
+.dark .task-detail-inner .drawer-task-title .task-ck-ring:not(.task-ck-ring--archived):not(.task-ck-ring--done) .chk-ring:not(.checked).hover-check .chk-ring-ico {
     color: #94a3b8 !important;
 }
 
-/* High priority ring */
-.task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring.hover-check .chk-ring-ico,
-.task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring:hover .chk-ring-ico {
-    color: var(--prio-high, #ef4444) !important;
-}
-
-/* High priority ring */
-.task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring {
-    --drawer-high-ring-border: var(--prio-high, #ef4444);
-    --drawer-high-ring-bg: color-mix(in srgb, var(--prio-high, #ef4444) 6%, var(--card));
+.task-detail-inner .drawer-task-title .task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked) {
+    --task-row-high-ring-border: var(--ck-prio, var(--prio-high, #ef4444));
+    --task-row-high-ring-bg: color-mix(in srgb, var(--ck-prio, var(--prio-high, #ef4444)) 6%, var(--card));
     border-style: solid !important;
     border-width: 2.5px !important;
-    border-color: var(--drawer-high-ring-border) !important;
-    background: var(--drawer-high-ring-bg) !important;
+    border-color: var(--task-row-high-ring-border) !important;
+    background: var(--task-row-high-ring-bg) !important;
     box-shadow: none !important;
 }
 
-.task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring.hover-check,
-.task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring:hover {
-    border-color: var(--drawer-high-ring-border) !important;
-    background: var(--drawer-high-ring-bg) !important;
+.dark .task-detail-inner .drawer-task-title .task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked) {
+    --task-row-high-ring-bg: color-mix(in srgb, var(--ck-prio, var(--prio-high, #ef4444)) 10%, var(--card));
 }
 
-.dark .task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring {
-    --drawer-high-ring-border: var(--prio-high, #ef4444);
-    --drawer-high-ring-bg: color-mix(in srgb, var(--prio-high, #ef4444) 10%, var(--card));
+.task-detail-inner .drawer-task-title .task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked):hover,
+.task-detail-inner .drawer-task-title .task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked).hover-check {
+    border-color: var(--task-row-high-ring-border) !important;
+    background: var(--task-row-high-ring-bg) !important;
+    box-shadow: none !important;
 }
 
-.dark .task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring.hover-check,
-.dark .task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring:hover {
-    border-color: var(--drawer-high-ring-border) !important;
-    background: var(--drawer-high-ring-bg) !important;
+.task-detail-inner .drawer-task-title .task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked):hover .chk-ring-ico,
+.task-detail-inner .drawer-task-title .task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked).hover-check .chk-ring-ico {
+    color: var(--ck-prio, var(--prio-high, #ef4444)) !important;
 }
 
-/* Done state - normal priority (match task row: gray color) */
-.task-detail-inner .task-ck-ring.task-ck-ring--done .chk-ring {
-    background: #94a3b8 !important;
-    border-color: #94a3b8 !important;
+.task-detail-inner .drawer-task-title .task-ck-ring--done:not(.task-ck-ring--prio-high):not(.task-ck-ring--archived) .chk-ring.checked {
+    background: #aeb8c6 !important;
+    border-color: transparent !important;
+    box-shadow: 0 1px 3px rgba(100, 116, 139, .22) !important;
 }
 
-.task-detail-inner .task-ck-ring.task-ck-ring--done .chk-ring:hover {
-    background: #94a3b8 !important;
-    border-color: #94a3b8 !important;
+.dark .task-detail-inner .drawer-task-title .task-ck-ring--done:not(.task-ck-ring--prio-high):not(.task-ck-ring--archived) .chk-ring.checked {
+    background: #6f7f92 !important;
+    border-color: transparent !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .2) !important;
 }
 
-.task-detail-inner .task-ck-ring.task-ck-ring--done .chk-ring.checked {
-    background: #94a3b8 !important;
-    border-color: #94a3b8 !important;
+.task-detail-inner .drawer-task-title .task-ck-ring--prio-high:not(.task-ck-ring--archived) .chk-ring.checked {
+    background: var(--ck-prio, var(--prio-high, #ef4444)) !important;
+    border-color: transparent !important;
+    box-shadow: 0 1px 4px rgba(220, 38, 38, .28) !important;
 }
 
-.task-detail-inner .task-ck-ring.task-ck-ring--done .chk-ring:hover.checked {
-    background: #94a3b8 !important;
-    border-color: #94a3b8 !important;
+.dark .task-detail-inner .drawer-task-title .task-ck-ring--prio-high:not(.task-ck-ring--archived) .chk-ring.checked {
+    background: var(--ck-prio, var(--prio-high, #ef4444)) !important;
+    border-color: transparent !important;
+    box-shadow: 0 1px 5px rgba(239, 68, 68, .32) !important;
 }
 
-.task-detail-inner .task-ck-ring.task-ck-ring--done .chk-ring .chk-ring-ico,
-.task-detail-inner .task-ck-ring.task-ck-ring--done .chk-ring:hover .chk-ring-ico {
+.task-detail-inner .drawer-task-title .task-ck-ring .chk-ring.checked .chk-ring-ico,
+.task-detail-inner .drawer-task-title .task-ck-ring .chk-ring.checked:hover .chk-ring-ico {
     color: #fff !important;
     opacity: 1;
     transform: scale(1.04);
-}
-
-/* High priority done state */
-.task-detail-inner .task-ck-ring.task-ck-ring--prio-high.task-ck-ring--done .chk-ring {
-    background: var(--prio-high, #ef4444) !important;
-    border-color: transparent !important;
-}
-
-.task-detail-inner .task-ck-ring.task-ck-ring--prio-high.task-ck-ring--done .chk-ring:hover {
-    background: var(--prio-high, #ef4444) !important;
-    border-color: transparent !important;
-}
-
-.task-detail-inner .task-ck-ring.task-ck-ring--prio-high.task-ck-ring--done .chk-ring:hover .chk-ring-ico {
-    color: #fff !important;
-}
-
-.dark .task-detail-inner .task-ck-ring.task-ck-ring--prio-high.task-ck-ring--done .chk-ring {
-    background: var(--prio-high, #ef4444) !important;
-    border-color: transparent !important;
 }
 
 .drawer-task-title-text {
@@ -1648,8 +1666,9 @@
 }
 
 .subtask-check.task-ck-slot .chk-ring:hover {
-    border-color: var(--acc2);
-    background: var(--acc-bg);
+    border-color: color-mix(in srgb, var(--inp-bd) 85%, #e5e7eb);
+    background: var(--card);
+    box-shadow: none;
 }
 
 .subtask-check.task-ck-slot.task-ck-ring--done .chk-ring {

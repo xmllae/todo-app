@@ -389,6 +389,12 @@ function taskAppearsDoneInDrawer(task) {
     return false;
 }
 
+function getDrawerCheckRingColor(priority) {
+    return priority === 'high'
+        ? ((typeof prioColor === 'function' ? prioColor('high') : '#ef4444') || '#ef4444')
+        : '#94a3b8';
+}
+
 function renderDrawerContent(task) {
     const content = document.getElementById('taskDetailContent');
     if (!content) return;
@@ -397,6 +403,7 @@ function renderDrawerContent(task) {
     const tagsHtml = renderTagsList(task);
     const isDone = taskAppearsDoneInDrawer(task);
     const normalizedPriority = task.priority === 'high' ? 'high' : 'normal';
+    const drawerCheckRingColor = getDrawerCheckRingColor(normalizedPriority);
     const scheduleState = getDrawerScheduleState(task);
     const scheduleDurationText = scheduleState.durationMinutes !== null
         ? formatDrawerDurationBadgeText(scheduleState.durationMinutes)
@@ -408,6 +415,7 @@ function renderDrawerContent(task) {
     content.innerHTML = `
         <div class="drawer-task-title ${isDone ? 'drawer-task-title--done' : ''}">
             <div class="task-ck-slot task-ck-ring ${task.priority === 'high' ? 'task-ck-ring--prio-high' : ''} ${isDone ? 'task-ck-ring--done' : ''}"
+                 style="--ck-prio:${drawerCheckRingColor}"
                  onclick="toggleTaskDoneFromDrawer(${task.id})"
                  title="${task.done ? '\u6807\u8bb0\u4e3a\u672a\u5b8c\u6210' : '\u6807\u8bb0\u4e3a\u5df2\u5b8c\u6210'}"
                  onmouseenter="handleCheckRingHover(this, true)"
@@ -737,8 +745,8 @@ function toggleTaskDoneFromDrawer(taskId) {
 
     // Update title styling
     const titleEl = document.querySelector('.drawer-task-title');
-    const checkSlot = document.querySelector('.task-ck-ring');
-    const chkRing = document.querySelector('.task-ck-ring .chk-ring');
+    const checkSlot = document.querySelector('.drawer-task-title .task-ck-ring');
+    const chkRing = document.querySelector('.drawer-task-title .chk-ring');
     const titleInput = document.getElementById('drawer-task-title-input');
 
     if (titleEl) {
@@ -857,9 +865,10 @@ function updateDrawerPriorityUI(priority) {
     });
 
     // Update check ring in title
-    const checkSlot = document.querySelector('.task-ck-ring');
+    const checkSlot = document.querySelector('.drawer-task-title .task-ck-ring');
     if (checkSlot) {
         checkSlot.classList.toggle('task-ck-ring--prio-high', activePriority === 'high');
+        checkSlot.style.setProperty('--ck-prio', getDrawerCheckRingColor(activePriority));
     }
 }
 

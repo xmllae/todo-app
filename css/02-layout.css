@@ -81,3 +81,45 @@
   border-color:var(--task-row-high-ring-border)!important;
   background:var(--task-row-high-ring-bg)!important;
 }
+
+/* Task-title rings should not change color on hover; hover only reveals the checkmark. */
+.task-ck-ring:not(.task-ck-ring--done):not(.task-ck-ring--archived):not(.task-ck-ring--prio-high) .chk-ring:not(.checked){
+  --task-row-ring-border:#aeb8c6;
+  --task-row-ring-bg:var(--card);
+  border-color:var(--task-row-ring-border)!important;
+  background:var(--task-row-ring-bg)!important;
+  box-shadow:none!important;
+}
+.dark .task-ck-ring:not(.task-ck-ring--done):not(.task-ck-ring--archived):not(.task-ck-ring--prio-high) .chk-ring:not(.checked){
+  --task-row-ring-border:#6f7f92;
+  --task-row-ring-bg:var(--card);
+}
+.task-ck-ring:not(.task-ck-ring--done):not(.task-ck-ring--archived):not(.task-ck-ring--prio-high) .chk-ring:not(.checked):hover,
+.task-ck-ring:not(.task-ck-ring--done):not(.task-ck-ring--archived):not(.task-ck-ring--prio-high) .chk-ring:not(.checked).hover-check{
+  border-color:var(--task-row-ring-border)!important;
+  background:var(--task-row-ring-bg)!important;
+  box-shadow:none!important;
+}
+.dark .task-ck-ring:not(.task-ck-ring--done):not(.task-ck-ring--archived):not(.task-ck-ring--prio-high) .chk-ring:not(.checked):hover,
+.dark .task-ck-ring:not(.task-ck-ring--done):not(.task-ck-ring--archived):not(.task-ck-ring--prio-high) .chk-ring:not(.checked).hover-check{
+  border-color:var(--task-row-ring-border)!important;
+  background:var(--task-row-ring-bg)!important;
+}
+.task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked){
+  --task-row-high-ring-border:var(--ck-prio,var(--prio-high,#ef4444));
+  --task-row-high-ring-bg:color-mix(in srgb,var(--ck-prio,var(--prio-high,#ef4444)) 6%,var(--card));
+}
+.dark .task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked){
+  --task-row-high-ring-bg:color-mix(in srgb,var(--ck-prio,var(--prio-high,#ef4444)) 10%,var(--card));
+}
+.task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked):hover,
+.task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked).hover-check{
+  border-color:var(--task-row-high-ring-border)!important;
+  background:var(--task-row-high-ring-bg)!important;
+  box-shadow:none!important;
+}
+.ck:not(.checked):hover{
+  border-color:color-mix(in srgb,var(--inp-bd) 85%,#e5e7eb)!important;
+  background:var(--card)!important;
+  box-shadow:0 1px 2px rgba(15,23,42,.05)!important;
+}
