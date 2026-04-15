@@ -1070,6 +1070,7 @@
     margin: 0 0 1px;
     padding: 0;
     border-radius: 0;
+    transform: translateY(11px);
 }
 
 .drawer-schedule-duration-row::before {
@@ -1339,6 +1340,7 @@
         width: 104px;
         margin-inline: 0;
         padding: 0;
+        transform: translateY(9px);
     }
 
     .drawer-schedule-duration-row::before {
