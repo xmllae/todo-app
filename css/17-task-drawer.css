@@ -311,11 +311,14 @@
    ========================================= */
 
 .drawer-task-title {
+    --drawer-title-bleed: 10px;
     display: flex;
+    position: relative;
     align-items: center;
     gap: 4px;
     padding: 4px 2px;
     margin-bottom: var(--drawer-module-gap);
+    isolation: isolate;
 }
 
 /* =========================================
@@ -331,6 +334,8 @@
     margin-left: -10px;
     align-self: center;
     flex-shrink: 0;
+    position: relative;
+    z-index: 2;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -487,30 +492,39 @@
 }
 
 .drawer-task-title-text {
-    flex: 1;
+    flex: 1 1 auto;
     min-width: 0;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1;
     font-size: 1.26rem;
     font-weight: 700;
     color: var(--text);
     line-height: 1.2;
     outline: none;
+    min-height: 46px;
     border: none;
     background: transparent;
-    padding: 4px 8px;
-    margin: -2px -8px;
-    border-radius: 10px;
-    transition: background 0.2s ease, box-shadow 0.2s ease;
+    caret-color: currentColor;
+    cursor: text;
+    padding: 10px 12px 10px var(--drawer-title-bleed);
+    margin: 0 0 0 calc(var(--drawer-title-bleed) * -1);
+    box-shadow: none;
+    transition: color 0.18s ease;
 }
 
 .drawer-task-title-text:hover {
-    background: var(--hov);
+    background: transparent;
 }
 
 .drawer-task-title-text:focus {
-    background: var(--drawer-surface-strong);
-    box-shadow:
-        inset 0 0 0 1px rgba(148, 163, 184, 0.18),
-        inset 0 1px 0 rgba(255, 255, 255, 0.78);
+    background: transparent;
+    box-shadow: none;
+}
+
+.drawer-task-title-text:focus-visible {
+    background: transparent;
+    box-shadow: none;
 }
 
 .drawer-priority-dropdown {
@@ -519,6 +533,7 @@
     justify-content: flex-end;
     align-self: center;
     flex-shrink: 0;
+    margin-left: 14px;
     width: max-content;
     max-width: none;
 }
@@ -532,19 +547,33 @@
     min-width: 0;
     max-width: 100%;
     overflow: visible;
-    min-height: 36px;
-    padding: 7px 8px;
-    border: none;
+    min-height: 40px;
+    padding: 8px 10px;
+    border: 1px solid color-mix(in srgb, var(--inp-bd) 58%, transparent);
     background: var(--drawer-surface-strong);
     cursor: pointer;
-    border-radius: 8px;
-    box-shadow: none;
-    transition: background 0.18s ease, color 0.18s ease;
+    border-radius: 14px;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.82),
+        0 10px 24px rgba(15, 23, 42, 0.06);
+    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
 .drawer-priority-btn:hover {
     background: var(--drawer-surface-soft);
-    box-shadow: none;
+    transform: translateY(-1px);
+    border-color: color-mix(in srgb, var(--acc) 14%, var(--inp-bd));
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.88),
+        0 14px 28px rgba(15, 23, 42, 0.08);
+}
+
+.drawer-priority-dropdown.is-open .drawer-priority-btn {
+    transform: translateY(-1px);
+    border-color: color-mix(in srgb, var(--acc) 16%, var(--inp-bd));
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        0 16px 32px rgba(15, 23, 42, 0.1);
 }
 
 .drawer-priority-btn-copy {
@@ -816,27 +845,37 @@
 .dark .drawer-priority-btn {
     border-color: color-mix(in srgb, var(--inp-bd) 72%, transparent);
     background: color-mix(in srgb, var(--card) 82%, #111827);
-    box-shadow: none;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.04),
+        0 14px 28px rgba(2, 6, 23, 0.28);
 }
 
 .dark .drawer-priority-btn.is-normal {
     background: color-mix(in srgb, var(--card) 82%, #111827);
-    box-shadow: none;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.04),
+        0 14px 28px rgba(2, 6, 23, 0.28);
 }
 
 .dark .drawer-priority-btn.is-normal:hover {
     background: color-mix(in srgb, var(--card) 90%, #1f2937);
-    box-shadow: none;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        0 18px 34px rgba(2, 6, 23, 0.34);
 }
 
 .dark .drawer-priority-btn.is-high {
     background: color-mix(in srgb, var(--prio-high, #ef4444) 14%, var(--card));
-    box-shadow: none;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.04),
+        0 14px 28px rgba(69, 10, 10, 0.2);
 }
 
 .dark .drawer-priority-btn.is-high:hover {
     background: color-mix(in srgb, var(--prio-high, #ef4444) 20%, var(--card));
-    box-shadow: none;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        0 18px 34px rgba(69, 10, 10, 0.24);
 }
 
 .dark .drawer-priority-btn.is-high .drawer-priority-btn-label {
@@ -863,6 +902,26 @@
 .dark .drawer-priority-btn:hover .drawer-priority-arrow-wrap {
     border-color: color-mix(in srgb, var(--acc2, var(--acc)) 22%, var(--inp-bd));
     background: transparent;
+}
+
+.dark .drawer-priority-dropdown.is-open .drawer-priority-btn {
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        0 20px 38px rgba(2, 6, 23, 0.38);
+}
+
+.dark .drawer-task-title-text:hover {
+    background: transparent;
+}
+
+.dark .drawer-task-title-text:focus {
+    background: transparent;
+    box-shadow: none;
+}
+
+.dark .drawer-task-title-text:focus-visible {
+    background: transparent;
+    box-shadow: none;
 }
 
 .dark .drawer-priority-dropdown[data-priority="high"].is-open .drawer-priority-arrow,
@@ -901,6 +960,7 @@
 
 @media (max-width: 640px) {
     .drawer-priority-dropdown {
+        margin-left: 10px;
         width: max-content;
         max-width: none;
     }
@@ -2223,6 +2283,7 @@
     }
 
     .drawer-task-title {
+        --drawer-title-bleed: 8px;
         gap: 10px;
         padding: 8px 2px;
         border-radius: 12px;
