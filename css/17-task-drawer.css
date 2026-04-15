@@ -86,13 +86,13 @@
 }
 
 .task-detail-inner {
-    --drawer-surface: #f6f9fc;
-    --drawer-surface-strong: #f2f6fb;
-    --drawer-surface-soft: #ecf2f8;
+    --drawer-surface: #f3f6fa;
+    --drawer-surface-strong: #eef3f8;
+    --drawer-surface-soft: #e6edf5;
     --drawer-surface-tint: color-mix(in srgb, var(--acc) 7%, var(--drawer-surface-strong));
     --drawer-surface-danger: color-mix(in srgb, #ef4444 8%, var(--drawer-surface-strong));
-    --drawer-elev-shadow: 0 8px 22px rgba(15, 23, 42, 0.045);
-    --drawer-elev-shadow-hover: 0 12px 28px rgba(15, 23, 42, 0.065);
+    --drawer-elev-shadow: 0 8px 22px rgba(15, 23, 42, 0.038);
+    --drawer-elev-shadow-hover: 0 12px 28px rgba(15, 23, 42, 0.058);
     position: relative;
     width: 100%;
     min-height: 0;
