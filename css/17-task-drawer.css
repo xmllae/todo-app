@@ -273,12 +273,14 @@
 }
 
 .drawer-content {
+    --drawer-module-gap: 24px;
+    --drawer-section-title-gap: 8px;
     position: relative;
     z-index: 1;
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 0;
     min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
@@ -316,6 +318,7 @@
     align-items: center;
     gap: 12px;
     padding: 6px 2px 2px;
+    margin-bottom: var(--drawer-module-gap);
 }
 
 /* =========================================
@@ -926,11 +929,12 @@
         var(--drawer-elev-shadow),
         inset 0 1px 0 rgba(255, 255, 255, 0.78);
     overflow: visible;
+    margin-bottom: var(--drawer-module-gap);
 }
 
 .drawer-section-header.drawer-section-header--schedule {
-    margin-top: 12px;
-    margin-bottom: 5px;
+    margin-top: 0;
+    margin-bottom: var(--drawer-section-title-gap);
 }
 
 .drawer-section-label--schedule {
@@ -1376,6 +1380,10 @@
     border-bottom: none;
 }
 
+.drawer-row--tags {
+    margin-bottom: var(--drawer-module-gap);
+}
+
 .drawer-row-icon {
     width: 32px;
     height: 32px;
@@ -1461,15 +1469,15 @@
 .drawer-section-header {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-top: 16px;
-    margin-bottom: 3px;
+    gap: 8px;
+    margin-top: 0;
+    margin-bottom: var(--drawer-section-title-gap);
 }
 
 .drawer-section-label {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 0;
     padding: 0;
     border-radius: 0;
     box-shadow: none;
@@ -1484,8 +1492,8 @@
 }
 
 .drawer-section-icon {
-    width: 19px;
-    height: 19px;
+    width: 21px;
+    height: 21px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1495,8 +1503,9 @@
 }
 
 .drawer-section-icon svg {
-    width: 17px;
-    height: 17px;
+    width: 19px;
+    height: 19px;
+    stroke-width: 2.1;
 }
 
 .drawer-section-icon--subtasks {
@@ -1512,23 +1521,23 @@
 }
 
 .drawer-section-title {
-    font-size: 1.12rem;
-    font-weight: 800;
-    color: var(--text);
-    line-height: 1.12;
-    letter-spacing: -0.02em;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6B7280;
+    line-height: 1.2;
+    letter-spacing: 0;
 }
 
 .drawer-section-label--subtasks .drawer-section-title {
-    color: var(--text);
+    color: #6B7280;
 }
 
 .drawer-section-label--schedule .drawer-section-title {
-    color: var(--text);
+    color: #6B7280;
 }
 
 .drawer-section-label--notes .drawer-section-title {
-    color: var(--text);
+    color: #6B7280;
 }
 
 .drawer-section-count {
@@ -1565,6 +1574,7 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+    margin-bottom: var(--drawer-module-gap);
 }
 
 .subtask-row {
@@ -2043,6 +2053,13 @@
     color: #a5b4fc;
 }
 
+.dark .drawer-section-title,
+.dark .drawer-section-label--subtasks .drawer-section-title,
+.dark .drawer-section-label--schedule .drawer-section-title,
+.dark .drawer-section-label--notes .drawer-section-title {
+    color: #9ca3af;
+}
+
 .dark .drawer-section-count {
     background: linear-gradient(180deg, color-mix(in srgb, var(--card) 86%, #1f2937) 0%, color-mix(in srgb, var(--hov) 74%, #111827) 100%);
     border-color: color-mix(in srgb, var(--inp-bd) 62%, transparent);
@@ -2144,14 +2161,14 @@
 
 @media (max-width: 640px) {
     .drawer-section-icon {
-        width: 19px;
-        height: 19px;
+        width: 20px;
+        height: 20px;
         border-radius: 0;
     }
 
     .drawer-section-icon svg {
-        width: 17px;
-        height: 17px;
+        width: 18px;
+        height: 18px;
     }
 
     .drawer-section-count {
