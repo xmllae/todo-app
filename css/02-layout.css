@@ -60,3 +60,24 @@
 .dark .task-exp-tabs{border-bottom-color:var(--task-bd)}
 .task-exp-tab{display:inline-flex;align-items:center;gap:7px;padding:5px 0 9px;margin:0;margin-right:24px;border:none;border-bottom:2px solid transparent;background:transparent;font:inherit;font-size:14px;font-weight:500;line-height:1.4;color:#6b7280;cursor:pointer;position:relative;top:0;transition:color .15s ease,border-color .15s ease;border-radius:0;-webkit-tap-highlight-color:transparent}
 .task-exp-tab:last-child{margin-right:0}
+
+/* Keep high-priority task-row rings stable on hover; only the checkmark appears. */
+.list-panel .task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked){
+  --task-row-high-ring-border:var(--ck-prio,#ef4444);
+  --task-row-high-ring-bg:color-mix(in srgb,var(--ck-prio,#ef4444) 6%,var(--card));
+  border-color:var(--task-row-high-ring-border)!important;
+  background:var(--task-row-high-ring-bg)!important;
+}
+.list-panel .task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked):hover,
+.list-panel .task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked).hover-check{
+  border-color:var(--task-row-high-ring-border)!important;
+  background:var(--task-row-high-ring-bg)!important;
+}
+.dark .list-panel .task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked){
+  --task-row-high-ring-bg:color-mix(in srgb,var(--ck-prio,#ef4444) 10%,var(--card));
+}
+.dark .list-panel .task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked):hover,
+.dark .list-panel .task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked).hover-check{
+  border-color:var(--task-row-high-ring-border)!important;
+  background:var(--task-row-high-ring-bg)!important;
+}

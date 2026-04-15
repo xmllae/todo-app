@@ -396,27 +396,30 @@
 
 /* High priority ring */
 .task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring {
+    --drawer-high-ring-border: var(--prio-high, #ef4444);
+    --drawer-high-ring-bg: color-mix(in srgb, var(--prio-high, #ef4444) 6%, var(--card));
     border-style: solid !important;
     border-width: 2.5px !important;
-    border-color: var(--prio-high, #ef4444) !important;
-    background: color-mix(in srgb, var(--prio-high, #ef4444) 6%, var(--card)) !important;
+    border-color: var(--drawer-high-ring-border) !important;
+    background: var(--drawer-high-ring-bg) !important;
     box-shadow: none !important;
 }
 
 .task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring.hover-check,
 .task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring:hover {
-    border-color: color-mix(in srgb, var(--prio-high, #ef4444) 82%, #450a0a) !important;
-    background: color-mix(in srgb, var(--prio-high, #ef4444) 11%, var(--card)) !important;
+    border-color: var(--drawer-high-ring-border) !important;
+    background: var(--drawer-high-ring-bg) !important;
 }
 
 .dark .task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring {
-    background: color-mix(in srgb, var(--prio-high, #f87171) 10%, var(--card)) !important;
+    --drawer-high-ring-border: var(--prio-high, #ef4444);
+    --drawer-high-ring-bg: color-mix(in srgb, var(--prio-high, #ef4444) 10%, var(--card));
 }
 
 .dark .task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring.hover-check,
 .dark .task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring:hover {
-    border-color: color-mix(in srgb, var(--prio-high, #ef4444) 90%, #fecaca) !important;
-    background: color-mix(in srgb, var(--prio-high, #ef4444) 14%, var(--card)) !important;
+    border-color: var(--drawer-high-ring-border) !important;
+    background: var(--drawer-high-ring-bg) !important;
 }
 
 /* Done state - normal priority (match task row: gray color) */
