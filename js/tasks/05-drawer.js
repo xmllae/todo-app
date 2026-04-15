@@ -450,10 +450,30 @@ function renderDrawerContent(task) {
             </div>
         </div>
 
+        <div class="drawer-section-header drawer-section-header--schedule">
+            <div class="drawer-section-label drawer-section-label--schedule">
+                <span class="drawer-section-icon drawer-section-icon--schedule" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="8"/>
+                        <path d="M12 7.5v4.7l3 1.8"/>
+                    </svg>
+                </span>
+                <span class="drawer-section-title">\u65f6\u95f4\u5b89\u6392</span>
+            </div>
+        </div>
+
         <div class="drawer-schedule-card" onclick="event.stopPropagation()">
             <div class="drawer-schedule-time-row">
-                <label class="drawer-schedule-time-box">
-                    <span class="drawer-schedule-time-label">\u5f00\u59cb\u65f6\u95f4</span>
+                <label class="drawer-schedule-time-box drawer-schedule-time-box--start">
+                    <span class="drawer-schedule-time-label">
+                        <span class="drawer-schedule-time-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="8.25"/>
+                                <path d="M12 7.8v4.25l2.9 1.85"/>
+                            </svg>
+                        </span>
+                        <span>\u5f00\u59cb</span>
+                    </span>
                     <div class="drawer-schedule-time-value">
                         <input type="text"
                                class="drawer-schedule-input drawer-schedule-input--time"
@@ -468,22 +488,47 @@ function renderDrawerContent(task) {
                                oninput="handleDrawerTimeTyping(this, ${task.id}, 'start')"
                                onkeydown="if(event.key==='Enter'){event.target.blur()}"
                                onchange="saveDrawerStartTime(${task.id})">
+                    </div>
+                </label>
+                <div class="drawer-schedule-duration-row ${scheduleState.spillsNextDay ? 'drawer-schedule-duration-row--overnight' : ''}">
+                    <label class="drawer-schedule-duration-main">
+                        <span class="drawer-schedule-duration-label">\u9884\u8ba1\u8017\u65f6</span>
+                        <div class="drawer-schedule-duration-inputline">
+                            <input type="number"
+                                   class="drawer-schedule-input drawer-schedule-input--duration"
+                                   id="drawer-duration-input-${task.id}"
+                                   value="${scheduleState.durationMinutes !== null ? scheduleState.durationMinutes : ''}"
+                                   min="0"
+                                   max="1440"
+                                   step="5"
+                                   inputmode="numeric"
+                                   placeholder="0"
+                                   onclick="event.stopPropagation()"
+                                   onchange="saveDrawerDuration(${task.id})">
+                            <span class="drawer-schedule-unit">\u5206\u949f</span>
+                        </div>
+                    </label>
+                    <div class="drawer-schedule-arrow" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4.5 12h15"/>
+                            <path d="m13.5 6 6 6-6 6"/>
+                        </svg>
+                    </div>
+                    <div class="drawer-schedule-duration-side">
+                        <span class="drawer-schedule-duration-chip ${scheduleDurationChipClass}">${scheduleDurationText}</span>
+                        ${scheduleState.spillsNextDay ? `<span class="drawer-schedule-duration-note">\u6b21\u65e5\u7ed3\u675f</span>` : ''}
+                    </div>
+                </div>
+                <label class="drawer-schedule-time-box drawer-schedule-time-box--end">
+                    <span class="drawer-schedule-time-label">
                         <span class="drawer-schedule-time-icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="12" cy="12" r="8.25"/>
                                 <path d="M12 7.8v4.25l2.9 1.85"/>
                             </svg>
                         </span>
-                    </div>
-                </label>
-                <div class="drawer-schedule-arrow" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M4.5 12h15"/>
-                        <path d="m13.5 6 6 6-6 6"/>
-                    </svg>
-                </div>
-                <label class="drawer-schedule-time-box">
-                    <span class="drawer-schedule-time-label">\u7ed3\u675f\u65f6\u95f4</span>
+                        <span>\u7ed3\u675f</span>
+                    </span>
                     <div class="drawer-schedule-time-value">
                         <input type="text"
                                class="drawer-schedule-input drawer-schedule-input--time"
@@ -498,37 +543,8 @@ function renderDrawerContent(task) {
                                oninput="handleDrawerTimeTyping(this, ${task.id}, 'end')"
                                onkeydown="if(event.key==='Enter'){event.target.blur()}"
                                onchange="saveDrawerEndTime(${task.id})">
-                        <span class="drawer-schedule-time-icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="8.25"/>
-                                <path d="M12 7.8v4.25l2.9 1.85"/>
-                            </svg>
-                        </span>
                     </div>
                 </label>
-            </div>
-            <div class="drawer-schedule-duration-row ${scheduleState.spillsNextDay ? 'drawer-schedule-duration-row--overnight' : ''}">
-                <label class="drawer-schedule-duration-main">
-                    <span class="drawer-schedule-duration-label">\u9884\u8ba1\u8017\u65f6</span>
-                    <div class="drawer-schedule-duration-inputline">
-                        <input type="number"
-                               class="drawer-schedule-input drawer-schedule-input--duration"
-                               id="drawer-duration-input-${task.id}"
-                               value="${scheduleState.durationMinutes !== null ? scheduleState.durationMinutes : ''}"
-                               min="0"
-                               max="1440"
-                               step="5"
-                               inputmode="numeric"
-                               placeholder="0"
-                               onclick="event.stopPropagation()"
-                               onchange="saveDrawerDuration(${task.id})">
-                        <span class="drawer-schedule-unit">\u5206\u949f</span>
-                    </div>
-                </label>
-                <div class="drawer-schedule-duration-side">
-                    <span class="drawer-schedule-duration-chip ${scheduleDurationChipClass}">${scheduleDurationText}</span>
-                    ${scheduleState.spillsNextDay ? `<span class="drawer-schedule-duration-note">\u6b21\u65e5\u7ed3\u675f</span>` : ''}
-                </div>
             </div>
         </div>
 
