@@ -319,6 +319,8 @@
     padding: 4px 2px;
     margin-bottom: var(--drawer-module-gap);
     isolation: isolate;
+    z-index: 20;
+    overflow: visible;
 }
 
 /* =========================================
@@ -543,6 +545,11 @@
     margin-left: 14px;
     width: max-content;
     max-width: none;
+    z-index: 2;
+}
+
+.drawer-priority-dropdown.is-open {
+    z-index: 60;
 }
 
 .drawer-priority-btn {
@@ -554,15 +561,15 @@
     min-width: 0;
     max-width: 100%;
     overflow: visible;
-    min-height: 40px;
-    padding: 8px 10px;
+    min-height: 36px;
+    padding: 6px 10px;
     border: 1px solid color-mix(in srgb, var(--inp-bd) 58%, transparent);
     background: var(--drawer-surface-strong);
     cursor: pointer;
-    border-radius: 14px;
+    border-radius: 12px;
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.82),
-        0 10px 24px rgba(15, 23, 42, 0.06);
+        0 8px 18px rgba(15, 23, 42, 0.05);
     transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
@@ -572,7 +579,7 @@
     border-color: color-mix(in srgb, var(--acc) 14%, var(--inp-bd));
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.88),
-        0 14px 28px rgba(15, 23, 42, 0.08);
+        0 10px 22px rgba(15, 23, 42, 0.07);
 }
 
 .drawer-priority-dropdown.is-open .drawer-priority-btn {
@@ -580,7 +587,7 @@
     border-color: color-mix(in srgb, var(--acc) 16%, var(--inp-bd));
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.9),
-        0 16px 32px rgba(15, 23, 42, 0.1);
+        0 12px 24px rgba(15, 23, 42, 0.09);
 }
 
 .drawer-priority-btn-copy {
@@ -733,7 +740,7 @@
     position: absolute;
     top: 100%;
     right: 0;
-    margin-top: 8px;
+    margin-top: 10px;
     background: var(--drawer-surface-strong);
     border: none;
     border-radius: 16px;
@@ -744,7 +751,7 @@
     box-shadow:
         0 18px 40px rgba(15, 23, 42, 0.13),
         0 4px 12px rgba(15, 23, 42, 0.05);
-    z-index: 100;
+    z-index: 140;
     display: none;
     flex-direction: column;
     gap: 4px;
@@ -914,7 +921,7 @@
 .dark .drawer-priority-dropdown.is-open .drawer-priority-btn {
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.06),
-        0 20px 38px rgba(2, 6, 23, 0.38);
+        0 14px 28px rgba(2, 6, 23, 0.32);
 }
 
 .dark .drawer-task-title-text:hover {
@@ -1034,7 +1041,7 @@
 
 .drawer-schedule-time-row {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(108px, auto) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: end;
     gap: 15px;
 }
@@ -1173,8 +1180,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 44px;
-    width: 112px;
+    height: 42px;
+    width: max-content;
     min-width: 0;
     margin: 0 0 1px;
     padding: 0;
@@ -1185,8 +1192,8 @@
 .drawer-schedule-duration-row::before {
     content: "";
     position: absolute;
-    left: -34px;
-    right: -34px;
+    left: -42px;
+    right: -42px;
     top: 50%;
     height: 1.5px;
     border-radius: 999px;
@@ -1222,8 +1229,8 @@
     display: flex;
     align-items: baseline;
     justify-content: center;
-    gap: 4px;
-    padding: 8px 14px;
+    gap: 3px;
+    padding: 7px 11px;
     border-radius: 999px;
     background: color-mix(in srgb, #ffffff 84%, var(--drawer-surface-strong));
     color: #475569;
@@ -1254,7 +1261,8 @@
 }
 
 .drawer-schedule-input--duration {
-    width: 34px;
+    width: 4.05ch;
+    min-width: 4.05ch;
     font-size: 0.86rem;
     font-weight: 800;
     line-height: 1;
@@ -1288,13 +1296,14 @@
 .drawer-schedule-duration-side {
     position: absolute;
     left: 50%;
-    top: calc(100% + 2px);
+    bottom: calc(100% + 7px);
     transform: translateX(-50%);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 0;
     pointer-events: none;
+    z-index: 3;
 }
 
 .drawer-schedule-duration-side:has(.drawer-schedule-duration-chip--filled:only-child) {
@@ -1337,12 +1346,13 @@
     padding: 0;
     border-radius: 0;
     background: transparent;
-    font-size: 0.68rem;
+    font-size: 0.66rem;
     font-weight: 700;
     line-height: 1.15;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.02em;
     color: #b45309;
     white-space: nowrap;
+    text-align: center;
 }
 
 .dark .drawer-schedule-card {
@@ -1446,20 +1456,20 @@
     }
 
     .drawer-schedule-duration-row {
-        height: 42px;
-        width: 104px;
+        height: 40px;
+        width: max-content;
         margin-inline: 0;
         padding: 0;
         transform: translateY(9px);
     }
 
     .drawer-schedule-duration-row::before {
-        left: -22px;
-        right: -22px;
+        left: -30px;
+        right: -30px;
     }
 
     .drawer-schedule-duration-inputline {
-        padding: 7px 12px;
+        padding: 6px 10px;
     }
 
     .drawer-schedule-input--time {
