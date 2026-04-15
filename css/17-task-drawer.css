@@ -288,7 +288,7 @@
     opacity: 0;
     transform: translateX(14px);
     background: var(--card);
-    scrollbar-gutter: stable;
+    scrollbar-gutter: auto;
 }
 
 .drawer-content.fade-in {
@@ -317,7 +317,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 6px 8px 2px 2px;
+    padding: 6px 2px 2px;
     margin-bottom: var(--drawer-module-gap);
 }
 
@@ -2176,7 +2176,7 @@
     }
 
     .drawer-task-title {
-        padding: 10px 8px 10px 2px;
+        padding: 10px 2px;
         border-radius: 12px;
     }
 
