@@ -434,15 +434,15 @@ function renderDrawerContent(task) {
                 <div class="drawer-priority-menu">
                     <div class="drawer-priority-option ${task.priority === 'high' ? 'selected' : ''}" data-priority="high" onclick="setDrawerPriority(${task.id}, 'high')">
                         <svg class="drawer-priority-flag drawer-priority-flag--high" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M6 21V5.5"/>
-                            <path d="M6 5.5h10.5l-1.7 4 1.7 4H6"/>
+                            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+                            <line x1="4" x2="4" y1="22" y2="15"/>
                         </svg>
                         <span>\u9ad8\u4f18\u5148\u7ea7</span>
                     </div>
                     <div class="drawer-priority-option ${!task.priority || task.priority === 'normal' ? 'selected' : ''}" data-priority="normal" onclick="setDrawerPriority(${task.id}, 'normal')">
                         <svg class="drawer-priority-flag drawer-priority-flag--normal" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M6 21V5.5"/>
-                            <path d="M6 5.5h10.5l-1.7 4 1.7 4H6"/>
+                            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+                            <line x1="4" x2="4" y1="22" y2="15"/>
                         </svg>
                         <span>\u65e0\u4f18\u5148\u7ea7</span>
                     </div>
@@ -825,7 +825,7 @@ function getDrawerPriorityPreviewHTML(priority) {
     const label = isHigh ? '\u9ad8\u4f18\u5148\u7ea7' : '\u65e0\u4f18\u5148\u7ea7';
     const flagClass = isHigh ? 'drawer-priority-preview-flag drawer-priority-preview-flag--high' : 'drawer-priority-preview-flag drawer-priority-preview-flag--normal';
 
-    return `<span class="drawer-priority-btn-copy"><svg class="${flagClass}" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M6 21V5.5"/><path d="M6 5.5h10.5l-1.7 4 1.7 4H6"/></svg><span class="drawer-priority-btn-text"><span class="drawer-priority-btn-label">${label}</span></span></span><span class="drawer-priority-arrow-wrap" aria-hidden="true"><svg class="drawer-priority-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>`;
+    return `<span class="drawer-priority-btn-copy"><svg class="${flagClass}" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg><span class="drawer-priority-btn-text"><span class="drawer-priority-btn-label">${label}</span></span></span><span class="drawer-priority-arrow-wrap" aria-hidden="true"><svg class="drawer-priority-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>`;
 }
 
 function updateDrawerPriorityUI(priority) {
