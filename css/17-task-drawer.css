@@ -313,7 +313,7 @@
 .drawer-task-title {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 4px;
     padding: 4px 2px;
     margin-bottom: var(--drawer-module-gap);
 }
@@ -328,6 +328,7 @@
     min-width: 38px;
     height: auto;
     min-height: 0;
+    margin-left: -10px;
     align-self: center;
     flex-shrink: 0;
     cursor: pointer;
@@ -2222,6 +2223,7 @@
     }
 
     .drawer-task-title {
+        gap: 10px;
         padding: 8px 2px;
         border-radius: 12px;
     }
