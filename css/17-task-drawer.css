@@ -364,22 +364,34 @@
 
 .task-detail-inner .task-ck-ring .chk-ring .chk-ring-ico {
     color: transparent;
-    transition: color .15s;
+    opacity: 0;
+    transform: scale(.9);
+    transition: opacity .2s ease, transform .2s ease, color .2s ease;
 }
 
 .task-detail-inner .task-ck-ring .chk-ring.hover-check .chk-ring-ico,
 .task-detail-inner .task-ck-ring .chk-ring:hover .chk-ring-ico {
-    color: var(--acc2);
+    color: #64748b !important;
+    opacity: 1;
+    transform: scale(1.02);
 }
 
-.task-detail-inner .task-ck-ring .chk-ring:hover {
-    border-color: var(--acc2);
-    background: var(--acc-bg);
+.task-detail-inner .task-ck-ring:not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring.hover-check,
+.task-detail-inner .task-ck-ring:not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring:hover {
+    border-color: #94a3b8;
+    background: var(--card);
+    box-shadow: none;
+}
+
+.dark .task-detail-inner .task-ck-ring:not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring.hover-check .chk-ring-ico,
+.dark .task-detail-inner .task-ck-ring:not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring:hover .chk-ring-ico {
+    color: #94a3b8 !important;
 }
 
 /* High priority ring */
+.task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring.hover-check .chk-ring-ico,
 .task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring:hover .chk-ring-ico {
-    color: var(--prio-high, #ef4444);
+    color: var(--prio-high, #ef4444) !important;
 }
 
 /* High priority ring */
@@ -391,6 +403,7 @@
     box-shadow: none !important;
 }
 
+.task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring.hover-check,
 .task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring:hover {
     border-color: color-mix(in srgb, var(--prio-high, #ef4444) 82%, #450a0a) !important;
     background: color-mix(in srgb, var(--prio-high, #ef4444) 11%, var(--card)) !important;
@@ -400,6 +413,7 @@
     background: color-mix(in srgb, var(--prio-high, #f87171) 10%, var(--card)) !important;
 }
 
+.dark .task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring.hover-check,
 .dark .task-detail-inner .task-ck-ring.task-ck-ring--prio-high:not(.task-ck-ring--done) .chk-ring:hover {
     border-color: color-mix(in srgb, var(--prio-high, #ef4444) 90%, #fecaca) !important;
     background: color-mix(in srgb, var(--prio-high, #ef4444) 14%, var(--card)) !important;
@@ -426,13 +440,11 @@
     border-color: #94a3b8 !important;
 }
 
-.task-detail-inner .task-ck-ring .chk-ring svg,
-.task-detail-inner .task-ck-ring.task-ck-ring--done .chk-ring svg {
-    color: #fff !important;
-}
-
+.task-detail-inner .task-ck-ring.task-ck-ring--done .chk-ring .chk-ring-ico,
 .task-detail-inner .task-ck-ring.task-ck-ring--done .chk-ring:hover .chk-ring-ico {
     color: #fff !important;
+    opacity: 1;
+    transform: scale(1.04);
 }
 
 /* High priority done state */
