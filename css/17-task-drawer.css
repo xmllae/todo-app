@@ -494,13 +494,13 @@
     display: inline-flex;
     align-items: center;
     justify-content: flex-start;
-    gap: 7px;
+    gap: 5px;
     width: auto;
     min-width: 0;
     max-width: 100%;
     overflow: visible;
     min-height: 36px;
-    padding: 7px 10px;
+    padding: 7px 8px;
     border: none;
     background: var(--drawer-surface-strong);
     cursor: pointer;
@@ -518,7 +518,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    gap: 8px;
+    gap: 6px;
     min-width: 0;
     flex: 0 1 auto;
     max-width: 100%;
@@ -877,7 +877,7 @@
         min-width: 0;
         max-width: 100%;
         min-height: 34px;
-        padding: 6px 9px;
+        padding: 6px 7px;
     }
 
     .drawer-priority-menu {
