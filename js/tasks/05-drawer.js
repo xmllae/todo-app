@@ -1141,14 +1141,15 @@ function normalizeDrawerTimeTextInput(rawValue) {
     return formatDrawerMinutesToTime(parsedMinutes);
 }
 
-function formatDrawerTimeTypingValue(rawValue) {
+function formatDrawerTimeTypingValue(rawValue, caretPosition) {
     const normalized = String(rawValue || '').replace(/\uFF1A/g, ':');
     if (normalized.includes(':')) {
         const parts = normalized.split(':');
         const hours = (parts[0] || '').replace(/\D/g, '').slice(0, 2);
         const minutes = parts.slice(1).join('').replace(/\D/g, '').slice(0, 2);
         const value = hours || minutes ? hours + ':' + minutes : '';
-        return { value: value, selectMinutes: false, isComplete: hours.length > 0 && minutes.length === 2 };
+        const shouldSelectMinutes = hours.length === 2 && typeof caretPosition === 'number' && caretPosition <= 2;
+        return { value: value, selectMinutes: shouldSelectMinutes, isComplete: hours.length > 0 && minutes.length === 2 };
     }
 
     const digits = normalized.replace(/\D/g, '').slice(0, 4);
@@ -1239,7 +1240,7 @@ function handleDrawerTimeTyping(input, taskId) {
     if (!input) return;
     const previousValue = input.value;
     const previousSelectionStart = typeof input.selectionStart === 'number' ? input.selectionStart : null;
-    const formatState = formatDrawerTimeTypingValue(input.value);
+    const formatState = formatDrawerTimeTypingValue(input.value, previousSelectionStart);
     if (input.value !== formatState.value) {
         input.value = formatState.value;
         if (!formatState.selectMinutes && previousSelectionStart !== null && typeof input.setSelectionRange === 'function') {
