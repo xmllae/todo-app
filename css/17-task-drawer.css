@@ -687,11 +687,13 @@
         0 4px 12px rgba(15, 23, 42, 0.05);
     z-index: 100;
     display: none;
+    flex-direction: column;
+    gap: 4px;
     backdrop-filter: blur(12px);
 }
 
 .drawer-priority-menu.open {
-    display: block;
+    display: flex;
 }
 
 .drawer-priority-option {
@@ -764,7 +766,6 @@
     background: #fff5f5;
     box-shadow:
         inset 0 0 0 1px rgba(225, 29, 72, 0.34),
-        0 0 0 1px rgba(255, 228, 230, 0.7),
         0 6px 16px rgba(185, 28, 28, 0.045),
         inset 0 1px 0 rgba(255, 255, 255, 0.86);
 }
@@ -777,7 +778,6 @@
     background: var(--drawer-surface-strong);
     box-shadow:
         inset 0 0 0 1px rgba(148, 163, 184, 0.34),
-        0 0 0 1px rgba(226, 232, 240, 0.7),
         0 6px 16px rgba(15, 23, 42, 0.045),
         inset 0 1px 0 rgba(255, 255, 255, 0.84);
 }
@@ -866,7 +866,6 @@
     background: color-mix(in srgb, var(--prio-high, #ef4444) 16%, var(--card));
     box-shadow:
         inset 0 0 0 1px color-mix(in srgb, var(--prio-high, #ef4444) 34%, transparent),
-        0 0 0 1px color-mix(in srgb, var(--prio-high, #ef4444) 10%, transparent),
         0 8px 18px rgba(127, 29, 29, 0.18);
 }
 
@@ -874,7 +873,6 @@
 .dark .drawer-priority-option.selected[data-priority="normal"] {
     box-shadow:
         inset 0 0 0 1px color-mix(in srgb, #94a3b8 30%, transparent),
-        0 0 0 1px color-mix(in srgb, #64748b 10%, transparent),
         0 8px 18px rgba(2, 6, 23, 0.2);
 }
 
