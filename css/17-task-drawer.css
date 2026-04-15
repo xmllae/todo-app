@@ -285,7 +285,14 @@
     opacity: 0;
     transform: translateX(14px);
     background: var(--card);
-    scrollbar-gutter: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.drawer-content::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    background: transparent;
 }
 
 .drawer-content.fade-in {
@@ -304,6 +311,40 @@
 
 .drawer-content > * {
     flex-shrink: 0;
+}
+
+.drawer-scrollbar {
+    position: absolute;
+    right: 7px;
+    width: 6px;
+    border-radius: 999px;
+    background: transparent;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 4;
+    transition: opacity 0.18s ease;
+}
+
+.drawer-scrollbar.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.drawer-scrollbar-thumb {
+    position: absolute;
+    inset: 0 0 auto;
+    min-height: 40px;
+    border-radius: 999px;
+    background: rgba(148, 163, 184, 0.38);
+    transition: background-color 0.18s ease, opacity 0.18s ease;
+    cursor: pointer;
+    touch-action: none;
+}
+
+.task-detail-inner:hover .drawer-scrollbar-thumb,
+.drawer-scrollbar.is-dragging .drawer-scrollbar-thumb,
+.drawer-scrollbar-thumb.is-dragging {
+    background: rgba(100, 116, 139, 0.52);
 }
 
 /* =========================================

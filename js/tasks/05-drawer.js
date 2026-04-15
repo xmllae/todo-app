@@ -6,6 +6,9 @@ let drawerActiveTaskId = null;
 let drawerExpandedSubtasks = new Set();
 let taskDetailRenderPatched = false;
 let taskDetailCloseTimer = null;
+let drawerScrollbarResizeObserver = null;
+let drawerScrollbarRaf = null;
+let drawerScrollbarDragState = null;
 const TASK_DETAIL_CLOSE_DELAY = 460;
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -27,6 +30,7 @@ function initDrawer() {
     patchTaskRenderSync();
     enhanceTaskRowInteractions();
     syncTaskDetailPanel();
+    initDrawerScrollbar();
 }
 
 function patchTaskRenderSync() {
@@ -50,6 +54,175 @@ function getTaskDetailRefs() {
         mainCol: document.querySelector('#taskMode .task-main-col'),
         taskMode: document.getElementById('taskMode')
     };
+}
+
+function ensureDrawerScrollbarElements() {
+    const refs = getTaskDetailRefs();
+    if (!refs.panel || !refs.content) return null;
+
+    const inner = refs.panel.querySelector('.task-detail-inner');
+    if (!inner) return null;
+
+    let rail = inner.querySelector('.drawer-scrollbar');
+    if (!rail) {
+        rail = document.createElement('div');
+        rail.className = 'drawer-scrollbar';
+        rail.setAttribute('aria-hidden', 'true');
+
+        const thumb = document.createElement('div');
+        thumb.className = 'drawer-scrollbar-thumb';
+        rail.appendChild(thumb);
+        rail.addEventListener('pointerdown', handleDrawerScrollbarPointerDown);
+        inner.appendChild(rail);
+    }
+
+    return {
+        panel: refs.panel,
+        content: refs.content,
+        inner: inner,
+        rail: rail,
+        thumb: rail.querySelector('.drawer-scrollbar-thumb')
+    };
+}
+
+function initDrawerScrollbar() {
+    const refs = ensureDrawerScrollbarElements();
+    if (!refs) return;
+
+    if (!refs.content.dataset.drawerScrollbarBound) {
+        refs.content.addEventListener('scroll', scheduleDrawerScrollbarSync, { passive: true });
+        refs.content.dataset.drawerScrollbarBound = 'true';
+    }
+
+    if (!window.__drawerScrollbarResizeBound) {
+        window.addEventListener('resize', scheduleDrawerScrollbarSync);
+        document.addEventListener('pointerup', scheduleDrawerScrollbarSync, true);
+        window.__drawerScrollbarResizeBound = true;
+    }
+
+    if (typeof ResizeObserver === 'function' && !drawerScrollbarResizeObserver) {
+        drawerScrollbarResizeObserver = new ResizeObserver(function() {
+            scheduleDrawerScrollbarSync();
+        });
+        drawerScrollbarResizeObserver.observe(refs.content);
+        drawerScrollbarResizeObserver.observe(refs.inner);
+    }
+
+    scheduleDrawerScrollbarSync();
+}
+
+function scheduleDrawerScrollbarSync() {
+    if (drawerScrollbarRaf !== null) return;
+
+    drawerScrollbarRaf = window.requestAnimationFrame(function() {
+        drawerScrollbarRaf = null;
+        syncDrawerScrollbar();
+    });
+}
+
+function syncDrawerScrollbar() {
+    const refs = ensureDrawerScrollbarElements();
+    if (!refs || !refs.rail || !refs.thumb) return;
+
+    const viewportHeight = refs.content.clientHeight;
+    const scrollHeight = refs.content.scrollHeight;
+    const maxScroll = Math.max(0, scrollHeight - viewportHeight);
+    const isOpen = refs.panel.classList.contains('task-detail-panel--open');
+    const isScrollable = isOpen && maxScroll > 1;
+    const railInset = 6;
+    const railHeight = Math.max(0, viewportHeight - railInset * 2);
+
+    refs.rail.style.top = (refs.content.offsetTop + railInset) + 'px';
+    refs.rail.style.height = railHeight + 'px';
+    refs.rail.classList.toggle('is-visible', isScrollable);
+
+    if (!isScrollable || railHeight <= 0) {
+        refs.thumb.style.height = '0px';
+        refs.thumb.style.transform = 'translateY(0)';
+        return;
+    }
+
+    const thumbHeight = Math.min(railHeight, Math.max(40, Math.round((viewportHeight / scrollHeight) * railHeight)));
+    const maxThumbTravel = Math.max(0, railHeight - thumbHeight);
+    const thumbTop = maxScroll > 0
+        ? Math.round((refs.content.scrollTop / maxScroll) * maxThumbTravel)
+        : 0;
+
+    refs.thumb.style.height = thumbHeight + 'px';
+    refs.thumb.style.transform = 'translateY(' + thumbTop + 'px)';
+}
+
+function handleDrawerScrollbarPointerDown(event) {
+    const refs = ensureDrawerScrollbarElements();
+    if (!refs || !refs.rail || !refs.thumb) return;
+
+    const maxScroll = refs.content.scrollHeight - refs.content.clientHeight;
+    if (maxScroll <= 0) return;
+
+    const railRect = refs.rail.getBoundingClientRect();
+    const thumbRect = refs.thumb.getBoundingClientRect();
+    const maxThumbTravel = Math.max(0, railRect.height - thumbRect.height);
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (event.target.closest('.drawer-scrollbar-thumb')) {
+        drawerScrollbarDragState = {
+            pointerId: event.pointerId,
+            startY: event.clientY,
+            startScrollTop: refs.content.scrollTop,
+            maxScroll: maxScroll,
+            maxThumbTravel: maxThumbTravel,
+            content: refs.content
+        };
+
+        refs.rail.classList.add('is-dragging');
+        refs.thumb.classList.add('is-dragging');
+
+        window.addEventListener('pointermove', handleDrawerScrollbarPointerMove);
+        window.addEventListener('pointerup', handleDrawerScrollbarPointerUp);
+        window.addEventListener('pointercancel', handleDrawerScrollbarPointerUp);
+        return;
+    }
+
+    const clickThumbTop = Math.max(0, Math.min(maxThumbTravel, event.clientY - railRect.top - (thumbRect.height / 2)));
+    refs.content.scrollTop = maxThumbTravel > 0
+        ? (clickThumbTop / maxThumbTravel) * maxScroll
+        : 0;
+    scheduleDrawerScrollbarSync();
+}
+
+function handleDrawerScrollbarPointerMove(event) {
+    if (!drawerScrollbarDragState) return;
+    if (event.pointerId !== drawerScrollbarDragState.pointerId) return;
+
+    event.preventDefault();
+
+    const deltaY = event.clientY - drawerScrollbarDragState.startY;
+    const scrollDelta = drawerScrollbarDragState.maxThumbTravel > 0
+        ? (deltaY / drawerScrollbarDragState.maxThumbTravel) * drawerScrollbarDragState.maxScroll
+        : 0;
+
+    drawerScrollbarDragState.content.scrollTop = drawerScrollbarDragState.startScrollTop + scrollDelta;
+    scheduleDrawerScrollbarSync();
+}
+
+function handleDrawerScrollbarPointerUp(event) {
+    if (!drawerScrollbarDragState) return;
+    if (event.pointerId !== drawerScrollbarDragState.pointerId) return;
+
+    drawerScrollbarDragState = null;
+    window.removeEventListener('pointermove', handleDrawerScrollbarPointerMove);
+    window.removeEventListener('pointerup', handleDrawerScrollbarPointerUp);
+    window.removeEventListener('pointercancel', handleDrawerScrollbarPointerUp);
+
+    const refs = ensureDrawerScrollbarElements();
+    if (refs && refs.rail && refs.thumb) {
+        refs.rail.classList.remove('is-dragging');
+        refs.thumb.classList.remove('is-dragging');
+    }
+
+    scheduleDrawerScrollbarSync();
 }
 
 function setTaskDetailOpenState(isOpen) {
@@ -310,6 +483,7 @@ function openTaskDrawer(taskId) {
     }
 
     syncTaskDetailSelectionState();
+    scheduleDrawerScrollbarSync();
 }
 
 function closeTaskDetail() {
@@ -330,6 +504,7 @@ function closeTaskDetail() {
     setTaskDetailOpenState(false);
     syncTaskDetailSelectionState();
     releaseTaskRowInteractionState(closingTaskId);
+    scheduleDrawerScrollbarSync();
 
     taskDetailCloseTimer = window.setTimeout(function() {
         if (drawerActiveTaskId !== null) return;
@@ -337,6 +512,7 @@ function closeTaskDetail() {
         refs.content.innerHTML = '';
         refs.content.scrollTop = 0;
         taskDetailCloseTimer = null;
+        scheduleDrawerScrollbarSync();
     }, TASK_DETAIL_CLOSE_DELAY);
 }
 
@@ -367,6 +543,7 @@ function syncTaskDetailPanel() {
     refs.content.classList.remove('fade-out');
     refs.content.classList.add('fade-in');
     syncTaskDetailSelectionState();
+    scheduleDrawerScrollbarSync();
 }
 
 function clearPendingTaskDetailClose(content) {
@@ -651,6 +828,7 @@ function renderDrawerContent(task) {
     }
 
     updateDrawerPriorityUI(normalizedPriority);
+    scheduleDrawerScrollbarSync();
 }
 
 function renderSubtasksList(task) {
