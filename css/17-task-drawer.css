@@ -513,6 +513,13 @@
     transition: color 0.18s ease;
 }
 
+.drawer-task-title-text::placeholder {
+    color: color-mix(in srgb, var(--text3) 72%, #dbe3ee);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    opacity: 1;
+}
+
 .drawer-task-title-text:hover {
     background: transparent;
 }
@@ -912,6 +919,10 @@
 
 .dark .drawer-task-title-text:hover {
     background: transparent;
+}
+
+.dark .drawer-task-title-text::placeholder {
+    color: color-mix(in srgb, var(--text3) 84%, white 16%);
 }
 
 .dark .drawer-task-title-text:focus {

@@ -429,6 +429,7 @@ function renderDrawerContent(task) {
             <input type="text"
                    class="drawer-task-title-text"
                    id="drawer-task-title-input"
+                   placeholder="输入任务标题..."
                    value="${escapeHtml(task.text || '')}"
                    onclick="event.stopPropagation()"
                    onblur="saveDrawerTitle(${task.id})"
