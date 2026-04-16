@@ -447,7 +447,10 @@
     color: #fff;
     opacity: 0;
     transform: scale(.9);
-    transition: opacity .2s ease, transform .2s ease, color .2s ease;
+    transition:
+        opacity .18s ease .04s,
+        transform .2s cubic-bezier(.2, .8, .2, 1) .04s,
+        color .18s ease;
     pointer-events: none;
     display: block;
     flex-shrink: 0;
@@ -543,6 +546,70 @@
     transform: scale(1.04);
 }
 
+.task-detail-inner .drawer-task-title .chk-ring.checked.chk-ring--ripple {
+    animation: chk-ring-ripple .5s ease;
+}
+
+.task-detail-inner .drawer-task-title .task-ck-ring--prio-high:not(.task-ck-ring--archived) .chk-ring.checked.chk-ring--ripple {
+    animation: chk-ring-ripple-prio .5s ease !important;
+    transition: none !important;
+}
+
+.drawer-task-title-field {
+    flex: 1 1 auto;
+    min-width: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.drawer-task-title-strike {
+    position: absolute;
+    left: var(--drawer-title-bleed);
+    top: 50%;
+    max-width: calc(100% - 24px);
+    overflow: hidden;
+    white-space: nowrap;
+    color: transparent;
+    font-size: 1.26rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0;
+    opacity: 0;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.drawer-task-title-strike::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: max(1px, .07em);
+    border-radius: 1px;
+    background: color-mix(in srgb, var(--text2) 38%, var(--text3));
+    transform: translateY(-50%) scaleX(0);
+    transform-origin: left center;
+}
+
+.dark .drawer-task-title-strike::after {
+    background: color-mix(in srgb, var(--text2) 28%, var(--text3));
+}
+
+.drawer-task-title--toggle-anim .drawer-task-title-strike {
+    opacity: 1;
+}
+
+.drawer-task-title--toggle-anim .drawer-task-title-strike::after {
+    animation: taskStrikeLtr .48s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.drawer-task-title--toggle-anim .drawer-task-title-text {
+    text-decoration-color: transparent;
+    animation: taskToggleTxtGray .45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
 .drawer-task-title-text {
     flex: 1 1 auto;
     min-width: 0;
@@ -563,7 +630,11 @@
     padding: 0 12px 0 var(--drawer-title-bleed);
     margin: 0 0 0 calc(var(--drawer-title-bleed) * -1);
     box-shadow: none;
-    transition: color 0.18s ease;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 2px;
+    transition:
+        color .24s ease,
+        text-decoration-color .24s ease;
 }
 
 .drawer-task-title-text::placeholder {
@@ -1070,13 +1141,54 @@
 }
 
 .drawer-task-check-slot.task-ck-ring--done ~ .drawer-task-title-text {
-    color: var(--text3);
+    color: color-mix(in srgb, var(--text2) 48%, var(--text3));
     text-decoration: line-through;
+    text-decoration-thickness: max(1px, .06em);
+    text-decoration-color: color-mix(in srgb, var(--text2) 38%, var(--text3));
 }
 
 .drawer-task-title--done .drawer-task-title-text {
-    color: var(--text3);
+    color: color-mix(in srgb, var(--text2) 48%, var(--text3));
     text-decoration: line-through;
+    text-decoration-thickness: max(1px, .06em);
+    text-decoration-color: color-mix(in srgb, var(--text2) 38%, var(--text3));
+}
+
+.dark .drawer-task-check-slot.task-ck-ring--done ~ .drawer-task-title-text,
+.dark .drawer-task-title--done .drawer-task-title-text {
+    text-decoration-color: color-mix(in srgb, var(--text2) 28%, var(--text3));
+}
+
+.drawer-task-title--done.drawer-task-title--toggle-anim .drawer-task-title-text {
+    text-decoration-color: transparent;
+    animation: taskToggleTxtGray .45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .task-detail-inner .drawer-task-title .task-ck-ring .chk-ring,
+    .task-detail-inner .drawer-task-title .task-ck-ring .chk-ring .chk-ring-ico,
+    .drawer-task-title-text {
+        transition-duration: .01ms !important;
+        transition-delay: 0ms !important;
+    }
+
+    .drawer-task-title--toggle-anim .task-ck-ring .chk-ring.checked.chk-ring--ripple,
+    .drawer-task-title--toggle-anim .drawer-task-title-strike::after,
+    .drawer-task-title--toggle-anim .drawer-task-title-text {
+        animation: none !important;
+    }
+
+    .drawer-task-title--toggle-anim .drawer-task-title-strike {
+        opacity: 0;
+    }
+
+    .drawer-task-title--done.drawer-task-title--toggle-anim .drawer-task-title-text {
+        text-decoration-color: color-mix(in srgb, var(--text2) 38%, var(--text3));
+    }
+
+    .dark .drawer-task-title--done.drawer-task-title--toggle-anim .drawer-task-title-text {
+        text-decoration-color: color-mix(in srgb, var(--text2) 28%, var(--text3));
+    }
 }
 
 /* =========================================

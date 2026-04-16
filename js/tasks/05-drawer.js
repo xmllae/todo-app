@@ -565,6 +565,11 @@ function clearPendingTaskDetailClose(content) {
 function taskAppearsDoneInDrawer(task) {
     if (!task) return false;
     if (task.done) return true;
+    return taskPendingDoneInDrawer(task);
+}
+
+function taskPendingDoneInDrawer(task) {
+    if (!task) return false;
     if (typeof _togVisualPendingIds !== 'undefined' && _togVisualPendingIds && typeof _togVisualPendingIds.has === 'function') {
         return _togVisualPendingIds.has(task.id);
     }
@@ -636,22 +641,30 @@ function renderDrawerContent(task) {
     const scheduleDurationChipClass = scheduleState.durationMinutes !== null
         ? 'drawer-schedule-duration-chip--filled'
         : 'drawer-schedule-duration-chip--idle';
+    const isPendingDone = taskPendingDoneInDrawer(task);
+    const completionAnimationClass = isPendingDone
+        ? ' drawer-task-title--toggle-anim'
+        : '';
+    const ringRippleClass = isPendingDone || (window._chkRippleTaskId != null && window._chkRippleTaskId == task.id)
+        ? ' chk-ring--ripple'
+        : '';
 
     content.innerHTML = `
-        <div class="drawer-task-title ${isDone ? 'drawer-task-title--done' : ''}">
+        <div class="drawer-task-title ${isDone ? 'drawer-task-title--done' : ''}${completionAnimationClass}">
             <div class="task-ck-slot task-ck-ring ${task.priority === 'high' ? 'task-ck-ring--prio-high' : ''} ${isDone ? 'task-ck-ring--done' : ''}"
                  style="--ck-prio:${drawerCheckRingColor}"
                  onclick="toggleTaskDoneFromDrawer(${task.id})"
-                 title="${task.done ? '\u6807\u8bb0\u4e3a\u672a\u5b8c\u6210' : '\u6807\u8bb0\u4e3a\u5df2\u5b8c\u6210'}"
+                 title="${isDone ? '\u6807\u8bb0\u4e3a\u672a\u5b8c\u6210' : '\u6807\u8bb0\u4e3a\u5df2\u5b8c\u6210'}"
                  onmouseenter="handleCheckRingHover(this, true)"
                  onmouseleave="handleCheckRingHover(this, false)">
                 <div class="tc-check">
-                    <div class="chk-ring ${isDone ? 'checked' : ''}">
+                    <div class="chk-ring ${isDone ? 'checked' : ''}${ringRippleClass}">
                         ${getDrawerTitleCheckIconMarkup()}
                     </div>
                 </div>
             </div>
-            <input type="text"
+            <div class="drawer-task-title-field">
+                <input type="text"
                    class="drawer-task-title-text"
                    id="drawer-task-title-input"
                    placeholder="输入任务标题..."
@@ -659,6 +672,8 @@ function renderDrawerContent(task) {
                    onclick="event.stopPropagation()"
                    onblur="saveDrawerTitle(${task.id})"
                    onkeydown="if(event.key==='Enter'){event.target.blur()}">
+                <span class="drawer-task-title-strike" aria-hidden="true">${escapeHtml(task.text || '')}</span>
+            </div>
             <div class="drawer-priority-dropdown" onclick="event.stopPropagation()">
                 <button type="button" class="drawer-priority-btn" onclick="togglePriorityDropdown(this)" title="\u9009\u62e9\u4f18\u5148\u7ea7">
                     ${getDrawerPhosphorIcon('caret-down', 'drawer-priority-arrow')}
@@ -897,7 +912,7 @@ function toggleTaskDoneFromDrawer(taskId) {
     const task = findTaskById(taskId);
     if (!task) return;
 
-    if (typeof _togVisualPendingIds !== 'undefined' && _togVisualPendingIds && _togVisualPendingIds.has(taskId) && typeof tog === 'function') {
+    if (typeof tog === 'function') {
         tog(taskId);
         return;
     }
@@ -906,6 +921,10 @@ function toggleTaskDoneFromDrawer(taskId) {
     task.status = task.done ? 'done' : 'todo';
     if (!task.done) {
         task.archived = false;
+    }
+
+    if (typeof playCheckSound === 'function') {
+        playCheckSound(task.done);
     }
 
     // Update title styling
@@ -930,7 +949,7 @@ function toggleTaskDoneFromDrawer(taskId) {
     }
     if (chkRing) {
         chkRing.classList.toggle('checked', task.done);
-        chkRing.innerHTML = getDrawerCheckIconMarkup();
+        chkRing.innerHTML = getDrawerTitleCheckIconMarkup();
     }
     if (titleInput) {
         titleInput.classList.toggle('drawer-task-title--done', task.done);
