@@ -784,13 +784,8 @@ function renderDrawerContent(task) {
                        id="subtask-add-input-${task.id}"
                        placeholder="\u8f93\u5165\u5b50\u4efb\u52a1\u5185\u5bb9\uff0c\u6309\u56de\u8f66\u6dfb\u52a0..."
                        onclick="event.stopPropagation()"
+                       onblur="hideSubtaskAddInline(${task.id})"
                        onkeydown="if(event.key==='Enter'){addSubtaskFromDrawer(${task.id});}if(event.key==='Escape'){hideSubtaskAddInline(${task.id})}">
-                <button type="button" class="subtask-add-confirm-btn" onclick="addSubtaskFromDrawer(${task.id})" title="\u786e\u8ba4">
-                    ${getDrawerPhosphorIcon('check')}
-                </button>
-                <button type="button" class="subtask-add-cancel-btn" onclick="hideSubtaskAddInline(${task.id})" title="\u53d6\u6d88">
-                    ${getDrawerPhosphorIcon('x')}
-                </button>
             </div>
             <div class="subtask-add-btn" onclick="event.stopPropagation();showSubtaskAddInline(${task.id})">
                 ${getDrawerPhosphorIcon('plus')}

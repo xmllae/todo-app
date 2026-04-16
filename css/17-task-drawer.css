@@ -1845,9 +1845,11 @@
 }
 
 .subtask-row {
+    box-sizing: border-box;
     display: flex;
     align-items: center;
     gap: 10px;
+    min-height: 42px;
     padding: 10px 12px;
     border-radius: 8px;
     cursor: pointer;
@@ -2018,55 +2020,53 @@
     box-sizing: border-box;
     display: flex;
     align-items: center;
-    gap: 4px;
-    height: 42px;
-    padding: 0 8px 0 var(--subtask-text-start);
-    border: 1px solid color-mix(in srgb, var(--inp-bd) 42%, #e5e7eb);
+    gap: 10px;
+    min-height: 42px;
+    padding: 10px 12px 10px var(--subtask-text-start);
+    border: 1px solid transparent;
     border-radius: 8px;
-    background: #f9fafb;
+    background: var(--drawer-surface-strong);
     margin-top: 0;
     cursor: text;
-    box-shadow:
-        0 8px 18px rgba(15, 23, 42, 0.025),
-        inset 0 1px 0 rgba(255, 255, 255, 0.84);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.035);
     transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .subtask-add-inline::before {
-    content: "";
+    content: "+";
     position: absolute;
     left: 12px;
     top: 50%;
     width: 22px;
     height: 22px;
     box-sizing: border-box;
-    border: 1.5px dashed color-mix(in srgb, var(--inp-bd) 86%, #cbd5e1);
-    border-radius: 50%;
-    background: color-mix(in srgb, #ffffff 84%, #f9fafb);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--acc);
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1;
     transform: translateY(-50%);
     pointer-events: none;
 }
 
 .subtask-add-inline:hover {
-    border-color: color-mix(in srgb, var(--inp-bd) 68%, #cbd5e1);
-    background: #f8fafc;
-    box-shadow:
-        0 10px 22px rgba(15, 23, 42, 0.04),
-        inset 0 1px 0 rgba(255, 255, 255, 0.88);
+    border-color: color-mix(in srgb, var(--acc2) 18%, transparent);
+    background: color-mix(in srgb, #4f46e5 3%, var(--drawer-surface-soft));
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.045);
 }
 
 .subtask-add-inline:focus-within {
-    border-color: color-mix(in srgb, var(--acc2) 32%, #cbd5e1);
-    background: #ffffff;
+    border-color: color-mix(in srgb, var(--acc2) 42%, #cbd5e1);
+    background: var(--drawer-surface-strong);
     box-shadow:
-        0 0 0 3px color-mix(in srgb, var(--acc2) 8%, transparent),
-        0 10px 24px rgba(15, 23, 42, 0.045),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        0 0 0 3px color-mix(in srgb, var(--acc2) 9%, transparent),
+        0 8px 18px rgba(15, 23, 42, 0.045);
 }
 
 .subtask-add-inline:focus-within::before {
-    border-color: color-mix(in srgb, var(--acc2) 48%, #cbd5e1);
-    background: #ffffff;
+    color: var(--acc);
 }
 
 .subtask-add-input {
@@ -2093,76 +2093,6 @@
 
 .subtask-add-input::placeholder {
     color: #94a3b8;
-}
-
-.subtask-add-confirm-btn {
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    border-radius: 999px;
-    background: transparent;
-    color: color-mix(in srgb, var(--text3) 90%, #94a3b8);
-    cursor: pointer;
-    transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
-    flex-shrink: 0;
-}
-
-.subtask-add-confirm-btn:hover {
-    background: color-mix(in srgb, var(--acc) 10%, transparent);
-    color: var(--acc);
-}
-
-.subtask-add-confirm-btn svg {
-    width: 15px;
-    height: 15px;
-}
-
-.subtask-add-confirm-btn .ph {
-    width: 15px;
-    height: 15px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 15px;
-    line-height: 1;
-}
-
-.subtask-add-cancel-btn {
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    border-radius: 999px;
-    background: transparent;
-    color: color-mix(in srgb, var(--text3) 90%, #94a3b8);
-    cursor: pointer;
-    transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
-    flex-shrink: 0;
-}
-
-.subtask-add-cancel-btn:hover {
-    background: color-mix(in srgb, #ef4444 10%, transparent);
-    color: #dc2626;
-}
-
-.subtask-add-cancel-btn svg {
-    width: 14px;
-    height: 14px;
-}
-
-.subtask-add-cancel-btn .ph {
-    width: 14px;
-    height: 14px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    line-height: 1;
 }
 
 .subtask-add-btn:hover {
@@ -2489,43 +2419,31 @@
 }
 
 .dark .subtask-add-inline {
-    border-color: color-mix(in srgb, var(--inp-bd) 58%, transparent);
-    background: color-mix(in srgb, var(--card) 86%, #111827);
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.04),
-        0 10px 22px rgba(2, 6, 23, 0.18);
+    border-color: transparent;
+    background: color-mix(in srgb, var(--card) 78%, #111827);
+    box-shadow: 0 8px 16px rgba(2, 6, 23, 0.16);
 }
 
 .dark .subtask-add-inline::before {
-    border-color: color-mix(in srgb, var(--inp-bd) 70%, #64748b);
-    background: color-mix(in srgb, var(--card) 78%, #111827);
+    color: var(--acc2, var(--acc));
 }
 
 .dark .subtask-add-inline:hover {
-    border-color: color-mix(in srgb, var(--inp-bd) 74%, #64748b);
-    background: color-mix(in srgb, var(--card) 78%, #111827);
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.05),
-        0 12px 24px rgba(2, 6, 23, 0.22);
+    border-color: color-mix(in srgb, var(--acc2, var(--acc)) 18%, transparent);
+    background: color-mix(in srgb, var(--card) 72%, #111827);
+    box-shadow: 0 10px 20px rgba(2, 6, 23, 0.2);
 }
 
 .dark .subtask-add-inline:focus-within {
-    border-color: color-mix(in srgb, var(--acc2) 38%, var(--inp-bd));
-    background: color-mix(in srgb, var(--card) 88%, #111827);
+    border-color: color-mix(in srgb, var(--acc2, var(--acc)) 42%, var(--inp-bd));
+    background: color-mix(in srgb, var(--card) 78%, #111827);
     box-shadow:
-        0 0 0 3px color-mix(in srgb, var(--acc2) 12%, transparent),
-        inset 0 1px 0 rgba(255, 255, 255, 0.04),
-        0 12px 26px rgba(2, 6, 23, 0.24);
+        0 0 0 3px color-mix(in srgb, var(--acc2, var(--acc)) 13%, transparent),
+        0 10px 20px rgba(2, 6, 23, 0.22);
 }
 
 .dark .subtask-add-inline:focus-within::before {
-    border-color: color-mix(in srgb, var(--acc2) 50%, var(--inp-bd));
-    background: color-mix(in srgb, var(--card) 88%, #111827);
-}
-
-.dark .subtask-add-confirm-btn,
-.dark .subtask-add-cancel-btn {
-    color: color-mix(in srgb, var(--text3) 88%, #cbd5e1);
+    color: var(--acc2, var(--acc));
 }
 
 .dark .subtask-add-btn:hover {
