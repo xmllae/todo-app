@@ -129,14 +129,19 @@ function syncDrawerScrollbar() {
     const maxScroll = Math.max(0, scrollHeight - viewportHeight);
     const isOpen = refs.panel.classList.contains('task-detail-panel--open');
     const isScrollable = isOpen && maxScroll > 1;
+    const footer = refs.content.querySelector('.drawer-footer');
+    const footerStyle = footer ? window.getComputedStyle(footer) : null;
+    const hasStickyFooter = footerStyle && (footerStyle.position === 'sticky' || footerStyle.position === '-webkit-sticky');
+    const footerClearance = hasStickyFooter ? Math.ceil(footer.getBoundingClientRect().height) + 8 : 0;
     const railInset = 6;
-    const railHeight = Math.max(0, viewportHeight - railInset * 2);
+    const railHeight = Math.max(0, viewportHeight - railInset * 2 - footerClearance);
+    const canShowScrollbar = isScrollable && railHeight > 0;
 
     refs.rail.style.top = (refs.content.offsetTop + railInset) + 'px';
     refs.rail.style.height = railHeight + 'px';
-    refs.rail.classList.toggle('is-visible', isScrollable);
+    refs.rail.classList.toggle('is-visible', canShowScrollbar);
 
-    if (!isScrollable || railHeight <= 0) {
+    if (!canShowScrollbar) {
         refs.thumb.style.height = '0px';
         refs.thumb.style.transform = 'translateY(0)';
         return;
@@ -584,6 +589,37 @@ function getDrawerTitleCheckIconMarkup() {
     return '<svg class="chk-ring-ico" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.15 12.35 10.95 16.05 17.1 8.2" stroke="currentColor" stroke-width="2.55" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 }
 
+function renderDrawerFooter(task) {
+    const refs = getTaskDetailRefs();
+    if (!refs.panel || !refs.content) return;
+
+    const inner = refs.panel.querySelector('.task-detail-inner');
+    if (!inner) return;
+
+    let footer = document.getElementById('taskDetailFooter');
+    if (!footer || !inner.contains(footer)) {
+        footer = document.createElement('div');
+        footer.id = 'taskDetailFooter';
+        refs.content.insertAdjacentElement('afterend', footer);
+    }
+
+    footer.className = 'drawer-footer';
+    footer.innerHTML = `
+        <button class="drawer-footer-btn drawer-footer-btn--repeat" onclick="event.stopPropagation();openRepeatInDrawer(${task.id})">
+            ${getDrawerPhosphorIcon('arrows-clockwise')}
+            \u91cd\u590d
+        </button>
+        <button class="drawer-footer-btn drawer-footer-btn--freeze" onclick="event.stopPropagation();toggleFreezeInDrawer(${task.id})">
+            ${getDrawerPhosphorIcon('snowflake')}
+            ${task.frozen ? '\u89e3\u51bb' : '\u51bb\u7ed3'}
+        </button>
+        <button class="drawer-footer-btn drawer-footer-btn--danger danger" onclick="event.stopPropagation();deleteTaskInDrawer(${task.id})">
+            ${getDrawerPhosphorIcon('trash')}
+            \u5220\u9664
+        </button>
+    `;
+}
+
 function renderDrawerContent(task) {
     const content = document.getElementById('taskDetailContent');
     if (!content) return;
@@ -773,22 +809,8 @@ function renderDrawerContent(task) {
                   placeholder="\u6dfb\u52a0\u4efb\u52a1\u8be6\u60c5\u3001\u94fe\u63a5\u6216\u5907\u5fd8\u5f55..."
                   onclick="event.stopPropagation()"
                   onblur="saveDrawerNotes(${task.id})">${escapeHtml(task.note || '')}</textarea>
-
-        <div class="drawer-footer">
-            <button class="drawer-footer-btn drawer-footer-btn--repeat" onclick="event.stopPropagation();openRepeatInDrawer(${task.id})">
-                ${getDrawerPhosphorIcon('arrows-clockwise')}
-                \u91cd\u590d
-            </button>
-            <button class="drawer-footer-btn drawer-footer-btn--freeze" onclick="event.stopPropagation();toggleFreezeInDrawer(${task.id})">
-                ${getDrawerPhosphorIcon('snowflake')}
-                ${task.frozen ? '\u89e3\u51bb' : '\u51bb\u7ed3'}
-            </button>
-            <button class="drawer-footer-btn drawer-footer-btn--danger danger" onclick="event.stopPropagation();deleteTaskInDrawer(${task.id})">
-                ${getDrawerPhosphorIcon('trash')}
-                \u5220\u9664
-            </button>
-        </div>
     `;
+    renderDrawerFooter(task);
 
     const checkSlot = content.querySelector('.drawer-task-title .task-ck-ring');
     if (checkSlot) {
