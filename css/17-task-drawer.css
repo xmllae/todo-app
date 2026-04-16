@@ -365,7 +365,7 @@
     position: relative;
     min-height: 44px;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
     padding: 2px 4px 4px 0;
     margin-bottom: var(--drawer-module-gap);
     isolation: isolate;
@@ -379,8 +379,8 @@
 
 /* Match the drawer title check ring to the main task-row ring. */
 .task-detail-inner .drawer-task-title .task-ck-ring.task-ck-slot {
-    width: 36px;
-    min-width: 36px;
+    width: 34px;
+    min-width: 34px;
     height: auto;
     min-height: 0;
     margin-left: -8px;
@@ -425,8 +425,8 @@
 }
 
 .task-detail-inner .drawer-task-title .task-ck-ring .tc-check {
-    width: 36px;
-    min-width: 36px;
+    width: 34px;
+    min-width: 34px;
     height: auto;
     min-height: 0;
     display: flex;
@@ -437,12 +437,12 @@
 }
 
 .task-detail-inner .drawer-task-title .task-ck-ring .chk-ring {
-    width: 20px;
-    min-width: 20px;
-    height: 20px;
-    min-height: 20px;
+    width: 18px;
+    min-width: 18px;
+    height: 18px;
+    min-height: 18px;
     border-radius: 50%;
-    border: 1.6px solid #cbd5e1;
+    border: 1.5px solid #cbd5e1;
     background: #fff;
     box-shadow: none;
     color: transparent;
@@ -2720,7 +2720,7 @@
 
     .drawer-task-title {
         --drawer-title-bleed: 8px;
-        gap: 10px;
+        gap: 4px;
         min-height: 38px;
         padding: 0 2px;
         border-radius: 12px;
