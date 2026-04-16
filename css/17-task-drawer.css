@@ -360,13 +360,13 @@
    ========================================= */
 
 .drawer-task-title {
-    --drawer-title-bleed: 10px;
+    --drawer-title-bleed: 8px;
     display: flex;
     position: relative;
-    min-height: 38px;
+    min-height: 44px;
     align-items: center;
-    gap: 4px;
-    padding: 0 2px;
+    gap: 8px;
+    padding: 2px 4px 4px 0;
     margin-bottom: var(--drawer-module-gap);
     isolation: isolate;
     z-index: 20;
@@ -379,15 +379,15 @@
 
 /* Match the drawer title check ring to the main task-row ring. */
 .task-detail-inner .drawer-task-title .task-ck-ring.task-ck-slot {
-    width: 34px;
-    min-width: 34px;
+    width: 36px;
+    min-width: 36px;
     height: auto;
     min-height: 0;
-    margin-left: -10px;
+    margin-left: -8px;
     align-self: center;
     flex-shrink: 0;
     position: relative;
-    z-index: 2;
+    z-index: 8;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -398,26 +398,51 @@
     user-select: none;
     -webkit-touch-callout: none;
     touch-action: manipulation;
+    pointer-events: auto;
+    -webkit-tap-highlight-color: transparent;
+    border-radius: 8px;
+    transition: background-color .18s ease, transform .18s ease;
+}
+
+.task-detail-inner .drawer-task-title .task-ck-ring.task-ck-slot::before {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: 8px;
+    background: transparent;
+    transition: background-color .18s ease;
+    pointer-events: none;
+}
+
+.task-detail-inner .drawer-task-title .task-ck-ring.task-ck-slot:hover::before,
+.task-detail-inner .drawer-task-title .task-ck-ring.task-ck-slot:focus-visible::before {
+    background: color-mix(in srgb, var(--text) 5%, transparent);
+}
+
+.dark .task-detail-inner .drawer-task-title .task-ck-ring.task-ck-slot:hover::before,
+.dark .task-detail-inner .drawer-task-title .task-ck-ring.task-ck-slot:focus-visible::before {
+    background: color-mix(in srgb, #fff 8%, transparent);
 }
 
 .task-detail-inner .drawer-task-title .task-ck-ring .tc-check {
-    width: 34px;
-    min-width: 34px;
+    width: 36px;
+    min-width: 36px;
     height: auto;
     min-height: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    pointer-events: auto;
 }
 
 .task-detail-inner .drawer-task-title .task-ck-ring .chk-ring {
-    width: 18px;
-    min-width: 18px;
-    height: 18px;
-    min-height: 18px;
+    width: 20px;
+    min-width: 20px;
+    height: 20px;
+    min-height: 20px;
     border-radius: 50%;
-    border: 1.5px solid #cbd5e1;
+    border: 1.6px solid #cbd5e1;
     background: #fff;
     box-shadow: none;
     color: transparent;
@@ -434,6 +459,12 @@
     user-select: none;
     -webkit-touch-callout: none;
     touch-action: manipulation;
+    pointer-events: auto;
+}
+
+.task-detail-inner .drawer-task-title .task-ck-ring.task-ck-slot:hover .chk-ring,
+.task-detail-inner .drawer-task-title .task-ck-ring.task-ck-slot:focus-visible .chk-ring {
+    transform: scale(1.06);
 }
 
 .dark .task-detail-inner .drawer-task-title .task-ck-ring .chk-ring {
@@ -558,56 +589,70 @@
 .drawer-task-title-field {
     flex: 1 1 auto;
     min-width: 0;
+    min-height: 42px;
     position: relative;
     display: flex;
     align-items: center;
+    z-index: 1;
 }
 
-.drawer-task-title-strike {
-    position: absolute;
-    left: var(--drawer-title-bleed);
-    top: 50%;
-    max-width: calc(100% - 24px);
-    overflow: hidden;
-    white-space: nowrap;
-    color: transparent;
-    font-size: 1.26rem;
-    font-weight: 700;
-    line-height: 1.2;
-    letter-spacing: 0;
-    opacity: 0;
-    z-index: 2;
-    pointer-events: none;
-}
-
-.drawer-task-title-strike::after {
-    content: "";
+.drawer-task-title-field::after {
+    content: '';
     position: absolute;
     left: 0;
-    top: 50%;
-    width: 100%;
-    height: max(1px, .07em);
-    border-radius: 1px;
-    background: color-mix(in srgb, var(--text2) 38%, var(--text3));
+    top: 53%;
+    width: min(var(--drawer-title-strike-width, 0px), calc(100% - 8px));
+    height: max(2px, .08em);
+    border-radius: 999px;
+    background: linear-gradient(90deg,
+        color-mix(in srgb, var(--text2) 52%, var(--text3)),
+        color-mix(in srgb, var(--text2) 34%, var(--text3)));
+    box-shadow: 0 1px 2px rgba(15, 23, 42, .08);
+    opacity: 0;
     transform: translateY(-50%) scaleX(0);
     transform-origin: left center;
+    pointer-events: none;
+    z-index: 5;
+    will-change: transform, opacity;
 }
 
-.dark .drawer-task-title-strike::after {
-    background: color-mix(in srgb, var(--text2) 28%, var(--text3));
+.dark .drawer-task-title-field::after {
+    background: linear-gradient(90deg,
+        color-mix(in srgb, var(--text2) 42%, var(--text3)),
+        color-mix(in srgb, var(--text2) 28%, var(--text3)));
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .18);
 }
 
-.drawer-task-title--toggle-anim .drawer-task-title-strike {
-    opacity: 1;
+.drawer-task-title--done:not(.drawer-task-title--toggle-anim):not(.drawer-task-title--strike-reset) .drawer-task-title-field::after {
+    opacity: .98;
+    transform: translateY(-50%) scaleX(1);
 }
 
-.drawer-task-title--toggle-anim .drawer-task-title-strike::after {
-    animation: taskStrikeLtr .48s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+.drawer-task-title--strike-reset .drawer-task-title-field::after {
+    animation: none !important;
+    opacity: 0 !important;
+    transform: translateY(-50%) scaleX(0) !important;
+}
+
+.drawer-task-title--toggle-anim .drawer-task-title-field::after {
+    animation: drawerTitleStrikeLtr .48s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .drawer-task-title--toggle-anim .drawer-task-title-text {
-    text-decoration-color: transparent;
+    text-decoration-color: transparent !important;
     animation: taskToggleTxtGray .45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes drawerTitleStrikeLtr {
+    from {
+        opacity: .3;
+        transform: translateY(-50%) scaleX(0);
+    }
+
+    to {
+        opacity: .98;
+        transform: translateY(-50%) scaleX(1);
+    }
 }
 
 .drawer-task-title-text {
@@ -616,13 +661,13 @@
     box-sizing: border-box;
     position: relative;
     z-index: 1;
-    font-size: 1.26rem;
+    font-size: 1.24rem;
     font-weight: 700;
     color: var(--text);
     line-height: 1.2;
     outline: none;
-    height: 38px;
-    min-height: 38px;
+    height: 42px;
+    min-height: 42px;
     border: none;
     background: transparent;
     caret-color: currentColor;
@@ -1149,9 +1194,8 @@
 
 .drawer-task-title--done .drawer-task-title-text {
     color: color-mix(in srgb, var(--text2) 48%, var(--text3));
-    text-decoration: line-through;
-    text-decoration-thickness: max(1px, .06em);
-    text-decoration-color: color-mix(in srgb, var(--text2) 38%, var(--text3));
+    text-decoration: none;
+    text-decoration-color: transparent !important;
 }
 
 .dark .drawer-task-check-slot.task-ck-ring--done ~ .drawer-task-title-text,
@@ -1160,7 +1204,7 @@
 }
 
 .drawer-task-title--done.drawer-task-title--toggle-anim .drawer-task-title-text {
-    text-decoration-color: transparent;
+    text-decoration-color: transparent !important;
     animation: taskToggleTxtGray .45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
@@ -1173,21 +1217,16 @@
     }
 
     .drawer-task-title--toggle-anim .task-ck-ring .chk-ring.checked.chk-ring--ripple,
-    .drawer-task-title--toggle-anim .drawer-task-title-strike::after,
     .drawer-task-title--toggle-anim .drawer-task-title-text {
         animation: none !important;
     }
 
-    .drawer-task-title--toggle-anim .drawer-task-title-strike {
-        opacity: 0;
-    }
-
     .drawer-task-title--done.drawer-task-title--toggle-anim .drawer-task-title-text {
-        text-decoration-color: color-mix(in srgb, var(--text2) 38%, var(--text3));
+        text-decoration-color: color-mix(in srgb, var(--text2) 38%, var(--text3)) !important;
     }
 
     .dark .drawer-task-title--done.drawer-task-title--toggle-anim .drawer-task-title-text {
-        text-decoration-color: color-mix(in srgb, var(--text2) 28%, var(--text3));
+        text-decoration-color: color-mix(in srgb, var(--text2) 28%, var(--text3)) !important;
     }
 }
 

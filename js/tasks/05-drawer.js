@@ -9,7 +9,11 @@ let taskDetailCloseTimer = null;
 let drawerScrollbarResizeObserver = null;
 let drawerScrollbarRaf = null;
 let drawerScrollbarDragState = null;
+let drawerTitleCompletionAnimTaskId = null;
+let drawerTitleCompletionAnimTimer = null;
+let drawerTitleCompletionAnimFrame = null;
 const TASK_DETAIL_CLOSE_DELAY = 460;
+const DRAWER_TITLE_COMPLETION_ANIM_MS = 720;
 
 document.addEventListener('DOMContentLoaded', function() {
     initDrawer();
@@ -594,6 +598,256 @@ function getDrawerTitleCheckIconMarkup() {
     return '<svg class="chk-ring-ico" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.15 12.35 10.95 16.05 17.1 8.2" stroke="currentColor" stroke-width="2.55" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 }
 
+function normalizeDrawerTaskId(taskId) {
+    const numericTaskId = Number(taskId);
+    return Number.isFinite(numericTaskId) ? numericTaskId : taskId;
+}
+
+function drawerTaskIdsMatch(a, b) {
+    return String(a) === String(b);
+}
+
+function getDrawerTitleElement(taskId) {
+    const titleEl = document.querySelector('.drawer-task-title');
+    if (!titleEl || !titleEl.dataset) return null;
+    return drawerTaskIdsMatch(titleEl.dataset.taskId, taskId) ? titleEl : null;
+}
+
+function isDrawerTitleCompletionAnimationActive(taskId) {
+    return drawerTitleCompletionAnimTaskId !== null
+        && drawerTaskIdsMatch(drawerTitleCompletionAnimTaskId, taskId);
+}
+
+function cancelDrawerTitleAnimationFrame() {
+    if (drawerTitleCompletionAnimFrame !== null) {
+        window.cancelAnimationFrame(drawerTitleCompletionAnimFrame);
+        drawerTitleCompletionAnimFrame = null;
+    }
+}
+
+function syncDrawerTitleStrikeMetrics(titleEl, task) {
+    if (!titleEl) return;
+
+    const field = titleEl.querySelector('.drawer-task-title-field');
+    const titleInput = titleEl.querySelector('.drawer-task-title-text');
+    if (!field) return;
+
+    const text = (task && task.text) || (titleInput && titleInput.value) || '';
+    let strikeWidth = 0;
+
+    if (text) {
+        const measure = document.createElement('span');
+        const inputStyle = titleInput ? window.getComputedStyle(titleInput) : window.getComputedStyle(field);
+
+        measure.textContent = text;
+        measure.style.position = 'fixed';
+        measure.style.left = '-9999px';
+        measure.style.top = '-9999px';
+        measure.style.visibility = 'hidden';
+        measure.style.whiteSpace = 'pre';
+        measure.style.font = inputStyle.font;
+        measure.style.fontSize = inputStyle.fontSize;
+        measure.style.fontWeight = inputStyle.fontWeight;
+        measure.style.fontFamily = inputStyle.fontFamily;
+        measure.style.letterSpacing = inputStyle.letterSpacing;
+        measure.style.lineHeight = inputStyle.lineHeight;
+
+        document.body.appendChild(measure);
+        strikeWidth = Math.ceil(measure.getBoundingClientRect().width);
+        measure.remove();
+    }
+
+    const fieldWidth = Math.max(0, field.getBoundingClientRect().width - 12);
+    titleEl.style.setProperty('--drawer-title-strike-width', Math.max(0, Math.min(strikeWidth, fieldWidth)) + 'px');
+}
+
+function restartDrawerTitleStrikeAnimation(taskId) {
+    const normalizedTaskId = normalizeDrawerTaskId(taskId);
+
+    cancelDrawerTitleAnimationFrame();
+
+    drawerTitleCompletionAnimFrame = window.requestAnimationFrame(function() {
+        drawerTitleCompletionAnimFrame = null;
+
+        const titleEl = getDrawerTitleElement(normalizedTaskId);
+        const task = findTaskById(normalizedTaskId);
+        if (!titleEl || !task || !isDrawerTitleCompletionAnimationActive(normalizedTaskId)) return;
+
+        syncDrawerTitleStrikeMetrics(titleEl, task);
+        titleEl.classList.remove('drawer-task-title--toggle-anim');
+        titleEl.classList.add('drawer-task-title--strike-reset');
+        void titleEl.offsetWidth;
+
+        drawerTitleCompletionAnimFrame = window.requestAnimationFrame(function() {
+            drawerTitleCompletionAnimFrame = null;
+
+            const currentTitleEl = getDrawerTitleElement(normalizedTaskId);
+            if (!currentTitleEl || !isDrawerTitleCompletionAnimationActive(normalizedTaskId)) return;
+
+            syncDrawerTitleStrikeMetrics(currentTitleEl, task);
+            currentTitleEl.classList.remove('drawer-task-title--toggle-anim', 'drawer-task-title--strike-reset');
+            void currentTitleEl.offsetWidth;
+            currentTitleEl.classList.add('drawer-task-title--toggle-anim');
+        });
+    });
+}
+
+function startDrawerTitleCompletionAnimation(taskId) {
+    const normalizedTaskId = normalizeDrawerTaskId(taskId);
+    drawerTitleCompletionAnimTaskId = normalizedTaskId;
+
+    if (drawerTitleCompletionAnimTimer !== null) {
+        window.clearTimeout(drawerTitleCompletionAnimTimer);
+        drawerTitleCompletionAnimTimer = null;
+    }
+
+    const titleEl = getDrawerTitleElement(normalizedTaskId);
+    if (titleEl) {
+        const task = findTaskById(normalizedTaskId);
+        syncDrawerTitleStrikeMetrics(titleEl, task);
+        titleEl.classList.remove('drawer-task-title--toggle-anim');
+        titleEl.classList.add('drawer-task-title--strike-reset');
+    }
+
+    restartDrawerTitleStrikeAnimation(normalizedTaskId);
+
+    drawerTitleCompletionAnimTimer = window.setTimeout(function() {
+        if (isDrawerTitleCompletionAnimationActive(normalizedTaskId)) {
+            drawerTitleCompletionAnimTaskId = null;
+        }
+
+        const currentTitleEl = getDrawerTitleElement(normalizedTaskId);
+        if (currentTitleEl) {
+            currentTitleEl.classList.remove('drawer-task-title--toggle-anim', 'drawer-task-title--strike-reset');
+        }
+
+        drawerTitleCompletionAnimTimer = null;
+    }, DRAWER_TITLE_COMPLETION_ANIM_MS);
+}
+
+function clearDrawerTitleCompletionAnimation(taskId) {
+    const shouldClear = taskId == null || isDrawerTitleCompletionAnimationActive(taskId);
+    if (!shouldClear) return;
+
+    cancelDrawerTitleAnimationFrame();
+
+    const normalizedTaskId = taskId == null
+        ? drawerTitleCompletionAnimTaskId
+        : normalizeDrawerTaskId(taskId);
+
+    if (drawerTitleCompletionAnimTimer !== null) {
+        window.clearTimeout(drawerTitleCompletionAnimTimer);
+        drawerTitleCompletionAnimTimer = null;
+    }
+
+    drawerTitleCompletionAnimTaskId = null;
+
+    const titleEl = normalizedTaskId != null
+        ? getDrawerTitleElement(normalizedTaskId)
+        : document.querySelector('.drawer-task-title');
+    if (titleEl) {
+        titleEl.classList.remove('drawer-task-title--toggle-anim', 'drawer-task-title--strike-reset');
+    }
+}
+
+function updateDrawerTitleCompletionState(task, options) {
+    if (!task) return false;
+
+    const titleEl = getDrawerTitleElement(task.id);
+    if (!titleEl) return false;
+
+    const isDone = taskAppearsDoneInDrawer(task);
+    const isPendingDone = taskPendingDoneInDrawer(task);
+    let animationActive = isDrawerTitleCompletionAnimationActive(task.id);
+
+    if (isDone && isPendingDone && !animationActive) {
+        startDrawerTitleCompletionAnimation(task.id);
+        animationActive = true;
+    }
+
+    syncDrawerTitleStrikeMetrics(titleEl, task);
+
+    titleEl.classList.toggle('drawer-task-title--done', isDone);
+    titleEl.dataset.taskState = isDone ? 'done' : 'todo';
+
+    if (!isDone) {
+        titleEl.classList.remove('drawer-task-title--toggle-anim', 'drawer-task-title--strike-reset');
+    } else if (animationActive) {
+        if (!titleEl.classList.contains('drawer-task-title--toggle-anim')) {
+            titleEl.classList.add('drawer-task-title--strike-reset');
+        }
+    } else {
+        titleEl.classList.remove('drawer-task-title--toggle-anim', 'drawer-task-title--strike-reset');
+    }
+
+    const checkSlot = titleEl.querySelector('.task-ck-ring.task-ck-slot');
+    const chkRing = titleEl.querySelector('.chk-ring');
+    const titleInput = titleEl.querySelector('.drawer-task-title-text');
+    const normalizedPriority = task.priority === 'high' ? 'high' : 'normal';
+    const ringRipple = isDone && (
+        isPendingDone
+        || isDrawerTitleCompletionAnimationActive(task.id)
+        || (window._chkRippleTaskId != null && window._chkRippleTaskId == task.id)
+        || (options && options.forceRipple)
+    );
+
+    if (checkSlot) {
+        checkSlot.classList.toggle('task-ck-ring--prio-high', normalizedPriority === 'high');
+        checkSlot.classList.toggle('task-ck-ring--done', isDone);
+        checkSlot.style.setProperty('--ck-prio', getDrawerCheckRingColor(normalizedPriority));
+        checkSlot.setAttribute('aria-pressed', isDone ? 'true' : 'false');
+        checkSlot.setAttribute('title', isDone ? '\u6807\u8bb0\u4e3a\u672a\u5b8c\u6210' : '\u6807\u8bb0\u4e3a\u5df2\u5b8c\u6210');
+    }
+
+    if (chkRing) {
+        chkRing.classList.toggle('checked', isDone);
+        chkRing.classList.toggle('chk-ring--ripple', ringRipple);
+        if (!isDone) {
+            chkRing.classList.remove('hover-check');
+        }
+        chkRing.innerHTML = getDrawerTitleCheckIconMarkup();
+    }
+
+    if (titleInput) {
+        titleInput.classList.toggle('drawer-task-title-text--done', isDone);
+        if (document.activeElement !== titleInput && titleInput.value !== (task.text || '')) {
+            titleInput.value = task.text || '';
+        }
+    }
+
+    return true;
+}
+
+function syncTaskDetailDoneState(taskId) {
+    const normalizedTaskId = normalizeDrawerTaskId(taskId);
+    if (drawerActiveTaskId == null || !drawerTaskIdsMatch(drawerActiveTaskId, normalizedTaskId)) {
+        return false;
+    }
+
+    const refs = getTaskDetailRefs();
+    if (!refs.panel || !refs.content || !refs.mainCol) return false;
+
+    const taskModeVisible = refs.taskMode && !refs.taskMode.classList.contains('hidden');
+    const task = findTaskById(normalizedTaskId);
+    if (!taskModeVisible || !task || !isTaskVisibleInCurrentDate(normalizedTaskId)) {
+        closeTaskDetail();
+        return true;
+    }
+
+    setTaskDetailOpenState(true);
+    clearPendingTaskDetailClose(refs.content);
+
+    if (!updateDrawerTitleCompletionState(task)) {
+        renderDrawerContent(task);
+    }
+
+    refs.content.classList.remove('fade-out');
+    refs.content.classList.add('fade-in');
+    syncTaskDetailSelectionState();
+    scheduleDrawerScrollbarSync();
+    return true;
+}
+
 function renderDrawerFooter(task) {
     const refs = getTaskDetailRefs();
     if (!refs.panel || !refs.content) return;
@@ -642,18 +896,21 @@ function renderDrawerContent(task) {
         ? 'drawer-schedule-duration-chip--filled'
         : 'drawer-schedule-duration-chip--idle';
     const isPendingDone = taskPendingDoneInDrawer(task);
-    const completionAnimationClass = isPendingDone
-        ? ' drawer-task-title--toggle-anim'
-        : '';
     const ringRippleClass = isPendingDone || (window._chkRippleTaskId != null && window._chkRippleTaskId == task.id)
         ? ' chk-ring--ripple'
         : '';
 
     content.innerHTML = `
-        <div class="drawer-task-title ${isDone ? 'drawer-task-title--done' : ''}${completionAnimationClass}">
+        <div class="drawer-task-title ${isDone ? 'drawer-task-title--done' : ''}" data-task-id="${task.id}">
             <div class="task-ck-slot task-ck-ring ${task.priority === 'high' ? 'task-ck-ring--prio-high' : ''} ${isDone ? 'task-ck-ring--done' : ''}"
+                 data-task-id="${task.id}"
+                 role="button"
+                 tabindex="0"
+                 aria-pressed="${isDone ? 'true' : 'false'}"
                  style="--ck-prio:${drawerCheckRingColor}"
-                 onclick="toggleTaskDoneFromDrawer(${task.id})"
+                 onmousedown="event.preventDefault();event.stopPropagation()"
+                 onclick="handleDrawerTitleCheckClick(event, ${task.id})"
+                 onkeydown="if(event.key==='Enter'||event.key===' '){handleDrawerTitleCheckClick(event, ${task.id})}"
                  title="${isDone ? '\u6807\u8bb0\u4e3a\u672a\u5b8c\u6210' : '\u6807\u8bb0\u4e3a\u5df2\u5b8c\u6210'}"
                  onmouseenter="handleCheckRingHover(this, true)"
                  onmouseleave="handleCheckRingHover(this, false)">
@@ -672,7 +929,6 @@ function renderDrawerContent(task) {
                    onclick="event.stopPropagation()"
                    onblur="saveDrawerTitle(${task.id})"
                    onkeydown="if(event.key==='Enter'){event.target.blur()}">
-                <span class="drawer-task-title-strike" aria-hidden="true">${escapeHtml(task.text || '')}</span>
             </div>
             <div class="drawer-priority-dropdown" onclick="event.stopPropagation()">
                 <button type="button" class="drawer-priority-btn" onclick="togglePriorityDropdown(this)" title="\u9009\u62e9\u4f18\u5148\u7ea7">
@@ -836,6 +1092,7 @@ function renderDrawerContent(task) {
     }
 
     autoResizeDrawerNotes(content.querySelector('#drawer-notes-input'));
+    updateDrawerTitleCompletionState(task);
     updateDrawerPriorityUI(normalizedPriority);
     scheduleDrawerScrollbarSync();
 }
@@ -908,6 +1165,26 @@ function renderNotesArea(task) {
     `;
 }
 
+function handleDrawerTitleCheckClick(event, taskId) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    const normalizedTaskId = Number(taskId);
+    if (!Number.isFinite(normalizedTaskId)) return;
+
+    const task = findTaskById(normalizedTaskId);
+    const willMarkDone = task && !taskAppearsDoneInDrawer(task);
+    if (willMarkDone) {
+        startDrawerTitleCompletionAnimation(normalizedTaskId);
+    } else {
+        clearDrawerTitleCompletionAnimation(normalizedTaskId);
+    }
+
+    toggleTaskDoneFromDrawer(normalizedTaskId);
+}
+
 function toggleTaskDoneFromDrawer(taskId) {
     const task = findTaskById(taskId);
     if (!task) return;
@@ -921,39 +1198,19 @@ function toggleTaskDoneFromDrawer(taskId) {
     task.status = task.done ? 'done' : 'todo';
     if (!task.done) {
         task.archived = false;
+        clearDrawerTitleCompletionAnimation(taskId);
+    } else if (!isDrawerTitleCompletionAnimationActive(taskId)) {
+        startDrawerTitleCompletionAnimation(taskId);
     }
 
     if (typeof playCheckSound === 'function') {
         playCheckSound(task.done);
     }
 
-    // Update title styling
-    const titleEl = document.querySelector('.drawer-task-title');
-    const checkSlot = document.querySelector('.drawer-task-title .task-ck-ring');
-    const chkRing = document.querySelector('.drawer-task-title .chk-ring');
-    const titleInput = document.getElementById('drawer-task-title-input');
-
-    if (titleEl) {
-        titleEl.classList.toggle('drawer-task-title--done', task.done);
-    }
-    if (checkSlot) {
-        checkSlot.classList.toggle('task-ck-ring--done', task.done);
-        // Update hover handlers based on done state
-        if (task.done) {
-            checkSlot.onmouseenter = null;
-            checkSlot.onmouseleave = null;
-        } else {
-            checkSlot.onmouseenter = function() { handleCheckRingHover(this, true); };
-            checkSlot.onmouseleave = function() { handleCheckRingHover(this, false); };
-        }
-    }
-    if (chkRing) {
-        chkRing.classList.toggle('checked', task.done);
-        chkRing.innerHTML = getDrawerTitleCheckIconMarkup();
-    }
-    if (titleInput) {
-        titleInput.classList.toggle('drawer-task-title--done', task.done);
-    }
+    updateDrawerTitleCompletionState(task, {
+        animate: task.done,
+        forceRipple: task.done
+    });
 
     // Update priority ring if needed
     updateDrawerPriorityUI(task.priority);
@@ -1667,6 +1924,8 @@ window.openTaskDetail = openTaskDrawer;
 window.closeDrawer = closeDrawer;
 window.closeTaskDetail = closeTaskDetail;
 window.syncTaskDetailPanel = syncTaskDetailPanel;
+window.syncTaskDetailDoneState = syncTaskDetailDoneState;
+window.handleDrawerTitleCheckClick = handleDrawerTitleCheckClick;
 
 // Close priority dropdown when clicking outside
 document.addEventListener('click', function(e) {
