@@ -580,6 +580,10 @@ function getDrawerCheckIconMarkup() {
     return getDrawerPhosphorIcon('check', 'chk-ring-ico');
 }
 
+function getDrawerTitleCheckIconMarkup() {
+    return '<svg class="chk-ring-ico" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.15 12.35 10.95 16.05 17.1 8.2" stroke="currentColor" stroke-width="2.55" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+}
+
 function renderDrawerContent(task) {
     const content = document.getElementById('taskDetailContent');
     if (!content) return;
@@ -607,7 +611,7 @@ function renderDrawerContent(task) {
                  onmouseleave="handleCheckRingHover(this, false)">
                 <div class="tc-check">
                     <div class="chk-ring ${isDone ? 'checked' : ''}">
-                        ${getDrawerCheckIconMarkup()}
+                        ${getDrawerTitleCheckIconMarkup()}
                     </div>
                 </div>
             </div>
