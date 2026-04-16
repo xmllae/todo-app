@@ -2140,7 +2140,7 @@
     height: 34px;
     min-height: 34px;
     padding: 0 14px 0 var(--subtask-text-start);
-    border: none;
+    border: 1px solid transparent;
     border-radius: 8px;
     background: transparent;
     color: color-mix(in srgb, var(--acc) 88%, #475569);
@@ -2189,16 +2189,18 @@
 }
 
 .subtask-add-inline.is-editing {
-    background: var(--drawer-surface-strong);
+    background: color-mix(in srgb, var(--acc2) 3%, #ffffff);
+    border-color: color-mix(in srgb, var(--acc2) 48%, #cbd5e1);
     color: var(--acc);
     cursor: text;
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--acc2) 42%, #cbd5e1);
+    box-shadow: none;
 }
 
 .subtask-add-inline:focus-within {
-    background: var(--drawer-surface-strong);
+    background: #ffffff;
+    border-color: color-mix(in srgb, var(--acc2) 68%, #a5b4fc);
     color: var(--acc);
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--acc2) 42%, #cbd5e1);
+    box-shadow: none;
 }
 
 .subtask-add-label {
@@ -2262,7 +2264,7 @@
     overflow: hidden;
     outline: none;
     box-shadow: 0 4px 12px rgba(15, 23, 42, 0.035);
-    transition: border-color 0.24s ease, box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), background 0.24s ease, transform 0.2s ease;
+    transition: border-color 0.24s ease, background 0.24s ease, color 0.2s ease;
 }
 
 .drawer-notes-textarea:hover {
@@ -2272,11 +2274,9 @@
 }
 
 .drawer-notes-textarea:focus {
-    border-color: color-mix(in srgb, var(--acc2) 42%, #cbd5e1);
-    background: var(--drawer-surface-strong);
-    box-shadow:
-        0 0 0 3px color-mix(in srgb, var(--acc2) 9%, transparent),
-        0 8px 18px rgba(15, 23, 42, 0.045);
+    border-color: color-mix(in srgb, var(--acc2) 68%, #a5b4fc);
+    background: #ffffff;
+    box-shadow: none;
     transform: none;
 }
 
@@ -2490,11 +2490,9 @@
 }
 
 .dark .drawer-notes-textarea:focus {
-    border-color: color-mix(in srgb, var(--acc2, var(--acc)) 42%, var(--inp-bd));
+    border-color: color-mix(in srgb, var(--acc2, var(--acc)) 68%, #a5b4fc);
     background: color-mix(in srgb, var(--card) 78%, #111827);
-    box-shadow:
-        0 0 0 3px color-mix(in srgb, var(--acc2, var(--acc)) 13%, transparent),
-        0 10px 20px rgba(2, 6, 23, 0.22);
+    box-shadow: none;
     transform: none;
 }
 
@@ -2513,8 +2511,9 @@
 .dark .subtask-add-inline.is-editing,
 .dark .subtask-add-inline:focus-within {
     background: color-mix(in srgb, var(--card) 78%, #111827);
+    border-color: color-mix(in srgb, var(--acc2, var(--acc)) 68%, #a5b4fc);
     color: var(--acc2, var(--acc));
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--acc2, var(--acc)) 42%, var(--inp-bd));
+    box-shadow: none;
 }
 
 .dark .drawer-footer-btn {
