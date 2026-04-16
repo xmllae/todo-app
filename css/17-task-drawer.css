@@ -1496,25 +1496,26 @@
     box-sizing: border-box;
     min-height: 34px;
     padding: 8px 15px;
+    border: 1px solid color-mix(in srgb, var(--acc2) 34%, #cbd5e1);
     border-radius: 8px;
-    background: var(--drawer-surface-strong);
+    background: color-mix(in srgb, var(--acc2) 3%, #ffffff);
     color: #475569;
-    box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.16);
-    transition: background 0.18s ease, box-shadow 0.18s ease, color 0.18s ease;
+    box-shadow: none;
+    transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
 }
 
 .drawer-schedule-duration-main:hover .drawer-schedule-duration-inputline {
-    background: var(--drawer-surface-strong);
+    background: color-mix(in srgb, var(--acc2) 4%, #ffffff);
     color: #334155;
-    box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.16);
+    border-color: color-mix(in srgb, var(--acc2) 48%, #cbd5e1);
+    box-shadow: none;
 }
 
 .drawer-schedule-duration-main:focus-within .drawer-schedule-duration-inputline {
-    background: var(--drawer-surface-strong);
+    background: #ffffff;
     color: color-mix(in srgb, var(--acc2) 74%, #334155);
-    box-shadow:
-        0 0 0 3px rgba(99, 102, 241, 0.1),
-        inset 0 0 0 1px rgba(99, 102, 241, 0.28);
+    border-color: color-mix(in srgb, var(--acc2) 68%, #a5b4fc);
+    box-shadow: none;
 }
 
 .drawer-schedule-input--duration {
@@ -1595,7 +1596,7 @@
 }
 
 .drawer-schedule-duration-row--overnight .drawer-schedule-duration-inputline {
-    background: var(--drawer-surface-strong);
+    background: color-mix(in srgb, var(--acc2) 3%, #ffffff);
     color: #475569;
 }
 
@@ -1650,21 +1651,22 @@
 .dark .drawer-schedule-duration-inputline {
     background: var(--drawer-surface-strong);
     color: color-mix(in srgb, var(--text2) 86%, #cbd5e1);
-    box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.14);
+    border-color: color-mix(in srgb, var(--acc2, var(--acc)) 34%, var(--inp-bd));
+    box-shadow: none;
 }
 
 .dark .drawer-schedule-duration-main:hover .drawer-schedule-duration-inputline {
     background: var(--drawer-surface-strong);
     color: color-mix(in srgb, var(--text) 90%, #e2e8f0);
-    box-shadow: inset 0 0 0 1px rgba(165, 180, 252, 0.18);
+    border-color: color-mix(in srgb, var(--acc2, var(--acc)) 48%, var(--inp-bd));
+    box-shadow: none;
 }
 
 .dark .drawer-schedule-duration-main:focus-within .drawer-schedule-duration-inputline {
     background: var(--drawer-surface-strong);
     color: color-mix(in srgb, var(--acc2) 86%, #c7d2fe);
-    box-shadow:
-        0 0 0 3px rgba(129, 140, 248, 0.12),
-        inset 0 0 0 1px rgba(165, 180, 252, 0.26);
+    border-color: color-mix(in srgb, var(--acc2, var(--acc)) 68%, #a5b4fc);
+    box-shadow: none;
 }
 
 .dark .drawer-schedule-duration-chip--filled {
