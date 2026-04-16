@@ -803,6 +803,7 @@ function renderDrawerContent(task) {
                   id="drawer-notes-input"
                   placeholder="\u6dfb\u52a0\u4efb\u52a1\u8be6\u60c5\u3001\u94fe\u63a5\u6216\u5907\u5fd8\u5f55..."
                   onclick="event.stopPropagation()"
+                  oninput="autoResizeDrawerNotes(this)"
                   onblur="saveDrawerNotes(${task.id})">${escapeHtml(task.note || '')}</textarea>
     `;
     renderDrawerFooter(task);
@@ -819,6 +820,7 @@ function renderDrawerContent(task) {
         }
     }
 
+    autoResizeDrawerNotes(content.querySelector('#drawer-notes-input'));
     updateDrawerPriorityUI(normalizedPriority);
     scheduleDrawerScrollbarSync();
 }
@@ -1047,6 +1049,15 @@ function saveDrawerNotes(taskId) {
         task.note = newNote;
         persistTaskDetailChanges(task, { kanban: true });
     }
+}
+
+function autoResizeDrawerNotes(textarea) {
+    if (!textarea) return;
+
+    const minHeight = 120;
+    textarea.style.height = 'auto';
+    textarea.style.height = Math.max(minHeight, textarea.scrollHeight) + 'px';
+    scheduleDrawerScrollbarSync();
 }
 
 function toggleSubtaskInDrawer(taskId, subtaskId) {
