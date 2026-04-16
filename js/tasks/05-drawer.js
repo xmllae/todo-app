@@ -1049,7 +1049,9 @@ function renderDrawerContent(task) {
 
         <div class="drawer-subtasks-list">
             ${subtasksHtml}
-            <div class="subtask-add-inline" id="subtask-add-inline-${task.id}" style="display:none">
+            <div class="subtask-add-inline" id="subtask-add-inline-${task.id}" onclick="event.stopPropagation();showSubtaskAddInline(${task.id})">
+                <span class="subtask-add-icon" aria-hidden="true"></span>
+                <span class="subtask-add-label">\u6dfb\u52a0\u5b50\u4efb\u52a1</span>
                 <input type="text"
                        class="subtask-add-input"
                        id="subtask-add-input-${task.id}"
@@ -1057,10 +1059,6 @@ function renderDrawerContent(task) {
                        onclick="event.stopPropagation()"
                        onblur="hideSubtaskAddInline(${task.id})"
                        onkeydown="if(event.key==='Enter'){addSubtaskFromDrawer(${task.id});}if(event.key==='Escape'){hideSubtaskAddInline(${task.id})}">
-            </div>
-            <div class="subtask-add-btn" onclick="event.stopPropagation();showSubtaskAddInline(${task.id})">
-                ${getDrawerPhosphorIcon('plus')}
-                <span>\u6dfb\u52a0\u5b50\u4efb\u52a1</span>
             </div>
         </div>
 
@@ -1393,25 +1391,21 @@ function openAddSubtaskInDrawer(taskId) {
 
 function showSubtaskAddInline(taskId) {
     const inputWrap = document.getElementById('subtask-add-inline-' + taskId);
-    const addBtn = inputWrap && inputWrap.nextElementSibling;
     const input = document.getElementById('subtask-add-input-' + taskId);
 
-    if (!inputWrap || !addBtn || !input) return;
+    if (!inputWrap || !input) return;
 
-    inputWrap.style.display = 'flex';
-    addBtn.style.display = 'none';
+    inputWrap.classList.add('is-editing');
     input.focus();
 }
 
 function hideSubtaskAddInline(taskId) {
     const inputWrap = document.getElementById('subtask-add-inline-' + taskId);
-    const addBtn = inputWrap && inputWrap.nextElementSibling;
     const input = document.getElementById('subtask-add-input-' + taskId);
 
-    if (!inputWrap || !addBtn || !input) return;
+    if (!inputWrap || !input) return;
 
-    inputWrap.style.display = 'none';
-    addBtn.style.display = 'flex';
+    inputWrap.classList.remove('is-editing');
     input.value = '';
 }
 
