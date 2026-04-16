@@ -1362,6 +1362,14 @@
     transition: background 0.18s ease, box-shadow 0.18s ease;
 }
 
+.drawer-schedule-time-core {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
 .drawer-schedule-input {
     min-width: 0;
     border: 0;
@@ -1374,9 +1382,9 @@
 }
 
 .drawer-schedule-input--time {
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
+    width: 5ch;
+    min-width: 5ch;
+    max-width: 5ch;
     font-size: 1.32rem;
     font-weight: 650;
     line-height: 1.05;
@@ -1389,6 +1397,34 @@
 
 .drawer-schedule-time-box--end .drawer-schedule-input--time {
     text-align: center;
+}
+
+.drawer-schedule-next-day-badge {
+    position: absolute;
+    left: calc(100% + 3px);
+    top: -0.48rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 4px;
+    border: 1px solid color-mix(in srgb, #fb923c 32%, #fed7aa);
+    border-radius: 999px;
+    background: color-mix(in srgb, #fb923c 8%, #fff7ed);
+    color: #b45309;
+    font-size: 0.58rem;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+    letter-spacing: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-1px);
+    pointer-events: none;
+}
+
+.drawer-schedule-next-day-badge.is-visible {
+    opacity: 1;
+    visibility: visible;
 }
 
 .drawer-schedule-input--time::placeholder {
@@ -1600,19 +1636,6 @@
     color: #475569;
 }
 
-.drawer-schedule-duration-note {
-    padding: 0;
-    border-radius: 0;
-    background: transparent;
-    font-size: 0.66rem;
-    font-weight: 700;
-    line-height: 1.15;
-    letter-spacing: 0.02em;
-    color: #b45309;
-    white-space: nowrap;
-    text-align: center;
-}
-
 .dark .drawer-schedule-card {
     background: transparent;
     box-shadow: none;
@@ -1646,6 +1669,12 @@
 
 .dark .drawer-schedule-arrow {
     color: color-mix(in srgb, var(--inp-bd) 70%, #64748b);
+}
+
+.dark .drawer-schedule-next-day-badge {
+    border-color: color-mix(in srgb, #f59e0b 42%, #78350f);
+    background: color-mix(in srgb, #f59e0b 16%, #451a03);
+    color: #fcd34d;
 }
 
 .dark .drawer-schedule-duration-inputline {
@@ -1689,11 +1718,6 @@
 .dark .drawer-schedule-duration-row--overnight .drawer-schedule-duration-inputline {
     background: var(--drawer-surface-strong);
     color: color-mix(in srgb, var(--text2) 86%, #cbd5e1);
-}
-
-.dark .drawer-schedule-duration-note {
-    background: transparent;
-    color: #f59e0b;
 }
 
 @media (max-width: 640px) {
@@ -1742,6 +1766,13 @@
 
     .drawer-schedule-input--time {
         font-size: 1.2rem;
+    }
+
+    .drawer-schedule-next-day-badge {
+        left: calc(100% + 2px);
+        top: -0.42rem;
+        padding: 1px 3px;
+        font-size: 0.52rem;
     }
 }
 

@@ -963,19 +963,21 @@ function renderDrawerContent(task) {
                         <span>\u5f00\u59cb</span>
                     </span>
                     <div class="drawer-schedule-time-value">
-                        <input type="text"
-                               class="drawer-schedule-input drawer-schedule-input--time"
-                               id="drawer-start-time-input-${task.id}"
-                               value="${task.planTime || ''}"
-                               placeholder="00:00"
-                               inputmode="numeric"
-                               maxlength="5"
-                               spellcheck="false"
-                               autocomplete="off"
-                               onclick="event.stopPropagation()"
-                               oninput="handleDrawerTimeTyping(this, ${task.id}, 'start')"
-                               onkeydown="if(event.key==='Enter'){event.target.blur()}"
-                               onchange="saveDrawerStartTime(${task.id})">
+                        <span class="drawer-schedule-time-core">
+                            <input type="text"
+                                   class="drawer-schedule-input drawer-schedule-input--time"
+                                   id="drawer-start-time-input-${task.id}"
+                                   value="${task.planTime || ''}"
+                                   placeholder="00:00"
+                                   inputmode="numeric"
+                                   maxlength="5"
+                                   spellcheck="false"
+                                   autocomplete="off"
+                                   onclick="event.stopPropagation()"
+                                   oninput="handleDrawerTimeTyping(this, ${task.id}, 'start')"
+                                   onkeydown="if(event.key==='Enter'){event.target.blur()}"
+                                   onchange="saveDrawerStartTime(${task.id})">
+                        </span>
                     </div>
                 </label>
                 <div class="drawer-schedule-duration-row ${scheduleState.spillsNextDay ? 'drawer-schedule-duration-row--overnight' : ''}">
@@ -1001,7 +1003,6 @@ function renderDrawerContent(task) {
                     </div>
                     <div class="drawer-schedule-duration-side">
                         <span class="drawer-schedule-duration-chip ${scheduleDurationChipClass}">${scheduleDurationText}</span>
-                        ${scheduleState.spillsNextDay ? `<span class="drawer-schedule-duration-note">\u6b21\u65e5\u7ed3\u675f</span>` : ''}
                     </div>
                 </div>
                 <label class="drawer-schedule-time-box drawer-schedule-time-box--end">
@@ -1012,19 +1013,24 @@ function renderDrawerContent(task) {
                         <span>\u7ed3\u675f</span>
                     </span>
                     <div class="drawer-schedule-time-value">
-                        <input type="text"
-                               class="drawer-schedule-input drawer-schedule-input--time"
-                               id="drawer-end-time-input-${task.id}"
-                               value="${scheduleState.endTime}"
-                               placeholder="00:00"
-                               inputmode="numeric"
-                               maxlength="5"
-                               spellcheck="false"
-                               autocomplete="off"
-                               onclick="event.stopPropagation()"
-                               oninput="handleDrawerTimeTyping(this, ${task.id}, 'end')"
-                               onkeydown="if(event.key==='Enter'){event.target.blur()}"
-                               onchange="saveDrawerEndTime(${task.id})">
+                        <span class="drawer-schedule-time-core drawer-schedule-time-core--end">
+                            <input type="text"
+                                   class="drawer-schedule-input drawer-schedule-input--time"
+                                   id="drawer-end-time-input-${task.id}"
+                                   value="${scheduleState.endTime}"
+                                   placeholder="00:00"
+                                   inputmode="numeric"
+                                   maxlength="5"
+                                   spellcheck="false"
+                                   autocomplete="off"
+                                   onclick="event.stopPropagation()"
+                                   oninput="handleDrawerTimeTyping(this, ${task.id}, 'end')"
+                                   onkeydown="if(event.key==='Enter'){event.target.blur()}"
+                                   onchange="saveDrawerEndTime(${task.id})">
+                            <span class="drawer-schedule-next-day-badge ${scheduleState.spillsNextDay ? 'is-visible' : ''}"
+                                  id="drawer-next-day-badge-${task.id}"
+                                  aria-hidden="${scheduleState.spillsNextDay ? 'false' : 'true'}">+1\u5929</span>
+                        </span>
                     </div>
                 </label>
             </div>
@@ -1609,8 +1615,8 @@ function updateDrawerScheduleLivePreview(taskId) {
     const durationInput = document.getElementById('drawer-duration-input-' + taskId);
     const durationChip = document.querySelector('.drawer-schedule-duration-chip');
     const durationRow = document.querySelector('.drawer-schedule-duration-row');
-    const durationSide = document.querySelector('.drawer-schedule-duration-side');
-    if (!durationInput || !durationChip || !durationRow || !durationSide) return;
+    const nextDayBadge = document.getElementById('drawer-next-day-badge-' + taskId);
+    if (!durationInput || !durationChip || !durationRow) return;
 
     const startTime = startInput ? normalizeDrawerTimeTextInput(startInput.value) : '';
     const endTime = endInput ? normalizeDrawerTimeTextInput(endInput.value) : '';
@@ -1656,17 +1662,9 @@ function updateDrawerScheduleLivePreview(taskId) {
     }
 
     durationRow.classList.toggle('drawer-schedule-duration-row--overnight', spillsNextDay);
-
-    let note = durationSide.querySelector('.drawer-schedule-duration-note');
-    if (spillsNextDay) {
-        if (!note) {
-            note = document.createElement('span');
-            note.className = 'drawer-schedule-duration-note';
-            durationSide.appendChild(note);
-        }
-        note.textContent = '\u6b21\u65e5\u7ed3\u675f';
-    } else if (note) {
-        note.remove();
+    if (nextDayBadge) {
+        nextDayBadge.classList.toggle('is-visible', spillsNextDay);
+        nextDayBadge.setAttribute('aria-hidden', spillsNextDay ? 'false' : 'true');
     }
 }
 
