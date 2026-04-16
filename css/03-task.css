@@ -112,3 +112,32 @@
 .dark .task-detail-trigger:hover,.dark .task-more-btn:hover{background:color-mix(in srgb,var(--acc2) 10%,transparent)}
 .dark .task-detail-trigger:focus-visible,.dark .task-more-btn:focus-visible{border-color:color-mix(in srgb,var(--acc2) 36%,var(--inp-bd));box-shadow:0 0 0 3px color-mix(in srgb,var(--acc2) 16%,transparent)}
 .dark .task-detail-trigger.is-active,.dark .task-item--detail-active .task-detail-trigger,.dark .task-more-btn.is-open,.dark .task-item--menu-open .task-more-btn{background:color-mix(in srgb,var(--acc2) 14%,transparent);border-color:color-mix(in srgb,var(--acc2) 30%,var(--inp-bd))}
+
+/* Main task-row check ring: slightly smaller visual ring, same comfortable hit area. */
+#taskMode .list-panel #tList .task-item > .task-row > .task-ck-slot {
+  width: 34px !important;
+  min-width: 34px !important;
+}
+
+#taskMode .list-panel #tList .task-item > .task-row > .task-ck-slot > .task-ck-ring,
+#taskMode .list-panel #tList .task-item > .task-row > .task-ck-slot .tc-check {
+  width: 34px !important;
+  min-width: 34px !important;
+}
+
+#taskMode .list-panel #tList .task-item > .task-row > .task-ck-slot .chk-ring {
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
+  border-width: 1.5px !important;
+}
+
+#taskMode .list-panel #tList .task-item > .task-row > .task-ck-slot .chk-ring-ico {
+  width: 13px !important;
+  height: 13px !important;
+}
+
+#taskMode .list-panel #tList .task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked) {
+  border-width: 2px !important;
+}
