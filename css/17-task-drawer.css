@@ -1236,21 +1236,17 @@
 
 .drawer-schedule-card {
     --drawer-schedule-inline-pad: 14px;
-    --drawer-schedule-time-width: 4.85rem;
+    --drawer-schedule-time-width: 4.55rem;
     --drawer-schedule-connector-min: 18px;
     --drawer-schedule-track-gap: 8px;
-    --drawer-schedule-line-outer-gap: 6px;
-    --drawer-schedule-line-inner-gap: -2px;
+    --drawer-schedule-line-outer-gap: 8px;
+    --drawer-schedule-line-inner-gap: 8px;
     position: relative;
-    padding: 16px var(--drawer-schedule-inline-pad) 20px;
-    background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0.58)),
-        color-mix(in srgb, #ffffff 58%, var(--drawer-surface-strong));
+    padding: 8px var(--drawer-schedule-inline-pad) 14px;
+    background: transparent;
     border: 0;
-    border-radius: 8px;
-    box-shadow:
-        var(--drawer-elev-shadow),
-        inset 0 1px 0 rgba(255, 255, 255, 0.78);
+    border-radius: 0;
+    box-shadow: none;
     overflow: visible;
     margin-bottom: var(--drawer-module-gap);
 }
@@ -1284,10 +1280,10 @@
     grid-row: 1;
     align-self: end;
     height: 2px;
-    margin-bottom: 12px;
+    margin-bottom: 9px;
     border-radius: 999px;
     background: color-mix(in srgb, var(--text3) 44%, #cbd5e1);
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.72);
+    box-shadow: none;
     pointer-events: none;
     z-index: 1;
 }
@@ -1396,12 +1392,13 @@
     width: 100%;
     min-width: 0;
     max-width: 100%;
-    font-size: 1.44rem;
-    font-weight: 800;
-    line-height: 1;
+    font-size: 1.32rem;
+    font-weight: 650;
+    line-height: 1.05;
     letter-spacing: 0;
     text-align: center;
     font-variant-numeric: tabular-nums;
+    color: color-mix(in srgb, var(--text) 88%, #334155);
     caret-color: color-mix(in srgb, var(--acc2) 88%, var(--text));
 }
 
@@ -1639,10 +1636,8 @@
 }
 
 .dark .drawer-schedule-card {
-    background: var(--drawer-surface-strong);
-    box-shadow:
-        0 16px 34px rgba(2, 6, 23, 0.24),
-        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    background: transparent;
+    box-shadow: none;
 }
 
 .dark .drawer-schedule-time-box,
@@ -1734,12 +1729,12 @@
 @media (max-width: 640px) {
     .drawer-schedule-card {
         --drawer-schedule-inline-pad: 8px;
-        --drawer-schedule-time-width: 4rem;
+        --drawer-schedule-time-width: 3.8rem;
         --drawer-schedule-connector-min: 6px;
         --drawer-schedule-track-gap: 4px;
         --drawer-schedule-line-outer-gap: 4px;
-        --drawer-schedule-line-inner-gap: -1px;
-        padding: 16px var(--drawer-schedule-inline-pad) 20px;
+        --drawer-schedule-line-inner-gap: 4px;
+        padding: 8px var(--drawer-schedule-inline-pad) 14px;
     }
 
     .drawer-schedule-time-row {
@@ -1767,7 +1762,7 @@
 
     .drawer-schedule-time-row::before,
     .drawer-schedule-time-row::after {
-        margin-bottom: 12px;
+        margin-bottom: 8px;
     }
 
     .drawer-schedule-duration-inputline {
@@ -1776,7 +1771,7 @@
     }
 
     .drawer-schedule-input--time {
-        font-size: 1.26rem;
+        font-size: 1.2rem;
     }
 }
 
