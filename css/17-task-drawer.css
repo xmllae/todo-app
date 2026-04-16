@@ -1089,7 +1089,7 @@
     --drawer-schedule-connector-min: 18px;
     --drawer-schedule-track-gap: 8px;
     position: relative;
-    padding: 18px var(--drawer-schedule-inline-pad) 22px;
+    padding: 16px var(--drawer-schedule-inline-pad) 20px;
     background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0.58)),
         color-mix(in srgb, #ffffff 58%, var(--drawer-surface-strong));
@@ -1131,7 +1131,7 @@
     grid-row: 1;
     align-self: end;
     height: 2px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     margin-inline: 0;
     border-radius: 999px;
     background: color-mix(in srgb, var(--text3) 44%, #cbd5e1);
@@ -1324,7 +1324,7 @@
     margin: 0;
     padding: 0;
     border-radius: 0;
-    transform: translateY(8px);
+    transform: translateY(6px);
 }
 
 .drawer-schedule-duration-main {
@@ -1604,12 +1604,12 @@
         width: max-content;
         margin-inline: 0;
         padding: 0;
-        transform: translateY(7px);
+        transform: translateY(5px);
     }
 
     .drawer-schedule-time-row::before,
     .drawer-schedule-time-row::after {
-        margin-bottom: 10px;
+        margin-bottom: 12px;
         margin-inline: 0;
     }
 
@@ -1836,8 +1836,12 @@
    ========================================= */
 
 .drawer-subtasks-list {
-    --subtask-text-start: 44px;
-    --subtask-add-icon-space: 29px;
+    --subtask-row-pad-x: 12px;
+    --subtask-icon-size: 22px;
+    --subtask-icon-gap: 10px;
+    --subtask-inline-border-width: 1px;
+    --subtask-text-start: calc(var(--subtask-row-pad-x) + var(--subtask-icon-size) + var(--subtask-icon-gap));
+    --subtask-add-icon-space: 28px;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -1848,9 +1852,9 @@
     box-sizing: border-box;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--subtask-icon-gap);
     min-height: 42px;
-    padding: 10px 12px;
+    padding: 10px var(--subtask-row-pad-x);
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.15s ease;
@@ -1998,7 +2002,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    gap: 13px;
+    gap: 14px;
     width: 100%;
     height: 38px;
     padding: 0 14px 0 calc(var(--subtask-text-start) - var(--subtask-add-icon-space));
@@ -2022,7 +2026,7 @@
     align-items: center;
     gap: 10px;
     min-height: 42px;
-    padding: 10px 12px 10px var(--subtask-text-start);
+    padding: 10px var(--subtask-row-pad-x) 10px calc(var(--subtask-text-start) - var(--subtask-inline-border-width));
     border: 1px solid transparent;
     border-radius: 8px;
     background: var(--drawer-surface-strong);
@@ -2033,20 +2037,16 @@
 }
 
 .subtask-add-inline::before {
-    content: "+";
+    content: "";
     position: absolute;
-    left: 12px;
+    left: calc(var(--subtask-row-pad-x) - var(--subtask-inline-border-width));
     top: 50%;
-    width: 22px;
-    height: 22px;
+    width: var(--subtask-icon-size);
+    height: var(--subtask-icon-size);
     box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--acc);
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 1;
+    background:
+        linear-gradient(var(--acc), var(--acc)) center / 14px 1.5px no-repeat,
+        linear-gradient(var(--acc), var(--acc)) center / 1.5px 14px no-repeat;
     transform: translateY(-50%);
     pointer-events: none;
 }
@@ -2066,7 +2066,9 @@
 }
 
 .subtask-add-inline:focus-within::before {
-    color: var(--acc);
+    background:
+        linear-gradient(var(--acc), var(--acc)) center / 14px 1.5px no-repeat,
+        linear-gradient(var(--acc), var(--acc)) center / 1.5px 14px no-repeat;
 }
 
 .subtask-add-input {
@@ -2116,21 +2118,21 @@
 }
 
 .subtask-add-btn svg {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     flex-shrink: 0;
     transform-origin: center;
     transition: transform 0.22s ease;
 }
 
 .subtask-add-btn .ph {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 1;
     transform-origin: center;
     transition: transform 0.22s ease;
@@ -2156,36 +2158,31 @@
     width: 100%;
     min-height: 120px;
     padding: 18px 18px;
-    border: 1px solid color-mix(in srgb, var(--inp-bd) 42%, #e5e7eb);
+    border: 1px solid transparent;
     border-radius: 8px;
-    background: #f9fafb;
+    background: var(--drawer-surface-strong);
     color: var(--text);
     font-size: 0.98rem;
     font-family: inherit;
     line-height: 1.7;
     resize: vertical;
     outline: none;
-    box-shadow:
-        0 8px 18px rgba(15, 23, 42, 0.025),
-        inset 0 1px 0 rgba(255, 255, 255, 0.84);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.035);
     transition: border-color 0.24s ease, box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), background 0.24s ease, transform 0.2s ease;
 }
 
 .drawer-notes-textarea:hover {
-    border-color: color-mix(in srgb, var(--inp-bd) 68%, #cbd5e1);
-    background: #f8fafc;
-    box-shadow:
-        0 10px 22px rgba(15, 23, 42, 0.04),
-        inset 0 1px 0 rgba(255, 255, 255, 0.88);
+    border-color: color-mix(in srgb, var(--acc2) 14%, transparent);
+    background: color-mix(in srgb, #4f46e5 2%, var(--drawer-surface-soft));
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.045);
 }
 
 .drawer-notes-textarea:focus {
-    border-color: color-mix(in srgb, var(--acc2) 38%, #cbd5e1);
-    background: #ffffff;
+    border-color: color-mix(in srgb, var(--acc2) 42%, #cbd5e1);
+    background: var(--drawer-surface-strong);
     box-shadow:
         0 0 0 3px color-mix(in srgb, var(--acc2) 9%, transparent),
-        0 10px 24px rgba(15, 23, 42, 0.045),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        0 8px 18px rgba(15, 23, 42, 0.045);
     transform: none;
 }
 
@@ -2387,28 +2384,23 @@
 }
 
 .dark .drawer-notes-textarea {
-    border-color: color-mix(in srgb, var(--inp-bd) 58%, transparent);
-    background: color-mix(in srgb, var(--card) 86%, #111827);
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.04),
-        0 10px 22px rgba(2, 6, 23, 0.18);
+    border-color: transparent;
+    background: color-mix(in srgb, var(--card) 78%, #111827);
+    box-shadow: 0 8px 16px rgba(2, 6, 23, 0.16);
 }
 
 .dark .drawer-notes-textarea:hover {
-    border-color: color-mix(in srgb, var(--inp-bd) 74%, #64748b);
-    background: color-mix(in srgb, var(--card) 78%, #111827);
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.05),
-        0 12px 24px rgba(2, 6, 23, 0.22);
+    border-color: color-mix(in srgb, var(--acc2, var(--acc)) 16%, transparent);
+    background: color-mix(in srgb, var(--card) 72%, #111827);
+    box-shadow: 0 10px 20px rgba(2, 6, 23, 0.2);
 }
 
 .dark .drawer-notes-textarea:focus {
-    border-color: color-mix(in srgb, var(--acc2) 42%, var(--inp-bd));
-    background: color-mix(in srgb, var(--card) 88%, #111827);
+    border-color: color-mix(in srgb, var(--acc2, var(--acc)) 42%, var(--inp-bd));
+    background: color-mix(in srgb, var(--card) 78%, #111827);
     box-shadow:
-        0 0 0 3px color-mix(in srgb, var(--acc2) 14%, transparent),
-        inset 0 1px 0 rgba(255, 255, 255, 0.04),
-        0 12px 26px rgba(2, 6, 23, 0.24);
+        0 0 0 3px color-mix(in srgb, var(--acc2, var(--acc)) 13%, transparent),
+        0 10px 20px rgba(2, 6, 23, 0.22);
     transform: none;
 }
 
@@ -2425,7 +2417,9 @@
 }
 
 .dark .subtask-add-inline::before {
-    color: var(--acc2, var(--acc));
+    background:
+        linear-gradient(var(--acc2, var(--acc)), var(--acc2, var(--acc))) center / 14px 1.5px no-repeat,
+        linear-gradient(var(--acc2, var(--acc)), var(--acc2, var(--acc))) center / 1.5px 14px no-repeat;
 }
 
 .dark .subtask-add-inline:hover {
@@ -2443,7 +2437,9 @@
 }
 
 .dark .subtask-add-inline:focus-within::before {
-    color: var(--acc2, var(--acc));
+    background:
+        linear-gradient(var(--acc2, var(--acc)), var(--acc2, var(--acc))) center / 14px 1.5px no-repeat,
+        linear-gradient(var(--acc2, var(--acc)), var(--acc2, var(--acc))) center / 1.5px 14px no-repeat;
 }
 
 .dark .subtask-add-btn:hover {
