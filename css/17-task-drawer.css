@@ -2193,14 +2193,15 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    min-height: 38px;
-    padding: 8px var(--subtask-row-pad-x) 8px calc(var(--subtask-text-start) - var(--subtask-inline-border-width));
+    height: 34px;
+    min-height: 34px;
+    padding: 0 var(--subtask-row-pad-x) 0 calc(var(--subtask-text-start) - var(--subtask-inline-border-width));
     border: 1px solid transparent;
     border-radius: 8px;
     background: var(--drawer-surface-strong);
     margin-top: 0;
     cursor: text;
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.035);
+    box-shadow: none;
     transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
@@ -2222,15 +2223,13 @@
 .subtask-add-inline:hover {
     border-color: color-mix(in srgb, var(--acc2) 18%, transparent);
     background: color-mix(in srgb, #4f46e5 3%, var(--drawer-surface-soft));
-    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.045);
+    box-shadow: none;
 }
 
 .subtask-add-inline:focus-within {
     border-color: color-mix(in srgb, var(--acc2) 42%, #cbd5e1);
     background: var(--drawer-surface-strong);
-    box-shadow:
-        0 0 0 3px color-mix(in srgb, var(--acc2) 9%, transparent),
-        0 8px 18px rgba(15, 23, 42, 0.045);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--acc2) 16%, transparent);
 }
 
 .subtask-add-inline:focus-within::before {
@@ -2583,7 +2582,7 @@
 .dark .subtask-add-inline {
     border-color: transparent;
     background: color-mix(in srgb, var(--card) 78%, #111827);
-    box-shadow: 0 8px 16px rgba(2, 6, 23, 0.16);
+    box-shadow: none;
 }
 
 .dark .subtask-add-inline::before {
@@ -2595,15 +2594,13 @@
 .dark .subtask-add-inline:hover {
     border-color: color-mix(in srgb, var(--acc2, var(--acc)) 18%, transparent);
     background: color-mix(in srgb, var(--card) 72%, #111827);
-    box-shadow: 0 10px 20px rgba(2, 6, 23, 0.2);
+    box-shadow: none;
 }
 
 .dark .subtask-add-inline:focus-within {
     border-color: color-mix(in srgb, var(--acc2, var(--acc)) 42%, var(--inp-bd));
     background: color-mix(in srgb, var(--card) 78%, #111827);
-    box-shadow:
-        0 0 0 3px color-mix(in srgb, var(--acc2, var(--acc)) 13%, transparent),
-        0 10px 20px rgba(2, 6, 23, 0.22);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--acc2, var(--acc)) 18%, transparent);
 }
 
 .dark .subtask-add-inline:focus-within::before {
