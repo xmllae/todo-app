@@ -2157,7 +2157,7 @@
     box-sizing: border-box;
     width: 100%;
     min-height: 120px;
-    padding: 18px 18px;
+    padding: 22px 20px 20px 22px;
     border: 1px solid transparent;
     border-radius: 8px;
     background: var(--drawer-surface-strong);
