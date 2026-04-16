@@ -1994,14 +1994,16 @@
 
 .drawer-subtasks-list {
     --subtask-row-pad-x: 12px;
-    --subtask-icon-size: 22px;
+    --subtask-icon-size: 16px;
+    --subtask-hit-size: 22px;
+    --subtask-icon-offset: 3px;
     --subtask-icon-gap: 10px;
     --subtask-inline-border-width: 1px;
-    --subtask-text-start: calc(var(--subtask-row-pad-x) + var(--subtask-icon-size) + var(--subtask-icon-gap));
+    --subtask-text-start: calc(var(--subtask-row-pad-x) + var(--subtask-hit-size) + var(--subtask-icon-gap));
     --subtask-add-icon-space: 28px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
     margin-bottom: var(--drawer-module-gap);
 }
 
@@ -2011,28 +2013,26 @@
     display: flex;
     align-items: center;
     gap: var(--subtask-icon-gap);
-    min-height: 42px;
-    padding: 10px var(--subtask-row-pad-x);
+    min-height: 34px;
+    padding: 6px var(--subtask-row-pad-x);
     border-radius: 8px;
     cursor: pointer;
-    transition: transform 0.16s ease, background 0.16s ease, box-shadow 0.18s ease, color 0.16s ease;
-    background: var(--drawer-surface-strong);
+    transition: background 0.16s ease, color 0.16s ease;
+    background: transparent;
     border: none;
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.035);
+    box-shadow: none;
 }
 
-.subtask-row:hover {
-    transform: translateY(-1px);
-    background: color-mix(in srgb, #4f46e5 5%, var(--drawer-surface-soft));
-    box-shadow:
-        0 9px 20px rgba(15, 23, 42, 0.055),
-        inset 0 0 0 1px rgba(148, 163, 184, 0.08);
+.subtask-row:hover,
+.subtask-row:focus-within {
+    background: color-mix(in srgb, var(--text) 4%, transparent);
+    box-shadow: none;
 }
 
 /* Subtask check - uses same ring styles */
 .subtask-check.task-ck-slot {
-    width: 22px;
-    height: 22px;
+    width: var(--subtask-hit-size);
+    height: var(--subtask-hit-size);
     flex-shrink: 0;
     cursor: pointer;
     display: flex;
@@ -2050,10 +2050,10 @@
 
 .subtask-check.task-ck-slot .chk-ring {
     box-sizing: border-box;
-    width: 22px;
-    height: 22px;
+    width: var(--subtask-icon-size);
+    height: var(--subtask-icon-size);
     border-radius: 50%;
-    border: 1.75px solid color-mix(in srgb, var(--inp-bd) 30%, #9ca3af);
+    border: 1.5px solid color-mix(in srgb, var(--inp-bd) 30%, #9ca3af);
     background: var(--card);
     box-shadow: 0 1px 2px rgba(15, 23, 42, .05);
     display: flex;
@@ -2066,7 +2066,7 @@
 
 .subtask-check.task-ck-slot .chk-ring .chk-ring-ico {
     color: transparent;
-    font-size: 14px;
+    font-size: 10px;
     line-height: 1;
     transition: color .15s;
 }
@@ -2172,9 +2172,9 @@
     justify-content: flex-start;
     gap: 14px;
     width: 100%;
-    height: 38px;
+    height: 34px;
     padding: 0 14px 0 calc(var(--subtask-text-start) - var(--subtask-add-icon-space));
-    margin-top: 2px;
+    margin-top: 0;
     border: none;
     border-radius: 8px;
     background: transparent;
@@ -2193,8 +2193,8 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    min-height: 42px;
-    padding: 10px var(--subtask-row-pad-x) 10px calc(var(--subtask-text-start) - var(--subtask-inline-border-width));
+    min-height: 38px;
+    padding: 8px var(--subtask-row-pad-x) 8px calc(var(--subtask-text-start) - var(--subtask-inline-border-width));
     border: 1px solid transparent;
     border-radius: 8px;
     background: var(--drawer-surface-strong);
@@ -2207,7 +2207,7 @@
 .subtask-add-inline::before {
     content: "";
     position: absolute;
-    left: calc(var(--subtask-row-pad-x) - var(--subtask-inline-border-width));
+    left: calc(var(--subtask-row-pad-x) + var(--subtask-icon-offset) - var(--subtask-inline-border-width));
     top: 50%;
     width: var(--subtask-icon-size);
     height: var(--subtask-icon-size);
@@ -2517,6 +2517,7 @@
 
 .dark .drawer-header-btn:hover,
 .dark .subtask-row:hover,
+.dark .subtask-row:focus-within,
 .dark .subtask-add-btn:hover,
 .dark .drawer-footer-btn:hover {
     background: color-mix(in srgb, var(--hov) 88%, transparent);
