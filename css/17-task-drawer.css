@@ -343,16 +343,16 @@
     inset: 0 0 auto;
     min-height: 40px;
     border-radius: 999px;
-    background: rgba(148, 163, 184, 0.38);
+    background: rgba(148, 163, 184, 0.24);
     transition: background-color 0.18s ease, opacity 0.18s ease;
     cursor: pointer;
     touch-action: none;
 }
 
-.task-detail-inner:hover .drawer-scrollbar-thumb,
+.drawer-scrollbar:hover .drawer-scrollbar-thumb,
 .drawer-scrollbar.is-dragging .drawer-scrollbar-thumb,
 .drawer-scrollbar-thumb.is-dragging {
-    background: rgba(100, 116, 139, 0.52);
+    background: rgba(100, 116, 139, 0.38);
 }
 
 /* =========================================
@@ -1088,9 +1088,11 @@
    ========================================= */
 
 .drawer-schedule-card {
-    --drawer-schedule-inline-pad: 28px;
+    --drawer-schedule-inline-pad: 12px;
+    --drawer-schedule-time-col: 5.8rem;
+    --drawer-schedule-time-width: 4.75rem;
     position: relative;
-    padding: 18px var(--drawer-schedule-inline-pad) 36px;
+    padding: 18px var(--drawer-schedule-inline-pad) 22px;
     background: color-mix(in srgb, #ffffff 58%, var(--drawer-surface-strong));
     border: 0;
     border-radius: 8px;
@@ -1112,9 +1114,39 @@
 
 .drawer-schedule-time-row {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-columns:
+        var(--drawer-schedule-time-col)
+        minmax(34px, 1fr)
+        auto
+        minmax(34px, 1fr)
+        var(--drawer-schedule-time-col);
     align-items: end;
-    gap: 24px;
+    gap: 8px;
+    position: relative;
+    min-width: 0;
+}
+
+.drawer-schedule-time-row::before,
+.drawer-schedule-time-row::after {
+    content: "";
+    grid-row: 1;
+    align-self: end;
+    height: 2px;
+    margin-bottom: 10px;
+    margin-inline: -3px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--text3) 44%, #cbd5e1);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.72);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.drawer-schedule-time-row::before {
+    grid-column: 2;
+}
+
+.drawer-schedule-time-row::after {
+    grid-column: 4;
 }
 
 .drawer-schedule-time-box,
@@ -1138,10 +1170,20 @@
     border-radius: 0;
     cursor: text;
     text-align: center;
+    width: 100%;
+    overflow: visible;
+}
+
+.drawer-schedule-time-box--start {
+    grid-column: 1;
+    align-items: flex-start;
+    justify-self: start;
 }
 
 .drawer-schedule-time-box--end {
-    align-items: center;
+    grid-column: 5;
+    align-items: flex-end;
+    justify-self: end;
 }
 
 .drawer-schedule-time-box:hover,
@@ -1161,7 +1203,7 @@
     align-items: center;
     justify-content: center;
     gap: 4px;
-    width: fit-content;
+    width: var(--drawer-schedule-time-width);
     font-size: 0.76rem;
     font-weight: 600;
     color: color-mix(in srgb, var(--text3) 92%, #64748b);
@@ -1169,13 +1211,13 @@
 }
 
 .drawer-schedule-time-box--end .drawer-schedule-time-label {
-    align-self: center;
+    align-self: flex-end;
 }
 
 .drawer-schedule-time-value {
     display: flex;
     justify-content: center;
-    width: 100%;
+    width: var(--drawer-schedule-time-width);
     min-width: 0;
 }
 
@@ -1191,9 +1233,9 @@
 }
 
 .drawer-schedule-input--time {
-    width: 5ch;
-    min-width: 5ch;
-    max-width: 5ch;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
     font-size: 1.42rem;
     font-weight: 800;
     line-height: 1;
@@ -1264,7 +1306,9 @@
 
 .drawer-schedule-duration-row {
     position: relative;
-    z-index: 1;
+    z-index: 2;
+    grid-column: 3;
+    grid-row: 1;
     align-self: end;
     justify-self: center;
     display: flex;
@@ -1276,29 +1320,7 @@
     margin: 0;
     padding: 0;
     border-radius: 0;
-    transform: translateY(24px);
-}
-
-.drawer-schedule-duration-row::before,
-.drawer-schedule-duration-row::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    width: 42px;
-    height: 2px;
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--text3) 44%, #cbd5e1);
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.72);
-    transform: translateY(-50%);
-    pointer-events: none;
-}
-
-.drawer-schedule-duration-row::before {
-    right: calc(100% + 12px);
-}
-
-.drawer-schedule-duration-row::after {
-    left: calc(100% + 12px);
+    transform: translateY(8px);
 }
 
 .drawer-schedule-duration-main {
@@ -1477,8 +1499,8 @@
     box-shadow: none;
 }
 
-.dark .drawer-schedule-duration-row::before,
-.dark .drawer-schedule-duration-row::after {
+.dark .drawer-schedule-time-row::before,
+.dark .drawer-schedule-time-row::after {
     background: color-mix(in srgb, var(--text3) 46%, #475569);
 }
 
@@ -1543,13 +1565,20 @@
 
 @media (max-width: 640px) {
     .drawer-schedule-card {
-        --drawer-schedule-inline-pad: 18px;
-        padding: 16px var(--drawer-schedule-inline-pad) 32px;
+        --drawer-schedule-inline-pad: 12px;
+        --drawer-schedule-time-col: 4.9rem;
+        --drawer-schedule-time-width: 4.28rem;
+        padding: 16px var(--drawer-schedule-inline-pad) 20px;
     }
 
     .drawer-schedule-time-row {
-        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-        gap: 16px;
+        grid-template-columns:
+            var(--drawer-schedule-time-col)
+            minmax(20px, 1fr)
+            auto
+            minmax(20px, 1fr)
+            var(--drawer-schedule-time-col);
+        gap: 6px;
     }
 
     .drawer-schedule-arrow {
@@ -1562,20 +1591,13 @@
         width: max-content;
         margin-inline: 0;
         padding: 0;
-        transform: translateY(22px);
+        transform: translateY(7px);
     }
 
-    .drawer-schedule-duration-row::before,
-    .drawer-schedule-duration-row::after {
-        width: 28px;
-    }
-
-    .drawer-schedule-duration-row::before {
-        right: calc(100% + 10px);
-    }
-
-    .drawer-schedule-duration-row::after {
-        left: calc(100% + 10px);
+    .drawer-schedule-time-row::before,
+    .drawer-schedule-time-row::after {
+        margin-bottom: 10px;
+        margin-inline: -2px;
     }
 
     .drawer-schedule-duration-inputline {
