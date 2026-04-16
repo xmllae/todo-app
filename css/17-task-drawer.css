@@ -1088,6 +1088,8 @@
     --drawer-schedule-time-width: 4.85rem;
     --drawer-schedule-connector-min: 18px;
     --drawer-schedule-track-gap: 8px;
+    --drawer-schedule-line-outer-gap: 6px;
+    --drawer-schedule-line-inner-gap: -2px;
     position: relative;
     padding: 16px var(--drawer-schedule-inline-pad) 20px;
     background:
@@ -1132,7 +1134,6 @@
     align-self: end;
     height: 2px;
     margin-bottom: 12px;
-    margin-inline: 0;
     border-radius: 999px;
     background: color-mix(in srgb, var(--text3) 44%, #cbd5e1);
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.72);
@@ -1142,10 +1143,14 @@
 
 .drawer-schedule-time-row::before {
     grid-column: 2;
+    margin-left: var(--drawer-schedule-line-outer-gap);
+    margin-right: var(--drawer-schedule-line-inner-gap);
 }
 
 .drawer-schedule-time-row::after {
     grid-column: 4;
+    margin-left: var(--drawer-schedule-line-inner-gap);
+    margin-right: var(--drawer-schedule-line-outer-gap);
 }
 
 .drawer-schedule-time-box,
@@ -1581,6 +1586,8 @@
         --drawer-schedule-time-width: 4rem;
         --drawer-schedule-connector-min: 6px;
         --drawer-schedule-track-gap: 4px;
+        --drawer-schedule-line-outer-gap: 4px;
+        --drawer-schedule-line-inner-gap: -1px;
         padding: 16px var(--drawer-schedule-inline-pad) 20px;
     }
 
@@ -1610,7 +1617,6 @@
     .drawer-schedule-time-row::before,
     .drawer-schedule-time-row::after {
         margin-bottom: 12px;
-        margin-inline: 0;
     }
 
     .drawer-schedule-duration-inputline {
