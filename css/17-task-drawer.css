@@ -2318,12 +2318,12 @@
 .drawer-footer-btn--danger {
     grid-column: auto;
     min-height: 44px;
-    color: #dc2626;
-    background: #fff5f5;
+    color: #475569;
+    background: #f1f5f9;
     box-shadow:
-        0 8px 18px rgba(239, 68, 68, 0.045),
-        inset 0 0 0 1px rgba(248, 113, 113, 0.16),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        0 8px 18px rgba(15, 23, 42, 0.035),
+        inset 0 0 0 1px rgba(148, 163, 184, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.86);
 }
 
 .drawer-footer-btn--danger:hover {
@@ -2344,12 +2344,21 @@
 }
 
 .drawer-footer-btn--freeze {
-    color: #2563eb;
-    background: #eff6ff;
+    color: #475569;
+    background: #f1f5f9;
     box-shadow:
-        0 8px 18px rgba(37, 99, 235, 0.04),
-        inset 0 0 0 1px rgba(59, 130, 246, 0.14),
-        inset 0 1px 0 rgba(255, 255, 255, 0.88);
+        0 8px 18px rgba(15, 23, 42, 0.035),
+        inset 0 0 0 1px rgba(148, 163, 184, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.86);
+}
+
+.drawer-footer-btn--repeat:hover {
+    background: color-mix(in srgb, var(--acc) 9%, #eef2f7);
+    color: var(--acc);
+    box-shadow:
+        0 10px 22px color-mix(in srgb, var(--acc) 8%, rgba(15, 23, 42, 0.05)),
+        inset 0 0 0 1px color-mix(in srgb, var(--acc) 20%, rgba(148, 163, 184, 0.12)),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .drawer-footer-btn--freeze:hover {
@@ -2546,13 +2555,22 @@
         0 10px 20px rgba(2, 6, 23, 0.22);
 }
 
-.dark .drawer-footer-btn--freeze {
-    color: #93c5fd;
-    background: color-mix(in srgb, #2563eb 14%, var(--card));
+.dark .drawer-footer-btn--repeat:hover {
+    color: var(--acc2, var(--acc));
+    background: color-mix(in srgb, var(--acc2, var(--acc)) 14%, var(--card));
     box-shadow:
-        inset 0 0 0 1px rgba(96, 165, 250, 0.18),
+        inset 0 0 0 1px color-mix(in srgb, var(--acc2, var(--acc)) 24%, rgba(203, 213, 225, 0.12)),
+        inset 0 1px 0 rgba(255, 255, 255, 0.055),
+        0 10px 20px color-mix(in srgb, var(--acc2, var(--acc)) 12%, rgba(2, 6, 23, 0.22));
+}
+
+.dark .drawer-footer-btn--freeze {
+    color: color-mix(in srgb, var(--text2) 90%, #e2e8f0);
+    background: color-mix(in srgb, var(--card) 78%, #111827);
+    box-shadow:
+        inset 0 0 0 1px rgba(148, 163, 184, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.045),
-        0 8px 18px rgba(30, 64, 175, 0.16);
+        0 8px 16px rgba(2, 6, 23, 0.16);
 }
 
 .dark .drawer-footer-btn--freeze:hover {
@@ -2565,12 +2583,12 @@
 }
 
 .dark .drawer-footer-btn--danger {
-    color: #fda4af;
-    background: color-mix(in srgb, #ef4444 12%, var(--card));
+    color: color-mix(in srgb, var(--text2) 90%, #e2e8f0);
+    background: color-mix(in srgb, var(--card) 78%, #111827);
     box-shadow:
-        inset 0 0 0 1px rgba(248, 113, 113, 0.18),
+        inset 0 0 0 1px rgba(148, 163, 184, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.045),
-        0 8px 18px rgba(69, 10, 10, 0.18);
+        0 8px 16px rgba(2, 6, 23, 0.16);
 }
 
 .dark .drawer-footer-btn--danger:hover {
