@@ -1885,7 +1885,7 @@
     width: 22px;
     height: 22px;
     border-radius: 50%;
-    border: 1.5px solid color-mix(in srgb, var(--inp-bd) 70%, #b8c2cf);
+    border: 1.5px solid color-mix(in srgb, var(--inp-bd) 48%, #94a3b8);
     background: var(--card);
     box-shadow: 0 1px 2px rgba(15, 23, 42, .05);
     display: flex;
@@ -1909,7 +1909,7 @@
 }
 
 .subtask-check.task-ck-slot .chk-ring:hover {
-    border-color: color-mix(in srgb, var(--inp-bd) 62%, #9aa8b8);
+    border-color: color-mix(in srgb, var(--inp-bd) 38%, #7f8da0);
     background: var(--card);
     box-shadow: none;
 }
@@ -2002,14 +2002,15 @@
     margin-top: 0;
     border: none;
     border-radius: 8px;
-    background: color-mix(in srgb, #ffffff 42%, var(--drawer-surface-strong));
-    color: #64748b;
+    background: color-mix(in srgb, var(--acc) 6%, #ffffff);
+    color: color-mix(in srgb, var(--acc) 88%, #475569);
     font-size: 0.875rem;
     font-weight: 500;
     cursor: pointer;
     user-select: none;
     box-shadow:
-        var(--drawer-elev-shadow),
+        0 8px 18px color-mix(in srgb, var(--acc) 5%, rgba(15, 23, 42, 0.035)),
+        inset 0 0 0 1px color-mix(in srgb, var(--acc) 14%, transparent),
         inset 0 1px 0 rgba(255, 255, 255, 0.82);
     transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
 }
@@ -2167,23 +2168,26 @@
 }
 
 .subtask-add-btn:hover {
-    background: color-mix(in srgb, #ffffff 34%, color-mix(in srgb, #4f46e5 3%, var(--drawer-surface-soft)));
+    background: color-mix(in srgb, var(--acc) 10%, #ffffff);
     color: var(--acc);
     box-shadow:
-        var(--drawer-elev-shadow-hover),
+        0 10px 22px color-mix(in srgb, var(--acc) 9%, rgba(15, 23, 42, 0.05)),
+        inset 0 0 0 1px color-mix(in srgb, var(--acc) 24%, transparent),
         inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .subtask-add-btn:active {
-    background: color-mix(in srgb, #ffffff 42%, var(--drawer-surface-strong));
+    background: color-mix(in srgb, var(--acc) 12%, #ffffff);
 }
 
 .subtask-add-btn:focus-visible {
     outline: none;
-    background: color-mix(in srgb, #ffffff 42%, var(--drawer-surface-strong));
-    color: #64748b;
+    background: color-mix(in srgb, var(--acc) 8%, #ffffff);
+    color: var(--acc);
     box-shadow:
-        var(--drawer-elev-shadow),
+        0 0 0 3px color-mix(in srgb, var(--acc) 12%, transparent),
+        0 8px 18px color-mix(in srgb, var(--acc) 6%, rgba(15, 23, 42, 0.04)),
+        inset 0 0 0 1px color-mix(in srgb, var(--acc) 22%, transparent),
         inset 0 1px 0 rgba(255, 255, 255, 0.82);
 }
 
@@ -2482,8 +2486,12 @@
 }
 
 .dark .subtask-add-btn {
-    background: linear-gradient(180deg, var(--drawer-surface) 0%, var(--drawer-surface-strong) 100%);
-    color: color-mix(in srgb, var(--text2) 58%, var(--text3));
+    background: color-mix(in srgb, var(--acc2, var(--acc)) 12%, var(--card));
+    color: var(--acc2, var(--acc));
+    box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--acc2, var(--acc)) 20%, transparent),
+        inset 0 1px 0 rgba(255, 255, 255, 0.045),
+        0 10px 20px rgba(2, 6, 23, 0.18);
 }
 
 .dark .subtask-add-inline {
@@ -2527,14 +2535,18 @@
 }
 
 .dark .subtask-add-btn:hover {
-    background: linear-gradient(180deg, color-mix(in srgb, var(--card) 94%, #111827) 0%, var(--drawer-surface-tint) 100%);
+    background: color-mix(in srgb, var(--acc2, var(--acc)) 18%, var(--card));
     color: var(--acc2, var(--acc));
 }
 
 .dark .subtask-add-btn:focus-visible {
-    background: linear-gradient(180deg, var(--drawer-surface) 0%, var(--drawer-surface-strong) 100%);
-    color: color-mix(in srgb, var(--text2) 58%, var(--text3));
-    box-shadow: none;
+    background: color-mix(in srgb, var(--acc2, var(--acc)) 16%, var(--card));
+    color: var(--acc2, var(--acc));
+    box-shadow:
+        0 0 0 3px color-mix(in srgb, var(--acc2, var(--acc)) 14%, transparent),
+        inset 0 0 0 1px color-mix(in srgb, var(--acc2, var(--acc)) 24%, transparent),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        0 10px 20px rgba(2, 6, 23, 0.2);
 }
 
 .dark .drawer-footer-btn {
