@@ -572,6 +572,14 @@ function getDrawerCheckRingColor(priority) {
         : '#94a3b8';
 }
 
+function getDrawerPhosphorIcon(name, extraClass) {
+    return `<i class="ph ph-${name}${extraClass ? ' ' + extraClass : ''}" aria-hidden="true"></i>`;
+}
+
+function getDrawerCheckIconMarkup() {
+    return getDrawerPhosphorIcon('check', 'chk-ring-ico');
+}
+
 function renderDrawerContent(task) {
     const content = document.getElementById('taskDetailContent');
     if (!content) return;
@@ -599,7 +607,7 @@ function renderDrawerContent(task) {
                  onmouseleave="handleCheckRingHover(this, false)">
                 <div class="tc-check">
                     <div class="chk-ring ${isDone ? 'checked' : ''}">
-                        <svg class="chk-ring-ico" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.15 12.35 10.95 16.05 17.1 8.2" stroke="currentColor" stroke-width="2.55" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        ${getDrawerCheckIconMarkup()}
                     </div>
                 </div>
             </div>
@@ -613,23 +621,15 @@ function renderDrawerContent(task) {
                    onkeydown="if(event.key==='Enter'){event.target.blur()}">
             <div class="drawer-priority-dropdown" onclick="event.stopPropagation()">
                 <button type="button" class="drawer-priority-btn" onclick="togglePriorityDropdown(this)" title="\u9009\u62e9\u4f18\u5148\u7ea7">
-                    <svg class="drawer-priority-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="6 9 12 15 18 9"/>
-                    </svg>
+                    ${getDrawerPhosphorIcon('caret-down', 'drawer-priority-arrow')}
                 </button>
                 <div class="drawer-priority-menu">
                     <div class="drawer-priority-option ${task.priority === 'high' ? 'selected' : ''}" data-priority="high" onclick="setDrawerPriority(${task.id}, 'high')">
-                        <svg class="drawer-priority-flag drawer-priority-flag--high" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
-                            <line x1="4" x2="4" y1="22" y2="15"/>
-                        </svg>
+                        ${getDrawerPhosphorIcon('flag', 'drawer-priority-flag drawer-priority-flag--high')}
                         <span>\u9ad8\u4f18\u5148\u7ea7</span>
                     </div>
                     <div class="drawer-priority-option ${!task.priority || task.priority === 'normal' ? 'selected' : ''}" data-priority="normal" onclick="setDrawerPriority(${task.id}, 'normal')">
-                        <svg class="drawer-priority-flag drawer-priority-flag--normal" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
-                            <line x1="4" x2="4" y1="22" y2="15"/>
-                        </svg>
+                        ${getDrawerPhosphorIcon('flag', 'drawer-priority-flag drawer-priority-flag--normal')}
                         <span>\u65e0\u4f18\u5148\u7ea7</span>
                     </div>
                 </div>
@@ -647,10 +647,7 @@ function renderDrawerContent(task) {
                 <label class="drawer-schedule-time-box drawer-schedule-time-box--start">
                     <span class="drawer-schedule-time-label">
                         <span class="drawer-schedule-time-icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="8.25"/>
-                                <path d="M12 7.8v4.25l2.9 1.85"/>
-                            </svg>
+                            ${getDrawerPhosphorIcon('clock')}
                         </span>
                         <span>\u5f00\u59cb</span>
                     </span>
@@ -689,10 +686,7 @@ function renderDrawerContent(task) {
                         </div>
                     </label>
                     <div class="drawer-schedule-arrow" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M4.5 12h15"/>
-                            <path d="m13.5 6 6 6-6 6"/>
-                        </svg>
+                        ${getDrawerPhosphorIcon('arrow-right')}
                     </div>
                     <div class="drawer-schedule-duration-side">
                         <span class="drawer-schedule-duration-chip ${scheduleDurationChipClass}">${scheduleDurationText}</span>
@@ -702,10 +696,7 @@ function renderDrawerContent(task) {
                 <label class="drawer-schedule-time-box drawer-schedule-time-box--end">
                     <span class="drawer-schedule-time-label">
                         <span class="drawer-schedule-time-icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="8.25"/>
-                                <path d="M12 7.8v4.25l2.9 1.85"/>
-                            </svg>
+                            ${getDrawerPhosphorIcon('clock')}
                         </span>
                         <span>\u7ed3\u675f</span>
                     </span>
@@ -731,10 +722,7 @@ function renderDrawerContent(task) {
         ${tagsHtml ? `
         <div class="drawer-row drawer-row--tags">
             <div class="drawer-row-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
-                    <line x1="7" y1="7" x2="7.01" y2="7"/>
-                </svg>
+                ${getDrawerPhosphorIcon('tag')}
             </div>
             <label class="drawer-row-label">\u6807\u7b7e</label>
             <div class="drawer-row-value">${tagsHtml}</div>
@@ -758,22 +746,14 @@ function renderDrawerContent(task) {
                        onclick="event.stopPropagation()"
                        onkeydown="if(event.key==='Enter'){addSubtaskFromDrawer(${task.id});}if(event.key==='Escape'){hideSubtaskAddInline(${task.id})}">
                 <button type="button" class="subtask-add-confirm-btn" onclick="addSubtaskFromDrawer(${task.id})" title="\u786e\u8ba4">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="20 6 9 17 4 12"/>
-                    </svg>
+                    ${getDrawerPhosphorIcon('check')}
                 </button>
                 <button type="button" class="subtask-add-cancel-btn" onclick="hideSubtaskAddInline(${task.id})" title="\u53d6\u6d88">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"/>
-                        <line x1="6" y1="6" x2="18" y2="18"/>
-                    </svg>
+                    ${getDrawerPhosphorIcon('x')}
                 </button>
             </div>
             <div class="subtask-add-btn" onclick="event.stopPropagation();showSubtaskAddInline(${task.id})">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="12" y1="5" x2="12" y2="19"/>
-                    <line x1="5" y1="12" x2="19" y2="12"/>
-                </svg>
+                ${getDrawerPhosphorIcon('plus')}
                 <span>\u6dfb\u52a0\u5b50\u4efb\u52a1</span>
             </div>
         </div>
@@ -792,24 +772,15 @@ function renderDrawerContent(task) {
 
         <div class="drawer-footer">
             <button class="drawer-footer-btn drawer-footer-btn--repeat" onclick="event.stopPropagation();openRepeatInDrawer(${task.id})">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M23 4v6h-6"/>
-                    <path d="M1 20v-6h6"/>
-                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-                </svg>
+                ${getDrawerPhosphorIcon('arrows-clockwise')}
                 \u91cd\u590d
             </button>
             <button class="drawer-footer-btn drawer-footer-btn--freeze" onclick="event.stopPropagation();toggleFreezeInDrawer(${task.id})">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                </svg>
+                ${getDrawerPhosphorIcon('snowflake')}
                 ${task.frozen ? '\u89e3\u51bb' : '\u51bb\u7ed3'}
             </button>
             <button class="drawer-footer-btn drawer-footer-btn--danger danger" onclick="event.stopPropagation();deleteTaskInDrawer(${task.id})">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="3 6 5 6 21 6"/>
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                </svg>
+                ${getDrawerPhosphorIcon('trash')}
                 \u5220\u9664
             </button>
         </div>
@@ -846,7 +817,7 @@ function renderSubtasksList(task) {
                      onmouseleave="handleSubtaskCheckHover(this, false)">
                     <div class="tc-check">
                         <div class="chk-ring ${isDone ? 'checked' : ''}">
-                            <svg class="chk-ring-ico" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.15 12.35 10.95 16.05 17.1 8.2" stroke="currentColor" stroke-width="2.55" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            ${getDrawerCheckIconMarkup()}
                         </div>
                     </div>
                 </div>
@@ -855,10 +826,7 @@ function renderSubtasksList(task) {
                 <button type="button" class="subtask-delete-btn"
                         onclick="event.stopPropagation();deleteSubtaskInDrawer(${task.id}, ${sub.id})"
                         title="\u5220\u9664\u5b50\u4efb\u52a1">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"/>
-                        <line x1="6" y1="6" x2="18" y2="18"/>
-                    </svg>
+                    ${getDrawerPhosphorIcon('x')}
                 </button>
             </div>
         `;
@@ -890,12 +858,7 @@ function renderNotesArea(task) {
     return `
         <div class="drawer-notes">
             <div class="drawer-notes-header">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                    <polyline points="14 2 14 8 20 8"/>
-                    <line x1="16" y1="13" x2="8" y2="13"/>
-                    <line x1="16" y1="17" x2="8" y2="17"/>
-                </svg>
+                ${getDrawerPhosphorIcon('note-pencil')}
                 \u5907\u6ce8
             </div>
             <textarea class="drawer-notes-textarea"
@@ -944,7 +907,7 @@ function toggleTaskDoneFromDrawer(taskId) {
     }
     if (chkRing) {
         chkRing.classList.toggle('checked', task.done);
-        chkRing.innerHTML = '<svg class="chk-ring-ico" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.15 12.35 10.95 16.05 17.1 8.2" stroke="currentColor" stroke-width="2.55" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        chkRing.innerHTML = getDrawerCheckIconMarkup();
     }
     if (titleInput) {
         titleInput.classList.toggle('drawer-task-title--done', task.done);
@@ -1012,7 +975,7 @@ function getDrawerPriorityPreviewHTML(priority) {
     const label = isHigh ? '\u9ad8\u4f18\u5148\u7ea7' : '\u65e0\u4f18\u5148\u7ea7';
     const flagClass = isHigh ? 'drawer-priority-preview-flag drawer-priority-preview-flag--high' : 'drawer-priority-preview-flag drawer-priority-preview-flag--normal';
 
-    return `<span class="drawer-priority-btn-copy"><svg class="${flagClass}" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg><span class="drawer-priority-btn-text"><span class="drawer-priority-btn-label">${label}</span></span></span><span class="drawer-priority-arrow-wrap" aria-hidden="true"><svg class="drawer-priority-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>`;
+    return `<span class="drawer-priority-btn-copy">${getDrawerPhosphorIcon('flag', flagClass)}<span class="drawer-priority-btn-text"><span class="drawer-priority-btn-label">${label}</span></span></span><span class="drawer-priority-arrow-wrap" aria-hidden="true">${getDrawerPhosphorIcon('caret-down', 'drawer-priority-arrow')}</span>`;
 }
 
 function updateDrawerPriorityUI(priority) {
@@ -1215,18 +1178,6 @@ function handleSubtaskCheckHover(element, isEntering) {
     } else {
         chkRing.classList.remove('hover-check');
     }
-}
-
-function getCircleIconSvg() {
-    return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-    </svg>`;
-}
-
-function getCheckIconSvg() {
-    return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="20 6 9 17 4 12"/>
-    </svg>`;
 }
 
 function escapeHtml(text) {

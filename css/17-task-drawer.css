@@ -109,6 +109,14 @@
                 box-shadow 0.28s ease;
 }
 
+.task-detail-inner .ph {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    font-weight: 400;
+}
+
 .task-detail-inner::before {
     content: "";
     position: absolute;
@@ -437,11 +445,15 @@
     width: 15px;
     height: 15px;
     color: #fff;
+    font-size: 15px;
+    line-height: 1;
     opacity: 0;
     transform: scale(.9);
     transition: opacity .2s ease, transform .2s ease, color .2s ease;
     pointer-events: none;
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
     overflow: visible;
 }
@@ -561,7 +573,7 @@
 .drawer-task-title-text::placeholder {
     color: color-mix(in srgb, var(--text3) 72%, #dbe3ee);
     font-weight: 700;
-    letter-spacing: -0.01em;
+    letter-spacing: 0;
     opacity: 1;
 }
 
@@ -609,7 +621,7 @@
     border: 1px solid color-mix(in srgb, var(--inp-bd) 58%, transparent);
     background: var(--drawer-surface-strong);
     cursor: pointer;
-    border-radius: 12px;
+    border-radius: 8px;
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.82),
         0 8px 18px rgba(15, 23, 42, 0.05);
@@ -659,7 +671,7 @@
     white-space: nowrap;
     overflow: visible;
     text-overflow: clip;
-    letter-spacing: -0.01em;
+    letter-spacing: 0;
 }
 
 .drawer-priority-btn-note {
@@ -672,7 +684,12 @@
 .drawer-priority-preview-flag {
     width: 18px;
     height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
+    font-size: 18px;
+    line-height: 1;
     stroke: currentColor;
     stroke-width: 2;
     stroke-linecap: round;
@@ -740,6 +757,11 @@
 .drawer-priority-arrow {
     width: 13px;
     height: 13px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    line-height: 1;
     color: var(--text3);
     flex-shrink: 0;
     transition: transform 0.18s ease, color 0.18s ease;
@@ -787,7 +809,7 @@
     box-sizing: border-box;
     background: var(--drawer-surface-strong);
     border: none;
-    border-radius: 16px;
+    border-radius: 8px;
     padding: 6px;
     width: 100%;
     min-width: 100%;
@@ -812,7 +834,7 @@
     gap: 10px;
     min-height: 42px;
     padding: 9px 11px;
-    border-radius: 12px;
+    border-radius: 8px;
     cursor: pointer;
     transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, color 0.18s ease;
     font-size: 0.84rem;
@@ -826,7 +848,12 @@
 .drawer-priority-flag {
     width: 20px;
     height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
+    font-size: 20px;
+    line-height: 1;
     stroke: currentColor;
     stroke-width: 2;
     stroke-linecap: round;
@@ -1061,12 +1088,12 @@
    ========================================= */
 
 .drawer-schedule-card {
-    --drawer-schedule-inline-pad: 26px;
+    --drawer-schedule-inline-pad: 28px;
     position: relative;
-    padding: 16px var(--drawer-schedule-inline-pad) 18px;
-    background: color-mix(in srgb, #ffffff 48%, var(--drawer-surface-strong));
+    padding: 18px var(--drawer-schedule-inline-pad) 36px;
+    background: color-mix(in srgb, #ffffff 58%, var(--drawer-surface-strong));
     border: 0;
-    border-radius: 18px;
+    border-radius: 8px;
     box-shadow:
         var(--drawer-elev-shadow),
         inset 0 1px 0 rgba(255, 255, 255, 0.78);
@@ -1087,7 +1114,7 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: end;
-    gap: 15px;
+    gap: 24px;
 }
 
 .drawer-schedule-time-box,
@@ -1103,16 +1130,18 @@
     z-index: 2;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    align-items: center;
+    gap: 9px;
     min-width: 0;
     box-sizing: border-box;
     padding: 0;
     border-radius: 0;
     cursor: text;
+    text-align: center;
 }
 
 .drawer-schedule-time-box--end {
-    align-items: flex-end;
+    align-items: center;
 }
 
 .drawer-schedule-time-box:hover,
@@ -1130,20 +1159,22 @@
 .drawer-schedule-time-label {
     display: inline-flex;
     align-items: center;
-    gap: 3px;
+    justify-content: center;
+    gap: 4px;
     width: fit-content;
     font-size: 0.76rem;
     font-weight: 600;
     color: color-mix(in srgb, var(--text3) 92%, #64748b);
-    letter-spacing: -0.01em;
+    letter-spacing: 0;
 }
 
 .drawer-schedule-time-box--end .drawer-schedule-time-label {
-    align-self: flex-end;
+    align-self: center;
 }
 
 .drawer-schedule-time-value {
-    display: block;
+    display: flex;
+    justify-content: center;
     width: 100%;
     min-width: 0;
 }
@@ -1160,17 +1191,20 @@
 }
 
 .drawer-schedule-input--time {
-    width: 100%;
-    font-size: clamp(1.18rem, 3.45vw, 1.42rem);
+    width: 5ch;
+    min-width: 5ch;
+    max-width: 5ch;
+    font-size: 1.42rem;
     font-weight: 800;
     line-height: 1;
-    letter-spacing: -0.03em;
+    letter-spacing: 0;
+    text-align: center;
     font-variant-numeric: tabular-nums;
     caret-color: color-mix(in srgb, var(--acc2) 88%, var(--text));
 }
 
 .drawer-schedule-time-box--end .drawer-schedule-input--time {
-    text-align: right;
+    text-align: center;
 }
 
 .drawer-schedule-input--time::placeholder {
@@ -1193,9 +1227,15 @@
     pointer-events: none;
 }
 
-.drawer-schedule-time-icon svg {
+.drawer-schedule-time-icon svg,
+.drawer-schedule-time-icon .ph {
     width: 13px;
     height: 13px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    line-height: 1;
 }
 
 .drawer-schedule-arrow {
@@ -1211,9 +1251,15 @@
     pointer-events: none;
 }
 
-.drawer-schedule-arrow svg {
+.drawer-schedule-arrow svg,
+.drawer-schedule-arrow .ph {
     width: 16px;
     height: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    line-height: 1;
 }
 
 .drawer-schedule-duration-row {
@@ -1224,26 +1270,35 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 42px;
+    height: 38px;
     width: max-content;
     min-width: 0;
-    margin: 0 0 1px;
+    margin: 0;
     padding: 0;
     border-radius: 0;
-    transform: translateY(11px);
+    transform: translateY(24px);
+}
+
+.drawer-schedule-duration-row::before,
+.drawer-schedule-duration-row::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 42px;
+    height: 2px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--text3) 44%, #cbd5e1);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.72);
+    transform: translateY(-50%);
+    pointer-events: none;
 }
 
 .drawer-schedule-duration-row::before {
-    content: "";
-    position: absolute;
-    left: -42px;
-    right: -42px;
-    top: 50%;
-    height: 1.5px;
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--text3) 32%, #cbd5e1);
-    transform: translateY(-50%);
-    pointer-events: none;
+    right: calc(100% + 12px);
+}
+
+.drawer-schedule-duration-row::after {
+    left: calc(100% + 12px);
 }
 
 .drawer-schedule-duration-main {
@@ -1271,12 +1326,14 @@
 .drawer-schedule-duration-inputline {
     min-width: 0;
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: center;
-    gap: 3px;
-    padding: 7px 11px;
+    gap: 5px;
+    box-sizing: border-box;
+    min-height: 34px;
+    padding: 9px 15px;
     border-radius: 999px;
-    background: color-mix(in srgb, #ffffff 84%, var(--drawer-surface-strong));
+    background: color-mix(in srgb, #ffffff 90%, var(--drawer-surface-strong));
     color: #475569;
     box-shadow:
         0 6px 16px rgba(15, 23, 42, 0.055),
@@ -1307,10 +1364,10 @@
 .drawer-schedule-input--duration {
     width: 4.05ch;
     min-width: 4.05ch;
-    font-size: 0.86rem;
+    font-size: 0.9rem;
     font-weight: 800;
     line-height: 1;
-    letter-spacing: -0.02em;
+    letter-spacing: 0;
     text-align: center;
     font-variant-numeric: tabular-nums;
     color: currentColor;
@@ -1331,7 +1388,7 @@
 }
 
 .drawer-schedule-unit {
-    font-size: 0.82rem;
+    font-size: 0.84rem;
     font-weight: 800;
     color: currentColor;
     white-space: nowrap;
@@ -1420,8 +1477,9 @@
     box-shadow: none;
 }
 
-.dark .drawer-schedule-duration-row::before {
-    background: color-mix(in srgb, var(--text3) 36%, #475569);
+.dark .drawer-schedule-duration-row::before,
+.dark .drawer-schedule-duration-row::after {
+    background: color-mix(in srgb, var(--text3) 46%, #475569);
 }
 
 .dark .drawer-schedule-arrow {
@@ -1486,12 +1544,12 @@
 @media (max-width: 640px) {
     .drawer-schedule-card {
         --drawer-schedule-inline-pad: 18px;
-        padding: 14px var(--drawer-schedule-inline-pad) 16px;
+        padding: 16px var(--drawer-schedule-inline-pad) 32px;
     }
 
     .drawer-schedule-time-row {
         grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-        gap: 11px;
+        gap: 16px;
     }
 
     .drawer-schedule-arrow {
@@ -1500,24 +1558,33 @@
     }
 
     .drawer-schedule-duration-row {
-        height: 40px;
+        height: 36px;
         width: max-content;
         margin-inline: 0;
         padding: 0;
-        transform: translateY(9px);
+        transform: translateY(22px);
+    }
+
+    .drawer-schedule-duration-row::before,
+    .drawer-schedule-duration-row::after {
+        width: 28px;
     }
 
     .drawer-schedule-duration-row::before {
-        left: -30px;
-        right: -30px;
+        right: calc(100% + 10px);
+    }
+
+    .drawer-schedule-duration-row::after {
+        left: calc(100% + 10px);
     }
 
     .drawer-schedule-duration-inputline {
-        padding: 6px 10px;
+        min-height: 32px;
+        padding: 8px 13px;
     }
 
     .drawer-schedule-input--time {
-        font-size: clamp(1.08rem, 5.4vw, 1.28rem);
+        font-size: 1.26rem;
     }
 }
 
@@ -1551,9 +1618,15 @@
     flex-shrink: 0;
 }
 
-.drawer-row-icon svg {
+.drawer-row-icon svg,
+.drawer-row-icon .ph {
     width: 18px;
     height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    line-height: 1;
 }
 
 .drawer-row-label {
@@ -1728,6 +1801,8 @@
    ========================================= */
 
 .drawer-subtasks-list {
+    --subtask-text-start: 44px;
+    --subtask-add-icon-space: 26px;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -1739,7 +1814,7 @@
     align-items: center;
     gap: 10px;
     padding: 10px 12px;
-    border-radius: 12px;
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.15s ease;
     background: var(--drawer-surface-strong);
@@ -1788,6 +1863,8 @@
 
 .subtask-check.task-ck-slot .chk-ring .chk-ring-ico {
     color: transparent;
+    font-size: 14px;
+    line-height: 1;
     transition: color .15s;
 }
 
@@ -1817,7 +1894,8 @@
 }
 
 .subtask-check.task-ck-slot .chk-ring svg,
-.subtask-check.task-ck-slot .chk-ring.checked svg {
+.subtask-check.task-ck-slot .chk-ring.checked svg,
+.subtask-check.task-ck-slot .chk-ring.checked .chk-ring-ico {
     color: #fff;
 }
 
@@ -1868,17 +1946,27 @@
     height: 14px;
 }
 
+.subtask-delete-btn .ph {
+    width: 14px;
+    height: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    line-height: 1;
+}
+
 .subtask-add-btn {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 10px;
     width: 100%;
     height: 42px;
-    padding: 0 14px;
+    padding: 0 14px 0 calc(var(--subtask-text-start) - var(--subtask-add-icon-space));
     margin-top: 0;
     border: none;
-    border-radius: 10px;
+    border-radius: 8px;
     background: color-mix(in srgb, #ffffff 42%, var(--drawer-surface-strong));
     color: #64748b;
     font-size: 0.875rem;
@@ -1896,9 +1984,9 @@
     align-items: center;
     gap: 4px;
     height: 42px;
-    padding: 0 8px 0 14px;
+    padding: 0 8px 0 var(--subtask-text-start);
     border: none;
-    border-radius: 10px;
+    border-radius: 8px;
     background: color-mix(in srgb, #ffffff 42%, var(--drawer-surface-strong));
     margin-top: 0;
     box-shadow:
@@ -1965,6 +2053,16 @@
     height: 15px;
 }
 
+.subtask-add-confirm-btn .ph {
+    width: 15px;
+    height: 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    line-height: 1;
+}
+
 .subtask-add-cancel-btn {
     width: 28px;
     height: 28px;
@@ -1988,6 +2086,16 @@
 .subtask-add-cancel-btn svg {
     width: 14px;
     height: 14px;
+}
+
+.subtask-add-cancel-btn .ph {
+    width: 14px;
+    height: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    line-height: 1;
 }
 
 .subtask-add-btn:hover {
@@ -2019,13 +2127,27 @@
     transition: transform 0.22s ease;
 }
 
+.subtask-add-btn .ph {
+    width: 16px;
+    height: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 16px;
+    line-height: 1;
+    transform-origin: center;
+    transition: transform 0.22s ease;
+}
+
 .subtask-add-btn span {
     font-size: 0.875rem;
     font-weight: 600;
     line-height: 1;
 }
 
-.subtask-add-btn:hover svg {
+.subtask-add-btn:hover svg,
+.subtask-add-btn:hover .ph {
     transform: rotate(90deg);
 }
 
@@ -2038,7 +2160,7 @@
     min-height: 120px;
     padding: 18px 18px;
     border: none;
-    border-radius: 18px;
+    border-radius: 8px;
     background: color-mix(in srgb, #ffffff 42%, var(--drawer-surface-strong));
     color: var(--text);
     font-size: 0.98rem;
@@ -2093,7 +2215,7 @@
     min-width: 0;
     min-height: 44px;
     padding: 10px 8px;
-    border-radius: 15px;
+    border-radius: 8px;
     font-size: 0.86rem;
     font-weight: 600;
     cursor: pointer;
@@ -2145,9 +2267,37 @@
     color: currentColor;
 }
 
-.drawer-footer-btn svg {
+.drawer-footer-btn--danger .ph {
+    color: currentColor;
+}
+
+.drawer-footer-btn--freeze {
+    color: #2563eb;
+    background: #eff6ff;
+    box-shadow:
+        0 8px 18px rgba(37, 99, 235, 0.04),
+        inset 0 0 0 1px rgba(59, 130, 246, 0.14),
+        inset 0 1px 0 rgba(255, 255, 255, 0.88);
+}
+
+.drawer-footer-btn--freeze:hover {
+    background: #dbeafe;
+    color: #1d4ed8;
+    box-shadow:
+        0 10px 22px rgba(37, 99, 235, 0.065),
+        inset 0 0 0 1px rgba(37, 99, 235, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.drawer-footer-btn svg,
+.drawer-footer-btn .ph {
     width: 15px;
     height: 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    line-height: 1;
     flex-shrink: 0;
 }
 
@@ -2299,6 +2449,24 @@
         0 10px 20px rgba(2, 6, 23, 0.22);
 }
 
+.dark .drawer-footer-btn--freeze {
+    color: #93c5fd;
+    background: color-mix(in srgb, #2563eb 14%, var(--card));
+    box-shadow:
+        inset 0 0 0 1px rgba(96, 165, 250, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.045),
+        0 8px 18px rgba(30, 64, 175, 0.16);
+}
+
+.dark .drawer-footer-btn--freeze:hover {
+    color: #bfdbfe;
+    background: color-mix(in srgb, #2563eb 22%, var(--card));
+    box-shadow:
+        inset 0 0 0 1px rgba(147, 197, 253, 0.24),
+        inset 0 1px 0 rgba(255, 255, 255, 0.055),
+        0 10px 20px rgba(30, 64, 175, 0.22);
+}
+
 .dark .drawer-footer-btn--danger {
     color: #fda4af;
     background: color-mix(in srgb, #ef4444 12%, var(--card));
@@ -2324,9 +2492,11 @@
         border-radius: 0;
     }
 
-    .drawer-section-icon svg {
+    .drawer-section-icon svg,
+    .drawer-section-icon .ph {
         width: 18px;
         height: 18px;
+        font-size: 18px;
     }
 
     .drawer-section-count {
@@ -2365,9 +2535,11 @@
         height: 28px;
     }
 
-    .drawer-row-icon svg {
+    .drawer-row-icon svg,
+    .drawer-row-icon .ph {
         width: 16px;
         height: 16px;
+        font-size: 16px;
     }
 
     .drawer-row-label {
