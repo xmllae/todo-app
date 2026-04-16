@@ -1268,8 +1268,10 @@
         auto
         minmax(var(--drawer-schedule-connector-min), 1fr)
         var(--drawer-schedule-time-width);
-    align-items: end;
+    grid-template-rows: auto 34px;
+    align-items: center;
     column-gap: var(--drawer-schedule-track-gap);
+    row-gap: 4px;
     position: relative;
     min-width: 0;
 }
@@ -1277,10 +1279,10 @@
 .drawer-schedule-time-row::before,
 .drawer-schedule-time-row::after {
     content: "";
-    grid-row: 1;
-    align-self: end;
+    grid-row: 2;
+    align-self: center;
     height: 2px;
-    margin-bottom: 9px;
+    margin-bottom: 0;
     border-radius: 999px;
     background: color-mix(in srgb, var(--text3) 44%, #cbd5e1);
     box-shadow: none;
@@ -1309,41 +1311,25 @@
 }
 
 .drawer-schedule-time-box {
-    position: relative;
+    display: contents;
     z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-    min-width: 0;
-    box-sizing: border-box;
-    padding: 4px 3px 0;
-    border-radius: 8px;
     cursor: text;
-    text-align: center;
-    width: 100%;
-    overflow: visible;
-    transition: background 0.18s ease, box-shadow 0.18s ease, color 0.18s ease;
 }
 
 .drawer-schedule-time-box--start {
     grid-column: 1;
-    align-items: center;
-    justify-self: stretch;
 }
 
 .drawer-schedule-time-box--end {
     grid-column: 5;
-    align-items: center;
-    justify-self: stretch;
 }
 
-.drawer-schedule-time-box:hover {
+.drawer-schedule-time-box:hover .drawer-schedule-time-value {
     background: color-mix(in srgb, var(--card) 68%, transparent);
     box-shadow: none;
 }
 
-.drawer-schedule-time-box:focus-within {
+.drawer-schedule-time-box:focus-within .drawer-schedule-time-value {
     background: color-mix(in srgb, var(--card) 82%, transparent);
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--acc2) 18%, transparent);
 }
@@ -1355,6 +1341,7 @@
 }
 
 .drawer-schedule-time-label {
+    grid-row: 1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1366,15 +1353,26 @@
     letter-spacing: 0;
 }
 
-.drawer-schedule-time-box--end .drawer-schedule-time-label {
-    align-self: center;
+.drawer-schedule-time-box--start .drawer-schedule-time-label,
+.drawer-schedule-time-box--start .drawer-schedule-time-value {
+    grid-column: 1;
+}
+
+.drawer-schedule-time-box--end .drawer-schedule-time-label,
+.drawer-schedule-time-box--end .drawer-schedule-time-value {
+    grid-column: 5;
 }
 
 .drawer-schedule-time-value {
+    grid-row: 2;
     display: flex;
+    align-items: center;
     justify-content: center;
     width: 100%;
+    height: 34px;
     min-width: 0;
+    border-radius: 8px;
+    transition: background 0.18s ease, box-shadow 0.18s ease;
 }
 
 .drawer-schedule-input {
@@ -1465,19 +1463,19 @@
     position: relative;
     z-index: 2;
     grid-column: 3;
-    grid-row: 1;
-    align-self: end;
+    grid-row: 2;
+    align-self: center;
     justify-self: center;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 38px;
+    height: 34px;
     width: max-content;
     min-width: 0;
     margin: 0;
     padding: 0;
     border-radius: 0;
-    transform: translateY(6px);
+    transform: none;
 }
 
 .drawer-schedule-duration-main {
@@ -1510,34 +1508,26 @@
     gap: 5px;
     box-sizing: border-box;
     min-height: 34px;
-    padding: 9px 15px;
+    padding: 8px 15px;
     border-radius: 8px;
-    background: color-mix(in srgb, #ffffff 90%, var(--drawer-surface-strong));
+    background: var(--drawer-surface-strong);
     color: #475569;
-    box-shadow:
-        0 8px 18px rgba(15, 23, 42, 0.06),
-        inset 0 0 0 1px rgba(148, 163, 184, 0.16),
-        inset 0 1px 0 rgba(255, 255, 255, 0.92);
+    box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.16);
     transition: background 0.18s ease, box-shadow 0.18s ease, color 0.18s ease;
 }
 
 .drawer-schedule-duration-main:hover .drawer-schedule-duration-inputline {
-    background: #ffffff;
+    background: var(--drawer-surface-strong);
     color: #334155;
-    box-shadow:
-        0 8px 18px rgba(15, 23, 42, 0.07),
-        inset 0 0 0 1px rgba(99, 102, 241, 0.16),
-        inset 0 1px 0 rgba(255, 255, 255, 0.96);
+    box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.16);
 }
 
 .drawer-schedule-duration-main:focus-within .drawer-schedule-duration-inputline {
-    background: #ffffff;
+    background: var(--drawer-surface-strong);
     color: color-mix(in srgb, var(--acc2) 74%, #334155);
     box-shadow:
         0 0 0 3px rgba(99, 102, 241, 0.1),
-        0 10px 22px rgba(15, 23, 42, 0.075),
-        inset 0 0 0 1px rgba(99, 102, 241, 0.28),
-        inset 0 1px 0 rgba(255, 255, 255, 0.96);
+        inset 0 0 0 1px rgba(99, 102, 241, 0.28);
 }
 
 .drawer-schedule-input--duration {
@@ -1618,7 +1608,7 @@
 }
 
 .drawer-schedule-duration-row--overnight .drawer-schedule-duration-inputline {
-    background: color-mix(in srgb, #ffffff 84%, var(--drawer-surface-strong));
+    background: var(--drawer-surface-strong);
     color: #475569;
 }
 
@@ -1640,18 +1630,17 @@
     box-shadow: none;
 }
 
-.dark .drawer-schedule-time-box,
 .dark .drawer-schedule-duration-row,
 .dark .drawer-schedule-duration-row:focus-within {
     background: transparent;
     box-shadow: none;
 }
 
-.dark .drawer-schedule-time-box:hover {
+.dark .drawer-schedule-time-box:hover .drawer-schedule-time-value {
     background: color-mix(in srgb, var(--card) 58%, transparent);
 }
 
-.dark .drawer-schedule-time-box:focus-within {
+.dark .drawer-schedule-time-box:focus-within .drawer-schedule-time-value {
     background: color-mix(in srgb, var(--card) 72%, transparent);
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--acc2) 22%, transparent);
 }
@@ -1672,31 +1661,23 @@
 }
 
 .dark .drawer-schedule-duration-inputline {
-    background: color-mix(in srgb, var(--card) 72%, #0f172a);
+    background: var(--drawer-surface-strong);
     color: color-mix(in srgb, var(--text2) 86%, #cbd5e1);
-    box-shadow:
-        0 10px 22px rgba(2, 6, 23, 0.22),
-        inset 0 0 0 1px rgba(148, 163, 184, 0.14),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.14);
 }
 
 .dark .drawer-schedule-duration-main:hover .drawer-schedule-duration-inputline {
-    background: color-mix(in srgb, var(--card) 84%, #111827);
+    background: var(--drawer-surface-strong);
     color: color-mix(in srgb, var(--text) 90%, #e2e8f0);
-    box-shadow:
-        0 12px 24px rgba(2, 6, 23, 0.28),
-        inset 0 0 0 1px rgba(165, 180, 252, 0.18),
-        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    box-shadow: inset 0 0 0 1px rgba(165, 180, 252, 0.18);
 }
 
 .dark .drawer-schedule-duration-main:focus-within .drawer-schedule-duration-inputline {
-    background: color-mix(in srgb, var(--card) 88%, #111827);
+    background: var(--drawer-surface-strong);
     color: color-mix(in srgb, var(--acc2) 86%, #c7d2fe);
     box-shadow:
         0 0 0 3px rgba(129, 140, 248, 0.12),
-        0 12px 24px rgba(2, 6, 23, 0.3),
-        inset 0 0 0 1px rgba(165, 180, 252, 0.26),
-        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        inset 0 0 0 1px rgba(165, 180, 252, 0.26);
 }
 
 .dark .drawer-schedule-duration-chip--filled {
@@ -1717,7 +1698,7 @@
 }
 
 .dark .drawer-schedule-duration-row--overnight .drawer-schedule-duration-inputline {
-    background: color-mix(in srgb, var(--card) 72%, #0f172a);
+    background: var(--drawer-surface-strong);
     color: color-mix(in srgb, var(--text2) 86%, #cbd5e1);
 }
 
@@ -1753,16 +1734,16 @@
     }
 
     .drawer-schedule-duration-row {
-        height: 36px;
+        height: 34px;
         width: max-content;
         margin-inline: 0;
         padding: 0;
-        transform: translateY(5px);
+        transform: none;
     }
 
     .drawer-schedule-time-row::before,
     .drawer-schedule-time-row::after {
-        margin-bottom: 8px;
+        margin-bottom: 0;
     }
 
     .drawer-schedule-duration-inputline {
