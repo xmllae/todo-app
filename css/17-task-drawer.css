@@ -790,18 +790,13 @@
 }
 
 .drawer-priority-preview-flag {
-    width: 18px;
-    height: 18px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    width: 16px;
+    height: 16px;
+    display: block;
     flex-shrink: 0;
-    font-size: 18px;
+    fill: currentColor;
+    font-size: 16px;
     line-height: 1;
-    stroke: currentColor;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
 }
 
 .drawer-priority-preview-flag--high {
@@ -952,18 +947,13 @@
 }
 
 .drawer-priority-flag {
-    width: 20px;
-    height: 20px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    width: 17px;
+    height: 17px;
+    display: block;
     flex-shrink: 0;
-    font-size: 20px;
+    fill: currentColor;
+    font-size: 17px;
     line-height: 1;
-    stroke: currentColor;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
 }
 
 .drawer-priority-flag--high {
