@@ -2137,6 +2137,90 @@
     display: block;
 }
 
+.subtask-row.is-subtask-dragging {
+    opacity: 0.42;
+    background: color-mix(in srgb, var(--text) 5%, transparent);
+}
+
+.subtask-row.is-subtask-drop-before::after,
+.subtask-row.is-subtask-drop-after::after {
+    content: "";
+    position: absolute;
+    left: var(--subtask-text-start);
+    right: 70px;
+    height: 2px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--acc) 82%, #6366f1);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--acc) 10%, transparent);
+    pointer-events: none;
+}
+
+.subtask-row.is-subtask-drop-before::after {
+    top: -2px;
+}
+
+.subtask-row.is-subtask-drop-after::after {
+    bottom: -2px;
+}
+
+.subtask-drag-handle {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: color-mix(in srgb, var(--text3) 86%, #94a3b8);
+    cursor: grab;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateX(3px);
+    transition: opacity 0.15s ease, visibility 0.15s ease, transform 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.subtask-drag-handle span {
+    width: 3px;
+    height: 3px;
+    border-radius: 999px;
+    background: currentColor;
+    box-shadow:
+        0 -5px 0 currentColor,
+        0 5px 0 currentColor,
+        6px -5px 0 currentColor,
+        6px 0 0 currentColor,
+        6px 5px 0 currentColor;
+    transform: translateX(-3px);
+}
+
+.subtask-drag-handle:hover {
+    background: color-mix(in srgb, var(--text) 6%, transparent);
+    color: color-mix(in srgb, var(--text2) 88%, #64748b);
+}
+
+.subtask-drag-handle:active {
+    cursor: grabbing;
+}
+
+.subtask-row:hover .subtask-drag-handle,
+.subtask-row:focus-within .subtask-drag-handle,
+.subtask-row.is-subtask-dragging .subtask-drag-handle {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(0);
+}
+
+.subtask-row.is-editing .subtask-drag-handle {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
 .subtask-delete-btn {
     width: 24px;
     height: 24px;
@@ -2567,6 +2651,25 @@
 .dark .subtask-row.is-editing:focus-within {
     border-color: color-mix(in srgb, var(--acc2, var(--acc)) 68%, #a5b4fc);
     background: color-mix(in srgb, var(--card) 78%, #111827);
+}
+
+.dark .subtask-row.is-subtask-dragging {
+    background: color-mix(in srgb, var(--hov) 80%, transparent);
+}
+
+.dark .subtask-row.is-subtask-drop-before::after,
+.dark .subtask-row.is-subtask-drop-after::after {
+    background: color-mix(in srgb, var(--acc2, var(--acc)) 82%, #a5b4fc);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--acc2, var(--acc)) 12%, transparent);
+}
+
+.dark .subtask-drag-handle {
+    color: color-mix(in srgb, var(--text3) 86%, #94a3b8);
+}
+
+.dark .subtask-drag-handle:hover {
+    background: color-mix(in srgb, var(--hov) 84%, transparent);
+    color: color-mix(in srgb, var(--text2) 92%, #e2e8f0);
 }
 
 .dark .subtask-edit-input {

@@ -12,6 +12,7 @@ let drawerScrollbarDragState = null;
 let drawerTitleCompletionAnimTaskId = null;
 let drawerTitleCompletionAnimTimer = null;
 let drawerTitleCompletionAnimFrame = null;
+let drawerSubtaskDragState = null;
 const TASK_DETAIL_CLOSE_DELAY = 460;
 const DRAWER_TITLE_COMPLETION_ANIM_MS = 720;
 
@@ -1116,6 +1117,9 @@ function renderSubtasksList(task) {
             <div class="subtask-row"
                  data-subtask-id="${sub.id}"
                  title="\u53cc\u51fb\u7f16\u8f91\u5b50\u4efb\u52a1"
+                 ondragover="handleSubtaskDragOver(event, ${task.id}, ${sub.id})"
+                 ondragleave="handleSubtaskDragLeave(event)"
+                 ondrop="handleSubtaskDrop(event, ${task.id}, ${sub.id})"
                  ondblclick="startSubtaskEditInDrawer(${task.id}, ${sub.id})">
                 <div class="subtask-check task-ck-slot ${isDone ? 'task-ck-ring--done' : ''}"
                      onclick="event.stopPropagation();toggleSubtaskInDrawer(${task.id}, ${sub.id})"
@@ -1140,6 +1144,18 @@ function renderSubtasksList(task) {
                        ondblclick="event.stopPropagation()"
                        onblur="commitSubtaskEditInDrawer(${task.id}, ${sub.id})"
                        onkeydown="handleSubtaskEditKeydown(event, ${task.id}, ${sub.id})">
+                <button type="button"
+                        class="subtask-drag-handle"
+                        draggable="true"
+                        aria-label="\u62d6\u52a8\u6392\u5e8f"
+                        title="\u62d6\u52a8\u6392\u5e8f"
+                        onclick="event.stopPropagation()"
+                        ondblclick="event.stopPropagation()"
+                        onmousedown="event.stopPropagation()"
+                        ondragstart="handleSubtaskDragStart(event, ${task.id}, ${sub.id})"
+                        ondragend="handleSubtaskDragEnd(event)">
+                    <span aria-hidden="true"></span>
+                </button>
                 <button type="button" class="subtask-delete-btn"
                         onclick="event.stopPropagation();deleteSubtaskInDrawer(${task.id}, ${sub.id})"
                         ondblclick="event.stopPropagation()"
@@ -1486,6 +1502,132 @@ function handleSubtaskEditKeydown(event, taskId, subtaskId) {
         event.target.dataset.cancelEdit = 'true';
         event.target.blur();
     }
+}
+
+function clearSubtaskDragIndicators() {
+    document.querySelectorAll('.subtask-row.is-subtask-drop-before, .subtask-row.is-subtask-drop-after, .subtask-row.is-subtask-dragging').forEach(function(row) {
+        row.classList.remove('is-subtask-drop-before', 'is-subtask-drop-after', 'is-subtask-dragging');
+        delete row.dataset.dropPosition;
+    });
+}
+
+function handleSubtaskDragStart(event, taskId, subtaskId) {
+    if (!event) return;
+
+    const row = event.currentTarget ? event.currentTarget.closest('.subtask-row') : null;
+    if (row && row.classList.contains('is-editing')) {
+        event.preventDefault();
+        return;
+    }
+
+    drawerSubtaskDragState = {
+        taskId: taskId,
+        subtaskId: subtaskId
+    };
+
+    if (event.dataTransfer) {
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData('text/plain', String(subtaskId));
+        if (row && typeof event.dataTransfer.setDragImage === 'function') {
+            event.dataTransfer.setDragImage(row, 24, Math.max(12, Math.min(row.offsetHeight / 2, 22)));
+        }
+    }
+
+    if (row) {
+        row.classList.add('is-subtask-dragging');
+    }
+}
+
+function handleSubtaskDragOver(event, taskId, subtaskId) {
+    if (!drawerSubtaskDragState) return;
+    if (String(drawerSubtaskDragState.taskId) !== String(taskId)) return;
+    if (String(drawerSubtaskDragState.subtaskId) === String(subtaskId)) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const row = event.currentTarget;
+    if (!row) return;
+
+    if (event.dataTransfer) {
+        event.dataTransfer.dropEffect = 'move';
+    }
+
+    const rect = row.getBoundingClientRect();
+    const dropBefore = event.clientY < rect.top + rect.height / 2;
+
+    document.querySelectorAll('.subtask-row.is-subtask-drop-before, .subtask-row.is-subtask-drop-after').forEach(function(item) {
+        if (item !== row) {
+            item.classList.remove('is-subtask-drop-before', 'is-subtask-drop-after');
+            delete item.dataset.dropPosition;
+        }
+    });
+
+    row.dataset.dropPosition = dropBefore ? 'before' : 'after';
+    row.classList.toggle('is-subtask-drop-before', dropBefore);
+    row.classList.toggle('is-subtask-drop-after', !dropBefore);
+}
+
+function handleSubtaskDragLeave(event) {
+    const row = event && event.currentTarget;
+    if (!row) return;
+    if (event.relatedTarget && row.contains(event.relatedTarget)) return;
+
+    row.classList.remove('is-subtask-drop-before', 'is-subtask-drop-after');
+    delete row.dataset.dropPosition;
+}
+
+function handleSubtaskDrop(event, taskId, subtaskId) {
+    if (!drawerSubtaskDragState) return;
+    if (String(drawerSubtaskDragState.taskId) !== String(taskId)) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const row = event.currentTarget;
+    let dropPosition = row && row.dataset.dropPosition === 'after' ? 'after' : 'before';
+    if (row && !row.dataset.dropPosition) {
+        const rect = row.getBoundingClientRect();
+        dropPosition = event.clientY < rect.top + rect.height / 2 ? 'before' : 'after';
+    }
+    const fromSubtaskId = drawerSubtaskDragState.subtaskId;
+
+    clearSubtaskDragIndicators();
+    drawerSubtaskDragState = null;
+
+    reorderSubtasksInDrawer(taskId, fromSubtaskId, subtaskId, dropPosition);
+}
+
+function handleSubtaskDragEnd() {
+    clearSubtaskDragIndicators();
+    drawerSubtaskDragState = null;
+}
+
+function reorderSubtasksInDrawer(taskId, fromSubtaskId, toSubtaskId, dropPosition) {
+    if (String(fromSubtaskId) === String(toSubtaskId)) return;
+
+    const task = findTaskById(taskId);
+    if (!task || !Array.isArray(task.subtasks)) return;
+
+    const fromIndex = task.subtasks.findIndex(function(item) {
+        return String(item.id) === String(fromSubtaskId);
+    });
+    const toIndex = task.subtasks.findIndex(function(item) {
+        return String(item.id) === String(toSubtaskId);
+    });
+
+    if (fromIndex < 0 || toIndex < 0) return;
+
+    let insertIndex = dropPosition === 'after' ? toIndex + 1 : toIndex;
+    if (fromIndex < insertIndex) {
+        insertIndex -= 1;
+    }
+
+    if (insertIndex === fromIndex) return;
+
+    const moved = task.subtasks.splice(fromIndex, 1)[0];
+    task.subtasks.splice(Math.max(0, Math.min(insertIndex, task.subtasks.length)), 0, moved);
+    persistTaskDetailChanges(task, { kanban: true });
 }
 
 function deleteSubtaskInDrawer(taskId, subtaskId) {
