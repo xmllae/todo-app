@@ -539,6 +539,233 @@
   color: var(--text2) !important;
 }
 
+/* Keep the collapse ghost visually identical to the row before it leaves #tList. */
+.task-item.task-item--collapse-ghost {
+  background: transparent !important;
+  border: 0 !important;
+  border-bottom: 1px solid #F0F0F5 !important;
+  box-shadow: none !important;
+  padding: 8px 12px 8px 10px !important;
+}
+
+.dark .task-item.task-item--collapse-ghost {
+  border-bottom-color: rgba(255,255,255,.1) !important;
+}
+
+.task-item.task-item--collapse-ghost > .task-row {
+  align-items: flex-start !important;
+  padding-right: 4px !important;
+}
+
+.task-item.task-item--collapse-ghost .task-ck-slot {
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 22px !important;
+  min-height: 22px !important;
+  align-self: flex-start !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  margin-top: 0 !important;
+}
+
+.task-item.task-item--collapse-ghost .task-ck-ring,
+.task-item.task-item--collapse-ghost .tc-check {
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 22px !important;
+  min-height: 22px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.task-item.task-item--collapse-ghost .chk-ring {
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  min-height: 18px !important;
+  border-width: 1.5px !important;
+}
+
+.task-item.task-item--collapse-ghost .chk-ring.checked {
+  background: #d1453b !important;
+  border-color: transparent !important;
+  box-shadow: 0 1px 4px rgba(209,69,59,.26) !important;
+}
+
+.task-item.task-item--collapse-ghost .task-ck-ring--prio-high .chk-ring.checked {
+  background: var(--ck-prio,#d1453b) !important;
+}
+
+.task-item.task-item--collapse-ghost .chk-ring.checked .chk-ring-ico {
+  color: #fff !important;
+  opacity: 1 !important;
+  transform: scale(1.04) !important;
+}
+
+.task-item.task-item--collapse-ghost .task-strike-wrap,
+.task-item.task-item--collapse-ghost .task-strike-content,
+.task-item.task-item--collapse-ghost .task-row-center {
+  align-items: flex-start !important;
+}
+
+.task-item.task-item--collapse-ghost .task-row-center {
+  justify-content: flex-start !important;
+  gap: 0 !important;
+}
+
+.task-item.task-item--collapse-ghost .task-row-center > .txt-line {
+  width: auto !important;
+  max-width: 100% !important;
+  min-height: 22px !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.task-item.task-item--collapse-ghost .task-row-center > .task-time-col {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  width: calc(100% + 2px) !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  align-self: stretch !important;
+  justify-content: flex-start !important;
+  column-gap: 12px !important;
+  row-gap: 2px !important;
+  padding: 0 !important;
+  margin: 3px 0 0 -2px !important;
+  text-align: left !important;
+}
+
+.task-item.task-item--collapse-ghost .task-row-center > .task-time-col .time-plain.time-disp,
+.task-item.task-item--collapse-ghost .task-row-center > .task-time-col .task-recur-badge,
+.task-item.task-item--collapse-ghost .task-row-center > .task-time-col .time-edit.time-edit--pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+  min-height: 16px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: none !important;
+  color: #64748b !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  line-height: 1.25 !important;
+  letter-spacing: 0 !important;
+}
+
+.task-item.task-item--collapse-ghost .task-row-center > .task-time-col .time-plain.time-disp::before {
+  content: "";
+  display: block;
+  width: 11px;
+  height: 11px;
+  flex: 0 0 11px;
+  align-self: center;
+  opacity: .78;
+  transform: translateY(-.5px);
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolyline points='12 6 12 12 16 14'/%3E%3C/svg%3E") center / 11px 11px no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolyline points='12 6 12 12 16 14'/%3E%3C/svg%3E") center / 11px 11px no-repeat;
+}
+
+.task-item.task-item--collapse-ghost .task-row-center > .task-time-col .task-recur-badge-ico {
+  width: 11px !important;
+  height: 11px !important;
+  flex: 0 0 11px !important;
+  opacity: .78 !important;
+}
+
+.task-item.task-item--collapse-ghost .task-row-center > .task-time-col .task-time-sep {
+  display: none !important;
+}
+
+.task-item.task-item--collapse-ghost .sub-task-pill,
+.task-item.task-item--collapse-ghost .sub-task-pill-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 5px !important;
+  color: #475569 !important;
+  box-shadow: none !important;
+  min-height: 16px !important;
+  padding: 1px 3px 1px 2px !important;
+  gap: 3px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  line-height: 1.25 !important;
+  box-sizing: border-box !important;
+}
+
+.task-item.task-item--collapse-ghost .sub-task-pill .stp-icon,
+.task-item.task-item--collapse-ghost .sub-task-pill-btn .stp-icon {
+  width: 11px !important;
+  height: 11px !important;
+  min-width: 11px !important;
+  min-height: 11px !important;
+  color: #8a99aa !important;
+}
+
+.task-item.task-item--collapse-ghost .sub-task-pill .stp-icon svg,
+.task-item.task-item--collapse-ghost .sub-task-pill-btn .stp-icon svg {
+  display: none !important;
+}
+
+.task-item.task-item--collapse-ghost .sub-task-pill .stp-icon::before,
+.task-item.task-item--collapse-ghost .sub-task-pill-btn .stp-icon::before {
+  content: "";
+  display: block;
+  width: 11px;
+  height: 11px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 7 2 2 4-4'/%3E%3Cpath d='m3 17 2 2 4-4'/%3E%3Cpath d='M13 6h8'/%3E%3Cpath d='M13 18h8'/%3E%3C/svg%3E") center / 11px 11px no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 7 2 2 4-4'/%3E%3Cpath d='m3 17 2 2 4-4'/%3E%3Cpath d='M13 6h8'/%3E%3Cpath d='M13 18h8'/%3E%3C/svg%3E") center / 11px 11px no-repeat;
+}
+
+.task-item.task-item--collapse-ghost .sub-task-pill .stp-n,
+.task-item.task-item--collapse-ghost .sub-task-pill-btn .stp-n {
+  min-width: auto !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: inherit !important;
+  letter-spacing: 0 !important;
+}
+
+.task-item.task-item--collapse-ghost .sub-task-pill::after,
+.task-item.task-item--collapse-ghost .sub-task-pill-btn::after {
+  content: "";
+  display: block;
+  width: 9px;
+  height: 9px;
+  flex: 0 0 9px;
+  margin-left: 1px;
+  background: currentColor;
+  opacity: .72;
+  transform: translateY(1px);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / 9px 9px no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / 9px 9px no-repeat;
+}
+
+.task-item.task-item--collapse-ghost .task-row-center > .task-time-col .sub-task-pill,
+.task-item.task-item--collapse-ghost .task-row-center > .task-time-col .sub-task-pill-btn {
+  min-height: 16px !important;
+  padding: 1px 3px 1px 2px !important;
+  gap: 3px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  line-height: 1.25 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
 /* Align row action buttons with the toolbar controls and keep icon contrast consistent. */
 #taskMode .list-panel #tList .task-item:not(.archived-item) > .task-row {
   padding-right: 4px !important;
