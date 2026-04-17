@@ -116,12 +116,23 @@
 #taskMode .list-panel #tList .task-item > .task-row > .task-ck-slot {
   width: 34px !important;
   min-width: 34px !important;
+  height: 22px !important;
+  min-height: 22px !important;
+  align-self: flex-start !important;
+  align-items: center !important;
+  box-sizing: border-box;
+  padding-top: 0 !important;
 }
 
 #taskMode .list-panel #tList .task-item > .task-row > .task-ck-slot > .task-ck-ring,
 #taskMode .list-panel #tList .task-item > .task-row > .task-ck-slot .tc-check {
   width: 34px !important;
   min-width: 34px !important;
+  height: 22px !important;
+  min-height: 22px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 #taskMode .list-panel #tList .task-item > .task-row > .task-ck-slot .chk-ring {
@@ -139,6 +150,93 @@
 
 #taskMode .list-panel #tList .task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked) {
   border-width: 1.75px !important;
+}
+
+/* Keep the task title column as one clean vertical line. */
+#taskMode .list-panel #tList .task-item > .task-row > .task-strike-wrap {
+  align-self: flex-start !important;
+  align-items: flex-start !important;
+}
+
+#taskMode .list-panel #tList .task-item > .task-row > .task-strike-wrap > .task-strike-content {
+  align-items: flex-start !important;
+}
+
+#taskMode .list-panel #tList .task-row-center {
+  align-self: flex-start !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  gap: 2px !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .txt-line {
+  width: 100% !important;
+  min-height: 22px !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  align-self: stretch !important;
+  justify-content: flex-start !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  text-align: left !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .time-disp {
+  margin-left: 0 !important;
+}
+
+#taskMode .list-panel #tList .sub-task-pill,
+#taskMode .list-panel #tList .sub-task-pill-btn {
+  background: #f4f7fa !important;
+  border: none !important;
+  border-radius: 0 !important;
+  color: #64748b !important;
+  box-shadow: none !important;
+}
+
+#taskMode .list-panel #tList .sub-task-pill .stp-icon,
+#taskMode .list-panel #tList .sub-task-pill-btn .stp-icon {
+  color: #94a3b8 !important;
+}
+
+#taskMode .list-panel #tList .sub-task-pill .stp-n,
+#taskMode .list-panel #tList .sub-task-pill-btn .stp-n {
+  color: inherit !important;
+}
+
+#taskMode .list-panel #tList .sub-task-pill:hover,
+#taskMode .list-panel #tList .sub-task-pill-btn:hover,
+#taskMode .list-panel #tList .sub-task-pill.sub-task-pill--open,
+#taskMode .list-panel #tList .sub-task-pill-btn.sub-task-pill--open {
+  background: #eef3f7 !important;
+  color: #475569 !important;
+  box-shadow: none !important;
+}
+
+.dark #taskMode .list-panel #tList .sub-task-pill,
+.dark #taskMode .list-panel #tList .sub-task-pill-btn {
+  background: rgba(255,255,255,.08) !important;
+  color: var(--text3) !important;
+}
+
+.dark #taskMode .list-panel #tList .sub-task-pill .stp-icon,
+.dark #taskMode .list-panel #tList .sub-task-pill-btn .stp-icon {
+  color: color-mix(in srgb,var(--text3) 78%,transparent) !important;
+}
+
+.dark #taskMode .list-panel #tList .sub-task-pill:hover,
+.dark #taskMode .list-panel #tList .sub-task-pill-btn:hover,
+.dark #taskMode .list-panel #tList .sub-task-pill.sub-task-pill--open,
+.dark #taskMode .list-panel #tList .sub-task-pill-btn.sub-task-pill--open {
+  background: rgba(255,255,255,.12) !important;
+  color: var(--text2) !important;
 }
 
 /* Align row action buttons with the toolbar controls and keep icon contrast consistent. */
