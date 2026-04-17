@@ -209,9 +209,10 @@
   min-width: 0 !important;
   align-self: stretch !important;
   justify-content: flex-start !important;
-  gap: 7px !important;
+  column-gap: 10px !important;
+  row-gap: 2px !important;
   padding: 0 !important;
-  margin: 1px 0 0 !important;
+  margin: 2px 0 0 !important;
   text-align: left !important;
 }
 
@@ -397,28 +398,74 @@
 
 #taskMode .list-panel #tList .sub-task-pill,
 #taskMode .list-panel #tList .sub-task-pill-btn {
-  background: #f4f7fa !important;
-  border: 1px solid #dbe4ee !important;
-  border-radius: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 5px !important;
   color: #475569 !important;
   box-shadow: none !important;
-  min-height: 18px !important;
-  padding: 1px 8px 1px 7px !important;
-  gap: 4px !important;
+  min-height: 17px !important;
+  padding: 1px 4px 1px 3px !important;
+  gap: 3px !important;
   font-size: 12px !important;
-  font-weight: 700 !important;
+  font-weight: 600 !important;
   line-height: 1.25 !important;
+  vertical-align: middle !important;
+  box-sizing: border-box !important;
+  transition: background .16s ease, color .16s ease !important;
 }
 
 #taskMode .list-panel #tList .sub-task-pill .stp-icon,
 #taskMode .list-panel #tList .sub-task-pill-btn .stp-icon {
-  color: #64748b !important;
-  opacity: .9 !important;
+  position: relative !important;
+  width: 11px !important;
+  height: 11px !important;
+  min-width: 11px !important;
+  min-height: 11px !important;
+  color: #8a99aa !important;
+  opacity: 1 !important;
+}
+
+#taskMode .list-panel #tList .sub-task-pill .stp-icon svg,
+#taskMode .list-panel #tList .sub-task-pill-btn .stp-icon svg {
+  display: none !important;
+}
+
+#taskMode .list-panel #tList .sub-task-pill .stp-icon::before,
+#taskMode .list-panel #tList .sub-task-pill-btn .stp-icon::before {
+  content: "";
+  display: block;
+  width: 11px;
+  height: 11px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 7 2 2 4-4'/%3E%3Cpath d='m3 17 2 2 4-4'/%3E%3Cpath d='M13 6h8'/%3E%3Cpath d='M13 18h8'/%3E%3C/svg%3E") center / 11px 11px no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 7 2 2 4-4'/%3E%3Cpath d='m3 17 2 2 4-4'/%3E%3Cpath d='M13 6h8'/%3E%3Cpath d='M13 18h8'/%3E%3C/svg%3E") center / 11px 11px no-repeat;
 }
 
 #taskMode .list-panel #tList .sub-task-pill .stp-n,
 #taskMode .list-panel #tList .sub-task-pill-btn .stp-n {
   color: inherit !important;
+  min-width: auto !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  font-variant-numeric: tabular-nums !important;
+  letter-spacing: 0 !important;
+  text-align: left !important;
+}
+
+#taskMode .list-panel #tList .sub-task-pill::after,
+#taskMode .list-panel #tList .sub-task-pill-btn::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
+  margin-left: 1px;
+  background: currentColor;
+  opacity: .58;
+  transition: transform .16s ease, opacity .16s ease !important;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / 8px 8px no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / 8px 8px no-repeat;
 }
 
 #taskMode .list-panel #tList .sub-task-pill:hover,
@@ -426,22 +473,41 @@
 #taskMode .list-panel #tList .sub-task-pill.sub-task-pill--open,
 #taskMode .list-panel #tList .sub-task-pill-btn.sub-task-pill--open {
   background: #f4f7fa !important;
-  border-color: #cbd6e3 !important;
-  color: #334155 !important;
+  border-color: transparent !important;
+  color: #1f2937 !important;
   box-shadow: none !important;
+}
+
+#taskMode .list-panel #tList .sub-task-pill:hover::after,
+#taskMode .list-panel #tList .sub-task-pill-btn:hover::after,
+#taskMode .list-panel #tList .sub-task-pill.sub-task-pill--open::after,
+#taskMode .list-panel #tList .sub-task-pill-btn.sub-task-pill--open::after {
+  opacity: .82;
+}
+
+#taskMode .list-panel #tList .sub-task-pill.sub-task-pill--open::after,
+#taskMode .list-panel #tList .sub-task-pill-btn.sub-task-pill--open::after {
+  transform: rotate(180deg);
 }
 
 #taskMode .list-panel #tList .sub-task-pill.sub-task-pill--done,
 #taskMode .list-panel #tList .sub-task-pill-btn.sub-task-pill--done {
-  background: #f0fdf4 !important;
-  border-color: #bbf7d0 !important;
+  background: transparent !important;
+  border-color: transparent !important;
   color: #15803d !important;
+}
+
+#taskMode .list-panel #tList .sub-task-pill.sub-task-pill--done:hover,
+#taskMode .list-panel #tList .sub-task-pill-btn.sub-task-pill--done:hover,
+#taskMode .list-panel #tList .sub-task-pill.sub-task-pill--done.sub-task-pill--open,
+#taskMode .list-panel #tList .sub-task-pill-btn.sub-task-pill--done.sub-task-pill--open {
+  background: #f0fdf4 !important;
 }
 
 .dark #taskMode .list-panel #tList .sub-task-pill,
 .dark #taskMode .list-panel #tList .sub-task-pill-btn {
-  background: rgba(255,255,255,.08) !important;
-  border-color: rgba(148,163,184,.24) !important;
+  background: transparent !important;
+  border-color: transparent !important;
   color: var(--text3) !important;
 }
 
