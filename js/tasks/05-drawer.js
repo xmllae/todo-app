@@ -1109,9 +1109,12 @@ function renderSubtasksList(task) {
         const isDone = sub.done;
         return `
             <div class="subtask-row"
-                 data-subtask-id="${sub.id}">
+                 data-subtask-id="${sub.id}"
+                 title="\u53cc\u51fb\u7f16\u8f91\u5b50\u4efb\u52a1"
+                 ondblclick="startSubtaskEditInDrawer(${task.id}, ${sub.id})">
                 <div class="subtask-check task-ck-slot ${isDone ? 'task-ck-ring--done' : ''}"
                      onclick="event.stopPropagation();toggleSubtaskInDrawer(${task.id}, ${sub.id})"
+                     ondblclick="event.stopPropagation()"
                      onmouseenter="handleSubtaskCheckHover(this, true)"
                      onmouseleave="handleSubtaskCheckHover(this, false)">
                     <div class="tc-check">
@@ -1121,9 +1124,20 @@ function renderSubtasksList(task) {
                     </div>
                 </div>
                 <span class="subtask-text ${isDone ? 'done' : ''}"
-                      onclick="event.stopPropagation();toggleSubtaskInDrawer(${task.id}, ${sub.id})">${escapeHtml(sub.text)}</span>
+                      title="\u53cc\u51fb\u7f16\u8f91\u5b50\u4efb\u52a1"
+                      onclick="event.stopPropagation()"
+                      ondblclick="event.stopPropagation();startSubtaskEditInDrawer(${task.id}, ${sub.id})">${escapeHtml(sub.text)}</span>
+                <input type="text"
+                       class="subtask-edit-input"
+                       value="${escapeHtml(sub.text)}"
+                       aria-label="\u7f16\u8f91\u5b50\u4efb\u52a1"
+                       onclick="event.stopPropagation()"
+                       ondblclick="event.stopPropagation()"
+                       onblur="commitSubtaskEditInDrawer(${task.id}, ${sub.id})"
+                       onkeydown="handleSubtaskEditKeydown(event, ${task.id}, ${sub.id})">
                 <button type="button" class="subtask-delete-btn"
                         onclick="event.stopPropagation();deleteSubtaskInDrawer(${task.id}, ${sub.id})"
+                        ondblclick="event.stopPropagation()"
                         title="\u5220\u9664\u5b50\u4efb\u52a1">
                     ${getDrawerPhosphorIcon('x')}
                 </button>
@@ -1379,6 +1393,94 @@ function toggleSubtaskInDrawer(taskId, subtaskId) {
     }
 
     persistTaskDetailChanges(task, { kanban: true });
+}
+
+function startSubtaskEditInDrawer(taskId, subtaskId) {
+    const task = findTaskById(taskId);
+    if (!task) return;
+
+    const subtask = (task.subtasks || []).find(function(item) {
+        return item.id === subtaskId;
+    });
+    if (!subtask) return;
+
+    document.querySelectorAll('.subtask-row.is-editing .subtask-edit-input').forEach(function(openInput) {
+        const openRow = openInput.closest('.subtask-row');
+        if (!openRow || String(openRow.dataset.subtaskId) !== String(subtaskId)) {
+            openInput.blur();
+        }
+    });
+
+    const subtaskRow = document.querySelector(`.subtask-row[data-subtask-id="${subtaskId}"]`);
+    if (!subtaskRow) return;
+
+    const input = subtaskRow.querySelector('.subtask-edit-input');
+    if (!input) return;
+
+    input.dataset.originalValue = subtask.text || '';
+    input.dataset.cancelEdit = 'false';
+    input.value = subtask.text || '';
+    subtaskRow.classList.add('is-editing');
+
+    window.requestAnimationFrame(function() {
+        input.focus();
+        input.select();
+    });
+}
+
+function commitSubtaskEditInDrawer(taskId, subtaskId) {
+    const subtaskRow = document.querySelector(`.subtask-row[data-subtask-id="${subtaskId}"]`);
+    if (!subtaskRow) return;
+
+    const input = subtaskRow.querySelector('.subtask-edit-input');
+    const textSpan = subtaskRow.querySelector('.subtask-text');
+    if (!input || !textSpan) return;
+
+    const originalValue = input.dataset.originalValue || '';
+    const shouldCancel = input.dataset.cancelEdit === 'true';
+    const nextText = input.value.trim();
+
+    subtaskRow.classList.remove('is-editing');
+    delete input.dataset.cancelEdit;
+    delete input.dataset.originalValue;
+
+    if (shouldCancel || !nextText) {
+        input.value = originalValue;
+        return;
+    }
+
+    const task = findTaskById(taskId);
+    if (!task) return;
+
+    const subtask = (task.subtasks || []).find(function(item) {
+        return item.id === subtaskId;
+    });
+    if (!subtask) return;
+
+    if (subtask.text !== nextText) {
+        subtask.text = nextText;
+        textSpan.textContent = nextText;
+        input.value = nextText;
+        persistTaskDetailChanges(task, { kanban: true });
+    }
+}
+
+function handleSubtaskEditKeydown(event, taskId, subtaskId) {
+    if (!event) return;
+
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        event.stopPropagation();
+        event.target.blur();
+        return;
+    }
+
+    if (event.key === 'Escape') {
+        event.preventDefault();
+        event.stopPropagation();
+        event.target.dataset.cancelEdit = 'true';
+        event.target.blur();
+    }
 }
 
 function deleteSubtaskInDrawer(taskId, subtaskId) {

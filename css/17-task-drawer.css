@@ -2009,12 +2009,12 @@
     align-items: center;
     gap: var(--subtask-icon-gap);
     min-height: 34px;
-    padding: 6px var(--subtask-row-pad-x);
+    padding: 5px calc(var(--subtask-row-pad-x) - 1px);
+    border: 1px solid transparent;
     border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.16s ease, color 0.16s ease;
+    cursor: text;
+    transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
     background: transparent;
-    border: none;
     box-shadow: none;
 }
 
@@ -2022,6 +2022,11 @@
 .subtask-row:focus-within {
     background: color-mix(in srgb, var(--text) 4%, transparent);
     box-shadow: none;
+}
+
+.subtask-row.is-editing {
+    border-color: color-mix(in srgb, var(--acc2) 68%, #a5b4fc);
+    background: color-mix(in srgb, var(--acc2) 4%, #ffffff);
 }
 
 /* Subtask check - uses same ring styles */
@@ -2102,7 +2107,8 @@
     font-size: 0.875rem;
     color: color-mix(in srgb, var(--text) 96%, #111827);
     transition: color 0.2s ease;
-    cursor: pointer;
+    cursor: text;
+    min-width: 0;
 }
 
 .subtask-text:hover {
@@ -2112,6 +2118,33 @@
 .subtask-text.done {
     color: var(--text3);
     text-decoration: line-through;
+}
+
+.subtask-row.is-editing .subtask-text {
+    display: none;
+}
+
+.subtask-edit-input {
+    box-sizing: border-box;
+    display: none;
+    flex: 1;
+    min-width: 0;
+    height: var(--subtask-hit-size);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: color-mix(in srgb, var(--text) 96%, #111827);
+    font: inherit;
+    font-size: 0.875rem;
+    line-height: 1.2;
+    outline: none;
+    box-shadow: none;
+}
+
+.subtask-row.is-editing .subtask-edit-input {
+    display: block;
 }
 
 .subtask-delete-btn {
@@ -2537,6 +2570,18 @@
     background: color-mix(in srgb, var(--card) 72%, #111827);
     color: var(--acc2, var(--acc));
     box-shadow: none;
+}
+
+.dark .subtask-row.is-editing,
+.dark .subtask-row.is-editing:hover,
+.dark .subtask-row.is-editing:focus-within {
+    border-color: color-mix(in srgb, var(--acc2, var(--acc)) 68%, #a5b4fc);
+    background: color-mix(in srgb, var(--card) 78%, #111827);
+}
+
+.dark .subtask-edit-input {
+    background: transparent;
+    color: color-mix(in srgb, var(--text) 92%, #f8fafc);
 }
 
 .dark .subtask-add-inline.is-editing,
