@@ -1,5 +1,5 @@
 // ?????????????????????
-function taskRingAppearsDone(t){if(!t)return false;if(_togVisualPendingIds.has(t.id))return true;const subs=t.subtasks||[];const subD=subs.filter(s=>s.done).length;const subT=subs.length;const subAllDone=subT===0||subD===subT;return!!(t.done&&subAllDone)}
+function taskRingAppearsDone(t){if(!t)return false;if(_togVisualPendingIds.has(t.id))return true;return!!t.done}
 function syncTaskDetailPanelIfNeeded(taskId){if(taskId!=null&&typeof syncTaskDetailDoneState==="function"){try{if(syncTaskDetailDoneState(taskId))return}catch(e){}}if(typeof syncTaskDetailPanel==="function")syncTaskDetailPanel()}
 function _clearTogDoneTimer(){if(_togDoneTimer){clearTimeout(_togDoneTimer);_togDoneTimer=null}}
 function _clearTogCollapseFallback(){if(_togCollapseFallbackTimer){clearTimeout(_togCollapseFallbackTimer);_togCollapseFallbackTimer=null}if(window._togCollapseFinalizeTimer){clearTimeout(window._togCollapseFinalizeTimer);window._togCollapseFinalizeTimer=null}}

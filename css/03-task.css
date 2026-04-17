@@ -60,7 +60,7 @@
 .task-detail-swatch--clear::after{content:'';position:absolute;inset:6px;border-radius:50%;background:linear-gradient(135deg,transparent 45%,var(--text3) 45%,var(--text3) 55%,transparent 55%)}
 .task-detail-swatch--on{box-shadow:0 0 0 2px var(--card),0 0 0 4px #6366f1}
 
-.list-panel .task-item{background:var(--card);border-radius:12px;margin-bottom:6px;overflow:hidden}
+.list-panel .task-item{background:var(--card);border-radius:0;margin-bottom:0;overflow:hidden}
 .list-panel .task-item:hover{background:color-mix(in srgb,var(--acc) 3%,transparent);box-shadow:none}
 .dark .list-panel .task-item:hover{background:color-mix(in srgb,var(--acc2) 8%,transparent);border-bottom-color:rgba(255,255,255,.1);box-shadow:none}
 #taskMode .list-panel #tList .task-item > .task-row:hover {
@@ -186,11 +186,17 @@
 }
 
 #taskMode .list-panel #tList .task-row-center > .txt-line {
-  width: 100% !important;
+  width: auto !important;
+  max-width: 100% !important;
+  align-self: flex-start !important;
   min-height: 22px !important;
   align-items: center !important;
   margin: 0 !important;
   padding: 0 !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .txt-line.txt-line--edit {
+  width: 100% !important;
 }
 
 #taskMode .list-panel #tList .task-row-center > .task-time-col {
