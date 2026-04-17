@@ -133,6 +133,12 @@
   padding-top: 0 !important;
 }
 
+#taskMode .list-panel #tList {
+  --task-check-accent: #d1453b;
+  --task-check-accent-bg: #faeceb;
+  --task-check-accent-shadow: rgba(209,69,59,.24);
+}
+
 #taskMode .list-panel #tList .task-item > .task-row > .task-ck-slot > .task-ck-ring,
 #taskMode .list-panel #tList .task-item > .task-row > .task-ck-slot .tc-check {
   width: 34px !important;
@@ -153,15 +159,39 @@
 }
 
 #taskMode .list-panel #tList .task-item:not(.archived-item) > .task-row > .task-ck-slot .task-ck-ring:not(.task-ck-ring--done) .chk-ring:not(.checked):not(.chk-ring--archived) {
-  border-color: #d1453b !important;
-  background: #faeceb !important;
+  border-color: var(--task-check-accent) !important;
+  background: var(--task-check-accent-bg) !important;
 }
 
 #taskMode .list-panel #tList .task-item:not(.archived-item) > .task-row > .task-ck-slot .task-ck-ring:not(.task-ck-ring--done) .chk-ring:not(.checked):not(.chk-ring--archived):hover,
 #taskMode .list-panel #tList .task-item:not(.archived-item) > .task-row > .task-ck-slot .task-ck-ring:not(.task-ck-ring--done) .chk-ring:not(.checked):not(.chk-ring--archived).hover-check {
-  border-color: #d1453b !important;
-  background: #faeceb !important;
+  border-color: var(--task-check-accent) !important;
+  background: var(--task-check-accent-bg) !important;
   box-shadow: none !important;
+}
+
+#taskMode .list-panel #tList .task-item:not(.archived-item) > .task-row > .task-ck-slot .task-ck-ring:not(.task-ck-ring--archived) .chk-ring.checked {
+  background: var(--task-check-accent) !important;
+  border-color: var(--task-check-accent) !important;
+  box-shadow: 0 2px 6px var(--task-check-accent-shadow) !important;
+}
+
+#taskMode .list-panel #tList .task-item:not(.archived-item) > .task-row > .task-ck-slot .task-ck-ring:not(.task-ck-ring--archived) .chk-ring.checked .chk-ring-ico {
+  color: #fff !important;
+  opacity: 1 !important;
+}
+
+#taskMode .list-panel #tList .task-item:not(.archived-item) > .task-row > .task-ck-slot .task-ck-ring:not(.task-ck-ring--archived) .chk-ring.checked.chk-ring--ripple {
+  animation: task-check-ripple-cohesive .5s ease !important;
+}
+
+@keyframes task-check-ripple-cohesive {
+  0% {
+    box-shadow: 0 0 0 0 rgba(209,69,59,.34);
+  }
+  100% {
+    box-shadow: 0 0 0 10px rgba(209,69,59,0);
+  }
 }
 
 #taskMode .list-panel #tList .task-item > .task-row > .task-ck-slot .chk-ring-ico {
@@ -541,6 +571,9 @@
 
 /* Keep the collapse ghost visually identical to the row before it leaves #tList. */
 .task-item.task-item--collapse-ghost {
+  --task-check-accent: #d1453b;
+  --task-check-accent-bg: #faeceb;
+  --task-check-accent-shadow: rgba(209,69,59,.24);
   background: transparent !important;
   border: 0 !important;
   border-bottom: 1px solid #F0F0F5 !important;
@@ -589,13 +622,14 @@
 }
 
 .task-item.task-item--collapse-ghost .chk-ring.checked {
-  background: #d1453b !important;
-  border-color: transparent !important;
-  box-shadow: 0 1px 4px rgba(209,69,59,.26) !important;
+  background: var(--task-check-accent) !important;
+  border-color: var(--task-check-accent) !important;
+  box-shadow: 0 2px 6px var(--task-check-accent-shadow) !important;
 }
 
 .task-item.task-item--collapse-ghost .task-ck-ring--prio-high .chk-ring.checked {
-  background: var(--ck-prio,#d1453b) !important;
+  background: var(--task-check-accent) !important;
+  border-color: var(--task-check-accent) !important;
 }
 
 .task-item.task-item--collapse-ghost .chk-ring.checked .chk-ring-ico {

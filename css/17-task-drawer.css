@@ -437,6 +437,9 @@
 }
 
 .task-detail-inner .drawer-task-title .task-ck-ring .chk-ring {
+    --task-check-accent: #d1453b;
+    --task-check-accent-bg: #faeceb;
+    --task-check-accent-shadow: rgba(209, 69, 59, .24);
     width: 18px;
     min-width: 18px;
     height: 18px;
@@ -489,16 +492,16 @@
 }
 
 .task-detail-inner .drawer-task-title .task-ck-ring:not(.task-ck-ring--archived):not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring:not(.checked) {
-    --task-row-ring-border: #d1453b;
-    --task-row-ring-bg: #faeceb;
+    --task-row-ring-border: var(--task-check-accent);
+    --task-row-ring-bg: var(--task-check-accent-bg);
     border-color: var(--task-row-ring-border) !important;
     background: var(--task-row-ring-bg) !important;
     box-shadow: none !important;
 }
 
 .dark .task-detail-inner .drawer-task-title .task-ck-ring:not(.task-ck-ring--archived):not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring:not(.checked) {
-    --task-row-ring-border: #d1453b;
-    --task-row-ring-bg: #faeceb;
+    --task-row-ring-border: var(--task-check-accent);
+    --task-row-ring-bg: var(--task-check-accent-bg);
 }
 
 .task-detail-inner .drawer-task-title .task-ck-ring:not(.task-ck-ring--archived):not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring:not(.checked):hover,
@@ -521,8 +524,8 @@
 }
 
 .task-detail-inner .drawer-task-title .task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked) {
-    --task-row-high-ring-border: #d1453b;
-    --task-row-high-ring-bg: #faeceb;
+    --task-row-high-ring-border: var(--task-check-accent);
+    --task-row-high-ring-bg: var(--task-check-accent-bg);
     border-style: solid !important;
     border-width: 1.75px !important;
     border-color: var(--task-row-high-ring-border) !important;
@@ -531,7 +534,7 @@
 }
 
 .dark .task-detail-inner .drawer-task-title .task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked) {
-    --task-row-high-ring-bg: #faeceb;
+    --task-row-high-ring-bg: var(--task-check-accent-bg);
 }
 
 .task-detail-inner .drawer-task-title .task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked):hover,
@@ -543,31 +546,31 @@
 
 .task-detail-inner .drawer-task-title .task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked):hover .chk-ring-ico,
 .task-detail-inner .drawer-task-title .task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked).hover-check .chk-ring-ico {
-    color: var(--ck-prio, var(--prio-high, #ef4444)) !important;
+    color: var(--task-check-accent) !important;
 }
 
 .task-detail-inner .drawer-task-title .task-ck-ring--done:not(.task-ck-ring--prio-high):not(.task-ck-ring--archived) .chk-ring.checked {
-    background: #aeb8c6 !important;
-    border-color: transparent !important;
-    box-shadow: 0 1px 3px rgba(100, 116, 139, .22) !important;
+    background: var(--task-check-accent) !important;
+    border-color: var(--task-check-accent) !important;
+    box-shadow: 0 2px 6px var(--task-check-accent-shadow) !important;
 }
 
 .dark .task-detail-inner .drawer-task-title .task-ck-ring--done:not(.task-ck-ring--prio-high):not(.task-ck-ring--archived) .chk-ring.checked {
-    background: #6f7f92 !important;
-    border-color: transparent !important;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, .2) !important;
+    background: var(--task-check-accent) !important;
+    border-color: var(--task-check-accent) !important;
+    box-shadow: 0 2px 6px var(--task-check-accent-shadow) !important;
 }
 
 .task-detail-inner .drawer-task-title .task-ck-ring--prio-high:not(.task-ck-ring--archived) .chk-ring.checked {
-    background: var(--ck-prio, var(--prio-high, #ef4444)) !important;
-    border-color: transparent !important;
-    box-shadow: 0 1px 4px rgba(220, 38, 38, .28) !important;
+    background: var(--task-check-accent) !important;
+    border-color: var(--task-check-accent) !important;
+    box-shadow: 0 2px 6px var(--task-check-accent-shadow) !important;
 }
 
 .dark .task-detail-inner .drawer-task-title .task-ck-ring--prio-high:not(.task-ck-ring--archived) .chk-ring.checked {
-    background: var(--ck-prio, var(--prio-high, #ef4444)) !important;
-    border-color: transparent !important;
-    box-shadow: 0 1px 5px rgba(239, 68, 68, .32) !important;
+    background: var(--task-check-accent) !important;
+    border-color: var(--task-check-accent) !important;
+    box-shadow: 0 2px 6px var(--task-check-accent-shadow) !important;
 }
 
 .task-detail-inner .drawer-task-title .task-ck-ring .chk-ring.checked .chk-ring-ico,
@@ -578,11 +581,11 @@
 }
 
 .task-detail-inner .drawer-task-title .chk-ring.checked.chk-ring--ripple {
-    animation: chk-ring-ripple .5s ease;
+    animation: task-check-ripple-cohesive .5s ease;
 }
 
 .task-detail-inner .drawer-task-title .task-ck-ring--prio-high:not(.task-ck-ring--archived) .chk-ring.checked.chk-ring--ripple {
-    animation: chk-ring-ripple-prio .5s ease !important;
+    animation: task-check-ripple-cohesive .5s ease !important;
     transition: none !important;
 }
 
