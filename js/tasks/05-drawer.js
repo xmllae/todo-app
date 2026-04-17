@@ -313,7 +313,6 @@ function enhanceTaskRowInteractions() {
                 if (node.classList.contains('task-ck-slot'))      return false;
                 if (node.classList.contains('chk-ring'))          return false;
                 if (node.classList.contains('task-rail'))         return false;
-                if (node.classList.contains('task-inline-meta'))  return false;
                 if (node.classList.contains('sub-task-pill-btn')) return false;
                 if (node.classList.contains('task-expand-area'))  return false;
                 if (node.classList.contains('exp-bg-wrap'))       return false;
@@ -366,13 +365,6 @@ function enhanceTaskRowInteractions() {
             });
         }
 
-        var inlineMeta = item.querySelector('.task-inline-meta');
-        if (inlineMeta && !inlineMeta._bgClickBound) {
-            inlineMeta._bgClickBound = true;
-            inlineMeta.addEventListener('click', function(e) {
-                handleBackgroundClick(e, inlineMeta);
-            });
-        }
     });
 
     syncTaskDetailSelectionState();

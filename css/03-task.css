@@ -87,8 +87,7 @@
 .list-panel .task-item:not(.archived-item) .task-row,
 .list-panel .task-item:not(.archived-item) .task-strike-wrap,
 .list-panel .task-item:not(.archived-item) .task-strike-content,
-.list-panel .task-item:not(.archived-item) .task-row-center,
-.list-panel .task-item:not(.archived-item) .task-inline-meta{cursor:pointer}
+.list-panel .task-item:not(.archived-item) .task-row-center{cursor:pointer}
 /* 无子任务时时间列也属于背景区域，与行背景一体 */
 .list-panel .task-item:not(.archived-item) .task-time-col--no-sub{cursor:pointer}
 /* 标题文字保持文本光标（双击可编辑） */
@@ -97,7 +96,6 @@
 .list-panel .task-row-center .time-plain{cursor:pointer}
 .list-panel .task-row-center .txt--editable{cursor:text;transition:color .18s ease}
 .list-panel .task-row-center .txt--editable:hover,.list-panel .task-item:focus-within .task-row-center .txt--editable{color:color-mix(in srgb,var(--text) 88%,var(--acc) 12%)}
-.list-panel .task-inline-meta .task-ri[title^="耗时"],.list-panel .task-inline-meta .task-ri[title^="截止"]{display:none!important}
 .task-detail-trigger,.task-more-btn{border:1px solid transparent;color:var(--text3);transition:color .18s ease,background-color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease}
 .task-detail-trigger svg,.task-more-btn svg{display:block}
 .task-detail-trigger:hover,.task-more-btn:hover{color:var(--acc);background:color-mix(in srgb,var(--acc) 7%,var(--card));transform:translateY(-1px)}
@@ -141,4 +139,83 @@
 
 #taskMode .list-panel #tList .task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked) {
   border-width: 1.75px !important;
+}
+
+/* Align row action buttons with the toolbar controls and keep icon contrast consistent. */
+#taskMode .list-panel #tList .task-item:not(.archived-item) > .task-row {
+  padding-right: 4px !important;
+}
+
+#taskMode .list-panel #tList .task-item:not(.archived-item) > .task-row > .task-actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+  margin-left: auto;
+  padding: 0;
+  min-width: 114px;
+}
+
+#taskMode .list-panel #tList .task-actions .task-more-wrap {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+#taskMode .list-panel #tList .task-actions .act-btn {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0;
+  border-radius: 10px;
+  color: #475569;
+  opacity: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#taskMode .list-panel #tList .task-actions .task-detail-trigger,
+#taskMode .list-panel #tList .task-actions .task-more-btn {
+  color: #475569;
+}
+
+#taskMode .list-panel #tList .task-actions .act-btn svg {
+  width: 15px;
+  height: 15px;
+  display: block;
+}
+
+#taskMode .list-panel #tList .task-actions .task-more-btn svg {
+  opacity: 1;
+}
+
+#taskMode .list-panel #tList .task-actions .act-btn:hover {
+  color: #334155;
+  background: #f3f4f6;
+}
+
+#taskMode .list-panel #tList .task-actions .act-btn.del:hover {
+  color: #ef4444;
+  background: #fef2f2;
+}
+
+.dark #taskMode .list-panel #tList .task-actions .act-btn,
+.dark #taskMode .list-panel #tList .task-actions .task-detail-trigger,
+.dark #taskMode .list-panel #tList .task-actions .task-more-btn {
+  color: var(--text2);
+}
+
+.dark #taskMode .list-panel #tList .task-actions .act-btn:hover {
+  color: var(--text);
+  background: rgba(255,255,255,.08);
+}
+
+.dark #taskMode .list-panel #tList .task-actions .act-btn.del:hover {
+  color: #f87171;
+  background: rgba(239,68,68,.14);
 }
