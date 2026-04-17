@@ -60,7 +60,7 @@
 .task-detail-swatch--clear::after{content:'';position:absolute;inset:6px;border-radius:50%;background:linear-gradient(135deg,transparent 45%,var(--text3) 45%,var(--text3) 55%,transparent 55%)}
 .task-detail-swatch--on{box-shadow:0 0 0 2px var(--card),0 0 0 4px #6366f1}
 
-.list-panel .task-item{background:var(--card);border-radius:0;margin-bottom:0;overflow:hidden}
+.list-panel .task-item{background:var(--card);border-radius:0;margin-bottom:0;overflow:hidden;padding-top:8px!important;padding-bottom:8px!important;box-sizing:border-box}
 .list-panel .task-item:hover{background:color-mix(in srgb,var(--acc) 3%,transparent);box-shadow:none}
 .dark .list-panel .task-item:hover{background:color-mix(in srgb,var(--acc2) 8%,transparent);border-bottom-color:rgba(255,255,255,.1);box-shadow:none}
 #taskMode .list-panel #tList .task-item > .task-row:hover {
@@ -84,6 +84,10 @@
 .task-row-corner--br{bottom:0;right:0;border-bottom:2px solid currentColor;border-right:2px solid currentColor;border-bottom-right-radius:2px;transform:translate(3px,3px)}
 .list-panel .task-item:hover .task-row-corner,.list-panel .task-item:focus-within .task-row-corner,.list-panel .task-item.task-item--detail-active .task-row-corner{opacity:1;transform:translate(0,0)}
 */
+
+#taskMode .list-panel #tList .task-item > .task-row {
+  align-items: flex-start !important;
+}
 
 /* 背景区域显示手型，暗示可点击打开详情 */
 .list-panel .task-item:not(.archived-item),
@@ -125,6 +129,7 @@
   align-self: flex-start !important;
   align-items: center !important;
   box-sizing: border-box;
+  margin-top: 0 !important;
   padding-top: 0 !important;
 }
 
@@ -182,7 +187,7 @@
   align-self: flex-start !important;
   align-items: flex-start !important;
   justify-content: flex-start !important;
-  gap: 2px !important;
+  gap: 0 !important;
 }
 
 #taskMode .list-panel #tList .task-row-center > .txt-line {
@@ -209,10 +214,10 @@
   min-width: 0 !important;
   align-self: stretch !important;
   justify-content: flex-start !important;
-  column-gap: 8px !important;
+  column-gap: 12px !important;
   row-gap: 2px !important;
   padding: 0 !important;
-  margin: 2px 0 0 !important;
+  margin: 3px 0 0 !important;
   text-align: left !important;
 }
 
@@ -252,9 +257,11 @@
 
 #taskMode .list-panel #tList .task-row-center > .task-time-col .time-plain.time-disp::before {
   content: "";
+  display: block;
   width: 11px;
   height: 11px;
   flex: 0 0 11px;
+  align-self: center;
   opacity: .78;
   background: currentColor;
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolyline points='12 6 12 12 16 14'/%3E%3C/svg%3E") center / 11px 11px no-repeat;
@@ -290,6 +297,9 @@
 #taskMode .list-panel #tList .task-row-center > .task-time-col .task-recur-badge-ico {
   width: 11px !important;
   height: 11px !important;
+  flex: 0 0 11px !important;
+  align-self: center !important;
+  display: block !important;
   opacity: .78 !important;
 }
 
@@ -438,6 +448,7 @@
   display: block;
   width: 11px;
   height: 11px;
+  align-self: center;
   background: currentColor;
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 7 2 2 4-4'/%3E%3Cpath d='m3 17 2 2 4-4'/%3E%3Cpath d='M13 6h8'/%3E%3Cpath d='M13 18h8'/%3E%3C/svg%3E") center / 11px 11px no-repeat;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 7 2 2 4-4'/%3E%3Cpath d='m3 17 2 2 4-4'/%3E%3Cpath d='M13 6h8'/%3E%3Cpath d='M13 18h8'/%3E%3C/svg%3E") center / 11px 11px no-repeat;
@@ -457,12 +468,15 @@
 #taskMode .list-panel #tList .sub-task-pill::after,
 #taskMode .list-panel #tList .sub-task-pill-btn::after {
   content: "";
+  display: block;
   width: 9px;
   height: 9px;
   flex: 0 0 9px;
+  align-self: center;
   margin-left: 1px;
   background: currentColor;
   opacity: .72;
+  transform: translateY(.5px);
   transition: transform .16s ease, opacity .16s ease !important;
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / 9px 9px no-repeat;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / 9px 9px no-repeat;
@@ -487,7 +501,7 @@
 
 #taskMode .list-panel #tList .sub-task-pill.sub-task-pill--open::after,
 #taskMode .list-panel #tList .sub-task-pill-btn.sub-task-pill--open::after {
-  transform: rotate(180deg);
+  transform: translateY(.5px) rotate(180deg);
 }
 
 #taskMode .list-panel #tList .sub-task-pill.sub-task-pill--done,
@@ -532,6 +546,7 @@
 #taskMode .list-panel #tList .task-item:not(.archived-item) > .task-row > .task-actions {
   display: inline-flex;
   align-items: center;
+  align-self: center;
   justify-content: flex-end;
   gap: 3px;
   margin-left: auto;
