@@ -97,6 +97,7 @@
 .list-panel .task-row-center .time-plain{cursor:pointer}
 .list-panel .task-row-center .txt--editable{cursor:text;transition:color .18s ease}
 .list-panel .task-row-center .txt--editable:hover,.list-panel .task-item:focus-within .task-row-center .txt--editable{color:color-mix(in srgb,var(--text) 88%,var(--acc) 12%)}
+.list-panel .task-inline-meta .task-ri[title^="耗时"],.list-panel .task-inline-meta .task-ri[title^="截止"]{display:none!important}
 .task-detail-trigger,.task-more-btn{border:1px solid transparent;color:var(--text3);transition:color .18s ease,background-color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease}
 .task-detail-trigger svg,.task-more-btn svg{display:block}
 .task-detail-trigger:hover,.task-more-btn:hover{color:var(--acc);background:color-mix(in srgb,var(--acc) 7%,var(--card));transform:translateY(-1px)}
