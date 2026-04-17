@@ -209,7 +209,7 @@
   flex-direction: row !important;
   flex-wrap: wrap !important;
   align-items: center !important;
-  width: 100% !important;
+  width: calc(100% + 2px) !important;
   max-width: none !important;
   min-width: 0 !important;
   align-self: stretch !important;
@@ -217,7 +217,7 @@
   column-gap: 12px !important;
   row-gap: 2px !important;
   padding: 0 !important;
-  margin: 3px 0 0 !important;
+  margin: 3px 0 0 -2px !important;
   text-align: left !important;
 }
 
@@ -263,6 +263,7 @@
   flex: 0 0 11px;
   align-self: center;
   opacity: .78;
+  transform: translateY(-.5px);
   background: currentColor;
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolyline points='12 6 12 12 16 14'/%3E%3C/svg%3E") center / 11px 11px no-repeat;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolyline points='12 6 12 12 16 14'/%3E%3C/svg%3E") center / 11px 11px no-repeat;
@@ -476,7 +477,7 @@
   margin-left: 1px;
   background: currentColor;
   opacity: .72;
-  transform: translateY(.5px);
+  transform: translateY(1px);
   transition: transform .16s ease, opacity .16s ease !important;
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / 9px 9px no-repeat;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / 9px 9px no-repeat;
@@ -501,7 +502,7 @@
 
 #taskMode .list-panel #tList .sub-task-pill.sub-task-pill--open::after,
 #taskMode .list-panel #tList .sub-task-pill-btn.sub-task-pill--open::after {
-  transform: translateY(.5px) rotate(180deg);
+  transform: translateY(1px) rotate(180deg);
 }
 
 #taskMode .list-panel #tList .sub-task-pill.sub-task-pill--done,
