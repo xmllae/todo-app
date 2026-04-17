@@ -95,8 +95,9 @@
 .list-panel .task-item:not(.archived-item) .task-time-col--no-sub{cursor:pointer}
 /* 标题文字保持文本光标（双击可编辑） */
 .list-panel .task-row-center .txt{cursor:default}
-/* 时间文字保持 pointer（单击进入时间编辑） */
+/* 时间信息点击进入详情，不再进入行内编辑 */
 .list-panel .task-row-center .time-plain{cursor:pointer}
+.list-panel .task-row-center .task-recur-badge{cursor:pointer}
 .list-panel .task-row-center .txt--editable{cursor:text;transition:color .18s ease}
 .list-panel .task-row-center .txt--editable:hover,.list-panel .task-item:focus-within .task-row-center .txt--editable{color:color-mix(in srgb,var(--text) 88%,var(--acc) 12%)}
 .task-detail-trigger,.task-more-btn{border:1px solid transparent;color:var(--text3);transition:color .18s ease,background-color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease}
@@ -218,11 +219,28 @@
   gap: 4px !important;
   min-height: 18px !important;
   padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: none !important;
   color: #64748b !important;
   font-size: 12px !important;
   font-weight: 500 !important;
   line-height: 1.25 !important;
   letter-spacing: 0 !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .time-plain.time-disp:hover,
+#taskMode .list-panel #tList .task-row-center > .task-time-col .time-plain.time-disp:focus,
+#taskMode .list-panel #tList .task-row-center > .task-time-col .time-plain.time-disp:active {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: none !important;
+  outline: 0 !important;
+  transform: none !important;
 }
 
 #taskMode .list-panel #tList .task-row-center > .task-time-col .time-plain.time-disp::before {
@@ -234,6 +252,137 @@
   background: currentColor;
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolyline points='12 6 12 12 16 14'/%3E%3C/svg%3E") center / 12px 12px no-repeat;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolyline points='12 6 12 12 16 14'/%3E%3C/svg%3E") center / 12px 12px no-repeat;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .task-recur-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  min-height: 18px !important;
+  max-width: 100% !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: none !important;
+  color: #64748b !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  line-height: 1.25 !important;
+  letter-spacing: 0 !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .task-recur-badge:hover {
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: none !important;
+  color: #475569 !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .task-recur-badge-ico {
+  width: 12px !important;
+  height: 12px !important;
+  opacity: .78 !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .task-recur-badge-txt {
+  color: inherit !important;
+  letter-spacing: 0 !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col.task-time-col--editing,
+#taskMode .list-panel #tList .task-row-center > .task-time-col.task-time-col--pill-edit {
+  width: 100% !important;
+  max-width: none !important;
+  align-self: stretch !important;
+  margin: 1px 0 0 !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .time-edit.time-edit--pill,
+#taskMode .list-panel #tList .task-row-center > .task-time-col.task-time-col--editing .time-edit.time-edit--pill,
+#taskMode .list-panel #tList .task-row-center > .task-time-col.task-time-col--pill-edit .time-edit.time-edit--pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  min-height: 18px !important;
+  width: auto !important;
+  max-width: 100% !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: none !important;
+  color: #64748b !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  line-height: 1.25 !important;
+  letter-spacing: 0 !important;
+  vertical-align: middle !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .time-edit.time-edit--pill .task-recur-badge-ico {
+  width: 12px !important;
+  height: 12px !important;
+  opacity: .78 !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .time-edit.time-edit--pill .te-pill-time-core {
+  gap: 0 !important;
+  color: inherit !important;
+  line-height: 1.25 !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .time-edit.time-edit--pill .time-edit-pill-prefix {
+  color: inherit !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  line-height: 1.25 !important;
+  letter-spacing: 0 !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .time-edit.time-edit--pill input[type="time"].te-input--pill {
+  width: 5.35ch !important;
+  min-width: 5.35ch !important;
+  max-width: 5.35ch !important;
+  flex: 0 0 5.35ch !important;
+  height: 18px !important;
+  min-height: 18px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  outline: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #475569 !important;
+  font: inherit !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  line-height: 18px !important;
+  letter-spacing: 0 !important;
+  caret-color: var(--acc) !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .time-edit.time-edit--pill .te-pill-clock-btn {
+  width: 16px !important;
+  height: 16px !important;
+  margin-left: 1px !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: #94a3b8 !important;
+  opacity: 1 !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .time-edit.time-edit--pill .te-pill-clock-btn:hover {
+  background: #f4f7fa !important;
+  color: #64748b !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .time-edit.time-edit--pill .te-pill-clock-ico {
+  width: 11px !important;
+  height: 11px !important;
 }
 
 #taskMode .list-panel #tList .task-row-center > .task-time-col .task-time-sep {
