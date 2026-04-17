@@ -63,6 +63,9 @@
 .list-panel .task-item{background:var(--card);border-radius:12px;margin-bottom:6px;overflow:hidden}
 .list-panel .task-item:hover{background:color-mix(in srgb,var(--acc) 3%,transparent);box-shadow:none}
 .dark .list-panel .task-item:hover{background:color-mix(in srgb,var(--acc2) 8%,transparent);border-bottom-color:rgba(255,255,255,.1);box-shadow:none}
+#taskMode .list-panel #tList .task-item > .task-row:hover {
+  filter: none !important;
+}
 .list-panel .task-item.task-main-checked:hover{background:color-mix(in srgb,var(--acc) 4%,var(--card))}
 .dark .list-panel .task-item.task-main-checked:hover{background:color-mix(in srgb,var(--acc2) 8%,transparent);border-bottom-color:rgba(255,255,255,.1)}
 .list-panel .task-item.ft-focus-task:hover{background:color-mix(in srgb,var(--acc) 10%,var(--card))!important}
@@ -143,6 +146,18 @@
   border-width: 1.5px !important;
 }
 
+#taskMode .list-panel #tList .task-item:not(.archived-item) > .task-row > .task-ck-slot .task-ck-ring:not(.task-ck-ring--done) .chk-ring:not(.checked):not(.chk-ring--archived) {
+  border-color: #d1453b !important;
+  background: #faeceb !important;
+}
+
+#taskMode .list-panel #tList .task-item:not(.archived-item) > .task-row > .task-ck-slot .task-ck-ring:not(.task-ck-ring--done) .chk-ring:not(.checked):not(.chk-ring--archived):hover,
+#taskMode .list-panel #tList .task-item:not(.archived-item) > .task-row > .task-ck-slot .task-ck-ring:not(.task-ck-ring--done) .chk-ring:not(.checked):not(.chk-ring--archived).hover-check {
+  border-color: #d1453b !important;
+  background: #faeceb !important;
+  box-shadow: none !important;
+}
+
 #taskMode .list-panel #tList .task-item > .task-row > .task-ck-slot .chk-ring-ico {
   width: 12px !important;
   height: 12px !important;
@@ -215,7 +230,7 @@
 #taskMode .list-panel #tList .sub-task-pill-btn:hover,
 #taskMode .list-panel #tList .sub-task-pill.sub-task-pill--open,
 #taskMode .list-panel #tList .sub-task-pill-btn.sub-task-pill--open {
-  background: #eef3f7 !important;
+  background: #f4f7fa !important;
   color: #475569 !important;
   box-shadow: none !important;
 }

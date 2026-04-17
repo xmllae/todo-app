@@ -464,7 +464,7 @@
 
 .task-detail-inner .drawer-task-title .task-ck-ring.task-ck-slot:hover .chk-ring,
 .task-detail-inner .drawer-task-title .task-ck-ring.task-ck-slot:focus-visible .chk-ring {
-    transform: scale(1.06);
+    transform: scale(1);
 }
 
 .dark .task-detail-inner .drawer-task-title .task-ck-ring .chk-ring {
@@ -489,16 +489,16 @@
 }
 
 .task-detail-inner .drawer-task-title .task-ck-ring:not(.task-ck-ring--archived):not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring:not(.checked) {
-    --task-row-ring-border: #aeb8c6;
-    --task-row-ring-bg: var(--card);
+    --task-row-ring-border: #d1453b;
+    --task-row-ring-bg: #faeceb;
     border-color: var(--task-row-ring-border) !important;
     background: var(--task-row-ring-bg) !important;
     box-shadow: none !important;
 }
 
 .dark .task-detail-inner .drawer-task-title .task-ck-ring:not(.task-ck-ring--archived):not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring:not(.checked) {
-    --task-row-ring-border: #6f7f92;
-    --task-row-ring-bg: var(--card);
+    --task-row-ring-border: #d1453b;
+    --task-row-ring-bg: #faeceb;
 }
 
 .task-detail-inner .drawer-task-title .task-ck-ring:not(.task-ck-ring--archived):not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring:not(.checked):hover,
@@ -521,8 +521,8 @@
 }
 
 .task-detail-inner .drawer-task-title .task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked) {
-    --task-row-high-ring-border: var(--ck-prio, var(--prio-high, #ef4444));
-    --task-row-high-ring-bg: color-mix(in srgb, var(--ck-prio, var(--prio-high, #ef4444)) 6%, var(--card));
+    --task-row-high-ring-border: #d1453b;
+    --task-row-high-ring-bg: #faeceb;
     border-style: solid !important;
     border-width: 1.75px !important;
     border-color: var(--task-row-high-ring-border) !important;
@@ -531,7 +531,7 @@
 }
 
 .dark .task-detail-inner .drawer-task-title .task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked) {
-    --task-row-high-ring-bg: color-mix(in srgb, var(--ck-prio, var(--prio-high, #ef4444)) 10%, var(--card));
+    --task-row-high-ring-bg: #faeceb;
 }
 
 .task-detail-inner .drawer-task-title .task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked):hover,
@@ -800,7 +800,7 @@
 }
 
 .drawer-priority-preview-flag--high {
-    color: #ef4444;
+    color: #d1453b;
 }
 
 .drawer-priority-preview-flag--normal {
@@ -957,7 +957,7 @@
 }
 
 .drawer-priority-flag--high {
-    color: #ef4444;
+    color: #d1453b;
 }
 
 .drawer-priority-flag--normal {
@@ -969,7 +969,7 @@
 }
 
 .drawer-priority-option.selected .drawer-priority-flag--high {
-    color: #e11d48;
+    color: #d1453b;
 }
 
 .drawer-priority-option:hover {
@@ -1062,7 +1062,7 @@
 .dark .drawer-priority-preview-flag--high,
 .dark .drawer-priority-flag--high,
 .dark .drawer-priority-option.selected .drawer-priority-flag--high {
-    color: #fb7185;
+    color: #d1453b;
 }
 
 .dark .drawer-priority-preview-flag--normal,
