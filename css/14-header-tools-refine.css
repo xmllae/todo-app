@@ -231,7 +231,8 @@
   gap: 8px;
   min-width: 0;
   max-width: 100%;
-  padding: 6px 8px;
+  min-height: var(--header-tool-btn-size);
+  padding: 0 12px;
   border: 1px solid transparent;
   border-radius: 8px;
   background: transparent;
@@ -247,14 +248,14 @@
 
 .header-context-date{
   color: #1f2937;
-  font-size: .9rem;
+  font-size: .94rem;
   font-weight: 760;
   font-variant-numeric: tabular-nums;
 }
 
 .header-context-sep{
   width: 1px;
-  height: 13px;
+  height: 16px;
   border-radius: 999px;
   background: rgba(148, 163, 184, .36);
   flex-shrink: 0;
@@ -262,7 +263,7 @@
 
 .header-context-stat{
   color: #64748b;
-  font-size: .78rem;
+  font-size: .8rem;
   font-weight: 680;
   font-variant-numeric: tabular-nums;
 }
