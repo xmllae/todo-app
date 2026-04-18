@@ -74,6 +74,7 @@ test('header today context returns to today pending tasks', async ({ page }) => 
   await page.goto('/');
 
   const todayLabel = await page.locator('#headerContext .header-context-date').textContent();
+  await expect(page.locator('#headerContext .header-context-date')).toHaveText('今天');
   await expect(page.locator('#tList .task-item[data-id="424242"]')).toBeVisible();
 
   await page.evaluate(() => {
