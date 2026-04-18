@@ -56,6 +56,19 @@ test('loads the app shell', async ({ page }) => {
   await expect(page.locator('#appMain')).toBeAttached();
 });
 
+test('opens search with the Ctrl+K shortcut', async ({ page }) => {
+  await seedGuestTask(page);
+  await page.goto('/');
+
+  await expect(page.locator('.header-search-trigger')).toBeVisible();
+  await expect(page.locator('.header-search-kbd')).toHaveText('Ctrl K');
+
+  await page.keyboard.press('Control+K');
+
+  await expect(page.locator('#searchWrap')).toHaveClass(/open/);
+  await expect(page.locator('#searchIn')).toBeFocused();
+});
+
 test('opens task detail from the empty check-slot gap', async ({ page }) => {
   await seedGuestTask(page);
   await page.goto('/');

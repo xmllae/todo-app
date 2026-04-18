@@ -44,6 +44,71 @@
   font-size: var(--header-tool-icon-size);
 }
 
+.site-header-inner .header-tools .header-search-trigger{
+  width: auto;
+  min-width: 154px;
+  height: var(--header-tool-btn-size);
+  padding: 0 9px 0 13px;
+  gap: 12px;
+  border-radius: 8px;
+  justify-content: space-between;
+  background: #f8fafc;
+  border-color: rgba(148, 163, 184, .20);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .86),
+    0 1px 2px rgba(15, 23, 42, .035);
+  line-height: 1;
+}
+
+.site-header-inner .header-tools .header-search-trigger .header-utility-ico{
+  display: none;
+}
+
+.header-search-placeholder{
+  color: #64748b;
+  font-size: .8rem;
+  font-weight: 650;
+  line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.header-search-kbd{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 6px;
+  border: 1px solid rgba(148, 163, 184, .20);
+  background: rgba(255, 255, 255, .66);
+  color: #94a3b8;
+  box-shadow: inset 0 -1px 0 rgba(15, 23, 42, .05);
+  font-size: .64rem;
+  font-weight: 740;
+  letter-spacing: 0;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+@media(hover:hover) and (pointer:fine){
+  .site-header-inner .header-tools .header-search-trigger:hover{
+    background: #fff;
+    border-color: rgba(129, 140, 248, .22);
+  }
+
+  .site-header-inner .header-tools .header-search-trigger:hover .header-search-placeholder{
+    color: #475569;
+  }
+
+  .site-header-inner .header-tools .header-search-trigger:hover .header-search-kbd{
+    color: #64748b;
+    border-color: rgba(148, 163, 184, .30);
+  }
+}
+
 .site-header-inner .user-btn{
   min-width: 42px;
   min-height: 42px;
@@ -87,6 +152,36 @@
   color: var(--header-tool-fg);
 }
 
+.dark .site-header-inner .header-tools .header-search-trigger{
+  background: rgba(255, 255, 255, .06);
+  border-color: rgba(255, 255, 255, .10);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .05),
+    0 2px 6px rgba(2, 6, 23, .18);
+}
+
+.dark .header-search-placeholder{
+  color: #cbd5e1;
+}
+
+.dark .header-search-kbd{
+  border-color: rgba(255, 255, 255, .14);
+  background: rgba(15, 23, 42, .26);
+  color: #94a3b8;
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, .04);
+}
+
+@media(hover:hover) and (pointer:fine){
+  .dark .site-header-inner .header-tools .header-search-trigger:hover{
+    background: rgba(255, 255, 255, .09);
+    border-color: rgba(167, 139, 250, .20);
+  }
+
+  .dark .site-header-inner .header-tools .header-search-trigger:hover .header-search-placeholder{
+    color: #f8fafc;
+  }
+}
+
 @media (max-width: 640px){
   .site-header-inner{
     --header-tools-gap: 10px;
@@ -102,5 +197,175 @@
   .site-header-inner .user-btn{
     min-width: 39px;
     min-height: 39px;
+  }
+
+  .site-header-inner .header-tools .header-search-trigger{
+    width: var(--header-tool-btn-size);
+    min-width: var(--header-tool-btn-size);
+    padding: 0;
+    justify-content: center;
+  }
+
+  .site-header-inner .header-tools .header-search-trigger .header-utility-ico{
+    display: inline-flex;
+  }
+
+  .header-search-placeholder,
+  .header-search-kbd{
+    display: none;
+  }
+}
+
+/* Keep the primary navigation centered and make the left side useful. */
+.site-header-inner{
+  display: grid;
+  grid-template-columns: minmax(168px, 1fr) auto minmax(168px, 1fr);
+  align-items: center;
+  gap: 12px;
+}
+
+.header-context{
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  max-width: 100%;
+  padding: 6px 8px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: #334155;
+  box-shadow: none;
+  cursor: pointer;
+  font: inherit;
+  line-height: 1.2;
+  white-space: nowrap;
+  letter-spacing: 0;
+  transition: background .18s ease, border-color .18s ease, color .18s ease;
+}
+
+.header-context-date{
+  color: #1f2937;
+  font-size: .9rem;
+  font-weight: 760;
+  font-variant-numeric: tabular-nums;
+}
+
+.header-context-sep{
+  width: 1px;
+  height: 13px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, .36);
+  flex-shrink: 0;
+}
+
+.header-context-stat{
+  color: #64748b;
+  font-size: .78rem;
+  font-weight: 680;
+  font-variant-numeric: tabular-nums;
+}
+
+@media(hover:hover) and (pointer:fine){
+  .header-context:hover{
+    background: #f8fafc;
+    border-color: rgba(148, 163, 184, .18);
+    color: #111827;
+  }
+}
+
+.site-header-inner .header-mid{
+  justify-self: center;
+  justify-content: center;
+  flex: 0 1 auto;
+  max-width: min(100%, 720px);
+  overflow-x: visible;
+}
+
+.site-header-inner .mode-toggle{
+  justify-content: center;
+}
+
+.site-header-inner .header-end{
+  justify-self: end;
+  margin-left: 0;
+}
+
+.site-header-inner .header-tools{
+  margin-left: 0;
+}
+
+.dark .header-context-date{
+  color: #f8fafc;
+}
+
+.dark .header-context-stat{
+  color: #cbd5e1;
+}
+
+.dark .header-context-sep{
+  background: rgba(148, 163, 184, .34);
+}
+
+@media(hover:hover) and (pointer:fine){
+  .dark .header-context:hover{
+    background: rgba(255, 255, 255, .06);
+    border-color: rgba(255, 255, 255, .10);
+    color: #f8fafc;
+  }
+}
+
+@media (max-width: 900px){
+  .site-header-inner{
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .site-header-inner .header-mid{
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .site-header-inner .header-mid::-webkit-scrollbar{
+    display: none;
+  }
+}
+
+@media (max-width: 640px){
+  .site-header-inner{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .header-context{
+    order: 1;
+    margin-right: auto;
+  }
+
+  .site-header-inner .header-end{
+    order: 2;
+    margin-left: auto;
+  }
+
+  .site-header-inner .header-mid{
+    order: 3;
+    flex: 1 0 100%;
+    max-width: 100%;
+    justify-content: center;
+    padding-top: 4px;
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 420px){
+  .header-context-stat,
+  .header-context-sep{
+    display: none;
+  }
+
+  .site-header-inner .header-end{
+    margin-left: 0;
   }
 }
