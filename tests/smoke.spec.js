@@ -69,6 +69,27 @@ test('opens search with the Ctrl+K shortcut', async ({ page }) => {
   await expect(page.locator('#searchIn')).toBeFocused();
 });
 
+test('header today context returns to today pending tasks', async ({ page }) => {
+  await seedGuestTask(page);
+  await page.goto('/');
+
+  const todayLabel = await page.locator('#headerContext .header-context-date').textContent();
+  await expect(page.locator('#tList .task-item[data-id="424242"]')).toBeVisible();
+
+  await page.evaluate(() => {
+    quickGo(1);
+    setF('done');
+  });
+
+  await expect(page.locator('#headerContext .header-context-date')).toHaveText(todayLabel || '');
+  await expect(page.locator('#tList .task-item[data-id="424242"]')).toHaveCount(0);
+
+  await page.locator('#headerContext').click();
+
+  await expect(page.locator('#tList .task-item[data-id="424242"]')).toBeVisible();
+  await expect(page.locator('#sidebar')).not.toHaveClass(/open/);
+});
+
 test('opens task detail from the empty check-slot gap', async ({ page }) => {
   await seedGuestTask(page);
   await page.goto('/');
