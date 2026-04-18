@@ -95,7 +95,35 @@ var _expandClickTimer=null,_expandDelayMs=220;
 function cancelDelayedToggleExpand(){if(_expandClickTimer){clearTimeout(_expandClickTimer);_expandClickTimer=null}}
 function scheduleToggleExpand(id){cancelDelayedToggleExpand();_expandClickTimer=setTimeout(function(){_expandClickTimer=null;toggleExpand(id)},_expandDelayMs)}
 function onTaskRowAsideClick(id){cancelDelayedToggleExpand();if(multiSelect)toggleMSel(id);else{const _tw=(T[sel]||[]).find(function(x){return x.id===id});if(!_tw||!(_tw.subtasks||[]).length)return;toggleExpand(id)}}
-function onTaskRowCenterClick(e,id){e.stopPropagation();if(e.target.closest(".txt-edit"))return;if(e.target.closest(".time-plain,.task-recur-badge")||(e.target.closest(".task-time-col")&&!e.target.closest(".sub-task-pill,.sub-task-pill-btn"))){cancelDelayedToggleExpand();if(multiSelect)toggleMSel(id);else if(window.openTaskDetail)window.openTaskDetail(id);return}if(e.target.closest(".txt")){cancelDelayedToggleExpand();if(multiSelect)toggleMSel(id);return}onTaskRowAsideClick(id)}
+function onTaskCheckSlotClick(e,id){
+if(e){
+e.stopPropagation();
+e.__taskDetailBgHandled=true;
+if(e.target&&e.target.closest&&e.target.closest(".chk-ring:not(.chk-ring--archived)"))return
+}
+cancelDelayedToggleExpand();
+if(multiSelect){toggleMSel(id);return}
+if(window.openTaskDetail)window.openTaskDetail(id);else onTaskRowAsideClick(id)
+}
+function onTaskRowCenterClick(e,id){
+e.stopPropagation();
+if(e.target.closest(".txt-edit"))return;
+if(e.target.closest(".time-plain,.task-recur-badge")||(e.target.closest(".task-time-col")&&!e.target.closest(".sub-task-pill,.sub-task-pill-btn"))){
+e.__taskDetailBgHandled=true;
+cancelDelayedToggleExpand();
+if(multiSelect)toggleMSel(id);else if(window.openTaskDetail)window.openTaskDetail(id);
+return
+}
+if(e.target.closest(".txt-line")){
+e.__taskDetailBgHandled=true;
+cancelDelayedToggleExpand();
+if(multiSelect)toggleMSel(id);else if(window.openTaskDetail)window.openTaskDetail(id);else onTaskRowAsideClick(id);
+return
+}
+e.__taskDetailBgHandled=true;
+cancelDelayedToggleExpand();
+if(multiSelect)toggleMSel(id);else if(window.openTaskDetail)window.openTaskDetail(id);else onTaskRowAsideClick(id)
+}
 function onTaskStrikeWrapPaddingClick(e,id){if(!multiSelect)return;var w=e.currentTarget;if(e.target!==w&&!e.target.classList.contains("task-strike-content"))return;e.stopPropagation();cancelDelayedToggleExpand();toggleMSel(id)}
 function onTaskItemMultiBackdrop(e,id){if(!multiSelect)return;var item=e.currentTarget,row=item.querySelector(".task-row");if(e.target!==item&&e.target!==row)return;e.stopPropagation();cancelDelayedToggleExpand();toggleMSel(id)}
 function toggleExpand(id){cancelDelayedToggleExpand();const _nex=expandedId===id?null:id;expandedId=_nex;if(_nex!==null)expandedPanelTab="subtasks";editingId=null;editingTimeId=null;editingSubId=null;ppOpenId=null;if(_nex===null||subAddComposingId!==_nex)subAddComposingId=null;rT()}

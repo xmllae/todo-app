@@ -92,6 +92,7 @@
 /* 背景区域显示手型，暗示可点击打开详情 */
 .list-panel .task-item:not(.archived-item),
 .list-panel .task-item:not(.archived-item) .task-row,
+.list-panel .task-item:not(.archived-item) .task-ck-slot,
 .list-panel .task-item:not(.archived-item) .task-strike-wrap,
 .list-panel .task-item:not(.archived-item) .task-strike-content,
 .list-panel .task-item:not(.archived-item) .task-row-center{cursor:pointer}
@@ -131,6 +132,7 @@
   box-sizing: border-box;
   margin-top: 0 !important;
   padding-top: 0 !important;
+  pointer-events: none !important;
 }
 
 #taskMode .list-panel #tList {
@@ -156,6 +158,7 @@
   min-width: 18px !important;
   min-height: 18px !important;
   border-width: 1.5px !important;
+  pointer-events: auto !important;
 }
 
 #taskMode .list-panel #tList .task-item:not(.archived-item) > .task-row > .task-ck-slot .task-ck-ring:not(.task-ck-ring--done) .chk-ring:not(.checked):not(.chk-ring--archived) {
@@ -183,6 +186,23 @@
 
 #taskMode .list-panel #tList .task-item:not(.archived-item) > .task-row > .task-ck-slot .task-ck-ring:not(.task-ck-ring--archived) .chk-ring.checked.chk-ring--ripple {
   animation: task-check-ripple-cohesive .5s ease !important;
+}
+
+#taskMode .list-panel #tList .task-item:not(.archived-item) > .task-row > .task-ck-slot .task-ck-ring:not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring:not(.checked):not(.chk-ring--archived) {
+  border-color: var(--ck-prio, #94a3b8) !important;
+  background: color-mix(in srgb, var(--ck-prio, #94a3b8) 9%, var(--card)) !important;
+}
+
+#taskMode .list-panel #tList .task-item:not(.archived-item) > .task-row > .task-ck-slot .task-ck-ring:not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring:not(.checked):not(.chk-ring--archived):hover,
+#taskMode .list-panel #tList .task-item:not(.archived-item) > .task-row > .task-ck-slot .task-ck-ring:not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring:not(.checked):not(.chk-ring--archived).hover-check {
+  border-color: color-mix(in srgb, var(--ck-prio, #94a3b8) 86%, #475569) !important;
+  background: color-mix(in srgb, var(--ck-prio, #94a3b8) 13%, var(--card)) !important;
+}
+
+#taskMode .list-panel #tList .task-item:not(.archived-item) > .task-row > .task-ck-slot .task-ck-ring:not(.task-ck-ring--archived):not(.task-ck-ring--prio-high) .chk-ring.checked {
+  background: var(--ck-prio, #94a3b8) !important;
+  border-color: var(--ck-prio, #94a3b8) !important;
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--ck-prio, #94a3b8) 32%, transparent) !important;
 }
 
 @keyframes task-check-ripple-cohesive {
@@ -878,4 +898,215 @@
 .dark #taskMode .list-panel #tList .task-actions .act-btn.del:hover {
   color: #f87171;
   background: rgba(239,68,68,.14);
+}
+
+/* Keep purple as the primary action color; make date/status controls quieter. */
+#taskMode .today-link {
+  color: #5b21b6 !important;
+  background: #f3f0ff !important;
+  border: 1px solid #e5ddff !important;
+  box-shadow: none !important;
+  font-weight: 700 !important;
+  transform: none !important;
+}
+
+#taskMode .today-link:hover {
+  color: #4c1d95 !important;
+  background: #ede9fe !important;
+  border-color: #d8ccff !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+#taskMode .view-sub {
+  border: 1px solid color-mix(in srgb,#7B61FF 18%,#e5e7eb) !important;
+  background: rgba(255,255,255,.78) !important;
+  box-shadow: none !important;
+}
+
+#taskMode .view-sub .vs-btn {
+  color: #6b7280 !important;
+  background: transparent !important;
+  font-weight: 600 !important;
+}
+
+#taskMode .view-sub .vs-btn + .vs-btn {
+  box-shadow: inset 1px 0 0 color-mix(in srgb,#7B61FF 16%,#e5e7eb) !important;
+}
+
+#taskMode .view-sub .vs-btn:hover {
+  color: #4b5563 !important;
+  background: color-mix(in srgb,#7B61FF 5%,transparent) !important;
+}
+
+#taskMode .view-sub .vs-btn.active {
+  color: #5b21b6 !important;
+  background: #f3f0ff !important;
+  font-weight: 700 !important;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb,#7B61FF 20%,transparent) !important;
+}
+
+#taskMode .list-panel .add-split {
+  box-shadow:
+    0 3px 10px rgba(124,58,237,.22),
+    0 1px 0 rgba(255,255,255,.12) inset !important;
+}
+
+.dark #taskMode .today-link {
+  color: #c4b5fd !important;
+  background: color-mix(in srgb,#818cf8 16%,transparent) !important;
+  border-color: color-mix(in srgb,#818cf8 24%,transparent) !important;
+}
+
+.dark #taskMode .today-link:hover {
+  color: #ddd6fe !important;
+  background: color-mix(in srgb,#818cf8 22%,transparent) !important;
+  border-color: color-mix(in srgb,#818cf8 34%,transparent) !important;
+}
+
+.dark #taskMode .view-sub {
+  border-color: color-mix(in srgb,#818cf8 22%,var(--task-bd)) !important;
+  background: color-mix(in srgb,var(--card) 86%,transparent) !important;
+  box-shadow: none !important;
+}
+
+.dark #taskMode .view-sub .vs-btn {
+  color: #94a3b8 !important;
+  background: transparent !important;
+}
+
+.dark #taskMode .view-sub .vs-btn + .vs-btn {
+  box-shadow: inset 1px 0 0 color-mix(in srgb,#818cf8 18%,transparent) !important;
+}
+
+.dark #taskMode .view-sub .vs-btn:hover {
+  color: #cbd5e1 !important;
+  background: color-mix(in srgb,#818cf8 9%,transparent) !important;
+}
+
+.dark #taskMode .view-sub .vs-btn.active {
+  color: #c4b5fd !important;
+  background: color-mix(in srgb,#818cf8 16%,transparent) !important;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb,#818cf8 24%,transparent) !important;
+}
+
+/* Shape hierarchy: primary action stays pill; secondary toggles use calmer rectangles. */
+#taskMode .filter-seg,
+#taskMode .view-sub {
+  border-radius: 8px !important;
+  background: rgba(255,255,255,.78) !important;
+  border: 1px solid color-mix(in srgb,#7B61FF 18%,#e5e7eb) !important;
+  box-shadow: none !important;
+  padding: 3px !important;
+  gap: 3px !important;
+}
+
+#taskMode .filter-seg-btn,
+#taskMode .view-sub .vs-btn {
+  border-radius: 6px !important;
+  color: #6b7280 !important;
+  background: transparent !important;
+  font-weight: 600 !important;
+}
+
+#taskMode .filter-seg-btn:not(.is-active):hover,
+#taskMode .view-sub .vs-btn:hover {
+  color: #4b5563 !important;
+  background: color-mix(in srgb,#7B61FF 5%,transparent) !important;
+}
+
+#taskMode .filter-seg-btn.is-active,
+#taskMode .view-sub .vs-btn.active {
+  color: #5b21b6 !important;
+  background: #f3f0ff !important;
+  font-weight: 700 !important;
+  border-color: transparent !important;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb,#7B61FF 20%,transparent) !important;
+}
+
+#taskMode .filter-seg-badge {
+  border-radius: 6px !important;
+  background: color-mix(in srgb,#64748b 10%,transparent) !important;
+  border-color: color-mix(in srgb,#64748b 14%,transparent) !important;
+  color: #64748b !important;
+}
+
+#taskMode .filter-seg-btn.is-active .filter-seg-badge {
+  background: color-mix(in srgb,#7B61FF 12%,transparent) !important;
+  border-color: color-mix(in srgb,#7B61FF 22%,transparent) !important;
+  color: #5b21b6 !important;
+}
+
+#taskMode .today-link {
+  border-radius: 8px !important;
+}
+
+#taskMode .view-sub {
+  overflow: visible !important;
+}
+
+#taskMode .view-sub .vs-btn + .vs-btn {
+  box-shadow: none !important;
+}
+
+.dark #taskMode .filter-seg,
+.dark #taskMode .view-sub {
+  background: color-mix(in srgb,var(--card) 82%,transparent) !important;
+  border-color: color-mix(in srgb,#818cf8 22%,var(--task-bd)) !important;
+}
+
+.dark #taskMode .filter-seg-btn,
+.dark #taskMode .view-sub .vs-btn {
+  color: #94a3b8 !important;
+}
+
+.dark #taskMode .filter-seg-btn:not(.is-active):hover,
+.dark #taskMode .view-sub .vs-btn:hover {
+  color: #cbd5e1 !important;
+  background: color-mix(in srgb,#818cf8 9%,transparent) !important;
+}
+
+.dark #taskMode .filter-seg-btn.is-active,
+.dark #taskMode .view-sub .vs-btn.active {
+  color: #c4b5fd !important;
+  background: color-mix(in srgb,#818cf8 16%,transparent) !important;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb,#818cf8 24%,transparent) !important;
+}
+
+.dark #taskMode .filter-seg-badge {
+  background: rgba(255,255,255,.08) !important;
+  border-color: rgba(255,255,255,.1) !important;
+  color: #94a3b8 !important;
+}
+
+.dark #taskMode .filter-seg-btn.is-active .filter-seg-badge {
+  background: color-mix(in srgb,#818cf8 18%,transparent) !important;
+  border-color: color-mix(in srgb,#818cf8 28%,transparent) !important;
+  color: #c4b5fd !important;
+}
+
+/* Align the task check column with the primary add action. */
+@media (min-width: 641px) {
+  #taskMode .list-panel:not(.list-panel--multi) #tList .task-item:not(.archived-item) > .task-row > .priority-bar.priority-bar-spacer,
+  .task-item.task-item--collapse-ghost:not(:has(.ms-ck)) > .task-row > .priority-bar.priority-bar-spacer {
+    display: none !important;
+  }
+
+  #taskMode .list-panel:not(.list-panel--multi) #tList .task-item:not(.archived-item) > .task-row > .task-rail,
+  .task-item.task-item--collapse-ghost:not(:has(.ms-ck)) > .task-row > .task-rail {
+    width: 0 !important;
+    min-width: 0 !important;
+    flex: 0 0 0 !important;
+    gap: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  #taskMode .list-panel:not(.list-panel--multi) #tList .task-item:not(.archived-item) > .task-row,
+  .task-item.task-item--collapse-ghost:not(:has(.ms-ck)) > .task-row {
+    gap: 4px !important;
+  }
 }

@@ -286,11 +286,22 @@ function enhanceTaskRowInteractions() {
             }
         }
 
+        const taskId = item.getAttribute('data-id');
+
+        const checkSlot = taskId && item.querySelector('.task-ck-slot');
+        if (checkSlot && !checkSlot._detailGapClickBound) {
+            checkSlot._detailGapClickBound = true;
+            checkSlot.addEventListener('click', function(e) {
+                if (typeof onTaskCheckSlotClick === 'function') {
+                    onTaskCheckSlotClick(e, Number(taskId));
+                }
+            });
+        }
+
         if (item.classList.contains('archived-item')) return;
 
         const actions = item.querySelector('.task-actions');
         const moreWrap = actions && actions.querySelector('.task-more-wrap');
-        const taskId = item.getAttribute('data-id');
         if (!actions || !moreWrap || !taskId) return;
 
         if (!actions.querySelector('.task-detail-trigger')) {

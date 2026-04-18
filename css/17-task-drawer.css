@@ -589,6 +589,23 @@
     transition: none !important;
 }
 
+.task-detail-inner .drawer-task-title .task-ck-ring:not(.task-ck-ring--archived):not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring:not(.checked) {
+    border-color: var(--ck-prio, #94a3b8) !important;
+    background: color-mix(in srgb, var(--ck-prio, #94a3b8) 9%, var(--drawer-surface, #fff)) !important;
+}
+
+.task-detail-inner .drawer-task-title .task-ck-ring:not(.task-ck-ring--archived):not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring:not(.checked):hover,
+.task-detail-inner .drawer-task-title .task-ck-ring:not(.task-ck-ring--archived):not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring:not(.checked).hover-check {
+    border-color: color-mix(in srgb, var(--ck-prio, #94a3b8) 86%, #475569) !important;
+    background: color-mix(in srgb, var(--ck-prio, #94a3b8) 13%, var(--drawer-surface, #fff)) !important;
+}
+
+.task-detail-inner .drawer-task-title .task-ck-ring--done:not(.task-ck-ring--prio-high):not(.task-ck-ring--archived) .chk-ring.checked {
+    background: var(--ck-prio, #94a3b8) !important;
+    border-color: var(--ck-prio, #94a3b8) !important;
+    box-shadow: 0 2px 6px color-mix(in srgb, var(--ck-prio, #94a3b8) 32%, transparent) !important;
+}
+
 .drawer-task-title-field {
     flex: 1 1 auto;
     min-width: 0;
