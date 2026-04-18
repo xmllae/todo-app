@@ -69,6 +69,61 @@ test('opens search with the Ctrl+K shortcut', async ({ page }) => {
   await expect(page.locator('#searchIn')).toBeFocused();
 });
 
+test('renders the desktop task workspace as three columns', async ({ page }) => {
+  await seedGuestTask(page);
+  await page.goto('/');
+
+  await expect(page.locator('#globalSideNav')).toBeVisible();
+  await expect(page.locator('#globalSideNav')).toContainText('日期快捷');
+  await expect(page.locator('#globalSideNav')).toContainText('清单');
+
+  const layout = await page.evaluate(() => {
+    const nav = document.querySelector('#globalSideNav').getBoundingClientRect();
+    const main = document.querySelector('#taskMode .task-main-col').getBoundingClientRect();
+    const dash = document.querySelector('#taskMode .task-dash-col').getBoundingClientRect();
+    return {
+      navWidth: nav.width,
+      navRight: nav.right,
+      mainLeft: main.left,
+      mainRight: main.right,
+      mainWidth: main.width,
+      dashLeft: dash.left,
+    };
+  });
+
+  expect(layout.navWidth).toBeGreaterThanOrEqual(216);
+  expect(layout.navWidth).toBeLessThanOrEqual(228);
+  expect(layout.navRight).toBeLessThan(layout.mainLeft);
+  expect(layout.mainWidth).toBeLessThanOrEqual(1080);
+  expect(layout.dashLeft).toBeGreaterThan(layout.mainRight);
+});
+
+test('keeps the task list before dashboard cards on mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await seedGuestTask(page);
+  await page.goto('/');
+
+  const item = page.locator('#tList .task-item[data-id="424242"]');
+  await expect(item).toBeVisible();
+
+  const layout = await page.evaluate(() => {
+    const box = (selector) => {
+      const el = document.querySelector(selector);
+      const r = el.getBoundingClientRect();
+      return { y: Math.round(r.y), h: Math.round(r.height) };
+    };
+    return {
+      main: box('#taskMode .task-main-col'),
+      dash: box('#taskMode .task-dash-col'),
+      task: box('#tList .task-item[data-id="424242"]'),
+    };
+  });
+
+  expect(layout.main.h).toBeGreaterThan(180);
+  expect(layout.task.h).toBeGreaterThan(48);
+  expect(layout.dash.y).toBeGreaterThan(layout.main.y + layout.main.h - 1);
+});
+
 test('header today context returns to today pending tasks', async ({ page }) => {
   await seedGuestTask(page);
   await page.goto('/');

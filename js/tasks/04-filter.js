@@ -1,5 +1,5 @@
 // ???????????????????
-function taskMatchesFilterKey(t,key){if(key==="all")return!t.frozen;if(key==="pending")return!t.done&&!t.frozen;if(key==="done")return t.done;if(key==="high")return t.priority==="high";if(key==="frozen")return t.frozen;return!t.frozen}
+function taskMatchesFilterKey(t,key){if(key==="all")return!t.frozen;if(key==="pending")return!t.done&&!t.frozen;if(key==="done")return t.done;if(key==="high")return t.priority==="high";if(key==="frozen")return t.frozen;if(key==="scheduled")return!!t.planTime&&!t.done&&!t.frozen;if(key==="repeating")return!!t.recurRuleId&&!t.done&&!t.frozen;if(key==="unscheduled")return!t.planTime&&!t.done&&!t.frozen;if(key==="default-list")return!(t.tags||[]).length&&!t.done&&!t.frozen;return!t.frozen}
 function passesFMulti(t){for(var k of FMulti)if(taskMatchesFilterKey(t,k))return true;if(FMulti.size===1&&FMulti.has("done")&&_togPendingDoneId!=null&&_togPendingDoneId===t.id)return true;return false}
 function applyBatchBarPanelState(){var ap=document.getElementById("addSplitPanel");var ac=document.querySelector(".add-split-chev");if(ap)ap.classList.toggle("open",addSplitOpen);if(ac){ac.classList.toggle("open",addSplitOpen);ac.setAttribute("aria-expanded",addSplitOpen?"true":"false")}}
 function toggleAddSplitMenu(e){if(e)e.stopPropagation();addSplitOpen=!addSplitOpen;applyBatchBarPanelState()}
