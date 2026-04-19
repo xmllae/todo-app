@@ -113,9 +113,24 @@
     return '<span class="gsn-count">' + String(value) + "</span>";
   }
 
+  function todayCalendarIcon() {
+    return (
+      '<span class="gsn-today-cal" aria-hidden="true">' +
+      '<span class="gsn-today-cal-top"></span>' +
+      '<span class="gsn-today-cal-day">' +
+      String(new Date().getDate()) +
+      "</span>" +
+      "</span>"
+    );
+  }
+
   function navButton(kind, icon, label, count, action, arg, active) {
     var cls = "gsn-" + kind + (active ? " is-active" : "");
     var dataArg = arg == null ? "" : ' data-gsn-arg="' + escapeHtml(arg) + '"';
+    var iconHtml =
+      icon === "today-calendar"
+        ? todayCalendarIcon()
+        : '<i class="ph ' + icon + '" aria-hidden="true"></i>';
     return (
       '<button type="button" class="' +
       cls +
@@ -124,9 +139,9 @@
       '"' +
       dataArg +
       ">" +
-      '<span class="gsn-item-main"><i class="ph ' +
-      icon +
-      '" aria-hidden="true"></i><span>' +
+      '<span class="gsn-item-main">' +
+      iconHtml +
+      "<span>" +
       escapeHtml(label) +
       "</span></span>" +
       countBadge(count) +
@@ -201,7 +216,7 @@
       "</div>" +
       '<section class="gsn-section" aria-labelledby="gsnDateTitle">' +
       '<h4 class="gsn-section-title" id="gsnDateTitle">日期快捷</h4>' +
-      navButton("item", "ph-sun-horizon", "今天", pendingFor(todayKey()).length, "today", "", activeDate === "today") +
+      navButton("item", "today-calendar", "今天", pendingFor(todayKey()).length, "today", "", activeDate === "today") +
       navButton("item", "ph-arrow-fat-lines-right", "明天", null, "tomorrow", "", activeDate === "tomorrow") +
       navButton("item", "ph-calendar-dots", "本周", countWeek(), "week", "", activeDate === "week") +
       navButton("item", "ph-warning-circle", "逾期", null, "overdue", "", activeDate === "overdue") +
@@ -384,6 +399,7 @@
     if (old) old.remove();
     var oldSummary = list.querySelector(".task-list-summary");
     if (oldSummary) oldSummary.remove();
+    return;
     var hasRows = !!list.querySelector(".task-item:not(.archived-item)");
     if (!hasRows) return;
     var currentDs = typeof sel === "undefined" ? todayKey() : sel;
