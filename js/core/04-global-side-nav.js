@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   var gsnRefreshTimer = null;
   var gsnActiveQuick = "";
   var gsnActiveProject = "";
@@ -200,11 +200,6 @@
     var nav = ensureSideNav();
     if (!nav) return;
     var activeDate = dateActiveKey();
-    var projectHtml = projects
-      .map(function (project, index) {
-        return projectButton(project, index, isProjectActive(project));
-      })
-      .join("");
 
     nav.innerHTML =
       '<div class="gsn-head">' +
@@ -220,12 +215,6 @@
       navButton("item", "ph-arrow-fat-lines-right", "明天", null, "tomorrow", "", activeDate === "tomorrow") +
       navButton("item", "ph-calendar-dots", "本周", countWeek(), "week", "", activeDate === "week") +
       navButton("item", "ph-warning-circle", "逾期", null, "overdue", "", activeDate === "overdue") +
-      "</section>" +
-      '<section class="gsn-section" aria-labelledby="gsnProjectTitle">' +
-      '<div class="gsn-section-row"><h4 class="gsn-section-title" id="gsnProjectTitle">清单</h4><button type="button" class="gsn-link-btn" data-gsn-action="settings">管理</button></div>' +
-      '<div class="gsn-project-list">' +
-      projectHtml +
-      "</div>" +
       "</section>" +
       '<section class="gsn-section" aria-labelledby="gsnFilterTitle">' +
       '<h4 class="gsn-section-title" id="gsnFilterTitle">筛选器</h4>' +
@@ -249,7 +238,37 @@
       '<div class="gsn-footnote"><span class="gsn-footnote-dot" aria-hidden="true"></span><span>本周节奏稳定，先抓住今天最重要的一件事。</span></div>';
   }
 
+  function getCurrentMode() {
+    try {
+      if (typeof getCurrentPath === "function" && typeof getPathMode === "function") {
+        return getPathMode(getCurrentPath());
+      }
+      if (typeof getPathMode === "function") {
+        var path = location.protocol === "file:" ? location.hash.replace(/^#/, "") || "/" : location.pathname;
+        return getPathMode(path || "/");
+      }
+    } catch (e) {}
+    var taskMode = document.getElementById("taskMode");
+    if (taskMode && !taskMode.classList.contains("hidden")) return "task";
+    return "";
+  }
+
+  function shouldShowSideNav() {
+    return getCurrentMode() === "task";
+  }
+
+  function detachSideNav() {
+    var app = document.querySelector(".app");
+    if (app) app.classList.remove("app--with-global-nav");
+    var nav = document.getElementById("globalSideNav");
+    if (nav && nav.parentNode) nav.parentNode.removeChild(nav);
+  }
+
   function ensureSideNav() {
+    if (!shouldShowSideNav()) {
+      detachSideNav();
+      return null;
+    }
     var app = document.querySelector(".app");
     if (!app) return null;
     app.classList.add("app--with-global-nav");
@@ -435,10 +454,23 @@
       window._globalSideNavRT = true;
       var originalRT = rT;
       rT = function () {
-      var result = originalRT.apply(this, arguments);
-      renderTaskListSupport();
-      scheduleRefresh();
-      return result;
+        var result = originalRT.apply(this, arguments);
+        renderTaskListSupport();
+        scheduleRefresh();
+        return result;
+      };
+    }
+  }
+
+  function patchModeSync() {
+    if (typeof applyMode === "function" && !window._globalSideNavApplyMode) {
+      window._globalSideNavApplyMode = true;
+      var originalApplyMode = applyMode;
+      applyMode = function () {
+        var result = originalApplyMode.apply(this, arguments);
+        ensureSideNav();
+        scheduleRefresh();
+        return result;
       };
     }
   }
@@ -446,10 +478,14 @@
   window.refreshGlobalSideNav = scheduleRefresh;
   ensureSideNav();
   patchRender();
+  patchModeSync();
   scheduleRefresh();
   document.addEventListener("DOMContentLoaded", function () {
     ensureSideNav();
     patchRender();
+    patchModeSync();
     scheduleRefresh();
   });
+  window.addEventListener("popstate", scheduleRefresh);
+  window.addEventListener("hashchange", scheduleRefresh);
 })();
