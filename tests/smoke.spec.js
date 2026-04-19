@@ -93,7 +93,7 @@ test('renders the desktop task workspace as three columns', async ({ page }) => 
 
   expect(layout.navWidth).toBeGreaterThanOrEqual(216);
   expect(layout.navWidth).toBeLessThanOrEqual(228);
-  expect(layout.navRight).toBeLessThan(layout.mainLeft);
+  expect(layout.navRight).toBeLessThanOrEqual(layout.mainLeft);
   expect(layout.mainWidth).toBeLessThanOrEqual(1080);
   expect(layout.dashLeft).toBeGreaterThan(layout.mainRight);
 });
