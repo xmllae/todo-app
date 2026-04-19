@@ -234,8 +234,7 @@
         "repeating",
         hasSingleFilter("repeating")
       ) +
-      "</section>" +
-      '<div class="gsn-footnote"><span class="gsn-footnote-dot" aria-hidden="true"></span><span>本周节奏稳定，先抓住今天最重要的一件事。</span></div>';
+      "</section>";
   }
 
   function getCurrentMode() {

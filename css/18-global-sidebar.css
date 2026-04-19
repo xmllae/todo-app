@@ -734,7 +734,7 @@
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     border: 1px solid color-mix(in srgb, var(--task-bd) 56%, transparent);
     border-radius: 13px;
     background: #fff;
@@ -778,8 +778,8 @@
     grid-template-columns: auto auto auto minmax(0, 1fr) auto;
     align-items: start !important;
     column-gap: 5px !important;
-    min-height: 72px;
-    padding: 15px 14px 14px 4px !important;
+    min-height: 62px;
+    padding: 11px 14px 10px 4px !important;
   }
 
   .app.app--with-global-nav
@@ -813,7 +813,7 @@
     > .task-ck-slot {
     grid-column: 3;
     grid-row: 1;
-    margin-top: 2px !important;
+    margin-top: 1px !important;
   }
 
   .app.app--with-global-nav
@@ -848,10 +848,10 @@
     grid-template-rows: auto auto;
     align-items: start !important;
     column-gap: 0 !important;
-    row-gap: 4px !important;
+    row-gap: 2px !important;
     width: 100%;
     min-width: 0;
-    min-height: 40px;
+    min-height: 34px;
   }
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .txt-line {
@@ -872,7 +872,7 @@
     flex-wrap: wrap !important;
     justify-content: flex-start !important;
     column-gap: 8px !important;
-    row-gap: 3px !important;
+    row-gap: 2px !important;
     white-space: nowrap;
   }
 
