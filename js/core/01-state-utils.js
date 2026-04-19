@@ -9,7 +9,6 @@ function setHeaderAvatar(av){const h=document.getElementById("headerAvatar");if(
 function setUdAvatar(av){const h=document.getElementById("udAvatar");if(!h)return;if(av==="👤")h.innerHTML=SVG_USER_AVATAR_U;else h.textContent=av}
 const WD=["日","一","二","三","四","五","六"];
 const COLORS=["","#ef4444","#f97316","#eab308","#22c55e","#3b82f6","#8b5cf6","#ec4899","#6b7280"];
-const TIME_BLOCKS=[{id:"morning",name:"🌅 早晨",from:"00:00",to:"09:00"},{id:"forenoon",name:"☀️ 上午",from:"09:00",to:"12:00"},{id:"afternoon",name:"🌤 下午",from:"12:00",to:"18:00"},{id:"evening",name:"🌙 晚上",from:"18:00",to:"24:00"},{id:"unset",name:"📌 未安排",from:"",to:""}];
 const DEFAULT_TAGS=[{id:"work",name:"工作",color:"#3b82f6"},{id:"personal",name:"个人",color:"#22c55e"},{id:"study",name:"学习",color:"#a855f7"},{id:"health",name:"健康",color:"#ef4444"}];
 const DEFAULT_PRIO_COLORS={high:"#ef4444"};
 const PRIO_COLOR_TEMPLATES=[{id:1,name:"金琥珀",dark:"#F59E0B",hi:"#FCD34D",cat:"warm"},{id:2,name:"薰衣紫",dark:"#7C3AED",hi:"#A78BFA",cat:"dreamy"},{id:3,name:"中国红",dark:"#DC2626",hi:"#F87171",cat:"warm"},{id:4,name:"翡翠绿",dark:"#059669",hi:"#34D399",cat:"natural"},{id:5,name:"宝石蓝",dark:"#1D4ED8",hi:"#60A5FA",cat:"cool"},{id:6,name:"玫瑰粉",dark:"#BE185D",hi:"#F472B6",cat:"dreamy"},{id:7,name:"落日橙",dark:"#EA580C",hi:"#FB923C",cat:"warm"},{id:8,name:"青碧色",dark:"#0F766E",hi:"#2DD4BF",cat:"cool"},{id:9,name:"靛蓝色",dark:"#4338CA",hi:"#818CF8",cat:"cool"},{id:10,name:"胭脂红",dark:"#BE123C",hi:"#FB7185",cat:"warm"},{id:11,name:"天青蓝",dark:"#0369A1",hi:"#38BDF8",cat:"cool"},{id:12,name:"柠檬黄",dark:"#A16207",hi:"#FDE047",cat:"warm"},{id:13,name:"紫藤色",dark:"#5B21B6",hi:"#C4B5FD",cat:"dreamy"},{id:14,name:"森林绿",dark:"#166534",hi:"#86EFAC",cat:"natural"},{id:15,name:"紫红品",dark:"#A21CAF",hi:"#E879F9",cat:"dreamy"},{id:16,name:"青柠绿",dark:"#4D7C0F",hi:"#A3E635",cat:"natural"},{id:17,name:"石板灰",dark:"#334155",hi:"#94A3B8",cat:"neutral"},{id:18,name:"珊瑚橙",dark:"#C2410C",hi:"#FCA5A1",cat:"warm"},{id:19,name:"星空黑",dark:"#1E1B4B",hi:"#6366F1",cat:"neutral"}];
@@ -25,10 +24,10 @@ let priorityColors={...DEFAULT_PRIO_COLORS};
 let priorityTemplateIds={...DEFAULT_PRIO_TEMPLATE_IDS};
 let showDeadline=false;
 let defaultSortMode="created",autoSortEnabled=false;
-let multiSelect=false,selectedIds=new Set,viewMode="list",lastSort="created",ppOpenId=null,taskMoreMenuId=null,_taskMoreFloatEl=null;
+let multiSelect=false,selectedIds=new Set,lastSort="created",ppOpenId=null,taskMoreMenuId=null,_taskMoreFloatEl=null;
 let undoStack=[],undoTimer=null,kbHideDone=true,kbTimeFilter="all";
 let archQYear="",archQMonth="",archQDay="",archSearch="",archYearMap={};
-let odCollapsed=false,collapsedBlocks={};
+let odCollapsed=false;
 let saveTimer=null,pendingSave=false,_togVisualPendingIds=new Set,_togDoneTimer=null,_togPendingDoneId=null,_togCollapseFallbackTimer=null,_togCollapseGen=0;
 if(!window._archCollapsed)window._archCollapsed={};
 if(!window._archPages)window._archPages={};
