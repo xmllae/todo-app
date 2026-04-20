@@ -103,11 +103,11 @@
     if (!isDesktop()) {
       restoreArrowOrder(dateNav);
       if (movedAdd) batchLeft.insertBefore(movedAdd, batchLeft.firstChild || null);
+      var desktopTodayBtns = dateNav.querySelectorAll(".date-nav-today-btn");
+      desktopTodayBtns.forEach(function (el) {
+        el.remove();
+      });
       if (actionWrap) {
-        var tBtns = actionWrap.querySelectorAll(".date-nav-today-btn");
-        tBtns.forEach(function (el) {
-          el.remove();
-        });
         if (!actionWrap.children.length) actionWrap.remove();
       }
       cleanupSortButtonLabel(batchBar);
@@ -122,9 +122,12 @@
       dateNav.appendChild(actionWrap);
     }
 
-    var allTodayBtns = actionWrap.querySelectorAll(".date-nav-today-btn");
+    var h3 = dateNav.querySelector("h3");
+    var allTodayBtns = dateNav.querySelectorAll(".date-nav-today-btn");
     if (!allTodayBtns.length) {
-      actionWrap.appendChild(createTodayBtn());
+      var todayBtn = createTodayBtn();
+      if (h3 && h3.nextSibling) dateNav.insertBefore(todayBtn, h3.nextSibling);
+      else dateNav.appendChild(todayBtn);
     } else {
       allTodayBtns.forEach(function (btn, idx) {
         if (idx > 0) {
@@ -134,6 +137,10 @@
         btn.setAttribute("aria-label", "\u56de\u5230\u4eca\u5929");
         btn.innerHTML =
           '<i class="ph ph-calendar-blank" aria-hidden="true"></i><span>\u4eca\u5929</span>';
+        if (h3 && btn.previousSibling !== h3) {
+          if (h3.nextSibling) dateNav.insertBefore(btn, h3.nextSibling);
+          else dateNav.appendChild(btn);
+        }
       });
     }
 

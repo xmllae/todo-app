@@ -1256,10 +1256,11 @@
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions {
     margin-left: auto;
+    flex: 0 0 auto;
+    min-width: fit-content;
     display: flex;
     align-items: center;
     gap: 8px;
-    flex-shrink: 0;
     position: relative;
     z-index: 180;
   }
@@ -1278,6 +1279,7 @@
     align-items: center;
     gap: 6px;
     cursor: pointer;
+    margin: 0 0 0 4px;
     transition:
       border-color 0.16s ease,
       background 0.16s ease,
@@ -1620,7 +1622,7 @@
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .time-plain.time-disp,
   .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .task-recur-badge {
-    font-size: 0.74rem !important;
+    font-size: 0.85rem !important;
     color: #8b98ad !important;
   }
 
