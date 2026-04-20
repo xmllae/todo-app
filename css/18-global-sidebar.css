@@ -813,7 +813,8 @@
     > .task-ck-slot {
     grid-column: 3;
     grid-row: 1;
-    margin-top: 1px !important;
+    align-self: start !important;
+    margin-top: -1px !important;
   }
 
   .app.app--with-global-nav
@@ -1585,6 +1586,12 @@
     min-height: 50px;
     padding: 5px 12px 5px 4px !important;
     column-gap: 5px !important;
+    align-items: flex-start;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-item > .task-row > .task-ck-slot {
+    align-self: flex-start;
+    margin-top: -1px;
   }
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center {
@@ -1593,13 +1600,15 @@
   }
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .txt-line {
-    min-height: 0 !important;
+    display: flex;
+    align-items: center;
+    min-height: 22px !important;
   }
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .txt-line .txt {
-    font-size: 0.82rem;
-    font-weight: 620;
-    line-height: 1.22;
+    font-size: 0.96rem;
+    font-weight: 650;
+    line-height: 1.2;
     color: #1f2937;
   }
 
