@@ -1585,8 +1585,8 @@
   }
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-item > .task-row {
-    min-height: 50px;
-    padding: 5px 12px 5px 4px !important;
+    min-height: 46px;
+    padding: 3px 12px 3px 4px !important;
     column-gap: 5px !important;
     align-items: flex-start;
   }
@@ -1597,14 +1597,14 @@
   }
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center {
-    row-gap: 2px !important;
+    row-gap: 1px !important;
     min-height: 0;
   }
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .txt-line {
     display: flex;
     align-items: center;
-    min-height: 22px !important;
+    min-height: 20px !important;
   }
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .txt-line .txt {
