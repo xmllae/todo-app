@@ -929,7 +929,7 @@
     .task-row-center {
     grid-template-columns: minmax(0, 1fr);
     align-items: start !important;
-    row-gap: 3px !important;
+    row-gap: 2px !important;
   }
 
   .app.app--with-global-nav
@@ -942,7 +942,7 @@
     justify-self: start !important;
     justify-content: flex-start !important;
     max-width: 100% !important;
-    margin-top: 2px !important;
+    margin-top: 0 !important;
   }
 
   .app.app--with-global-nav > #taskMode > .task-dash-col .dash-card {
@@ -1217,10 +1217,10 @@
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-arrow-group {
-    height: 40px;
-    padding: 0 3px;
+    height: 35px;
+    padding: 0 1px;
     border: 1px solid #e4e9f1;
-    border-radius: 12px;
+    border-radius: 10px;
     background: #f6f8fc;
     display: inline-flex;
     align-items: center;
@@ -1229,9 +1229,9 @@
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 {
-    font-size: 0.92rem;
+    font-size: 0.98rem;
     font-weight: 740;
-    line-height: 1.1;
+    line-height: 1.12;
     gap: 6px;
     color: #10223f;
     margin: 0;
@@ -1239,13 +1239,13 @@
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow {
-    width: 32px;
-    height: 32px;
-    border-radius: 10px;
+    width: 29px;
+    height: 29px;
+    border-radius: 9px;
     border: 0;
     background: transparent;
     color: #7a879b;
-    font-size: 0.88rem;
+    font-size: 0.78rem;
     box-shadow: none;
   }
 
@@ -1265,14 +1265,14 @@
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-today-btn {
-    height: 36px;
-    padding: 0 12px;
-    border-radius: 10px;
+    height: 34px;
+    padding: 0 10px;
+    border-radius: 9px;
     border: 1px solid #e2e8f0;
     background: #f3f5f9;
     color: #55627a;
     font-family: inherit;
-    font-size: 0.84rem;
+    font-size: 0.82rem;
     font-weight: 650;
     display: inline-flex;
     align-items: center;
@@ -1291,14 +1291,14 @@
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-today-btn i {
-    font-size: 0.88rem;
+    font-size: 0.84rem;
     line-height: 1;
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split {
-    height: 44px;
-    min-height: 44px;
-    border-radius: 13px;
+    height: 40px;
+    min-height: 40px;
+    border-radius: 11px;
     background: linear-gradient(135deg, #7c3aed, #6d28d9);
     box-shadow:
       0 7px 16px rgba(109, 40, 217, 0.16),
@@ -1309,9 +1309,9 @@
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split-main {
-    padding: 0 16px;
-    gap: 8px;
-    font-size: 0.88rem;
+    padding: 0 14px;
+    gap: 7px;
+    font-size: 0.84rem;
     font-weight: 720;
     letter-spacing: 0;
     color: #fff;
