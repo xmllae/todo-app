@@ -929,7 +929,7 @@
     .task-row-center {
     grid-template-columns: minmax(0, 1fr);
     align-items: start !important;
-    row-gap: 2px !important;
+    row-gap: 1px !important;
   }
 
   .app.app--with-global-nav
