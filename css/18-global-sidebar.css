@@ -1197,3 +1197,369 @@
     width: 100%;
   }
 }
+
+/* Schedule center-panel reference layout polish (desktop-first). */
+@media (min-width: 1181px) {
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav {
+    margin: 0 !important;
+    width: 100% !important;
+    padding: 14px 24px 8px !important;
+    box-sizing: border-box;
+    border-bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 7px;
+    position: relative;
+    z-index: 120;
+    overflow: visible;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 {
+    font-size: 1.56rem;
+    font-weight: 720;
+    line-height: 1.1;
+    gap: 7px;
+    color: #10223f;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow {
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+    border-color: #d9e2ef;
+    color: #8695ac;
+    font-size: 0.84rem;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow:hover {
+    border-color: #c9d5e7;
+    color: #627287;
+    background: #f7f9fc;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 130;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-today-btn {
+    height: 44px;
+    padding: 0 14px;
+    border-radius: 13px;
+    border: 1px solid #d9e2ef;
+    background: #fff;
+    color: #5f6f87;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 620;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition:
+      border-color 0.16s ease,
+      background 0.16s ease,
+      color 0.16s ease;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-today-btn:hover {
+    border-color: #c5d2e4;
+    color: #4b5d75;
+    background: #f9fbfd;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-today-btn i {
+    font-size: 0.96rem;
+    line-height: 1;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split {
+    height: 46px;
+    min-height: 46px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #7c3aed, #6d28d9);
+    box-shadow:
+      0 10px 26px rgba(109, 40, 217, 0.25),
+      0 2px 8px rgba(109, 40, 217, 0.22);
+    position: relative;
+    z-index: 150;
+    overflow: visible;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split-main {
+    padding: 0 16px 0 14px;
+    gap: 6px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split-main svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split-panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 136px;
+    padding: 6px;
+    border-radius: 10px;
+    border: 1px solid #dbe4ef;
+    background: #fff;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.14);
+    z-index: 260;
+    display: none;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split-panel.open {
+    display: block;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split-item {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    border-radius: 8px;
+    color: #475569;
+    font-size: 0.82rem;
+    font-weight: 620;
+    line-height: 1.2;
+    text-align: left;
+    padding: 8px 10px;
+    cursor: pointer;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split-item:hover {
+    background: #f4f7fa;
+    color: #334155;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split-chev {
+    display: none;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split-div {
+    display: none;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .list-panel {
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel .batch-bar {
+    padding: 0 24px 7px !important;
+    border-bottom: 1px solid color-mix(in srgb, var(--task-bd) 72%, transparent) !important;
+  }
+
+  .app.app--with-global-nav #taskMode .batch-bar-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 42px;
+  }
+
+  .app.app--with-global-nav #taskMode .batch-bar-left {
+    flex: 1 1 auto;
+    min-width: 0;
+    gap: 0;
+  }
+
+  .app.app--with-global-nav #taskMode .batch-bar-left .add-split {
+    display: none !important;
+  }
+
+  .app.app--with-global-nav #taskMode .batch-bar-left .filters.filter-seg-host {
+    margin: 0 !important;
+    display: flex !important;
+    align-items: flex-end !important;
+  }
+
+  .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0;
+    padding: 0 !important;
+    gap: 16px !important;
+  }
+
+  .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-btn {
+    padding: 0 0 8px !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #73819a;
+    font-size: 0.88rem;
+    font-weight: 600;
+    line-height: 1.2;
+    position: relative;
+    gap: 9px;
+  }
+
+  .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-btn:hover {
+    color: #334155;
+  }
+
+  .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-btn.is-active {
+    color: #0f172a;
+    font-weight: 650;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-btn.is-active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    border-radius: 999px;
+    background: #15223b;
+  }
+
+  .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-badge {
+    min-width: 24px;
+    height: 24px;
+    line-height: 24px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border: 0;
+    background: #edf2f8;
+    color: #74839b;
+    padding: 0 7px;
+  }
+
+  .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-btn.is-active .filter-seg-badge,
+  .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-badge.filter-seg-badge--on {
+    background: #0f2344;
+    color: #fff;
+  }
+
+  .app.app--with-global-nav #taskMode .batch-bar-right {
+    margin-left: auto;
+    padding-bottom: 4px;
+    gap: 6px;
+  }
+
+  .app.app--with-global-nav #taskMode .batch-bar-right .batch-ico-btn {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    border-radius: 9px;
+    border: 0;
+    background: #edf2f7;
+    color: #7686a0;
+  }
+
+  .app.app--with-global-nav #taskMode .batch-bar-right .batch-ico-btn:first-child {
+    background: #f1ecff;
+    color: #7c3aed;
+  }
+
+  .app.app--with-global-nav #taskMode .batch-bar-right .batch-ico-btn:hover {
+    background: #e3e9f2;
+    color: #4b5d75;
+  }
+
+  .app.app--with-global-nav #taskMode .batch-bar-right .batch-ico-btn:first-child:hover {
+    background: #ebe4ff;
+    color: #6d28d9;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel .tasks {
+    width: 100%;
+    margin: 8px 0 18px;
+    padding: 0 24px !important;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-item {
+    width: 100%;
+    margin: 0 0 7px;
+    border: 1px solid #dbe4ef;
+    border-radius: 13px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.035);
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-item:hover {
+    border-color: #cad7e8;
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.055);
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-item > .task-row {
+    min-height: 60px;
+    padding: 7px 13px 7px 4px !important;
+    column-gap: 5px !important;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center {
+    row-gap: 2px !important;
+    min-height: 0;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .txt-line {
+    min-height: 0 !important;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .txt-line .txt {
+    font-size: 0.84rem;
+    font-weight: 620;
+    line-height: 1.22;
+    color: #1f2937;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col {
+    margin: 0 !important;
+    column-gap: 8px !important;
+    row-gap: 2px !important;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .time-plain.time-disp,
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .task-recur-badge {
+    font-size: 0.76rem !important;
+    color: #8b98ad !important;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .time-plain.time-disp::before,
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .task-recur-badge-ico {
+    width: 11px !important;
+    height: 11px !important;
+    flex: 0 0 11px !important;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn,
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill {
+    min-height: 20px !important;
+    padding: 0 6px !important;
+    border-radius: 6px !important;
+    border: 1px solid #dbe4ef !important;
+    background: #f4f7fa !important;
+    color: #59677f !important;
+    font-size: 0.74rem !important;
+    font-weight: 690 !important;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-item > .task-row > .task-actions {
+    min-width: 64px;
+    margin-left: 6px;
+  }
+}
