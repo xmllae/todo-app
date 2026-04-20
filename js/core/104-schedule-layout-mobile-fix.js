@@ -3,6 +3,72 @@
     return window.matchMedia("(min-width: 1181px)").matches;
   }
 
+  function getSortLabel(mode) {
+    var key = String(mode || "deadline");
+    if (key === "created") return "创建时间";
+    if (key === "priority") return "优先级";
+    return "截止日期";
+  }
+
+  function ensureArrowGroup(dateNav) {
+    var h3 = dateNav.querySelector("h3");
+    if (!h3) return;
+    var arrows = dateNav.querySelectorAll(".nav-arrow");
+    if (!arrows || arrows.length < 2) return;
+    var group = dateNav.querySelector(".date-nav-arrow-group");
+    if (!group) {
+      group = document.createElement("div");
+      group.className = "date-nav-arrow-group";
+    }
+    group.appendChild(arrows[0]);
+    group.appendChild(arrows[1]);
+    dateNav.insertBefore(group, h3);
+  }
+
+  function restoreArrowOrder(dateNav) {
+    var group = dateNav.querySelector(".date-nav-arrow-group");
+    var h3 = dateNav.querySelector("h3");
+    if (!group || !h3) return;
+    var arrows = group.querySelectorAll(".nav-arrow");
+    if (arrows.length >= 2) {
+      dateNav.insertBefore(arrows[0], h3);
+      if (h3.nextSibling) dateNav.insertBefore(arrows[1], h3.nextSibling);
+      else dateNav.appendChild(arrows[1]);
+    }
+    group.remove();
+  }
+
+  function ensureSortButtonLabel(batchBar) {
+    var sortBtn = batchBar.querySelector(".batch-sort-btn");
+    if (!sortBtn) return;
+    var label = sortBtn.querySelector(".batch-sort-label");
+    if (!label) {
+      label = document.createElement("span");
+      label.className = "batch-sort-label";
+      sortBtn.appendChild(label);
+    }
+    label.textContent = getSortLabel(window.lastSort || window.defaultSortMode || "deadline");
+
+    var chev = sortBtn.querySelector(".batch-sort-chev");
+    if (!chev) {
+      chev = document.createElement("span");
+      chev.className = "batch-sort-chev";
+      chev.setAttribute("aria-hidden", "true");
+      chev.innerHTML =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+      sortBtn.appendChild(chev);
+    }
+  }
+
+  function cleanupSortButtonLabel(batchBar) {
+    var sortBtn = batchBar.querySelector(".batch-sort-btn");
+    if (!sortBtn) return;
+    var extra = sortBtn.querySelectorAll(".batch-sort-label, .batch-sort-chev");
+    extra.forEach(function (el) {
+      el.remove();
+    });
+  }
+
   function createTodayBtn() {
     var btn = document.createElement("button");
     btn.type = "button";
@@ -35,6 +101,7 @@
     var movedAdd = dateNav.querySelector(".date-nav-actions .add-split");
 
     if (!isDesktop()) {
+      restoreArrowOrder(dateNav);
       if (movedAdd) batchLeft.insertBefore(movedAdd, batchLeft.firstChild || null);
       if (actionWrap) {
         var tBtns = actionWrap.querySelectorAll(".date-nav-today-btn");
@@ -43,8 +110,11 @@
         });
         if (!actionWrap.children.length) actionWrap.remove();
       }
+      cleanupSortButtonLabel(batchBar);
       return;
     }
+
+    ensureArrowGroup(dateNav);
 
     if (!actionWrap) {
       actionWrap = document.createElement("div");
@@ -69,6 +139,8 @@
 
     var addSplit = batchBar.querySelector(".batch-bar-left .add-split");
     if (addSplit) actionWrap.appendChild(addSplit);
+
+    ensureSortButtonLabel(batchBar);
   }
 
   function hook(name) {
@@ -90,6 +162,7 @@
     hook("rFilterBar");
     hook("rAll");
     hook("applyMode");
+    hook("updateSortUI");
   }
 
   if (document.readyState === "loading") {
