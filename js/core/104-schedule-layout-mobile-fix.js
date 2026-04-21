@@ -4,10 +4,22 @@
   }
 
   function getSortLabel(mode) {
-    var key = String(mode || "deadline");
+    var key = String(mode || "created");
     if (key === "created") return "创建时间";
     if (key === "priority") return "优先级";
     return "截止日期";
+  }
+
+  function getCurrentSortMode() {
+    if (typeof lastSort !== "undefined" && lastSort) {
+      return String(lastSort);
+    }
+    if (typeof defaultSortMode !== "undefined" && defaultSortMode) {
+      return String(defaultSortMode);
+    }
+    if (window.lastSort) return String(window.lastSort);
+    if (window.defaultSortMode) return String(window.defaultSortMode);
+    return "created";
   }
 
   function ensureArrowGroup(dateNav) {
@@ -47,7 +59,7 @@
       label.className = "batch-sort-label";
       sortBtn.appendChild(label);
     }
-    label.textContent = getSortLabel(window.lastSort || window.defaultSortMode || "deadline");
+    label.textContent = getSortLabel(getCurrentSortMode());
 
     var chev = sortBtn.querySelector(".batch-sort-chev");
     if (!chev) {

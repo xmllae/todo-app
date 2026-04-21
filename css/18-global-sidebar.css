@@ -1674,10 +1674,11 @@
   .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .task-recur-badge {
     display: inline-flex !important;
     align-items: center !important;
-    min-height: 16px !important;
+    min-height: 20px !important;
     font-size: 0.85rem !important;
-    line-height: 1.15 !important;
+    line-height: 1 !important;
     color: #8b98ad !important;
+    align-self: center !important;
   }
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .time-plain.time-disp::before,
@@ -1685,6 +1686,7 @@
     width: 11px !important;
     height: 11px !important;
     flex: 0 0 11px !important;
+    transform: translateY(0) !important;
   }
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn,
