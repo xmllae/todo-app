@@ -16,7 +16,7 @@
 }
 
 @media (min-width: 1181px) {
-  #appMain.show:has(.app.app--with-global-nav) .site-header-inner {
+  #appMain.show .site-header-inner {
     width: 100%;
     max-width: 1532px;
     margin-left: auto;
