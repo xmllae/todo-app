@@ -170,9 +170,8 @@
   function filterIconMarkup(iconKey) {
     if (iconKey === "high") {
       return (
-        '<svg class="gsn-filter-ico gsn-filter-ico--high" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">' +
-        '<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>' +
-        '<line x1="4" y1="22" x2="4" y2="15"></line>' +
+        '<svg class="gsn-filter-ico gsn-filter-ico--high" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">' +
+        '<path fill-rule="evenodd" d="M3 2.25a.75.75 0 0 1 .75.75v.54l9.78-2.932a1.5 1.5 0 0 1 1.04-.018l3.652 1.536a.75.75 0 0 0 .556.018l4.41-1.764a.75.75 0 0 1 1.052.686v9.273a.75.75 0 0 1-.536.719l-4.41 1.764a.75.75 0 0 0-.556-.018l-3.652-1.536a1.5 1.5 0 0 0-1.04-.018L3.75 14.216V21a.75.75 0 0 1-1.5 0V3A.75.75 0 0 1 3 2.25Z" clip-rule="evenodd"></path>' +
         "</svg>"
       );
     }
