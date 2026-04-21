@@ -130,7 +130,7 @@
   align-self: flex-start !important;
   align-items: center !important;
   box-sizing: border-box;
-  margin-top: 0 !important;
+  margin-top: -1px !important;
   padding-top: 0 !important;
   pointer-events: none !important;
 }
