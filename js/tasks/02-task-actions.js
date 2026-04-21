@@ -117,8 +117,7 @@ return
 if(e.target.closest(".txt-line")){
 e.__taskDetailBgHandled=true;
 cancelDelayedToggleExpand();
-if(multiSelect)toggleMSel(id);else if(window.openTaskDetail)window.openTaskDetail(id);else onTaskRowAsideClick(id);
-return
+ return
 }
 e.__taskDetailBgHandled=true;
 cancelDelayedToggleExpand();
