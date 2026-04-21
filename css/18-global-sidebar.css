@@ -778,8 +778,8 @@
     grid-template-columns: auto auto auto minmax(0, 1fr) auto;
     align-items: start !important;
     column-gap: 5px !important;
-    min-height: 62px;
-    padding: 11px 14px 10px 4px !important;
+    min-height: 53px;
+    padding: 7px 14px 7px 4px !important;
   }
 
   .app.app--with-global-nav
@@ -828,7 +828,7 @@
     grid-row: 1;
     min-width: 0;
     width: 100%;
-    align-self: stretch !important;
+    align-self: center !important;
   }
 
   .app.app--with-global-nav
@@ -1618,11 +1618,16 @@
     margin: 0 !important;
     column-gap: 8px !important;
     row-gap: 2px !important;
+    align-items: center !important;
   }
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .time-plain.time-disp,
   .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .task-recur-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    min-height: 16px !important;
     font-size: 0.85rem !important;
+    line-height: 1.15 !important;
     color: #8b98ad !important;
   }
 
@@ -1635,14 +1640,50 @@
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn,
   .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill {
-    min-height: 18px !important;
-    padding: 0 6px !important;
-    border-radius: 6px !important;
+    min-height: 16px !important;
+    padding: 0 5px !important;
+    border-radius: 5px !important;
     border: 1px solid #dbe4ef !important;
-    background: #f4f7fa !important;
-    color: #59677f !important;
-    font-size: 0.74rem !important;
-    font-weight: 690 !important;
+    background: #f7f9fc !important;
+    color: #5a6880 !important;
+    font-size: 0.7rem !important;
+    font-weight: 670 !important;
+    line-height: 1.15 !important;
+    gap: 2px !important;
+    margin: 0 !important;
+    align-self: center !important;
+    vertical-align: middle !important;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn .stp-icon,
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill .stp-icon {
+    width: 10px !important;
+    height: 10px !important;
+    min-width: 10px !important;
+    min-height: 10px !important;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn .stp-icon::before,
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill .stp-icon::before {
+    width: 10px !important;
+    height: 10px !important;
+    -webkit-mask-size: 10px 10px !important;
+    mask-size: 10px 10px !important;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn .stp-n,
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill .stp-n {
+    font-size: 0.7rem !important;
+    font-weight: 670 !important;
+    line-height: 1.15 !important;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn::after,
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill::after {
+    width: 8px !important;
+    height: 8px !important;
+    flex: 0 0 8px !important;
+    margin-left: 0 !important;
   }
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-item > .task-row > .task-actions {
