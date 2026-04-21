@@ -35,6 +35,43 @@ function focusTimerSaveSettings(){if(!_ftO)return;var a=+document.getElementById
 function focusTimerOpenTaskPick(){var day=fd(now),tasks=(T[day]||[]).filter(function(t){return!t.done&&!t.archived&&!t.frozen});var body=document.getElementById("mBody"),bg=document.getElementById("mBg");if(!body||!bg)return;var h;if(!tasks.length)h='<div class="m-sheet-wrap"><p class="m-sheet-title">今日无可用任务</p><button type="button" class="m-sheet-btn m-sheet-btn--accent" onclick="clM()">关闭</button></div>';else h='<div class="m-sheet-wrap"><p class="m-sheet-title">选择专注任务</p><div class="ft-pick-list">'+tasks.map(function(t){return'<button type="button" class="ft-pick-item" onclick="focusTimerPickTask(\''+day+"',"+t.id+')">'+esc(t.text)+"</button>"}).join("")+'</div><div class="ft-pick-actions"><button type="button" class="m-sheet-btn m-sheet-btn--ghost" onclick="clM()">取消</button><button type="button" class="m-sheet-btn ft-pick-deselect" onclick="focusTimerClearPick()">取消选择</button></div></div>';body.innerHTML=h;bg.classList.add("show")}
 function focusTimerPickTask(d,id){if(!_ftO)focusTimerLoad();_ftO.task={d:d,id:+id};focusTimerSave();clM();rT()}
 function focusTimerClearPick(){if(!_ftO)focusTimerLoad();_ftO.task=null;focusTimerSave();clM();rT()}
-function setTaskBackTodayBtn(ds){const nav=document.querySelector("#taskMode .task-main-col > .task-card > .date-nav");if(!nav)return;let btn=nav.querySelector(".date-nav-return-today");if(!btn){btn=document.createElement("button");btn.type="button";btn.className="date-nav-return-today";btn.setAttribute("aria-label","回到今天");btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg><span>回到今天</span>';btn.onclick=function(e){e.stopPropagation();if(typeof goToday==="function")goToday();else if(typeof quickGo==="function")quickGo(0)}}const right=nav.querySelector('.nav-arrow[aria-label*="下"]');if(right){if(right.nextSibling)nav.insertBefore(btn,right.nextSibling);else nav.appendChild(btn)}const show=ds!==fd(now);btn.classList.toggle("is-visible",show);btn.setAttribute("aria-hidden",show?"false":"true");btn.tabIndex=show?0:-1}
+function setTaskBackTodayBtn(ds){
+const nav=document.querySelector("#taskMode .task-main-col > .task-card > .date-nav");
+if(!nav)return;
+let btn=nav.querySelector(".date-nav-return-today");
+if(!btn){
+btn=document.createElement("button");
+btn.type="button";
+btn.className="date-nav-return-today";
+btn.setAttribute("aria-label","\u56de\u5230\u4eca\u5929");
+btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg><span class="date-nav-return-today-main">\u56de\u5230\u4eca\u5929</span><span class="date-nav-return-today-divider" aria-hidden="true"></span><span class="date-nav-return-today-meta" aria-hidden="true"></span>';
+btn.onclick=function(e){e.stopPropagation();if(typeof goToday==="function")goToday();else if(typeof quickGo==="function")quickGo(0)}
+}
+const arrows=nav.querySelectorAll(".nav-arrow");
+const right=arrows&&arrows.length>1?arrows[1]:null;
+if(right){if(right.nextSibling)nav.insertBefore(btn,right.nextSibling);else nav.appendChild(btn)}
+const show=ds!==fd(now);
+let dayOffset=0;
+try{
+const base=parseDS(fd(now)),target=parseDS(ds);
+if(base&&target){
+const baseDate=new Date(base.getFullYear(),base.getMonth(),base.getDate());
+const targetDate=new Date(target.getFullYear(),target.getMonth(),target.getDate());
+dayOffset=Math.round((targetDate-baseDate)/86400000)
+}
+}catch(e){dayOffset=0}
+const abs=Math.abs(dayOffset);
+const showRange=show&&abs>=3;
+const metaEl=btn.querySelector(".date-nav-return-today-meta");
+if(metaEl){
+metaEl.textContent=dayOffset>0?"\u672a\u6765"+abs+"\u5929":"\u8fc7\u53bb"+abs+"\u5929";
+metaEl.setAttribute("aria-hidden",showRange?"false":"true")
+}
+btn.classList.toggle("has-range",showRange);
+btn.classList.toggle("is-visible",show);
+btn.setAttribute("aria-hidden",show?"false":"true");
+btn.tabIndex=show?0:-1;
+btn.setAttribute("aria-label",showRange?"\u56de\u5230\u4eca\u5929\uff0c\u5f53\u524d"+(metaEl?metaEl.textContent:""):"\u56de\u5230\u4eca\u5929")
+}
 function setTaskDateTitle(ds){const el=document.getElementById("dTitle");if(!el)return;let mainEl=el.querySelector(".date-nav-date-main"),subEl=el.querySelector(".date-nav-date-sub");if(!mainEl||!subEl){el.innerHTML='<span class="date-nav-date-main"></span><span class="date-nav-date-sub"></span>';mainEl=el.querySelector(".date-nav-date-main");subEl=el.querySelector(".date-nav-date-sub")}const text=String(disp(ds)||"");const splitIdx=text.lastIndexOf(" ");const dateText=splitIdx>0?text.slice(0,splitIdx):text;const weekText=splitIdx>0?text.slice(splitIdx+1):"";let dayOffset=99;try{const base=parseDS(fd(now)),target=parseDS(ds);if(base&&target){const baseDate=new Date(base.getFullYear(),base.getMonth(),base.getDate());const targetDate=new Date(target.getFullYear(),target.getMonth(),target.getDate());dayOffset=Math.round((targetDate-baseDate)/86400000)}}catch(e){}let relativeText="";if(dayOffset===0)relativeText="\u4eca\u5929";else if(dayOffset===1)relativeText="\u660e\u5929";else if(dayOffset===2)relativeText="\u540e\u5929";else if(dayOffset===-1)relativeText="\u6628\u5929";else if(dayOffset===-2)relativeText="\u524d\u5929";const useRelative=!!relativeText;const mainText=useRelative?relativeText:dateText;const subText=useRelative?`${dateText}${weekText?" "+weekText:""}`:weekText;const renderKey=`${ds}|${useRelative?"r":"d"}|${mainText}|${subText}`;const prevKey=el.dataset.renderKey||"";const prevDs=el.dataset.lastDs||"";const shouldUpdate=prevKey!==renderKey;if(shouldUpdate){mainEl.textContent=mainText;subEl.textContent=subText;el.classList.toggle("is-relative",useRelative);el.classList.toggle("is-plain-date",!useRelative);subEl.classList.toggle("is-empty",!subText);const shouldAnimate=!!prevDs&&prevDs!==ds;el.classList.remove("is-animating");if(shouldAnimate){void el.offsetWidth;el.classList.add("is-animating")}el.dataset.renderKey=renderKey;el.dataset.lastDs=ds}else{if(!el.classList.contains("is-relative")&&!el.classList.contains("is-plain-date")){el.classList.toggle("is-relative",useRelative);el.classList.toggle("is-plain-date",!useRelative)}if(subEl.classList.contains("is-empty")===!!subText)subEl.classList.toggle("is-empty",!subText)}setTaskBackTodayBtn(ds)}
 function rT(){if(_togPendingDoneId!=null){flushPendingTogIfAny();return}hydrateSortModes();generateRecurring(sel);checkUnfreeze();const list=document.getElementById("tList");setTaskDateTitle(sel);updateHeaderContext();const dt=T[sel]||[];const nonArchived=dt.filter(t=>!t.archived);const archivedTasks=dt.filter(t=>t.archived);const pn=nonArchived.filter(t=>!t.done&&!t.frozen).length;const dn=nonArchived.filter(t=>t.done).length;const archDn=archivedTasks.length;const tot=nonArchived.length;document.getElementById("batchBar").style.display="flex";updateSortUI();renderOverdue();let fl=nonArchived.filter(t=>passesFMulti(t));if(FTag)fl=fl.filter(t=>(t.tags||[]).includes(FTag));let archVisible=[];if(showArchivedInList&&archivedTasks.length>0){let af=archivedTasks;if(FTag)af=af.filter(t=>(t.tags||[]).includes(FTag));archVisible=af}const totalForProg=tot+archDn;const doneForProg=dn+archDn;const pct=totalForProg>0?Math.round(doneForProg/totalForProg*100):0;let displayList=fl;let activeSortMode="";if(sortStates&&sortStates[sel])activeSortMode=normalizeSortMode(sortStates[sel]);else if(autoSortEnabled)activeSortMode=normalizeSortMode(defaultSortMode||lastSort||"created");if(activeSortMode&&displayList.length>1){displayList=sortDisplayList([...displayList],activeSortMode)}if(!displayList.length&&!archVisible.length){const isZero=tot===0&&archDn===0;list.innerHTML=`<div class="empty"><div class="em">🎉</div><p class="empty-main">${isZero?"今天任务已全部完成":"没有匹配的任务"}</p><p class="empty-sub">${isZero?"休息一下，或添加新任务":"试试其他筛选条件"}</p></div>`;renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,sel);focusTimerAfterRender();return}let h=displayList.map(t=>taskHTML(t,false)).join("");if(archVisible.length>0)h+=archVisible.map(t=>taskHTML(t,true)).join("");list.innerHTML=h;renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,sel);focusTimerAfterRender()}

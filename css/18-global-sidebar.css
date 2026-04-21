@@ -1266,6 +1266,10 @@
     pointer-events: auto;
   }
 
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today.has-range.is-visible {
+    max-width: 236px;
+  }
+
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today svg {
     width: 16px;
     height: 16px;
@@ -1276,6 +1280,29 @@
     font-size: 14px;
     font-weight: 600;
     line-height: 1;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today .date-nav-return-today-divider,
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today .date-nav-return-today-meta {
+    display: none;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today.has-range .date-nav-return-today-divider {
+    display: block;
+    width: 1px;
+    height: 14px;
+    background: #dbe4ef;
+    opacity: 0.95;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today.has-range .date-nav-return-today-meta {
+    display: inline-flex;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    color: #94a3b8;
+    letter-spacing: 0;
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today:hover {
@@ -1293,6 +1320,14 @@
 
   .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today.is-visible {
     border-color: #334155;
+  }
+
+  .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today.has-range .date-nav-return-today-divider {
+    background: #334155;
+  }
+
+  .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today.has-range .date-nav-return-today-meta {
+    color: #a8b3c7;
   }
 
   .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today:hover {
