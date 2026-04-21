@@ -50,6 +50,18 @@
     group.remove();
   }
 
+  function ensureDateArrowIcons(dateNav) {
+    if (!dateNav) return;
+    var left = dateNav.querySelector('.nav-arrow[aria-label*="\u4e0a"]');
+    var right = dateNav.querySelector('.nav-arrow[aria-label*="\u4e0b"]');
+    var leftSvg =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>';
+    var rightSvg =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>';
+    if (left && !left.querySelector("svg")) left.innerHTML = leftSvg;
+    if (right && !right.querySelector("svg")) right.innerHTML = rightSvg;
+  }
+
   function ensureSortButtonLabel(batchBar) {
     var sortBtn = batchBar.querySelector(".batch-sort-btn");
     if (!sortBtn) return;
@@ -81,19 +93,6 @@
     });
   }
 
-  function createTodayBtn() {
-    var btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "date-nav-today-btn";
-    btn.setAttribute("aria-label", "\u56de\u5230\u4eca\u5929");
-    btn.innerHTML =
-      '<i class="ph ph-calendar-blank" aria-hidden="true"></i><span>\u4eca\u5929</span>';
-    btn.addEventListener("click", function () {
-      if (typeof goToday === "function") goToday();
-    });
-    return btn;
-  }
-
   function ensureHeaderLayout() {
     var taskMode = document.getElementById("taskMode");
     if (!taskMode || taskMode.classList.contains("hidden")) return;
@@ -111,6 +110,7 @@
 
     var actionWrap = dateNav.querySelector(".date-nav-actions");
     var movedAdd = dateNav.querySelector(".date-nav-actions .add-split");
+    ensureDateArrowIcons(dateNav);
 
     if (!isDesktop()) {
       restoreArrowOrder(dateNav);
@@ -126,34 +126,17 @@
       return;
     }
 
-    ensureArrowGroup(dateNav);
+    restoreArrowOrder(dateNav);
+
+    var desktopTodayBtns = dateNav.querySelectorAll(".date-nav-today-btn");
+    desktopTodayBtns.forEach(function (el) {
+      el.remove();
+    });
 
     if (!actionWrap) {
       actionWrap = document.createElement("div");
       actionWrap.className = "date-nav-actions";
       dateNav.appendChild(actionWrap);
-    }
-
-    var h3 = dateNav.querySelector("h3");
-    var allTodayBtns = dateNav.querySelectorAll(".date-nav-today-btn");
-    if (!allTodayBtns.length) {
-      var todayBtn = createTodayBtn();
-      if (h3 && h3.nextSibling) dateNav.insertBefore(todayBtn, h3.nextSibling);
-      else dateNav.appendChild(todayBtn);
-    } else {
-      allTodayBtns.forEach(function (btn, idx) {
-        if (idx > 0) {
-          btn.remove();
-          return;
-        }
-        btn.setAttribute("aria-label", "\u56de\u5230\u4eca\u5929");
-        btn.innerHTML =
-          '<i class="ph ph-calendar-blank" aria-hidden="true"></i><span>\u4eca\u5929</span>';
-        if (h3 && btn.previousSibling !== h3) {
-          if (h3.nextSibling) dateNav.insertBefore(btn, h3.nextSibling);
-          else dateNav.appendChild(btn);
-        }
-      });
     }
 
     var addSplit = batchBar.querySelector(".batch-bar-left .add-split");

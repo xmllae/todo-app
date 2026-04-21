@@ -15,15 +15,6 @@
   isolation: isolate;
 }
 
-@media (min-width: 1181px) {
-  #appMain.show .site-header-inner {
-    width: 100%;
-    max-width: 1532px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
-
 .app.app--with-global-nav::before {
   content: '';
   grid-column: 1 / 3;
@@ -1231,54 +1222,89 @@
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav {
     margin: 0 !important;
     width: 100% !important;
-    padding: 14px 28px 8px !important;
+    padding: 18px 28px 10px !important;
     box-sizing: border-box;
     border-bottom: 0;
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    gap: 10px;
+    gap: 14px;
     position: relative;
     z-index: 150;
     overflow: visible;
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-arrow-group {
-    height: 35px;
-    padding: 0 1px;
-    border: 1px solid #e4e9f1;
-    border-radius: 10px;
-    background: #f6f8fc;
-    display: inline-flex;
-    align-items: center;
-    gap: 2px;
-    flex-shrink: 0;
+    display: none !important;
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 {
-    font-size: 0.98rem;
-    font-weight: 740;
-    line-height: 1.12;
-    gap: 6px;
-    color: #10223f;
     margin: 0;
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 12px;
+    color: #0f172a;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.01em;
     flex-shrink: 0;
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow {
-    width: 29px;
-    height: 29px;
-    border-radius: 9px;
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    border-radius: 999px;
     border: 0;
     background: transparent;
-    color: #7a879b;
-    font-size: 0.78rem;
+    color: #98a2b3;
+    font-size: 0;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     box-shadow: none;
   }
 
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow svg {
+    width: 19px;
+    height: 19px;
+    display: block;
+    stroke-width: 2.2;
+  }
+
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow:hover {
-    color: #5b6880;
-    background: #edf2f8;
+    color: #6b778c;
+    background: rgba(148, 163, 184, 0.12);
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 .date-nav-h3-ico {
+    display: none;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 12px;
+    line-height: 1;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle .date-nav-date-main {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    color: #0f172a;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle .date-nav-date-week {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1;
+    color: #94a3b8;
+    letter-spacing: 0;
+    margin-bottom: 0.08em;
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions {
@@ -1293,35 +1319,33 @@
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-today-btn {
-    height: 34px;
-    padding: 0 10px;
-    border-radius: 9px;
-    border: 1px solid #e2e8f0;
-    background: #f3f5f9;
-    color: #55627a;
-    font-family: inherit;
-    font-size: 0.82rem;
-    font-weight: 650;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
-    margin: 0 0 0 4px;
-    transition:
-      border-color 0.16s ease,
-      background 0.16s ease,
-      color 0.16s ease;
+    display: none !important;
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-today-btn:hover {
-    border-color: #d6deea;
-    color: #44536d;
-    background: #eef2f7;
+    display: none !important;
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-today-btn i {
-    font-size: 0.84rem;
-    line-height: 1;
+    display: none !important;
+  }
+
+  .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3,
+  .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle .date-nav-date-main {
+    color: #e2e8f0;
+  }
+
+  .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle .date-nav-date-week {
+    color: #94a3b8;
+  }
+
+  .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow {
+    color: #64748b;
+  }
+
+  .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow:hover {
+    color: #cbd5e1;
+    background: rgba(148, 163, 184, 0.16);
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split {

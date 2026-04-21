@@ -47,7 +47,27 @@ function moveModeToggleIndicator(btn, noAnim){
  * 同步导航栏高亮状态（不处理动画，由调用方决定是否动画）
  */
 function syncNavHighlight(path){const normalized=path.replace(/\/+$/,"");document.querySelectorAll("#modeToggle .mode-btn").forEach(b=>{const btnPath=b.dataset.path.replace(/\/+$/,"");const isAct=btnPath===normalized;b.classList.toggle("active",isAct);const ico=b.querySelector(".nav-ph-ico");if(ico){ico.classList.toggle("ph",!isAct);ico.classList.toggle("ph-fill",isAct)}});const activeBtn=document.querySelector("#modeToggle .mode-btn.active");requestAnimationFrame(()=>moveModeToggleIndicator(activeBtn))}
-function applyMode(mode){["taskMode","kanbanMode","settingsMode","statsMode","subscriptionsMode"].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.add("hidden")});if(mode==="task")document.getElementById("taskMode").classList.remove("hidden");else if(mode==="kanban")document.getElementById("kanbanMode").classList.remove("hidden");else if(mode==="settings"){document.getElementById("settingsMode").classList.remove("hidden");if(typeof initSubAlertSettings==="function")initSubAlertSettings()}else if(mode==="stats")document.getElementById("statsMode").classList.remove("hidden");else if(mode==="subscriptions"){if(typeof ensureSubMode==="function")ensureSubMode();const sm=document.getElementById("subscriptionsMode");if(sm)sm.classList.remove("hidden");if(typeof rSubscriptions==="function")rSubscriptions();return}rAll()}
+function applyMode(mode){
+  ["taskMode","kanbanMode","settingsMode","statsMode","subscriptionsMode"].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.classList.add("hidden")
+  });
+  if(typeof updateHeaderContext==="function")updateHeaderContext();
+  if(mode==="task")document.getElementById("taskMode").classList.remove("hidden");
+  else if(mode==="kanban")document.getElementById("kanbanMode").classList.remove("hidden");
+  else if(mode==="settings"){
+    document.getElementById("settingsMode").classList.remove("hidden");
+    if(typeof initSubAlertSettings==="function")initSubAlertSettings()
+  }else if(mode==="stats")document.getElementById("statsMode").classList.remove("hidden");
+  else if(mode==="subscriptions"){
+    if(typeof ensureSubMode==="function")ensureSubMode();
+    const sm=document.getElementById("subscriptionsMode");
+    if(sm)sm.classList.remove("hidden");
+    if(typeof rSubscriptions==="function")rSubscriptions();
+    return
+  }
+  rAll()
+}
 function getCurrentPath(){if(location.protocol==="file:"){const h=location.hash.replace(/^#/,"");return h||"/"}return location.pathname}
 function navigate(path){const normalized=path.replace(/\/+$/,"");try{if(location.protocol==="file:"){location.hash=normalized}else{const current=location.pathname.replace(/\/+$/,"");if(current!==normalized)history.pushState({path:normalized},"",normalized)}}catch(e){}syncNavHighlight(normalized);applyMode(getPathMode(normalized))}
 window.addEventListener("popstate",e=>{const path=e.state&&e.state.path||getCurrentPath();syncNavHighlight(path);applyMode(getPathMode(path))});
