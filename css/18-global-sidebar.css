@@ -1302,7 +1302,7 @@
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav {
-    --date-nav-title-slot-w: 176px;
+    --date-nav-title-slot-w: 150px;
     margin: 0 !important;
     width: 100% !important;
     padding: 18px 28px 10px !important;
@@ -1382,7 +1382,7 @@
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle .date-nav-date-main {
-    font-size: 24px;
+    font-size: 30px;
     font-weight: 700;
     line-height: 1.02;
     letter-spacing: -0.01em;
