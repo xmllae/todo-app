@@ -388,36 +388,43 @@
   white-space: nowrap;
 }
 
-.gsn-filter-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
+.gsn-filter-icon {
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  opacity: 0.92;
   flex-shrink: 0;
 }
 
-.gsn-filter-dot--high {
-  background: #d1453b;
-  box-shadow: 0 0 0 3px rgba(209, 69, 59, 0.12);
+.gsn-filter-ico {
+  width: 14px;
+  height: 14px;
+  display: block;
 }
 
-.gsn-filter-dot--frozen {
-  background: #60a5fa;
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.14);
+.gsn-filter-ico-ph {
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  line-height: 1;
 }
 
-.gsn-filter-dot--repeat {
-  background: #8b5cf6;
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
+.gsn-filter-ico--high {
+  color: #d1453b;
 }
 
-.gsn-filter-dot--done {
-  background: #22c55e;
-  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.12);
-}
-
-.gsn-filter-dot--unscheduled {
-  background: #94a3b8;
-  box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.16);
+.gsn-filter-ico-fallback {
+  width: 6px;
+  height: 6px;
+  display: inline-block;
+  border-radius: 999px;
+  background: currentColor;
 }
 
 .gsn-footnote {

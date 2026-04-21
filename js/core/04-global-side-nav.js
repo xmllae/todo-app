@@ -167,16 +167,41 @@
     );
   }
 
-  function filterButton(label, dotClass, count, key, active) {
+  function filterIconMarkup(iconKey) {
+    if (iconKey === "high") {
+      return (
+        '<svg class="gsn-filter-ico gsn-filter-ico--high" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>' +
+        '<line x1="4" y1="22" x2="4" y2="15"></line>' +
+        "</svg>"
+      );
+    }
+    if (iconKey === "repeating") {
+      return (
+        '<svg class="gsn-filter-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M17 1l4 4-4 4"></path>' +
+        '<path d="M3 11V9a4 4 0 0 1 4-4h14"></path>' +
+        '<path d="M7 23l-4-4 4-4"></path>' +
+        '<path d="M21 13v2a4 4 0 0 1-4 4H3"></path>' +
+        "</svg>"
+      );
+    }
+    if (iconKey === "frozen") {
+      return '<i class="ph ph-snowflake gsn-filter-ico-ph gsn-filter-ico--frozen" aria-hidden="true"></i>';
+    }
+    return '<span class="gsn-filter-ico-fallback"></span>';
+  }
+
+  function filterButton(label, iconKey, count, key, active) {
     return (
       '<button type="button" class="gsn-filter' +
       (active ? " is-active" : "") +
       '" data-gsn-action="filter" data-gsn-arg="' +
       key +
       '">' +
-      '<span class="gsn-filter-dot ' +
-      dotClass +
-      '" aria-hidden="true"></span>' +
+      '<span class="gsn-filter-icon" aria-hidden="true">' +
+      filterIconMarkup(iconKey) +
+      "</span>" +
       '<span class="gsn-project-name">' +
       escapeHtml(label) +
       "</span>" +
@@ -220,7 +245,7 @@
       '<h4 class="gsn-section-title" id="gsnFilterTitle">筛选器</h4>' +
       filterButton(
         "高优先级",
-        "gsn-filter-dot--high",
+        "high",
         countToday(function (task) {
           return task.priority === "high" && isPending(task);
         }),
@@ -229,10 +254,19 @@
       ) +
       filterButton(
         "重复任务",
-        "gsn-filter-dot--repeat",
+        "repeating",
         null,
         "repeating",
         hasSingleFilter("repeating")
+      ) +
+      filterButton(
+        "已冻结任务",
+        "frozen",
+        countToday(function (task) {
+          return !!task.frozen;
+        }),
+        "frozen",
+        hasSingleFilter("frozen")
       ) +
       "</section>";
   }
