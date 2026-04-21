@@ -114,16 +114,37 @@ cancelDelayedToggleExpand();
 if(multiSelect)toggleMSel(id);else if(window.openTaskDetail)window.openTaskDetail(id);
 return
 }
-if(e.target.closest(".txt-line")){
+if(e.target.closest(".txt")){
 e.__taskDetailBgHandled=true;
 cancelDelayedToggleExpand();
  return
+}
+if(e.target.closest(".txt-line")){
+e.__taskDetailBgHandled=true;
+cancelDelayedToggleExpand();
+if(multiSelect)toggleMSel(id);else if(window.openTaskDetail)window.openTaskDetail(id);else onTaskRowAsideClick(id);
+return
 }
 e.__taskDetailBgHandled=true;
 cancelDelayedToggleExpand();
 if(multiSelect)toggleMSel(id);else if(window.openTaskDetail)window.openTaskDetail(id);else onTaskRowAsideClick(id)
 }
-function onTaskStrikeWrapPaddingClick(e,id){if(!multiSelect)return;var w=e.currentTarget;if(e.target!==w&&!e.target.classList.contains("task-strike-content"))return;e.stopPropagation();cancelDelayedToggleExpand();toggleMSel(id)}
+function onTaskStrikeWrapPaddingClick(e,id){
+var w=e.currentTarget;
+if(multiSelect){
+if(e.target!==w&&!e.target.classList.contains("task-strike-content"))return;
+e.stopPropagation();
+cancelDelayedToggleExpand();
+toggleMSel(id);
+return
+}
+if(e.target.closest(".txt,.txt-edit"))return;
+if(e.target!==w&&!e.target.classList.contains("task-strike-content"))return;
+e.stopPropagation();
+e.__taskDetailBgHandled=true;
+cancelDelayedToggleExpand();
+if(window.openTaskDetail)window.openTaskDetail(id);else onTaskRowAsideClick(id)
+}
 function onTaskItemMultiBackdrop(e,id){if(!multiSelect)return;var item=e.currentTarget,row=item.querySelector(".task-row");if(e.target!==item&&e.target!==row)return;e.stopPropagation();cancelDelayedToggleExpand();toggleMSel(id)}
 function toggleExpand(id){cancelDelayedToggleExpand();const _nex=expandedId===id?null:id;expandedId=_nex;if(_nex!==null)expandedPanelTab="subtasks";editingId=null;editingTimeId=null;editingSubId=null;ppOpenId=null;if(_nex===null||subAddComposingId!==_nex)subAddComposingId=null;rT()}
 function setTaskExpandTab(tab){expandedPanelTab=tab==="details"?"details":"subtasks";if(expandedPanelTab==="details")subAddComposingId=null;rT()}
