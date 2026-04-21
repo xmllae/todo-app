@@ -1324,9 +1324,9 @@
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 {
     margin: 0;
     display: inline-flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: 0;
     color: #0f172a;
     font-size: 1rem;
     font-weight: 700;
@@ -1371,71 +1371,76 @@
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle {
     display: inline-flex;
-    align-items: flex-end;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
     gap: 0;
     line-height: 1;
     max-width: 100%;
     overflow: visible;
+    text-align: center;
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle .date-nav-date-main {
     font-size: 24px;
     font-weight: 700;
-    line-height: 1;
+    line-height: 1.02;
     letter-spacing: -0.01em;
     color: #0f172a;
+    white-space: nowrap;
   }
 
-  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle .date-nav-date-week {
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle.is-relative .date-nav-date-main {
+    font-size: 30px;
+    letter-spacing: -0.015em;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle .date-nav-date-sub {
     font-size: 14px;
-    font-weight: 400;
-    line-height: 1;
+    font-weight: 500;
+    line-height: 1.1;
     color: #94a3b8;
     letter-spacing: 0;
-    margin-left: 8px;
-    margin-bottom: 0.06em;
-  }
-
-  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle .date-nav-today-chip-wrap {
-    display: inline-flex;
-    align-items: center;
-    overflow: hidden;
-    max-width: 0;
-    opacity: 0;
-    transform: translate(-4px, -7px) scale(0.94);
-    margin-left: 0;
-    transition:
-      max-width 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 0.2s ease,
-      transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-      margin-left 0.28s cubic-bezier(0.22, 1, 0.36, 1);
-    will-change: max-width, opacity, transform, margin-left;
-  }
-
-  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle .date-nav-today-chip-wrap.is-visible {
-    max-width: 58px;
-    opacity: 1;
-    transform: translate(0, -7px) scale(1);
-    margin-left: 5px;
-  }
-
-  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle .date-nav-today-chip {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 17px;
-    padding: 0 7px;
-    border-radius: 999px;
-    background: #edf2ff;
-    border: 1px solid #dbe4ff;
-    color: #4c45df;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.01em;
-    line-height: 1;
     white-space: nowrap;
-    box-shadow: 0 1px 2px rgba(79, 70, 229, 0.08);
+    margin-top: 6px;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle.is-relative .date-nav-date-sub {
+    margin-top: 8px;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle .date-nav-date-sub.is-empty {
+    display: none;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle.is-animating .date-nav-date-main {
+    animation: task-date-nav-main-in 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle.is-animating .date-nav-date-sub {
+    animation: task-date-nav-sub-in 0.22s ease;
+  }
+
+  @keyframes task-date-nav-main-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes task-date-nav-sub-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions {
@@ -1466,15 +1471,8 @@
     color: #e2e8f0;
   }
 
-  .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle .date-nav-date-week {
+  .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle .date-nav-date-sub {
     color: #94a3b8;
-  }
-
-  .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle .date-nav-today-chip {
-    background: rgba(99, 102, 241, 0.24);
-    border-color: rgba(129, 140, 248, 0.36);
-    color: #cfd7ff;
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.24);
   }
 
   .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow {
