@@ -82,7 +82,7 @@ el.classList.add("task-toggle-anim")
 }else{rT()}
 syncTaskDetailPanelIfNeeded(id)
 }
-function startEdit(id){cancelDelayedToggleExpand();editingId=id;editingTimeId=null;expandedId=null;subAddComposingId=null;rT();setTimeout(()=>{const inp=document.querySelector(".txt-edit");if(inp){inp.focus();inp.setSelectionRange(inp.value.length,inp.value.length)}},30)}
+function startEdit(id){cancelDelayedToggleExpand();editingId=id;editingTimeId=null;expandedId=null;subAddComposingId=null;rT();setTimeout(()=>{const inp=document.querySelector(".txt-edit");if(inp){inp.focus();try{inp.select()}catch(e){inp.setSelectionRange(0,inp.value.length)}}},30)}
 function saveEdit(id){const inp=document.querySelector(".txt-edit");if(!inp)return;const txt=inp.value.trim();const t=(T[sel]||[]).find(x=>x.id===id);if(t&&txt){t.text=txt;syncToRule(t)}editingId=null;rT();save()}
 function cancelEdit(){editingId=null;rT()}
 function dupTask(id){const t=(T[sel]||[]).find(x=>x.id===id);if(!t)return;const bid=Date.now();T[sel].push(mkTask(t.text,t.priority,t.planTime,t.duration,{tags:[...t.tags||[]],color:t.color,note:t.note||"",subtasks:(t.subtasks||[]).map((s,i)=>({id:bid+i+Math.floor(Math.random()*1e4),text:s.text,done:false}))}));rT();save();toast("📋 已复制")}
