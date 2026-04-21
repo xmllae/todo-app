@@ -45,8 +45,8 @@
 }
 
 .site-header-inner .header-tools .header-search-trigger{
-  width: auto;
-  min-width: 154px;
+  width: clamp(188px, 20vw, 236px);
+  min-width: 188px;
   height: var(--header-tool-btn-size);
   padding: 0 9px 0 13px;
   gap: 12px;
