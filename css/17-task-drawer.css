@@ -172,10 +172,27 @@
     opacity: 1;
 }
 
+@keyframes task-edit-indicator-in {
+    from {
+        transform: scaleY(0);
+        opacity: 0;
+    }
+    to {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+}
+
 .list-panel .task-item.task-item--title-editing::before,
 .list-panel .task-item.task-item--detail-active.task-item--title-editing::before {
-    transform: scaleY(0) !important;
-    opacity: 0 !important;
+    transform: scaleY(0);
+    opacity: 0;
+}
+
+.list-panel .task-item.task-item--title-editing.task-item--title-editing-indicator-anim::before,
+.list-panel .task-item.task-item--detail-active.task-item--title-editing.task-item--title-editing-indicator-anim::before {
+    transition: none;
+    animation: task-edit-indicator-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .dark .task-item--detail-active {
