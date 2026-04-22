@@ -264,7 +264,7 @@
   min-width: 0 !important;
   align-self: stretch !important;
   justify-content: flex-start !important;
-  column-gap: 12px !important;
+  column-gap: 8px !important;
   row-gap: 2px !important;
   padding: 0 !important;
   margin: 3px 0 0 -2px !important;
@@ -1132,41 +1132,48 @@
   --subtask-row-muted: #94a3b8;
   --subtask-ck-bd: #c1ccdb;
   --subtask-ck-on: #5b67f7;
+  --task-meta-fg: #738397;
+  --task-meta-fg-hover: #3f4f66;
+  --task-meta-subtle: #9aa8bb;
+  --task-meta-done: #1f7a43;
 }
 
 #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn,
 #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill {
   display: inline-flex !important;
   align-items: center !important;
-  gap: 5px !important;
-  min-height: 22px !important;
-  padding: 0 9px 0 8px !important;
+  gap: 3px !important;
+  min-height: 16px !important;
+  padding: 0 !important;
   margin: 0 !important;
-  border: 1px solid var(--subtask-pill-bd) !important;
-  border-radius: 999px !important;
-  background: var(--subtask-pill-bg) !important;
-  color: var(--subtask-pill-fg) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--task-meta-fg) !important;
   font-size: 12px !important;
-  font-weight: 650 !important;
-  line-height: 1 !important;
+  font-weight: 620 !important;
+  line-height: 1.2 !important;
   box-shadow: none !important;
-  transition: background .2s ease, color .2s ease, border-color .2s ease, transform .15s ease !important;
+  text-decoration: none !important;
+  transition: color .18s ease, text-decoration-color .18s ease !important;
 }
 
 #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn .stp-icon,
 #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill .stp-icon {
-  width: 12px !important;
-  height: 12px !important;
-  min-width: 12px !important;
-  min-height: 12px !important;
-  color: color-mix(in srgb, var(--subtask-pill-fg) 75%, #94a3b8) !important;
+  width: 11px !important;
+  height: 11px !important;
+  min-width: 11px !important;
+  min-height: 11px !important;
+  color: color-mix(in srgb, var(--task-meta-fg) 82%, #94a3b8) !important;
 }
 
 #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn .stp-icon svg,
 #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill .stp-icon svg {
   display: block !important;
-  width: 12px !important;
-  height: 12px !important;
+  width: 11px !important;
+  height: 11px !important;
+  max-width: 11px !important;
+  max-height: 11px !important;
 }
 
 #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn .stp-icon::before,
@@ -1177,16 +1184,16 @@
 #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn .stp-n,
 #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill .stp-n {
   font-size: 12px !important;
-  font-weight: 650 !important;
+  font-weight: 620 !important;
   letter-spacing: .01em !important;
 }
 
 #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn::after,
 #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill::after {
-  width: 9px !important;
-  height: 9px !important;
-  opacity: .62 !important;
-  margin-left: 0 !important;
+  width: 8px !important;
+  height: 8px !important;
+  opacity: .46 !important;
+  margin-left: 1px !important;
   transform: translateY(0) !important;
 }
 
@@ -1194,38 +1201,89 @@
 #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill:hover,
 #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn.sub-task-pill--open,
 #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill.sub-task-pill--open {
-  background: var(--subtask-pill-open-bg) !important;
-  border-color: var(--subtask-pill-open-bd) !important;
-  color: var(--subtask-pill-open-fg) !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  color: var(--task-meta-fg-hover) !important;
+  text-decoration: underline !important;
+  text-decoration-thickness: 1px !important;
+  text-underline-offset: 2px !important;
 }
 
 #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn:active,
 #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill:active {
-  transform: translateY(1px) !important;
+  transform: none !important;
 }
 
 #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn.sub-task-pill--open::after,
 #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill.sub-task-pill--open::after {
   transform: translateY(0) rotate(180deg) !important;
-  opacity: .78 !important;
+  opacity: .62 !important;
 }
 
 #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn.sub-task-pill--done,
 #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill.sub-task-pill--done {
-  background: #eff9f3 !important;
-  border-color: #d0e8db !important;
-  color: #1f7a43 !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  color: var(--task-meta-done) !important;
+  text-decoration: none !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .time-plain.time-disp,
+#taskMode .list-panel #tList .task-row-center > .task-time-col .task-recur-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+  min-height: 16px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--task-meta-fg) !important;
+  font-size: 12px !important;
+  font-weight: 540 !important;
+  line-height: 1.2 !important;
+  box-shadow: none !important;
+  filter: none !important;
+  transition: color .18s ease !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .time-plain.time-disp:hover,
+#taskMode .list-panel #tList .task-row-center > .task-time-col .time-plain.time-disp:focus,
+#taskMode .list-panel #tList .task-row-center > .task-time-col .time-plain.time-disp:active,
+#taskMode .list-panel #tList .task-row-center > .task-time-col .task-recur-badge:hover {
+  background: transparent !important;
+  border-color: transparent !important;
+  color: var(--task-meta-fg-hover) !important;
+  box-shadow: none !important;
+  filter: none !important;
+  outline: 0 !important;
+  transform: none !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .time-plain.time-disp::before,
+#taskMode .list-panel #tList .task-row-center > .task-time-col .task-recur-badge-ico {
+  width: 11px !important;
+  height: 11px !important;
+  flex: 0 0 11px !important;
+  align-self: center !important;
+  opacity: .72 !important;
+  transform: translateY(0) !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .task-recur-badge-txt {
+  color: inherit !important;
 }
 
 #taskMode .list-panel #tList .task-item.task-item--collapse-ghost .sub-task-pill-btn,
 #taskMode .list-panel #tList .task-item.task-item--collapse-ghost .sub-task-pill {
-  min-height: 22px !important;
-  padding: 0 9px 0 8px !important;
-  border: 1px solid var(--subtask-pill-bd) !important;
-  border-radius: 999px !important;
-  background: var(--subtask-pill-bg) !important;
-  color: var(--subtask-pill-fg) !important;
-  gap: 5px !important;
+  min-height: 16px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--task-meta-fg) !important;
+  gap: 4px !important;
 }
 
 #taskMode .list-panel #tList .task-item.task-item--collapse-ghost .sub-task-pill-btn .stp-icon svg,
@@ -1388,11 +1446,15 @@
   --subtask-row-muted: #8ea0b9;
   --subtask-ck-bd: color-mix(in srgb, #94a3b8 58%, transparent);
   --subtask-ck-on: #818cf8;
+  --task-meta-fg: #8ea0b8;
+  --task-meta-fg-hover: #d5e1f5;
+  --task-meta-subtle: #7f93ac;
+  --task-meta-done: #9fe0b7;
 }
 
 .dark #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn.sub-task-pill--done,
 .dark #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill.sub-task-pill--done {
-  background: color-mix(in srgb, #22c55e 18%, transparent) !important;
-  border-color: color-mix(in srgb, #22c55e 36%, transparent) !important;
-  color: #a7e6be !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  color: var(--task-meta-done) !important;
 }

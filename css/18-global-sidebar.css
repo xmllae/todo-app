@@ -2832,34 +2832,38 @@
 
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill {
-  min-height: 22px !important;
-  padding: 0 9px 0 8px !important;
-  border-radius: 999px !important;
-  border: 1px solid #dde5f1 !important;
-  background: #f1f4f9 !important;
-  color: #42526b !important;
+  min-height: 16px !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: #738397 !important;
   font-size: 12px !important;
-  font-weight: 650 !important;
-  line-height: 1 !important;
-  gap: 5px !important;
+  font-weight: 620 !important;
+  line-height: 1.2 !important;
+  gap: 3px !important;
   box-shadow: none !important;
   position: relative !important;
+  text-decoration: none !important;
+  transition: color .18s ease, text-decoration-color .18s ease !important;
 }
 
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn .stp-icon,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill .stp-icon {
-  width: 12px !important;
-  height: 12px !important;
-  min-width: 12px !important;
-  min-height: 12px !important;
-  color: #60718a !important;
+  width: 11px !important;
+  height: 11px !important;
+  min-width: 11px !important;
+  min-height: 11px !important;
+  color: #7f90a8 !important;
 }
 
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn .stp-icon svg,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill .stp-icon svg {
   display: block !important;
-  width: 12px !important;
-  height: 12px !important;
+  width: 11px !important;
+  height: 11px !important;
+  max-width: 11px !important;
+  max-height: 11px !important;
 }
 
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn .stp-icon::before,
@@ -2869,24 +2873,27 @@
 
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn::after,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill::after {
-  width: 9px !important;
-  height: 9px !important;
+  width: 8px !important;
+  height: 8px !important;
   right: auto !important;
   top: auto !important;
-  margin-left: 0 !important;
-  opacity: .64 !important;
+  margin-left: 1px !important;
+  opacity: .46 !important;
   transform: translateY(0) !important;
-  -webkit-mask-size: 9px 9px !important;
-  mask-size: 9px 9px !important;
+  -webkit-mask-size: 8px 8px !important;
+  mask-size: 8px 8px !important;
 }
 
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn:hover,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill:hover,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn.sub-task-pill--open,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill.sub-task-pill--open {
-  background: #e8eef8 !important;
-  border-color: #cfdcf0 !important;
-  color: #233750 !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  color: #3f4f66 !important;
+  text-decoration: underline !important;
+  text-decoration-thickness: 1px !important;
+  text-underline-offset: 2px !important;
 }
 
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn.sub-task-pill--open::after,
@@ -2896,9 +2903,52 @@
 
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn.sub-task-pill--done,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill.sub-task-pill--done {
-  background: #eff9f3 !important;
-  border-color: #d0e8db !important;
+  background: transparent !important;
+  border-color: transparent !important;
   color: #1f7a43 !important;
+  text-decoration: none !important;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .time-plain.time-disp,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .task-recur-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+  min-height: 16px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: #738397 !important;
+  font-size: 12px !important;
+  font-weight: 540 !important;
+  line-height: 1.2 !important;
+  box-shadow: none !important;
+  filter: none !important;
+  transition: color .18s ease !important;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .time-plain.time-disp:hover,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .time-plain.time-disp:focus,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .time-plain.time-disp:active,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .task-recur-badge:hover {
+  background: transparent !important;
+  border-color: transparent !important;
+  color: #3f4f66 !important;
+  box-shadow: none !important;
+  filter: none !important;
+  outline: 0 !important;
+  transform: none !important;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .time-plain.time-disp::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .task-recur-badge-ico {
+  width: 11px !important;
+  height: 11px !important;
+  flex: 0 0 11px !important;
+  opacity: .72 !important;
+  transform: translateY(0) !important;
 }
 
 .app.app--with-global-nav #taskMode .list-panel #tList .task-exp-sub-bg {
