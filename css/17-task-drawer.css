@@ -183,14 +183,17 @@
     }
 }
 
-.list-panel .task-item.task-item--title-editing::before,
-.list-panel .task-item.task-item--detail-active.task-item--title-editing::before {
+.list-panel .task-item.task-item--title-editing:not(.task-item--detail-active)::before {
     transform: scaleY(0);
     opacity: 0;
 }
 
-.list-panel .task-item.task-item--title-editing.task-item--title-editing-indicator-anim::before,
-.list-panel .task-item.task-item--detail-active.task-item--title-editing.task-item--title-editing-indicator-anim::before {
+.list-panel .task-item.task-item--detail-active.task-item--title-editing::before {
+    transform: scaleY(1);
+    opacity: 1;
+}
+
+.list-panel .task-item.task-item--title-editing:not(.task-item--detail-active).task-item--title-editing-indicator-anim::before {
     transition: none;
     animation: task-edit-indicator-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -266,7 +269,8 @@
 .drawer-header {
     position: relative;
     z-index: 1;
-    padding: 11px 18px 10px;
+    padding: 10px 18px;
+    min-height: 52px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -281,6 +285,11 @@
 .drawer-header-title {
     font-size: 0.95rem;
     font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    margin: 0;
+    line-height: 1.2;
     letter-spacing: 0;
     text-transform: none;
     color: var(--text);
@@ -289,6 +298,8 @@
 .drawer-header-actions {
     display: flex;
     gap: 6px;
+    align-items: center;
+    min-height: 32px;
 }
 
 .drawer-header-btn {
@@ -300,9 +311,14 @@
     border: 1px solid transparent;
     background: transparent;
     color: var(--text3);
+    line-height: 0;
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.2s ease;
+}
+
+.drawer-header-btn svg {
+    display: block;
 }
 
 .drawer-header-btn:hover {

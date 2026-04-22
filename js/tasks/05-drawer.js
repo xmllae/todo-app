@@ -1268,10 +1268,23 @@ function saveDrawerTitle(taskId) {
     if (!task) return;
 
     const newText = input.value.trim();
-    if (newText && newText !== task.text) {
+    const oldText = (task.text || '').trim();
+
+    // Empty title on blur should roll back to the original title.
+    if (!newText) {
+        input.value = task.text || '';
+        return;
+    }
+
+    if (newText !== oldText) {
         task.text = newText;
         persistTaskDetailChanges(task, { kanban: true });
+        input.value = newText;
+        return;
     }
+
+    // Keep displayed text consistent when only whitespace was edited.
+    input.value = task.text || '';
 }
 
 function togglePriorityDropdown(btn) {
