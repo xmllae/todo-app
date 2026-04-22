@@ -1857,8 +1857,9 @@
   }
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .txt-line:hover .txt.txt--editable {
-    background: #f8fafc;
-    border-color: #e6edf6;
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
   }
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .txt-line.txt-line--edit {
@@ -1959,8 +1960,9 @@
   }
 
   .dark .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .txt-line:hover .txt.txt--editable {
-    background: rgba(71, 85, 105, 0.26);
-    border-color: rgba(148, 163, 184, 0.32);
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
   }
 
   .dark .app.app--with-global-nav #taskMode .list-panel #tList .task-item.task-item--title-editing {
