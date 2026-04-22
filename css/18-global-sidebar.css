@@ -1779,6 +1779,31 @@
     height: 12px;
   }
 
+  .app.app--with-global-nav #taskMode .batch-bar-right #sortDropdown {
+    left: auto;
+    right: 0;
+    min-width: 156px;
+    width: max-content;
+    max-width: min(70vw, 170px);
+    border-radius: 10px;
+  }
+
+  .app.app--with-global-nav #taskMode .batch-bar-right #sortDropdown .sd-title {
+    padding: 8px 12px 5px;
+    font-size: 0.7rem;
+    letter-spacing: 0.6px;
+  }
+
+  .app.app--with-global-nav #taskMode .batch-bar-right #sortDropdown .sd-item {
+    padding: 9px 12px;
+    gap: 6px;
+    font-size: 0.82rem;
+  }
+
+  .app.app--with-global-nav #taskMode .batch-bar-right #sortDropdown .sd-item .sd-check {
+    font-size: 0.72rem;
+  }
+
   .app.app--with-global-nav #taskMode .batch-bar-right #multiSelectBtn {
     order: 3;
     width: 30px;
