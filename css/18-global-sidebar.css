@@ -2826,6 +2826,10 @@
 }
 
 /* Subtask UI Refresh (Global Nav Mode Parity) */
+.app.app--with-global-nav #taskMode .list-panel #tList .task-item > .exp-bg-wrap:has(.task-expand-area--tabbed) {
+  margin-top: 0 !important;
+}
+
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill {
   min-height: 22px !important;
@@ -2898,8 +2902,8 @@
 }
 
 .app.app--with-global-nav #taskMode .list-panel #tList .task-exp-sub-bg {
-  margin: 0 14px 2px 58px !important;
-  padding: 1px 0 !important;
+  margin: 0 14px 0 58px !important;
+  padding: 0 !important;
   border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
