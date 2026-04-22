@@ -1919,7 +1919,7 @@
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-item.task-item--title-editing {
     background: #fcfbff !important;
-    border-color: #b9a8ff !important;
+    border-color: color-mix(in srgb, var(--task-bd) 56%, transparent) !important;
     box-shadow: none !important;
   }
 
@@ -1967,7 +1967,7 @@
 
   .dark .app.app--with-global-nav #taskMode .list-panel #tList .task-item.task-item--title-editing {
     background: color-mix(in srgb, #6d5ed8 10%, var(--card)) !important;
-    border-color: #8f7cff !important;
+    border-color: color-mix(in srgb, var(--task-bd) 56%, transparent) !important;
     box-shadow: none !important;
   }
 

@@ -98,8 +98,8 @@
 .list-panel .task-item:not(.archived-item) .task-row-center{cursor:pointer}
 /* 无子任务时时间列也属于背景区域，与行背景一体 */
 .list-panel .task-item:not(.archived-item) .task-time-col--no-sub{cursor:pointer}
-/* 标题文字保持文本光标（双击可编辑） */
-.list-panel .task-row-center .txt{cursor:default}
+/* 标题文字悬浮显示手势，提示可点击打开详情 */
+.list-panel .task-row-center .txt{cursor:pointer}
 /* 时间信息点击进入详情，不再进入行内编辑 */
 .list-panel .task-row-center .time-plain{cursor:pointer}
 .list-panel .task-row-center .task-recur-badge{cursor:pointer}
