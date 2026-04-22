@@ -103,9 +103,9 @@
     });
   }
 
-  function ensureHeaderLayout() {
+  function ensureHeaderLayout(forceRunWhenHidden) {
     var taskMode = document.getElementById("taskMode");
-    if (!taskMode || taskMode.classList.contains("hidden")) return;
+    if (!taskMode || (!forceRunWhenHidden && taskMode.classList.contains("hidden"))) return;
 
     var dateNav = document.querySelector(
       "#taskMode .task-main-col > .task-card > .date-nav",
@@ -185,7 +185,9 @@
     boot();
   }
 
-  window.ensureScheduleHeaderLayoutNow = ensureHeaderLayout;
+  window.ensureScheduleHeaderLayoutNow = function (forceRunWhenHidden) {
+    ensureHeaderLayout(!!forceRunWhenHidden);
+  };
   window.ensureScheduleHeaderLayout = scheduleEnsureHeaderLayout;
 
   window.addEventListener("resize", function () {
