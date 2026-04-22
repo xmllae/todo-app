@@ -1110,3 +1110,244 @@
     gap: 4px !important;
   }
 }
+
+/* Subtask Pill + Expanded Panel Visual Refresh */
+#taskMode .list-panel #tList {
+  --subtask-pill-bg: #f3f6fb;
+  --subtask-pill-bd: #dde5f0;
+  --subtask-pill-fg: #42526b;
+  --subtask-pill-open-bg: #e9eff9;
+  --subtask-pill-open-bd: #cfdced;
+  --subtask-pill-open-fg: #24364f;
+  --subtask-panel-bg: linear-gradient(180deg, #fbfdff 0%, #f5f8fc 100%);
+  --subtask-panel-bd: #e2e8f0;
+  --subtask-item-bg: #ffffff;
+  --subtask-item-bd: #e6edf5;
+  --subtask-item-hover-bg: #f8fbff;
+  --subtask-item-hover-bd: #d7e3f2;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn,
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  min-height: 22px !important;
+  padding: 0 9px 0 8px !important;
+  margin: 0 !important;
+  border: 1px solid var(--subtask-pill-bd) !important;
+  border-radius: 999px !important;
+  background: var(--subtask-pill-bg) !important;
+  color: var(--subtask-pill-fg) !important;
+  font-size: 12px !important;
+  font-weight: 650 !important;
+  line-height: 1 !important;
+  box-shadow: none !important;
+  transition: background .2s ease, color .2s ease, border-color .2s ease, transform .15s ease !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn .stp-icon,
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill .stp-icon {
+  width: 12px !important;
+  height: 12px !important;
+  min-width: 12px !important;
+  min-height: 12px !important;
+  color: color-mix(in srgb, var(--subtask-pill-fg) 75%, #94a3b8) !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn .stp-icon svg,
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill .stp-icon svg {
+  display: block !important;
+  width: 12px !important;
+  height: 12px !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn .stp-icon::before,
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill .stp-icon::before {
+  display: none !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn .stp-n,
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill .stp-n {
+  font-size: 12px !important;
+  font-weight: 650 !important;
+  letter-spacing: .01em !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn::after,
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill::after {
+  width: 9px !important;
+  height: 9px !important;
+  opacity: .62 !important;
+  margin-left: 0 !important;
+  transform: translateY(0) !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn:hover,
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill:hover,
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn.sub-task-pill--open,
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill.sub-task-pill--open {
+  background: var(--subtask-pill-open-bg) !important;
+  border-color: var(--subtask-pill-open-bd) !important;
+  color: var(--subtask-pill-open-fg) !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn:active,
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill:active {
+  transform: translateY(1px) !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn.sub-task-pill--open::after,
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill.sub-task-pill--open::after {
+  transform: translateY(0) rotate(180deg) !important;
+  opacity: .78 !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn.sub-task-pill--done,
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill.sub-task-pill--done {
+  background: #eefaf2 !important;
+  border-color: #cfe9d8 !important;
+  color: #1f7a43 !important;
+}
+
+#taskMode .list-panel #tList .task-item.task-item--collapse-ghost .sub-task-pill-btn,
+#taskMode .list-panel #tList .task-item.task-item--collapse-ghost .sub-task-pill {
+  min-height: 22px !important;
+  padding: 0 9px 0 8px !important;
+  border: 1px solid var(--subtask-pill-bd) !important;
+  border-radius: 999px !important;
+  background: var(--subtask-pill-bg) !important;
+  color: var(--subtask-pill-fg) !important;
+  gap: 5px !important;
+}
+
+#taskMode .list-panel #tList .task-item.task-item--collapse-ghost .sub-task-pill-btn .stp-icon svg,
+#taskMode .list-panel #tList .task-item.task-item--collapse-ghost .sub-task-pill .stp-icon svg {
+  display: block !important;
+}
+
+#taskMode .list-panel #tList .task-item.task-item--collapse-ghost .sub-task-pill-btn .stp-icon::before,
+#taskMode .list-panel #tList .task-item.task-item--collapse-ghost .sub-task-pill .stp-icon::before {
+  display: none !important;
+}
+
+#taskMode .list-panel #tList .task-item > .exp-bg-wrap:has(.task-expand-area--tabbed) {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  width: 100% !important;
+}
+
+#taskMode .list-panel #tList .task-item > .exp-bg-wrap .task-expand-area.task-expand-area--tabbed {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  border-radius: 0 !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area--tabbed {
+  padding: 4px 0 10px !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area--tabbed.task-expand-area--open .task-expand-drop {
+  padding-bottom: 0 !important;
+}
+
+#taskMode .list-panel #tList .task-expand-drop {
+  border-top: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transition: max-height .32s cubic-bezier(.22,1,.36,1), opacity .24s ease !important;
+}
+
+#taskMode .list-panel #tList .task-exp-sub-bg {
+  margin: 2px 14px 0 50px !important;
+  padding: 10px 12px !important;
+  border-radius: 12px !important;
+  border: 1px solid var(--subtask-panel-bd) !important;
+  background: var(--subtask-panel-bg) !important;
+  box-shadow: 0 4px 16px rgba(15,23,42,.05) !important;
+}
+
+#taskMode .list-panel.list-panel--multi #tList .task-exp-sub-bg {
+  margin-left: 74px !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .exp-block.exp-block--sub {
+  padding: 0 !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-list {
+  gap: 8px !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-item {
+  margin-left: 0 !important;
+  padding: 8px 10px !important;
+  border-radius: 10px !important;
+  border: 1px solid var(--subtask-item-bd) !important;
+  background: var(--subtask-item-bg) !important;
+  transition: background .18s ease, border-color .18s ease, transform .18s ease, box-shadow .18s ease !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-item:hover {
+  background: var(--subtask-item-hover-bg) !important;
+  border-color: var(--subtask-item-hover-bd) !important;
+  box-shadow: 0 2px 10px rgba(15,23,42,.06) !important;
+  transform: translateY(-1px);
+}
+
+#taskMode .list-panel #tList .task-expand-area .sub-ck {
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  border-radius: 50% !important;
+  border-color: #c2ccdb !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .sub-ck.checked {
+  background: #5b67f7 !important;
+  border-color: #5b67f7 !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .sub-text {
+  font-size: 14px !important;
+  line-height: 1.42 !important;
+  color: #334155 !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .sub-text.sub-done {
+  color: #94a3b8 !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .sub-del {
+  opacity: .4 !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-item:hover .sub-del {
+  opacity: .85 !important;
+}
+
+.dark #taskMode .list-panel #tList {
+  --subtask-pill-bg: color-mix(in srgb, #94a3b8 12%, transparent);
+  --subtask-pill-bd: color-mix(in srgb, #94a3b8 26%, transparent);
+  --subtask-pill-fg: #b8c4d4;
+  --subtask-pill-open-bg: color-mix(in srgb, #818cf8 22%, transparent);
+  --subtask-pill-open-bd: color-mix(in srgb, #818cf8 34%, transparent);
+  --subtask-pill-open-fg: #d8ddff;
+  --subtask-panel-bg: color-mix(in srgb, #94a3b8 9%, var(--card));
+  --subtask-panel-bd: color-mix(in srgb, #94a3b8 24%, var(--task-bd));
+  --subtask-item-bg: color-mix(in srgb, #ffffff 3%, transparent);
+  --subtask-item-bd: color-mix(in srgb, #94a3b8 24%, transparent);
+  --subtask-item-hover-bg: color-mix(in srgb, #818cf8 14%, transparent);
+  --subtask-item-hover-bd: color-mix(in srgb, #818cf8 26%, transparent);
+}
+
+.dark #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn.sub-task-pill--done,
+.dark #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill.sub-task-pill--done {
+  background: color-mix(in srgb, #22c55e 18%, transparent) !important;
+  border-color: color-mix(in srgb, #22c55e 36%, transparent) !important;
+  color: #9ee6b7 !important;
+}
+
+.dark #taskMode .list-panel #tList .task-expand-area .sub-ck {
+  border-color: color-mix(in srgb, #94a3b8 58%, transparent) !important;
+}
