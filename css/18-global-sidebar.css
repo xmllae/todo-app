@@ -1659,10 +1659,10 @@
 
   .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-card .task-ghost-input-row.task-row {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: auto auto auto minmax(0, 1fr);
     align-items: center;
-    column-gap: 10px;
-    padding: 14px 15px 12px 13px;
+    column-gap: 5px;
+    padding: 14px 15px 12px 4px;
     min-height: 56px;
   }
 
@@ -1672,22 +1672,47 @@
   }
 
   .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-card .task-ck-slot.add-embed-ck-slot {
-    width: 38px;
-    min-width: 38px;
+    grid-column: 3;
+    grid-row: 1;
+    width: 34px;
+    min-width: 34px;
+    height: 22px;
+    min-height: 22px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     padding: 0;
+    align-self: flex-start;
+    margin-top: -1px;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-card .task-ck-slot.add-embed-ck-slot > .task-ck-ring,
+  .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-card .task-ck-slot.add-embed-ck-slot .tc-check {
+    width: 34px;
+    min-width: 34px;
+    height: 22px;
+    min-height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-card .task-ghost-dashed-ring {
-    width: 23px !important;
-    height: 23px !important;
-    border-width: 2px !important;
+    width: 18px !important;
+    height: 18px !important;
+    min-width: 18px !important;
+    min-height: 18px !important;
+    border-width: 1.5px !important;
     border-style: dashed !important;
     border-color: #c8d4e6 !important;
     background: #f8fbff !important;
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55) !important;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-card .task-ghost-input {
+    grid-column: 4;
+    grid-row: 1;
+    min-width: 0;
   }
 
   .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-input {
@@ -2703,5 +2728,85 @@
   .app.app--with-global-nav #taskMode .list-panel #tList .task-item > .task-row > .task-actions {
     min-width: 64px;
     margin-left: 6px;
+  }
+}
+
+/* Final guard: hard-lock add-inline card and dashed ring to the same X axis as task rows. */
+#taskMode .list-panel #addEmbedWrap {
+  box-sizing: border-box !important;
+  width: calc(100% - 56px) !important;
+  margin: 8px 28px 10px !important;
+  padding: 0 !important;
+}
+
+#taskMode .list-panel #addTaskInlineHold .task-ghost-card .task-ghost-input-row.task-row {
+  position: relative !important;
+  display: block !important;
+  min-height: 56px !important;
+  padding: 14px 15px 12px 44px !important;
+}
+
+#taskMode .list-panel #addTaskInlineHold .task-ghost-card .task-ghost-input-row.task-row > .priority-bar,
+#taskMode .list-panel #addTaskInlineHold .task-ghost-card .task-ghost-input-row.task-row > .task-rail {
+  display: none !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+#taskMode .list-panel #addTaskInlineHold .task-ghost-card .task-ck-slot.add-embed-ck-slot {
+  position: absolute !important;
+  left: 4px !important;
+  top: 13px !important;
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 22px !important;
+  min-height: 22px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+#taskMode .list-panel #addTaskInlineHold .task-ghost-card .task-ck-slot.add-embed-ck-slot > .task-ck-ring,
+#taskMode .list-panel #addTaskInlineHold .task-ghost-card .task-ck-slot.add-embed-ck-slot .tc-check {
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 22px !important;
+  min-height: 22px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+#taskMode .list-panel #addTaskInlineHold .task-ghost-card .task-ghost-input {
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+#taskMode .list-panel #addTaskInlineHold .task-ghost-card .task-ghost-dashed-ring {
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  min-height: 18px !important;
+  border-width: 1.5px !important;
+}
+
+@media (max-width: 960px) {
+  #taskMode .list-panel #addEmbedWrap {
+    width: calc(100% - 28px) !important;
+    margin: 8px 14px 10px !important;
+  }
+}
+
+@media (min-width: 1181px) {
+  #taskMode .list-panel #addTaskInlineHold .task-ghost-card .task-ghost-input-row.task-row {
+    padding-left: 64px !important;
+  }
+
+  #taskMode .list-panel #addTaskInlineHold .task-ghost-card .task-ck-slot.add-embed-ck-slot {
+    left: 24px !important;
   }
 }
