@@ -1,4 +1,14 @@
 (function () {
+  var _ensureHeaderLayoutRaf = 0;
+
+  function scheduleEnsureHeaderLayout() {
+    if (_ensureHeaderLayoutRaf) return;
+    _ensureHeaderLayoutRaf = window.requestAnimationFrame(function () {
+      _ensureHeaderLayoutRaf = 0;
+      ensureHeaderLayout();
+    });
+  }
+
   function isDesktop() {
     return window.matchMedia("(min-width: 1181px)").matches;
   }
@@ -153,7 +163,9 @@
     window[key] = true;
     window[name] = function () {
       var ret = fn.apply(this, arguments);
-      setTimeout(ensureHeaderLayout, 0);
+      // Run once synchronously to avoid first-paint jump, then one RAF pass as a safety net.
+      ensureHeaderLayout();
+      scheduleEnsureHeaderLayout();
       return ret;
     };
   }
@@ -173,13 +185,16 @@
     boot();
   }
 
+  window.ensureScheduleHeaderLayoutNow = ensureHeaderLayout;
+  window.ensureScheduleHeaderLayout = scheduleEnsureHeaderLayout;
+
   window.addEventListener("resize", function () {
-    setTimeout(ensureHeaderLayout, 0);
+    scheduleEnsureHeaderLayout();
   });
   window.addEventListener("hashchange", function () {
-    setTimeout(ensureHeaderLayout, 0);
+    scheduleEnsureHeaderLayout();
   });
   window.addEventListener("popstate", function () {
-    setTimeout(ensureHeaderLayout, 0);
+    scheduleEnsureHeaderLayout();
   });
 })();

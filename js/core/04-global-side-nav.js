@@ -499,6 +499,9 @@
       window._globalSideNavApplyMode = true;
       var originalApplyMode = applyMode;
       applyMode = function () {
+        // Ensure task layout class/nav are ready before page mode render,
+        // avoiding first-frame style swap on route switch.
+        ensureSideNav();
         var result = originalApplyMode.apply(this, arguments);
         ensureSideNav();
         scheduleRefresh();

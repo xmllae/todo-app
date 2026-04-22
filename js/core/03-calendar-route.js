@@ -19,6 +19,19 @@ function toggleDark(){isDark=!isDark;document.body.classList.toggle("dark",isDar
 const ROUTE_MAP={"/":"task","/kanban":"kanban","/settings":"settings","/statistics":"stats","/subscriptions":"subscriptions"};
 const MODE_PATH={task:"/",kanban:"/kanban",settings:"/settings",stats:"/statistics",subscriptions:"/subscriptions"};
 function getPathMode(path){const normalized=path.replace(/\/+$/,"");return ROUTE_MAP[normalized]||ROUTE_MAP[path]||"task"}
+let _lastAppliedMode=null;
+let _taskEnterNoMotionTimer=null;
+function markTaskModeRouteEnter(){
+  const taskModeEl=document.getElementById("taskMode");
+  if(!taskModeEl)return;
+  taskModeEl.classList.add("task-mode--route-enter");
+  if(_taskEnterNoMotionTimer){clearTimeout(_taskEnterNoMotionTimer);_taskEnterNoMotionTimer=null}
+  _taskEnterNoMotionTimer=setTimeout(function(){
+    const el=document.getElementById("taskMode");
+    if(el)el.classList.remove("task-mode--route-enter");
+    _taskEnterNoMotionTimer=null;
+  },220);
+}
 
 /**
  * 导航高亮背景块的移动函数
@@ -48,12 +61,18 @@ function moveModeToggleIndicator(btn, noAnim){
  */
 function syncNavHighlight(path){const normalized=path.replace(/\/+$/,"");document.querySelectorAll("#modeToggle .mode-btn").forEach(b=>{const btnPath=b.dataset.path.replace(/\/+$/,"");const isAct=btnPath===normalized;b.classList.toggle("active",isAct);const ico=b.querySelector(".nav-ph-ico");if(ico){ico.classList.toggle("ph",!isAct);ico.classList.toggle("ph-fill",isAct)}});const activeBtn=document.querySelector("#modeToggle .mode-btn.active");requestAnimationFrame(()=>moveModeToggleIndicator(activeBtn))}
 function applyMode(mode){
+  const prevMode=_lastAppliedMode;
   ["taskMode","kanbanMode","settingsMode","statsMode","subscriptionsMode"].forEach(id=>{
     const el=document.getElementById(id);
     if(el)el.classList.add("hidden")
   });
   if(typeof updateHeaderContext==="function")updateHeaderContext();
-  if(mode==="task")document.getElementById("taskMode").classList.remove("hidden");
+  if(mode==="task"){
+    const taskModeEl=document.getElementById("taskMode");
+    if(taskModeEl)taskModeEl.classList.remove("hidden");
+    if(typeof ensureScheduleHeaderLayoutNow==="function")ensureScheduleHeaderLayoutNow();
+    if(prevMode&&prevMode!=="task")markTaskModeRouteEnter();
+  }
   else if(mode==="kanban")document.getElementById("kanbanMode").classList.remove("hidden");
   else if(mode==="settings"){
     document.getElementById("settingsMode").classList.remove("hidden");
@@ -64,9 +83,11 @@ function applyMode(mode){
     const sm=document.getElementById("subscriptionsMode");
     if(sm)sm.classList.remove("hidden");
     if(typeof rSubscriptions==="function")rSubscriptions();
+    _lastAppliedMode=mode;
     return
   }
   rAll()
+  _lastAppliedMode=mode;
 }
 function getCurrentPath(){if(location.protocol==="file:"){const h=location.hash.replace(/^#/,"");return h||"/"}return location.pathname}
 function navigate(path){const normalized=path.replace(/\/+$/,"");try{if(location.protocol==="file:"){location.hash=normalized}else{const current=location.pathname.replace(/\/+$/,"");if(current!==normalized)history.pushState({path:normalized},"",normalized)}}catch(e){}syncNavHighlight(normalized);applyMode(getPathMode(normalized))}
