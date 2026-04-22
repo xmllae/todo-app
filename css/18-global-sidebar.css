@@ -1616,6 +1616,7 @@
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
+    overflow: visible;
   }
 
   .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold.hidden {
@@ -1631,6 +1632,7 @@
     padding: 0 28px;
     margin: 8px 0 10px;
     box-sizing: border-box;
+    z-index: 80;
   }
 
   .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-card {
@@ -1641,7 +1643,7 @@
     box-shadow:
       0 1px 2px rgba(15, 23, 42, 0.035),
       0 10px 22px rgba(15, 23, 42, 0.04);
-    overflow: hidden;
+    overflow: visible;
   }
 
   .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold.task-add-inline-open .task-ghost-card {
@@ -1734,6 +1736,131 @@
     border-color: #c4d1e3;
     background: #f8fafc;
     color: #475569;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-dropdown {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    z-index: 36;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-dropdown.is-open {
+    z-index: 96;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-btn {
+    min-width: 122px;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 5px 9px;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-btn-copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-preview-flag {
+    width: 14px;
+    height: 14px;
+    display: block;
+    flex-shrink: 0;
+    color: #64748b;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-btn.is-high .task-ghost-priority-preview-flag {
+    color: #d1453b;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-btn.is-normal .task-ghost-priority-preview-flag {
+    color: #64748b;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-arrow-wrap {
+    width: 14px;
+    height: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-arrow {
+    width: 13px;
+    height: 13px;
+    color: #64748b;
+    transition: transform 0.18s ease, color 0.18s ease;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-dropdown.is-open .task-ghost-priority-arrow {
+    transform: rotate(180deg);
+    color: #334155;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-menu {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 8px);
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    width: 148px;
+    padding: 6px;
+    border-radius: 10px;
+    border: 1px solid #d7e0ec;
+    background: #fff;
+    box-shadow:
+      0 12px 26px rgba(15, 23, 42, 0.14),
+      0 3px 8px rgba(15, 23, 42, 0.06);
+    z-index: 120;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-menu.open {
+    display: flex;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-option {
+    width: 100%;
+    border: none;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 9px;
+    border-radius: 8px;
+    font-size: 0.79rem;
+    font-weight: 560;
+    color: #4b5563;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-option:hover {
+    background: #f3f4f6;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-option.selected {
+    background: #eef2ff;
+    color: #3730a3;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-flag {
+    width: 15px;
+    height: 15px;
+    display: block;
+    flex-shrink: 0;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-flag--high {
+    color: #d1453b;
+  }
+
+  .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-flag--normal {
+    color: #94a3b8;
   }
 
   .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-dur-inline {
@@ -1833,6 +1960,27 @@
   .dark .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-footer {
     border-top-color: rgba(148, 163, 184, 0.2);
     background: rgba(15, 23, 42, 0.56);
+  }
+
+  .dark .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-menu {
+    background: #111827;
+    border-color: rgba(148, 163, 184, 0.36);
+    box-shadow:
+      0 16px 30px rgba(2, 6, 23, 0.46),
+      0 2px 6px rgba(2, 6, 23, 0.3);
+  }
+
+  .dark .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-option {
+    color: #cbd5e1;
+  }
+
+  .dark .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-option:hover {
+    background: rgba(148, 163, 184, 0.14);
+  }
+
+  .dark .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-option.selected {
+    background: rgba(79, 70, 229, 0.22);
+    color: #e0e7ff;
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split-main svg {
