@@ -1918,9 +1918,9 @@
   }
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-item.task-item--title-editing {
-    background: #fff !important;
-    border-color: color-mix(in srgb, var(--task-bd) 56%, transparent) !important;
-    box-shadow: 0 1px 0 rgba(15, 23, 42, 0.025) !important;
+    background: #fcfbff !important;
+    border-color: #b9a8ff !important;
+    box-shadow: none !important;
   }
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-item.task-item--title-editing > .task-row > .task-ck-slot,
@@ -1966,9 +1966,9 @@
   }
 
   .dark .app.app--with-global-nav #taskMode .list-panel #tList .task-item.task-item--title-editing {
-    background: var(--card) !important;
-    border-color: color-mix(in srgb, var(--task-bd) 56%, transparent) !important;
-    box-shadow: 0 1px 0 rgba(15, 23, 42, 0.025) !important;
+    background: color-mix(in srgb, #6d5ed8 10%, var(--card)) !important;
+    border-color: #8f7cff !important;
+    box-shadow: none !important;
   }
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col {
