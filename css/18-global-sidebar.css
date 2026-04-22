@@ -1605,14 +1605,14 @@
     pointer-events: none;
     overflow: hidden;
     transition:
-      max-height 0.34s cubic-bezier(0.16, 1, 0.3, 1),
+      max-height 0.3s cubic-bezier(0.22, 1, 0.36, 1),
       opacity 0.2s ease,
-      transform 0.34s cubic-bezier(0.16, 1, 0.3, 1);
+      transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
     will-change: max-height, opacity, transform;
   }
 
   .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold.task-add-inline-open {
-    max-height: 560px;
+    max-height: var(--task-add-inline-max-h, 560px);
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
@@ -2735,8 +2735,13 @@
 #taskMode .list-panel #addEmbedWrap {
   box-sizing: border-box !important;
   width: calc(100% - 56px) !important;
-  margin: 8px 28px 10px !important;
+  margin: 0 28px !important;
   padding: 0 !important;
+  transition: margin 0.3s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+#taskMode .list-panel #addEmbedWrap.add-embed-active {
+  margin: 8px 28px 10px !important;
 }
 
 #taskMode .list-panel #addTaskInlineHold .task-ghost-card .task-ghost-input-row.task-row {
@@ -2797,8 +2802,17 @@
 @media (max-width: 960px) {
   #taskMode .list-panel #addEmbedWrap {
     width: calc(100% - 28px) !important;
+    margin: 0 14px !important;
+  }
+
+  #taskMode .list-panel #addEmbedWrap.add-embed-active {
     margin: 8px 14px 10px !important;
   }
+}
+
+#taskMode .list-panel #addEmbedWrap:has(#addTaskInlineHold.hidden):has(#quickImportBox.hidden) {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
 }
 
 @media (min-width: 1181px) {
