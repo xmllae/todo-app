@@ -103,6 +103,51 @@
     });
   }
 
+  function syncQuickImportShortcutState(addSplit) {
+    if (!addSplit) return;
+    var quickBtn = addSplit.querySelector(".add-split-quick");
+    if (!quickBtn) return;
+    var quickBox = document.getElementById("quickImportBox");
+    var isOpen = !!(quickBox && !quickBox.classList.contains("hidden"));
+    quickBtn.classList.toggle("is-open", isOpen);
+    quickBtn.setAttribute("aria-pressed", isOpen ? "true" : "false");
+  }
+
+  function ensureQuickImportShortcut(addSplit) {
+    if (!addSplit) return;
+    var mainBtn = addSplit.querySelector(".add-split-main");
+    if (!mainBtn) return;
+
+    addSplit.classList.add("add-split--quick-shortcut");
+
+    var quickBtn = addSplit.querySelector(".add-split-quick");
+    if (!quickBtn) {
+      quickBtn = document.createElement("button");
+      quickBtn.type = "button";
+      quickBtn.className = "add-split-quick";
+      quickBtn.setAttribute("title", "\u5feb\u901f\u5bfc\u5165");
+      quickBtn.setAttribute("aria-label", "\u5feb\u901f\u5bfc\u5165");
+      quickBtn.innerHTML =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>';
+      quickBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (typeof closeAddSplitMenu === "function") closeAddSplitMenu();
+        if (typeof toggleQuickImport === "function") toggleQuickImport();
+        if (typeof syncQuickImportEntryState === "function") {
+          window.requestAnimationFrame(syncQuickImportEntryState);
+        } else {
+          window.requestAnimationFrame(function () {
+            syncQuickImportShortcutState(addSplit);
+          });
+        }
+      });
+      addSplit.insertBefore(quickBtn, mainBtn);
+    }
+
+    syncQuickImportShortcutState(addSplit);
+  }
+
   function ensureHeaderLayout(forceRunWhenHidden) {
     var taskMode = document.getElementById("taskMode");
     if (!taskMode || (!forceRunWhenHidden && taskMode.classList.contains("hidden"))) return;
@@ -125,6 +170,8 @@
     if (!isDesktop()) {
       restoreArrowOrder(dateNav);
       if (movedAdd) batchLeft.insertBefore(movedAdd, batchLeft.firstChild || null);
+      var inlineAdd = batchLeft.querySelector(".add-split");
+      if (inlineAdd) ensureQuickImportShortcut(inlineAdd);
       var desktopTodayBtns = dateNav.querySelectorAll(".date-nav-today-btn");
       desktopTodayBtns.forEach(function (el) {
         el.remove();
@@ -151,6 +198,8 @@
 
     var addSplit = batchBar.querySelector(".batch-bar-left .add-split");
     if (addSplit) actionWrap.appendChild(addSplit);
+    var actionAddSplit = actionWrap.querySelector(".add-split");
+    if (actionAddSplit) ensureQuickImportShortcut(actionAddSplit);
 
     ensureSortButtonLabel(batchBar);
   }

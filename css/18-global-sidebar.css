@@ -1551,6 +1551,53 @@
     height: 15px;
   }
 
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut {
+    height: 40px;
+    min-height: 40px;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    gap: 10px;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut .add-split-main {
+    height: 40px;
+    min-height: 40px;
+    padding: 0 16px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #7c3aed, #6d28d9);
+    box-shadow:
+      0 7px 16px rgba(109, 40, 217, 0.16),
+      0 1px 4px rgba(109, 40, 217, 0.14);
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut .add-split-quick {
+    height: 40px;
+    min-height: 40px;
+    width: 40px;
+    min-width: 40px;
+    padding: 0;
+    border-radius: 12px;
+    border: 1px solid #d7e0ee;
+    background: #fff;
+    color: #4f5f79;
+    box-shadow: 0 2px 8px rgba(148, 163, 184, 0.2);
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut .add-split-quick:hover {
+    color: #334155;
+    border-color: #becde3;
+    background: #f8fbff;
+    box-shadow: 0 3px 10px rgba(148, 163, 184, 0.25);
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut .add-split-quick.is-open {
+    color: #4338ca;
+    border-color: #c7d2fe;
+    background: #eef2ff;
+    box-shadow: 0 2px 9px rgba(99, 102, 241, 0.18);
+  }
+
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split-panel {
     position: absolute;
     top: calc(100% + 8px);
@@ -2161,6 +2208,25 @@
   .dark .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-option.selected {
     background: rgba(79, 70, 229, 0.22);
     color: #e0e7ff;
+  }
+
+  .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut .add-split-main {
+    box-shadow:
+      0 8px 20px rgba(76, 29, 149, 0.34),
+      0 1px 4px rgba(30, 41, 59, 0.32);
+  }
+
+  .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut .add-split-quick {
+    background: rgba(148, 163, 184, 0.14);
+    border-color: rgba(148, 163, 184, 0.4);
+    color: #d3dce9;
+    box-shadow: none;
+  }
+
+  .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut .add-split-quick:hover {
+    background: rgba(129, 140, 248, 0.2);
+    border-color: rgba(129, 140, 248, 0.46);
+    color: #e5e7ff;
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split-main svg {
