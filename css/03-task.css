@@ -264,7 +264,7 @@
   min-width: 0 !important;
   align-self: stretch !important;
   justify-content: flex-start !important;
-  column-gap: 12px !important;
+  column-gap: 15px !important;
   row-gap: 2px !important;
   padding: 0 !important;
   margin: 3px 0 0 -2px !important;
@@ -278,7 +278,7 @@
 #taskMode .list-panel #tList .task-row-center > .task-time-col .time-plain.time-disp {
   display: inline-flex !important;
   align-items: center !important;
-  gap: 3px !important;
+  gap: 5px !important;
   min-height: 16px !important;
   padding: 0 !important;
   border: 0 !important;
@@ -322,7 +322,7 @@
 #taskMode .list-panel #tList .task-row-center > .task-time-col .task-recur-badge {
   display: inline-flex !important;
   align-items: center !important;
-  gap: 3px !important;
+  gap: 5px !important;
   min-height: 16px !important;
   max-width: 100% !important;
   padding: 0 !important;
@@ -372,7 +372,7 @@
 #taskMode .list-panel #tList .task-row-center > .task-time-col.task-time-col--pill-edit .time-edit.time-edit--pill {
   display: inline-flex !important;
   align-items: center !important;
-  gap: 3px !important;
+  gap: 5px !important;
   min-height: 16px !important;
   width: auto !important;
   max-width: 100% !important;
@@ -468,7 +468,7 @@
   box-shadow: none !important;
   min-height: 16px !important;
   padding: 1px 3px 1px 2px !important;
-  gap: 3px !important;
+  gap: 5px !important;
   font-size: 11px !important;
   font-weight: 600 !important;
   line-height: 1.25 !important;
@@ -688,7 +688,7 @@
   min-width: 0 !important;
   align-self: stretch !important;
   justify-content: flex-start !important;
-  column-gap: 12px !important;
+  column-gap: 15px !important;
   row-gap: 2px !important;
   padding: 0 !important;
   margin: 3px 0 0 -2px !important;
@@ -700,7 +700,7 @@
 .task-item.task-item--collapse-ghost .task-row-center > .task-time-col .time-edit.time-edit--pill {
   display: inline-flex !important;
   align-items: center !important;
-  gap: 3px !important;
+  gap: 5px !important;
   min-height: 16px !important;
   padding: 0 !important;
   border: 0 !important;
@@ -751,7 +751,7 @@
   box-shadow: none !important;
   min-height: 16px !important;
   padding: 1px 3px 1px 2px !important;
-  gap: 3px !important;
+  gap: 5px !important;
   font-size: 11px !important;
   font-weight: 600 !important;
   line-height: 1.25 !important;
@@ -811,7 +811,7 @@
 .task-item.task-item--collapse-ghost .task-row-center > .task-time-col .sub-task-pill-btn {
   min-height: 16px !important;
   padding: 1px 3px 1px 2px !important;
-  gap: 3px !important;
+  gap: 5px !important;
   font-size: 11px !important;
   font-weight: 600 !important;
   line-height: 1.25 !important;
@@ -1142,7 +1142,7 @@
 #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill {
   display: inline-flex !important;
   align-items: center !important;
-  gap: 3px !important;
+  gap: 5px !important;
   min-height: 16px !important;
   padding: 0 !important;
   margin: 0 !important;
@@ -1232,7 +1232,7 @@
 #taskMode .list-panel #tList .task-row-center > .task-time-col .task-recur-badge {
   display: inline-flex !important;
   align-items: center !important;
-  gap: 3px !important;
+  gap: 5px !important;
   min-height: 16px !important;
   padding: 0 !important;
   margin: 0 !important;
@@ -1283,7 +1283,7 @@
   border-radius: 0 !important;
   background: transparent !important;
   color: var(--task-meta-fg) !important;
-  gap: 4px !important;
+  gap: 5px !important;
 }
 
 #taskMode .list-panel #tList .task-item.task-item--collapse-ghost .sub-task-pill-btn .stp-icon svg,

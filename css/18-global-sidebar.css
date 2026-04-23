@@ -894,7 +894,7 @@
     margin: 0 !important;
     flex-wrap: wrap !important;
     justify-content: flex-start !important;
-    column-gap: 12px !important;
+    column-gap: 15px !important;
     row-gap: 2px !important;
     white-space: nowrap;
   }
@@ -2626,7 +2626,7 @@
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col {
     margin: 0 !important;
-    column-gap: 12px !important;
+    column-gap: 15px !important;
     row-gap: 2px !important;
     align-items: center !important;
   }
@@ -2661,7 +2661,7 @@
     font-size: 0.82rem !important;
     font-weight: 680 !important;
     line-height: 1 !important;
-    gap: 3px !important;
+    gap: 5px !important;
     margin: 0 !important;
     align-self: center !important;
     vertical-align: middle !important;
@@ -2841,7 +2841,7 @@
   font-size: 12px !important;
   font-weight: 620 !important;
   line-height: 1.2 !important;
-  gap: 3px !important;
+  gap: 5px !important;
   box-shadow: none !important;
   position: relative !important;
   text-decoration: none !important;
@@ -2913,7 +2913,7 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .task-recur-badge {
   display: inline-flex !important;
   align-items: center !important;
-  gap: 3px !important;
+  gap: 5px !important;
   min-height: 16px !important;
   padding: 0 !important;
   margin: 0 !important;
