@@ -894,7 +894,7 @@
     margin: 0 !important;
     flex-wrap: wrap !important;
     justify-content: flex-start !important;
-    column-gap: 8px !important;
+    column-gap: 12px !important;
     row-gap: 2px !important;
     white-space: nowrap;
   }
@@ -2626,7 +2626,7 @@
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col {
     margin: 0 !important;
-    column-gap: 8px !important;
+    column-gap: 12px !important;
     row-gap: 2px !important;
     align-items: center !important;
   }
