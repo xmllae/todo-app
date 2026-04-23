@@ -3190,9 +3190,9 @@
   justify-content: flex-end !important;
   align-items: center !important;
   gap: 10px !important;
-  margin-top: 12px !important;
-  padding-top: 10px !important;
-  border-top: 1px solid color-mix(in srgb, var(--task-bd) 82%, transparent) !important;
+  margin-top: 8px !important;
+  padding-top: 6px !important;
+  border-top: 0 !important;
 }
 
 #taskMode .list-panel #quickImportBox > div:last-child > button:first-child {
@@ -3293,7 +3293,7 @@
 }
 
 .dark #taskMode .list-panel #quickImportBox > div:last-child {
-  border-top-color: color-mix(in srgb, var(--task-bd) 70%, transparent) !important;
+  border-top: 0 !important;
 }
 
 .dark #taskMode .list-panel #quickImportBox > div:last-child > button:first-child {
