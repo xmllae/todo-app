@@ -3029,3 +3029,321 @@
 .app.app--with-global-nav #taskMode .list-panel.list-panel--multi #tList .task-exp-sub-bg {
   margin-left: 82px !important;
 }
+
+/* Quick Import Panel Refresh */
+#taskMode .list-panel .add-embed-wrap #quickImportBox {
+  width: 100% !important;
+  max-width: none !important;
+  box-sizing: border-box !important;
+  margin: 6px 0 14px !important;
+  padding: 14px !important;
+  border: 1px solid color-mix(in srgb, var(--task-bd) 86%, #dbe4ef) !important;
+  border-radius: 16px !important;
+  background: color-mix(in srgb, var(--card) 94%, var(--inp-bg)) !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06) !important;
+  overflow: hidden !important;
+  position: relative;
+  z-index: 1;
+}
+
+#taskMode .list-panel .add-embed-wrap #quickImportBox:not(.hidden) {
+  animation: quick-import-panel-in .24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes quick-import-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#taskMode .list-panel #quickImportBox .qi-head {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  margin: 0 0 12px !important;
+  padding: 2px 2px 0 !important;
+  min-width: 0 !important;
+}
+
+#taskMode .list-panel #quickImportBox .qi-head > span:first-child {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  min-width: 0 !important;
+  font-size: 1rem !important;
+  font-weight: 760 !important;
+  letter-spacing: -0.01em !important;
+  color: var(--text) !important;
+}
+
+#taskMode .list-panel #quickImportBox .qi-head > span:first-child svg {
+  width: 15px !important;
+  height: 15px !important;
+  margin-right: 0 !important;
+  opacity: 0.82 !important;
+  color: var(--text2) !important;
+}
+
+#taskMode .list-panel #quickImportBox .qi-head > div {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-shrink: 0 !important;
+}
+
+#taskMode .list-panel #quickImportBox .qi-head > div > button:first-child {
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 0 12px !important;
+  border-radius: 10px !important;
+  border: 1px solid color-mix(in srgb, var(--inp-bd) 90%, #dbe4ef) !important;
+  background: var(--card) !important;
+  color: var(--text2) !important;
+  font-size: 0.84rem !important;
+  font-weight: 620 !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  transition: transform .16s ease, color .16s ease, border-color .16s ease, background .16s ease !important;
+}
+
+#taskMode .list-panel #quickImportBox .qi-head > div > button:first-child:hover {
+  transform: translateY(-1px) !important;
+  color: var(--text) !important;
+  border-color: color-mix(in srgb, var(--text2) 26%, var(--inp-bd)) !important;
+  background: color-mix(in srgb, var(--card) 92%, var(--hov)) !important;
+}
+
+#taskMode .list-panel #quickImportBox .qi-head > div > button:first-child svg {
+  width: 14px !important;
+  height: 14px !important;
+  margin-right: 4px !important;
+}
+
+#taskMode .list-panel #quickImportBox .qi-head > div > button:last-child {
+  width: 30px !important;
+  min-width: 30px !important;
+  height: 30px !important;
+  min-height: 30px !important;
+  border: 0 !important;
+  border-radius: 8px !important;
+  background: transparent !important;
+  color: var(--text3) !important;
+  padding: 0 !important;
+  cursor: pointer !important;
+  transition: color .15s ease, background .15s ease, transform .15s ease !important;
+}
+
+#taskMode .list-panel #quickImportBox .qi-head > div > button:last-child:hover {
+  color: var(--text2) !important;
+  background: color-mix(in srgb, var(--text3) 16%, transparent) !important;
+  transform: none !important;
+}
+
+#taskMode .list-panel #quickImportBox .qi-body {
+  display: block !important;
+  gap: 0 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+}
+
+#taskMode .list-panel #quickImportText {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  min-height: 206px !important;
+  max-height: 56vh !important;
+  border: 1.5px solid color-mix(in srgb, var(--inp-bd) 88%, #d5deea) !important;
+  border-radius: 13px !important;
+  padding: 14px 15px !important;
+  font: inherit !important;
+  font-size: 0.92rem !important;
+  line-height: 1.72 !important;
+  color: var(--text) !important;
+  background: color-mix(in srgb, var(--card) 94%, #fbfdff) !important;
+  outline: 0 !important;
+  resize: vertical !important;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.05) !important;
+  transition: border-color .18s ease, box-shadow .18s ease, background .18s ease !important;
+}
+
+#taskMode .list-panel #quickImportText::placeholder {
+  color: color-mix(in srgb, var(--text3) 92%, #9aa7ba) !important;
+}
+
+#taskMode .list-panel #quickImportText:focus {
+  border-color: color-mix(in srgb, var(--acc) 24%, var(--inp-bd)) !important;
+  background: var(--card) !important;
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--acc) 10%, transparent),
+    inset 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+}
+
+#taskMode .list-panel #quickImportBox > div:last-child {
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin-top: 12px !important;
+  padding-top: 10px !important;
+  border-top: 1px solid color-mix(in srgb, var(--task-bd) 82%, transparent) !important;
+}
+
+#taskMode .list-panel #quickImportBox > div:last-child > button:first-child {
+  min-width: 102px !important;
+  height: 40px !important;
+  border: 0 !important;
+  border-radius: 12px !important;
+  padding: 0 18px !important;
+  background: var(--acc) !important;
+  color: #fff !important;
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  cursor: pointer !important;
+  box-shadow: 0 6px 14px color-mix(in srgb, var(--acc) 30%, transparent) !important;
+  transition: transform .16s ease, filter .16s ease, box-shadow .18s ease !important;
+}
+
+#taskMode .list-panel #quickImportBox > div:last-child > button:first-child:hover {
+  transform: translateY(-1px) !important;
+  filter: brightness(1.03) !important;
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--acc) 34%, transparent) !important;
+}
+
+#taskMode .list-panel #quickImportBox > div:last-child > button:first-child svg {
+  width: 13px !important;
+  height: 13px !important;
+  margin-right: 4px !important;
+}
+
+#taskMode .list-panel #quickImportBox > div:last-child > button:last-child {
+  height: 40px !important;
+  border-radius: 12px !important;
+  border: 1px solid color-mix(in srgb, var(--inp-bd) 94%, #dbe4ef) !important;
+  background: color-mix(in srgb, var(--card) 92%, #f8fafc) !important;
+  color: var(--text3) !important;
+  font-size: 0.92rem !important;
+  font-weight: 620 !important;
+  padding: 0 18px !important;
+  cursor: pointer !important;
+  transition: color .16s ease, border-color .16s ease, background .16s ease !important;
+}
+
+#taskMode .list-panel #quickImportBox > div:last-child > button:last-child:hover {
+  color: var(--text2) !important;
+  border-color: color-mix(in srgb, var(--text2) 22%, var(--inp-bd)) !important;
+  background: var(--card) !important;
+}
+
+.dark #taskMode .list-panel .add-embed-wrap #quickImportBox {
+  border-color: color-mix(in srgb, var(--task-bd) 86%, #475569) !important;
+  background: color-mix(in srgb, var(--card) 94%, #0f172a) !important;
+  box-shadow: 0 12px 24px rgba(2, 6, 23, 0.34) !important;
+}
+
+.dark #taskMode .list-panel #quickImportBox .qi-head > span:first-child {
+  color: #e2e8f0 !important;
+}
+
+.dark #taskMode .list-panel #quickImportBox .qi-head > span:first-child svg {
+  color: #a9b5c7 !important;
+}
+
+.dark #taskMode .list-panel #quickImportBox .qi-head > div > button:first-child {
+  border-color: color-mix(in srgb, var(--inp-bd) 90%, #5f6f86) !important;
+  background: color-mix(in srgb, var(--card) 94%, #0f172a) !important;
+  color: #cbd5e1 !important;
+}
+
+.dark #taskMode .list-panel #quickImportBox .qi-head > div > button:first-child:hover {
+  border-color: color-mix(in srgb, var(--text2) 34%, var(--inp-bd)) !important;
+  color: #e2e8f0 !important;
+  background: color-mix(in srgb, var(--card) 86%, #1f2937) !important;
+}
+
+.dark #taskMode .list-panel #quickImportBox .qi-head > div > button:last-child {
+  color: #94a3b8 !important;
+}
+
+.dark #taskMode .list-panel #quickImportBox .qi-head > div > button:last-child:hover {
+  color: #cbd5e1 !important;
+  background: color-mix(in srgb, #94a3b8 22%, transparent) !important;
+}
+
+.dark #taskMode .list-panel #quickImportText {
+  border-color: color-mix(in srgb, var(--task-bd) 82%, #475569) !important;
+  background: color-mix(in srgb, var(--card) 90%, #0f172a) !important;
+  box-shadow: inset 0 1px 2px rgba(2, 6, 23, 0.36) !important;
+}
+
+.dark #taskMode .list-panel #quickImportText::placeholder {
+  color: #8393a8 !important;
+}
+
+.dark #taskMode .list-panel #quickImportText:focus {
+  border-color: color-mix(in srgb, var(--acc2) 28%, var(--inp-bd)) !important;
+  background: color-mix(in srgb, var(--card) 95%, #111827) !important;
+}
+
+.dark #taskMode .list-panel #quickImportBox > div:last-child {
+  border-top-color: color-mix(in srgb, var(--task-bd) 70%, transparent) !important;
+}
+
+.dark #taskMode .list-panel #quickImportBox > div:last-child > button:first-child {
+  background: var(--acc) !important;
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--acc) 34%, transparent) !important;
+}
+
+.dark #taskMode .list-panel #quickImportBox > div:last-child > button:last-child {
+  border-color: color-mix(in srgb, var(--task-bd) 80%, #5f6f86) !important;
+  background: color-mix(in srgb, var(--card) 92%, #0f172a) !important;
+  color: #93a4b8 !important;
+}
+
+@media (max-width: 680px) {
+  #taskMode .list-panel .add-embed-wrap #quickImportBox {
+    margin: 6px 0 10px !important;
+    padding: 12px !important;
+    border-radius: 14px !important;
+  }
+
+  #taskMode .list-panel #quickImportBox .qi-head {
+    margin-bottom: 10px !important;
+  }
+
+  #taskMode .list-panel #quickImportBox .qi-head > span:first-child {
+    font-size: .94rem !important;
+  }
+
+  #taskMode .list-panel #quickImportBox .qi-head > div > button:first-child {
+    height: 32px !important;
+    min-height: 32px !important;
+    padding: 0 10px !important;
+    font-size: .8rem !important;
+  }
+
+  #taskMode .list-panel #quickImportText {
+    min-height: 170px !important;
+    padding: 12px !important;
+    font-size: .88rem !important;
+  }
+
+  #taskMode .list-panel #quickImportBox > div:last-child {
+    justify-content: stretch !important;
+    gap: 8px !important;
+  }
+
+  #taskMode .list-panel #quickImportBox > div:last-child > button:first-child,
+  #taskMode .list-panel #quickImportBox > div:last-child > button:last-child {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    padding: 0 10px !important;
+  }
+}
