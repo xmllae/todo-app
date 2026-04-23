@@ -722,7 +722,7 @@
 
   .app.app--with-global-nav #taskMode .list-panel .batch-bar {
     padding: 4px 18px 10px !important;
-    border-bottom: 1px solid color-mix(in srgb, var(--task-bd) 64%, transparent) !important;
+    border-bottom: 0 !important;
   }
 
   .app.app--with-global-nav #taskMode .batch-bar-row {
@@ -2244,7 +2244,7 @@
 
   .app.app--with-global-nav #taskMode .list-panel .batch-bar {
     padding: 0 28px 2px !important;
-    border-bottom: 1px solid color-mix(in srgb, var(--task-bd) 72%, transparent) !important;
+    border-bottom: 0 !important;
   }
 
   .app.app--with-global-nav #taskMode .batch-bar-row {
