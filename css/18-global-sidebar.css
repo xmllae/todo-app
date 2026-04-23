@@ -2288,12 +2288,12 @@
     position: absolute;
     left: 0;
     bottom: -3px;
-    width: var(--seg-indicator-w, 0px);
+    width: calc(var(--seg-indicator-w, 0px) + 8px);
     height: 3px;
     border-radius: 999px;
     background: #8b5cf6;
     opacity: var(--seg-indicator-o, 0);
-    transform: translateX(var(--seg-indicator-x, 0px));
+    transform: translateX(calc(var(--seg-indicator-x, 0px) - 4px));
     transition:
       transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
       width 0.28s cubic-bezier(0.22, 1, 0.36, 1),
@@ -2327,7 +2327,7 @@
   }
 
   .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-btn {
-    padding: 0 0 10px !important;
+    padding: 0 0 3px !important;
     border: 0 !important;
     border-radius: 0 !important;
     background: transparent !important;
@@ -2355,8 +2355,8 @@
   .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-btn.is-active::after {
     content: '';
     position: absolute;
-    left: 0;
-    right: 0;
+    left: -4px;
+    right: -4px;
     bottom: -3px;
     height: 3px;
     border-radius: 999px;
@@ -2504,7 +2504,7 @@
 
   .app.app--with-global-nav #taskMode .list-panel .tasks {
     width: 100%;
-    margin: 6px 0 14px;
+    margin: 11px 0 14px;
     padding: 0 28px !important;
     border: 0;
     border-radius: 0;
