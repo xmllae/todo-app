@@ -2037,6 +2037,111 @@
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
 }
 
+.drawer-subtasks-pref {
+    position: relative;
+    display: block;
+    margin: -1px 0 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.drawer-subtasks-pref-checkbox {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.drawer-subtasks-pref-inner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 34px;
+    padding: 0 10px;
+    border-radius: 8px;
+    border: 1px solid color-mix(in srgb, var(--inp-bd) 66%, transparent);
+    background: color-mix(in srgb, var(--card) 88%, #f8fafc);
+    color: var(--text2);
+    transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease;
+}
+
+.drawer-subtasks-pref-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    height: 15px;
+    color: color-mix(in srgb, var(--text3) 92%, #94a3b8);
+    flex-shrink: 0;
+}
+
+.drawer-subtasks-pref-icon .ph {
+    width: 15px;
+    height: 15px;
+    stroke-width: 2;
+}
+
+.drawer-subtasks-pref-text {
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0;
+}
+
+.drawer-subtasks-pref-switch {
+    margin-left: auto;
+    width: 32px;
+    height: 18px;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--inp-bd) 72%, #e2e8f0);
+    display: inline-flex;
+    align-items: center;
+    padding: 2px;
+    transition: background 0.18s ease;
+    flex-shrink: 0;
+}
+
+.drawer-subtasks-pref-knob {
+    width: 14px;
+    height: 14px;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.18);
+    transition: transform 0.18s ease;
+}
+
+.drawer-subtasks-pref:hover .drawer-subtasks-pref-inner {
+    border-color: color-mix(in srgb, var(--inp-bd) 92%, transparent);
+    background: color-mix(in srgb, var(--card) 82%, #f8fafc);
+    color: var(--text);
+}
+
+.drawer-subtasks-pref-checkbox:focus-visible + .drawer-subtasks-pref-inner {
+    border-color: color-mix(in srgb, var(--acc2, var(--acc)) 52%, #a5b4fc);
+}
+
+.drawer-subtasks-pref-checkbox:checked + .drawer-subtasks-pref-inner {
+    border-color: color-mix(in srgb, var(--acc2, var(--acc)) 40%, #a5b4fc);
+    background: color-mix(in srgb, var(--acc2, var(--acc)) 8%, var(--card));
+}
+
+.drawer-subtasks-pref-checkbox:checked + .drawer-subtasks-pref-inner .drawer-subtasks-pref-icon {
+    color: color-mix(in srgb, var(--acc2, var(--acc)) 84%, #4f46e5);
+}
+
+.drawer-subtasks-pref-checkbox:checked + .drawer-subtasks-pref-inner .drawer-subtasks-pref-switch {
+    background: color-mix(in srgb, var(--acc2, var(--acc)) 68%, #6366f1);
+}
+
+.drawer-subtasks-pref-checkbox:checked + .drawer-subtasks-pref-inner .drawer-subtasks-pref-knob {
+    transform: translateX(14px);
+}
+
 /* Tags */
 .drawer-tag {
     display: inline-flex;
@@ -2688,6 +2793,42 @@
     background: linear-gradient(180deg, color-mix(in srgb, var(--card) 86%, #1f2937) 0%, color-mix(in srgb, var(--hov) 74%, #111827) 100%);
     border-color: color-mix(in srgb, var(--inp-bd) 62%, transparent);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.dark .drawer-subtasks-pref {
+    border-radius: 8px;
+}
+
+.dark .drawer-subtasks-pref-inner {
+    border-color: color-mix(in srgb, var(--inp-bd) 58%, transparent);
+    background: color-mix(in srgb, var(--card) 82%, #111827);
+    color: color-mix(in srgb, var(--text2) 90%, #e2e8f0);
+}
+
+.dark .drawer-subtasks-pref:hover .drawer-subtasks-pref-inner {
+    border-color: color-mix(in srgb, var(--inp-bd) 76%, transparent);
+    background: color-mix(in srgb, var(--card) 76%, #111827);
+}
+
+.dark .drawer-subtasks-pref-icon {
+    color: color-mix(in srgb, var(--text3) 86%, #94a3b8);
+}
+
+.dark .drawer-subtasks-pref-switch {
+    background: color-mix(in srgb, var(--inp-bd) 60%, #334155);
+}
+
+.dark .drawer-subtasks-pref-checkbox:checked + .drawer-subtasks-pref-inner {
+    border-color: color-mix(in srgb, var(--acc2, var(--acc)) 44%, #818cf8);
+    background: color-mix(in srgb, var(--acc2, var(--acc)) 14%, color-mix(in srgb, var(--card) 84%, #111827));
+}
+
+.dark .drawer-subtasks-pref-checkbox:checked + .drawer-subtasks-pref-inner .drawer-subtasks-pref-switch {
+    background: color-mix(in srgb, var(--acc2, var(--acc)) 72%, #6366f1);
+}
+
+.dark .drawer-subtasks-pref-checkbox:checked + .drawer-subtasks-pref-inner .drawer-subtasks-pref-icon {
+    color: color-mix(in srgb, var(--acc2, var(--acc)) 84%, #a5b4fc);
 }
 
 .dark .drawer-notes-textarea {

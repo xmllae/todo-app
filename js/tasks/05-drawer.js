@@ -908,6 +908,7 @@ function renderDrawerContent(task) {
     const ringRippleClass = isPendingDone || (window._chkRippleTaskId != null && window._chkRippleTaskId == task.id)
         ? ' chk-ring--ripple'
         : '';
+    const showSubtasksByDefault = task.showSubtasksByDefault !== false;
 
     content.innerHTML = `
         <div class="drawer-task-title ${isDone ? 'drawer-task-title--done' : ''}" data-task-id="${task.id}">
@@ -1061,6 +1062,21 @@ function renderDrawerContent(task) {
             </div>
             ${(task.subtasks || []).length > 0 ? `<span class="drawer-section-count">${getSubtaskDoneCount(task)}/${task.subtasks.length}</span>` : ''}
         </div>
+
+        <label class="drawer-subtasks-pref" onclick="event.stopPropagation()">
+            <input type="checkbox"
+                   class="drawer-subtasks-pref-checkbox"
+                   id="drawer-subtasks-default-toggle-${task.id}"
+                   ${showSubtasksByDefault ? 'checked' : ''}
+                   onchange="toggleDrawerDefaultSubtasks(${task.id}, this.checked)">
+            <span class="drawer-subtasks-pref-inner">
+                <span class="drawer-subtasks-pref-icon" aria-hidden="true">${getDrawerPhosphorIcon('list-checks')}</span>
+                <span class="drawer-subtasks-pref-text">\u9ed8\u8ba4\u5c55\u793a\u5b50\u4efb\u52a1</span>
+                <span class="drawer-subtasks-pref-switch" aria-hidden="true">
+                    <span class="drawer-subtasks-pref-knob"></span>
+                </span>
+            </span>
+        </label>
 
         <div class="drawer-subtasks-list">
             ${subtasksHtml}
@@ -1389,6 +1405,19 @@ function autoResizeDrawerNotes(textarea) {
     textarea.style.height = 'auto';
     textarea.style.height = Math.max(minHeight, textarea.scrollHeight) + 'px';
     scheduleDrawerScrollbarSync();
+}
+
+function toggleDrawerDefaultSubtasks(taskId, checked) {
+    const task = findTaskById(taskId);
+    if (!task) return;
+
+    task.showSubtasksByDefault = !!checked;
+
+    if (!checked && typeof expandedId !== 'undefined' && expandedId === task.id) {
+        expandedId = null;
+    }
+
+    persistTaskDetailChanges(task, { kanban: true });
 }
 
 function toggleSubtaskInDrawer(taskId, subtaskId) {
