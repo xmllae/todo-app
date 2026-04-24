@@ -1,14 +1,301 @@
-// ???????????????????
-function ensureSubMode(){var appShell=document.querySelector("#appMain .app");var mount=appShell||document.getElementById("appMain");var existing=document.getElementById("subscriptionsMode");if(existing){if(mount&&existing.parentNode!==mount)mount.appendChild(existing);var _tc=existing.querySelector(".task-card");if(_tc&&!_tc.classList.contains("sub-mode-card"))_tc.classList.add("sub-mode-card");return}var d=document.createElement("div");d.id="subscriptionsMode";d.className="hidden";var h="";h+='<div class="task-card sub-mode-card">';h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">';h+='<h3 style="margin:0;font-size:1.1rem;font-weight:700"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-.15em;margin-right:6px"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>订阅管理</h3>';h+="<button onclick=\"openSubModal()\" style=\"background:var(--acc);border:none;color:#fff;padding:8px 16px;border-radius:10px;cursor:pointer;font-size:.85rem;font-weight:600;white-space:nowrap;box-shadow:0 2px 8px rgba(99,102,241,0.3);transition:all 150ms ease\" onmouseenter=\"this.style.transform='translateY(-1px)';this.style.boxShadow='0 4px 12px rgba(99,102,241,0.4)'\" onmouseleave=\"this.style.transform='';this.style.boxShadow='0 2px 8px rgba(99,102,241,0.3)'\">+ 添加</button>";h+="</div>";h+='<div id="subStats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:14px"></div>';h+='<div id="subBanner"></div>';h+='<div id="subList"></div>';h+="</div>";d.innerHTML=h;mount.appendChild(d)}
-function getSubColor(days){if(days<=0)return{bg:"#fef2f2",border:"#fca5a5",text:"#ef4444"};if(days<=30)return{bg:"#fff7ed",border:"#fed7aa",text:"#ea580c"};return{bg:"#f0fdf4",border:"#bbf7d0",text:"#16a34a"}}
-function calcDaysLeft(d){var e=new Date(d),t=new Date;t.setHours(0,0,0,0);e.setHours(0,0,0,0);return Math.ceil((e-t)/864e5)}
-function _subHighlightRow(id){var row=document.querySelector('.sub-row[data-id="'+id+'"]');if(!row)return;row.scrollIntoView({behavior:"smooth",block:"center"});row.style.transition="background .3s";row.style.background="rgba(251,191,36,.18)";setTimeout(function(){row.style.background=""},1500)}
-function _subSetSearch(v){_subSearch=v;rSubList()}
-function _subSetSort(v){_subSort=v;rSubList()}
-function _subToggleMonthFilter(){_subMonthFilter=!_subMonthFilter;rSubscriptions()}
-function _subSetTab(v){_subTabFilter=v;rSubList()}
-function _subToggleAll(checked){subscriptions.forEach(function(s){if(checked)_subSelected.add(s.id);else _subSelected.delete(s.id)});rSubList()}
-function _subToggleOne(id,checked){if(checked)_subSelected.add(id);else _subSelected.delete(id);rSubList()}
-function _subBatchDel(){if(!_subSelected.size)return;subscriptions=JSON.parse(localStorage.getItem("tuole_subs")||"[]");var names=subscriptions.filter(function(s){return _subSelected.has(s.id)}).map(function(s){return s.name});if(!confirm("确认删除 "+_subSelected.size+" 项？\n"+names.join("、")))return;subscriptions=subscriptions.filter(function(s){return!_subSelected.has(s.id)});localStorage.setItem("tuole_subs",JSON.stringify(subscriptions));if(typeof save==="function")save();_subSelected.clear();rSubscriptions();toast("🗑️ 已删除")}
-function delSub(id){subscriptions=JSON.parse(localStorage.getItem("tuole_subs")||"[]");var s=subscriptions.find(function(x){return x.id===id});var name=s?s.name:"";if(!confirm("确认删除「"+name+"」？"))return;subscriptions=subscriptions.filter(function(x){return x.id!==id});localStorage.setItem("tuole_subs",JSON.stringify(subscriptions));if(typeof save==="function")save();_subSelected.delete(id);rSubscriptions();toast("🗑️ 已删除")}
-function editSub(id){openSubModal(id)}
+// 订阅页挂载与公共工具
+function ensureSubMode() {
+  var appShell = document.querySelector("#appMain .app");
+  var mount = appShell || document.getElementById("appMain");
+  if (!mount) return;
+
+  var existing = document.getElementById("subscriptionsMode");
+  if (existing) {
+    if (existing.parentNode !== mount) mount.appendChild(existing);
+    return;
+  }
+
+  var d = document.createElement("div");
+  d.id = "subscriptionsMode";
+  d.className = "hidden";
+  d.innerHTML =
+    '<div class="sub-premium-page">' +
+    '<aside class="sub-side-nav">' +
+    '<div class="sub-side-head"><strong>总览</strong><span>Subscription OS</span></div>' +
+    '<div class="sub-side-sec">' +
+    '<div class="sub-side-title">管理</div>' +
+    '<button class="sub-side-item is-active" id="subSideAll" type="button" onclick="_subSetTab(\'all\')"><span><i class="ph ph-shield-check"></i>我的订阅</span><span class="sub-side-count" id="subNavAllCount">0</span></button>' +
+    '<button class="sub-side-item" id="subSideSoon" type="button" onclick="_subSetTab(\'soon\')"><span><i class="ph ph-arrows-clockwise"></i>即将续费</span><span class="sub-side-count" id="subNavSoonCount">0</span></button>' +
+    '<button class="sub-side-item" id="subSideExpired" type="button" onclick="_subSetTab(\'expired\')"><span><i class="ph ph-x-circle"></i>已失效</span><span class="sub-side-count" id="subNavExpiredCount">0</span></button>' +
+    '</div>' +
+    '<div class="sub-side-sec">' +
+    '<div class="sub-side-title">分类管理</div>' +
+    '<div id="subNavCategories"><div class="sub-side-empty">暂无分类</div></div>' +
+    '</div>' +
+    '<div class="sub-side-sec">' +
+    '<div class="sub-side-title">工具</div>' +
+    '<button class="sub-tool-item" type="button" onclick="_subToolToast(\'消费分析\')"><span><i class="ph ph-chart-pie-slice"></i>消费分析</span></button>' +
+    '<button class="sub-tool-item" type="button" onclick="_subToolToast(\'日历视图\')"><span><i class="ph ph-calendar"></i>日历视图</span></button>' +
+    '<button class="sub-tool-item" type="button" onclick="_subToolToast(\'优惠与折扣\')"><span><i class="ph ph-percent"></i>优惠与折扣</span></button>' +
+    '</div>' +
+    '</aside>' +
+    '<section class="sub-main-panel">' +
+    '<div class="sub-page-header">' +
+    '<div><h2 class="sub-page-title">我的订阅</h2><p class="sub-page-desc">管理你的所有订阅服务，掌控每一笔支出。</p></div>' +
+    '<button class="sub-add-btn" type="button" onclick="openSubModal()"><i class="ph ph-plus"></i>新建项目</button>' +
+    '</div>' +
+    '<div id="subStats"></div>' +
+    '<div id="subBanner"></div>' +
+    '<div id="subList"></div>' +
+    '</section>' +
+    '</div>';
+
+  mount.appendChild(d);
+}
+
+function getSubColor(days) {
+  if (days <= 0) return { bg: "#fef2f2", border: "#fca5a5", text: "#ef4444" };
+  if (days <= 7) return { bg: "#fff7ed", border: "#fdba74", text: "#ea580c" };
+  return { bg: "#ecfeff", border: "#67e8f9", text: "#0e7490" };
+}
+
+function calcDaysLeft(d) {
+  var e = new Date(d);
+  if (isNaN(e)) return 9999;
+  var t = new Date();
+  t.setHours(0, 0, 0, 0);
+  e.setHours(0, 0, 0, 0);
+  return Math.ceil((e - t) / 864e5);
+}
+
+function _subNormalizeText(v) {
+  return String(v == null ? "" : v).trim();
+}
+
+function _subFormatCurrency(v) {
+  var n = +v || 0;
+  if (n <= 0) return "—";
+  return "¥ " + n.toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function _subFormatDateTime(dateStr, timeStr) {
+  if (!dateStr) return "—";
+  var d = new Date(dateStr);
+  if (isNaN(d)) return dateStr + (timeStr ? " " + timeStr : "");
+  var y = d.getFullYear();
+  var m = String(d.getMonth() + 1).padStart(2, "0");
+  var day = String(d.getDate()).padStart(2, "0");
+  return y + "/" + m + "/" + day + (timeStr ? " " + timeStr : "");
+}
+
+function _subMonthlyCost(entry) {
+  if (!entry) return 0;
+  var v = +entry.cost || 0;
+  if (v <= 0) return 0;
+  if (entry.cycle === "month") return v;
+  if (entry.cycle === "quarter") return v / 3;
+  if (entry.cycle === "year") return v / 12;
+  if (entry.cycle === "custom") {
+    var days = +entry.customDays || 30;
+    if (days <= 0) days = 30;
+    return (v / days) * 30;
+  }
+  return v;
+}
+
+function _subCategoryLabelByKey(key) {
+  var map = {
+    entertainment: "娱乐",
+    work: "工作效率",
+    learning: "学习教育",
+    cloud: "云服务",
+    life: "生活服务",
+    other: "其他",
+  };
+  return map[key] || map.other;
+}
+
+function _subDetectCategory(s) {
+  var text = (_subNormalizeText(s && s.name) + " " + _subNormalizeText(s && s.note)).toLowerCase();
+
+  if (/(netflix|spotify|youtube|disney|music|movie|video|game|娱乐|音乐|视频|影视|动漫)/.test(text)) {
+    return { key: "entertainment", label: _subCategoryLabelByKey("entertainment") };
+  }
+  if (/(icloud|dropbox|onedrive|google drive|aws|azure|cloud|storage|网盘|存储|云)/.test(text)) {
+    return { key: "cloud", label: _subCategoryLabelByKey("cloud") };
+  }
+  if (/(coursera|udemy|edx|skillshare|learn|study|class|course|学习|课程|教育|训练营)/.test(text)) {
+    return { key: "learning", label: _subCategoryLabelByKey("learning") };
+  }
+  if (/(adobe|microsoft|office|notion|figma|github|chatgpt|claude|jira|slack|工作|效率|协作|开发|设计)/.test(text)) {
+    return { key: "work", label: _subCategoryLabelByKey("work") };
+  }
+  if (/(health|fitness|life|家庭|生活|健康|健身|个人)/.test(text)) {
+    return { key: "life", label: _subCategoryLabelByKey("life") };
+  }
+  return { key: "other", label: _subCategoryLabelByKey("other") };
+}
+
+function _subTagToneByKey(key) {
+  var map = {
+    important: "danger",
+    work: "violet",
+    entertainment: "warm",
+    learning: "sky",
+    cloud: "mint",
+    life: "warm",
+    auto: "mint",
+    manual: "muted",
+    other: "neutral",
+  };
+  return map[key] || "neutral";
+}
+
+function _subBuildLabels(s, days) {
+  var labels = [];
+  var push = function (key, text) {
+    if (!labels.some(function (x) { return x.key === key; })) {
+      labels.push({ key: key, text: text, tone: _subTagToneByKey(key) });
+    }
+  };
+
+  var cat = _subDetectCategory(s);
+  var renewal = (s && s.renewal) || "manual";
+
+  if (days >= 0 && days <= 7) push("important", "重要");
+  if (cat.key !== "other") push(cat.key, cat.label);
+  if (renewal === "auto") push("auto", "自动");
+  else push("manual", "手动");
+  if (!labels.length) push("other", "普通");
+
+  return labels.slice(0, 3);
+}
+
+function _subStatusMeta(days) {
+  if (days < 0) {
+    return { key: "expired", text: "已失效", dotClass: "is-danger", dueText: "已过期 " + Math.abs(days) + " 天", dueClass: "is-danger" };
+  }
+  if (days <= 7) {
+    return { key: "soon", text: "即将续费", dotClass: "is-warn", dueText: days === 0 ? "今天到期" : "剩 " + days + " 天", dueClass: "is-warn" };
+  }
+  return { key: "active", text: "活跃中", dotClass: "", dueText: "剩 " + days + " 天", dueClass: "" };
+}
+
+function _subMetaForEntry(s) {
+  var days = calcDaysLeft(s && s.expireDate);
+  var category = _subDetectCategory(s);
+  var labels = _subBuildLabels(s, days);
+  var status = _subStatusMeta(days);
+  return {
+    days: days,
+    category: category,
+    labels: labels,
+    status: status,
+    amount: +((s && s.cost) || 0),
+  };
+}
+
+function _subRenderSideCategories(items) {
+  var wrap = document.getElementById("subNavCategories");
+  if (!wrap) return;
+
+  if (!items || !items.length) {
+    wrap.innerHTML = '<div class="sub-side-empty">暂无可用分类</div>';
+    return;
+  }
+
+  wrap.innerHTML = items
+    .map(function (item) {
+      return (
+        '<button class="sub-cat-item' + (_subLabelFilter === item.key ? " is-active" : "") + '" data-key="' + item.key + '" type="button" onclick="_subSetLabelFilter(\'' + item.key + '\')">' +
+        '<span><i class="ph ph-folder"></i>' + esc(item.label) + '</span>' +
+        '<span class="sub-cat-count">' + item.count + "</span>" +
+        "</button>"
+      );
+    })
+    .join("");
+}
+
+function _subUpdateSideCounts(summary) {
+  summary = summary || {};
+  var all = document.getElementById("subNavAllCount");
+  var soon = document.getElementById("subNavSoonCount");
+  var expired = document.getElementById("subNavExpiredCount");
+  if (all) all.textContent = summary.total || 0;
+  if (soon) soon.textContent = summary.soon || 0;
+  if (expired) expired.textContent = summary.expired || 0;
+}
+
+function _subSyncSideActiveState() {
+  var allBtn = document.getElementById("subSideAll");
+  var soonBtn = document.getElementById("subSideSoon");
+  var expiredBtn = document.getElementById("subSideExpired");
+
+  if (allBtn) allBtn.classList.toggle("is-active", _subTabFilter === "all");
+  if (soonBtn) soonBtn.classList.toggle("is-active", _subTabFilter === "soon");
+  if (expiredBtn) expiredBtn.classList.toggle("is-active", _subTabFilter === "expired");
+
+  var catBtns = document.querySelectorAll("#subNavCategories .sub-cat-item");
+  catBtns.forEach(function (btn) {
+    btn.classList.toggle("is-active", btn.getAttribute("data-key") === _subLabelFilter);
+  });
+}
+
+function _subToolToast(name) {
+  if (typeof toast === "function") toast(name + " 功能准备中");
+}
+
+function _subSetSearch(v) {
+  _subSearch = v || "";
+  _subPage = 1;
+  rSubList();
+}
+
+function _subSetSort(v) {
+  _subSort = v || "days";
+  rSubList();
+}
+
+function _subSetTab(v) {
+  _subTabFilter = v || "all";
+  _subPage = 1;
+  rSubList();
+}
+
+function _subSetLabelFilter(v) {
+  _subLabelFilter = v || "all";
+  _subPage = 1;
+  rSubList();
+}
+
+function _subToggleMonthFilter() {
+  _subMonthFilter = !_subMonthFilter;
+  _subPage = 1;
+  rSubscriptions();
+}
+
+function _subSetPage(page) {
+  var p = parseInt(page, 10) || 1;
+  if (p < 1) p = 1;
+  _subPage = p;
+  rSubList();
+}
+
+function _subSetPageSize(size) {
+  var n = parseInt(size, 10);
+  if (!n || n < 1) n = 10;
+  _subPageSize = n;
+  _subPage = 1;
+  rSubList();
+}
+
+function _subToggleAll(checked) {
+  var rows = document.querySelectorAll("#subList .sub-table-row[data-id]");
+  rows.forEach(function (row) {
+    var id = +row.getAttribute("data-id");
+    if (checked) _subSelected.add(id);
+    else _subSelected.delete(id);
+  });
+  rSubList();
+}
+
+function _subToggleOne(id, checked) {
+  if (checked) _subSelected.add(id);
+  else _subSelected.delete(id);
+  rSubList();
+}

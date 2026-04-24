@@ -1,5 +1,80 @@
-// ?????????????????
-function _subUpdateBatchBar(){var list=document.getElementById("subList");if(!list)return;var bar=list.querySelector(".sub-batch-bar");if(_subSelected.size>0){var html='<span style="flex:1;font-size:.85rem;color:#4338ca;font-weight:600">已选 '+_subSelected.size+" 项</span>";html+='<button onclick="_subBatchDel()" style="background:#ef4444;border:none;color:#fff;padding:5px 12px;border-radius:7px;cursor:pointer;font-size:.8rem;font-weight:600">批量删除</button>';html+='<button onclick="_subBatchRenew()" style="background:#3b82f6;border:none;color:#fff;padding:5px 12px;border-radius:7px;cursor:pointer;font-size:.8rem;font-weight:600">批量续期</button>';html+='<button onclick="_subSelected.clear();_subUpdateBatchBar();rSubList()" style="background:transparent;border:1.5px solid #a5b4fc;color:#4338ca;padding:5px 10px;border-radius:7px;cursor:pointer;font-size:.8rem">取消选择</button>';if(bar){bar.innerHTML=html}else{var newBar=document.createElement("div");newBar.className="sub-batch-bar";newBar.style.cssText="display:flex;align-items:center;gap:10px;padding:8px 14px;background:#eef2ff;border-bottom:1.5px solid #c7d2fe;flex-wrap:wrap";newBar.innerHTML=html;var wrap=list.querySelector(".sub-table-wrap");var hdrRow=wrap&&wrap.querySelector("div");if(hdrRow)hdrRow.insertAdjacentElement("afterend",newBar)}}else{if(bar)bar.remove()}}
-function _subBatchDel(){if(_subSelected.size===0)return;var names=subscriptions.filter(function(s){return _subSelected.has(s.id)}).map(function(s){return s.name});if(!confirm("确认删除所选 "+_subSelected.size+" 条订阅？\n"+names.join("、")))return;subscriptions=subscriptions.filter(function(s){return!_subSelected.has(s.id)});localStorage.setItem("tuole_subs",JSON.stringify(subscriptions));if(typeof save==="function")save();_subSelected.clear();rSubscriptions();toast("🗑️ 已批量删除")}
-function _subBatchRenew(){if(_subSelected.size===0)return;var updated=0;subscriptions.forEach(function(s){if(!_subSelected.has(s.id))return;var base=new Date(s.expireDate);if(isNaN(base))return;if(s.cycle==="month")base.setMonth(base.getMonth()+1);else if(s.cycle==="year")base.setFullYear(base.getFullYear()+1);else if(s.cycle==="quarter")base.setMonth(base.getMonth()+3);else if(s.cycle==="custom"&&s.customDays)base.setDate(base.getDate()+ +s.customDays);else base.setMonth(base.getMonth()+1);s.expireDate=base.toISOString().slice(0,10);updated++});localStorage.setItem("tuole_subs",JSON.stringify(subscriptions));if(typeof save==="function")save();_subSelected.clear();rSubscriptions();toast("✅ 已批量续期 "+updated+" 条订阅")}
-function _subHighlightRow(id){var row=document.querySelector('.sub-row[data-id="'+id+'"]');if(!row)return;row.scrollIntoView({behavior:"smooth",block:"center"});var s=subscriptions.find(function(x){return x.id===id});var dl=s?calcDaysLeft(s.expireDate):99;var sel=_subSelected.has(id);var naturalBg=sel?"rgba(99,102,241,.07)":dl<=0?"rgba(239,68,68,.06)":dl<=7?"rgba(249,115,22,.06)":"";row.style.transition="background .3s";row.style.background="rgba(251,191,36,.28)";setTimeout(function(){row.style.background=naturalBg},1500)}
+// 订阅页选择与批量操作
+function _subUpdateBatchBar() {
+  rSubList();
+}
+
+function _subBatchDel() {
+  if (_subSelected.size === 0) return;
+
+  var names = subscriptions
+    .filter(function (s) {
+      return _subSelected.has(s.id);
+    })
+    .map(function (s) {
+      return _subNormalizeText(s.name) || "未命名";
+    });
+
+  if (!confirm("确认删除所选 " + _subSelected.size + " 条订阅？\n" + names.join("、"))) return;
+
+  subscriptions = subscriptions.filter(function (s) {
+    return !_subSelected.has(s.id);
+  });
+
+  localStorage.setItem("tuole_subs", JSON.stringify(subscriptions));
+  if (typeof save === "function") save();
+  _subSelected.clear();
+  rSubscriptions();
+  toast("🗑️ 已批量删除");
+}
+
+function _subBatchRenew() {
+  if (_subSelected.size === 0) return;
+
+  var updated = 0;
+  subscriptions.forEach(function (s) {
+    if (!_subSelected.has(s.id)) return;
+
+    var base = new Date(s.expireDate);
+    if (isNaN(base)) return;
+
+    if (s.cycle === "month") base.setMonth(base.getMonth() + 1);
+    else if (s.cycle === "year") base.setFullYear(base.getFullYear() + 1);
+    else if (s.cycle === "quarter") base.setMonth(base.getMonth() + 3);
+    else if (s.cycle === "custom" && s.customDays) base.setDate(base.getDate() + +s.customDays);
+    else base.setMonth(base.getMonth() + 1);
+
+    s.expireDate = base.toISOString().slice(0, 10);
+    updated++;
+  });
+
+  localStorage.setItem("tuole_subs", JSON.stringify(subscriptions));
+  if (typeof save === "function") save();
+  _subSelected.clear();
+  rSubscriptions();
+  toast("✅ 已批量续期 " + updated + " 条订阅");
+}
+
+function _subHighlightRow(id) {
+  var row = document.querySelector('.sub-table-row[data-id="' + id + '"]');
+
+  if (!row) {
+    var target = subscriptions.find(function (s) {
+      return s.id === id;
+    });
+    if (target) {
+      _subSearch = _subNormalizeText(target.name);
+      _subTabFilter = "all";
+      _subLabelFilter = "all";
+      _subPage = 1;
+      rSubList();
+      row = document.querySelector('.sub-table-row[data-id="' + id + '"]');
+    }
+  }
+
+  if (!row) return;
+
+  row.scrollIntoView({ behavior: "smooth", block: "center" });
+  row.classList.remove("is-flash");
+  row.offsetWidth;
+  row.classList.add("is-flash");
+}

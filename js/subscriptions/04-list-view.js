@@ -1,7 +1,498 @@
-// ?????????????????
-function rSubList(){var list=document.getElementById("subList");if(!list)return;var COL="26% 14% 10% 10% 10% 10% 20%";var toolbar="";var _allSubs=subscriptions.slice();if(_subMonthFilter){var _mn=new Date;_allSubs=_allSubs.filter(function(s){var d=new Date(s.expireDate);return d.getMonth()===_mn.getMonth()&&d.getFullYear()===_mn.getFullYear()})}var cntAll=_allSubs.length,cntExp=0,cntSoon=0,cntNorm=0;_allSubs.forEach(function(s){var d=calcDaysLeft(s.expireDate);if(d<=0)cntExp++;else if(d<=7)cntSoon++;else cntNorm++});toolbar+='<div class="sub-tab-bar">';var tabs=[["all","全部",cntAll],["expired","已到期",cntExp],["soon","即将到期",cntSoon],["normal","正常",cntNorm]];tabs.forEach(function(t){var bc=t[2]>0?" sub-tab-badge--has":" sub-tab-badge--zero";toolbar+='<button class="sub-tab'+(t[0]===_subTabFilter?" active":"")+'" onclick="_subSetTab(\''+t[0]+"')\">"+t[1]+' <span class="sub-tab-badge'+bc+'">'+t[2]+"</span></button>"});toolbar+="</div>";toolbar+='<div class="sub-toolbar" style="display:flex;gap:12px;margin-bottom:12px;align-items:center;width:100%">';toolbar+='<div style="position:relative;flex:1;min-width:0">';toolbar+='<input type="text" id="subSearchInp" placeholder="搜索订阅…" value="'+esc(_subSearch)+"\" oninput=\"_subSetSearch(this.value);var c=document.getElementById('subSearchClear');if(c)c.style.display=this.value?'flex':'none';\" style=\"width:100%;border:1.5px solid var(--inp-bd);border-radius:9px;padding:8px 32px 8px 12px;font-size:.88rem;color:var(--text);background:var(--inp-bg);outline:0;box-sizing:border-box\">";toolbar+="<span id=\"subSearchClear\" onclick=\"document.getElementById('subSearchInp').value='';_subSetSearch('');this.style.display='none';\" style=\"display:"+(_subSearch?"flex":"none")+';position:absolute;right:8px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--text3);width:18px;height:18px;align-items:center;justify-content:center;font-size:.8rem;border-radius:50%;background:var(--hov)">×</span>';toolbar+="</div>";toolbar+='<select onchange="_subSetSort(this.value)" style="width:180px;flex-shrink:0;border:1.5px solid var(--inp-bd);border-radius:9px;padding:8px 10px;font-size:.85rem;color:var(--text2);background:var(--inp-bg);outline:0;cursor:pointer">';toolbar+='<option value="days"'+(_subSort==="days"?" selected":"")+">按剩余天数（升序）</option>";toolbar+='<option value="days_desc"'+(_subSort==="days_desc"?" selected":"")+">按剩余天数（降序）</option>";toolbar+='<option value="expire"'+(_subSort==="expire"?" selected":"")+">按到期日期</option>";toolbar+='<option value="cost"'+(_subSort==="cost"?" selected":"")+">按费用高低</option>";toolbar+='<option value="name"'+(_subSort==="name"?" selected":"")+">按名称 A-Z</option>";toolbar+="</select>";toolbar+="</div>";var filtered=subscriptions.slice();if(_subMonthFilter){var _now=new Date;filtered=filtered.filter(function(s){var d=new Date(s.expireDate);return d.getMonth()===_now.getMonth()&&d.getFullYear()===_now.getFullYear()})}if(_subTabFilter==="expired")filtered=filtered.filter(function(s){return calcDaysLeft(s.expireDate)<=0});else if(_subTabFilter==="soon")filtered=filtered.filter(function(s){var d=calcDaysLeft(s.expireDate);return d>0&&d<=7});else if(_subTabFilter==="normal")filtered=filtered.filter(function(s){return calcDaysLeft(s.expireDate)>7});if(_subSearch){var q=_subSearch.toLowerCase();filtered=filtered.filter(function(s){return s.name.toLowerCase().indexOf(q)>=0})}filtered.sort(function(a,b){if(_subSort==="name")return(a.name||"").localeCompare(b.name||"");if(_subSort==="cost")return(+b.cost||0)-(+a.cost||0);if(_subSort==="days_desc")return calcDaysLeft(b.expireDate)-calcDaysLeft(a.expireDate);if(_subSort==="expire")return new Date(a.expireDate)-new Date(b.expireDate);return calcDaysLeft(a.expireDate)-calcDaysLeft(b.expireDate)});var tbl="";tbl+='<div class="sub-table-wrap" style="border:1.5px solid var(--task-bd);border-radius:14px;overflow:hidden">';tbl+='<div style="display:grid;grid-template-columns:'+COL+';align-items:center;padding:0 14px;min-height:42px;background:var(--hov);font-size:.77rem;font-weight:600;color:var(--text3)">';tbl+='<div style="display:flex;align-items:center;gap:8px">'+(filtered.length?'<label style="display:inline-flex;align-items:center;cursor:pointer;min-width:20px;min-height:20px;flex-shrink:0"><input type="checkbox" id="subHdrCb" onclick="_subToggleAll(this.checked)" style="cursor:pointer;width:16px;height:16px;accent-color:#6366f1"></label>':"")+"服务名称</div>";tbl+='<div style="text-align:center">到期日期</div>';tbl+='<div style="text-align:center">剩余天数</div>';tbl+='<div style="text-align:center">周期</div>';tbl+='<div style="text-align:center">费用</div>';tbl+='<div style="text-align:center">续期</div>';tbl+='<div style="text-align:center">操作</div>';tbl+="</div>";if(_subSelected.size>0){tbl+='<div class="sub-batch-bar" style="display:flex;align-items:center;gap:10px;padding:8px 14px;background:#eef2ff;border-bottom:1.5px solid #c7d2fe;flex-wrap:wrap">';tbl+='<span style="flex:1;font-size:.85rem;color:#4338ca;font-weight:600">已选 '+_subSelected.size+" 项</span>";tbl+='<button onclick="_subBatchDel()" style="background:#ef4444;border:none;color:#fff;padding:5px 12px;border-radius:7px;cursor:pointer;font-size:.8rem;font-weight:600">批量删除</button>';tbl+='<button onclick="_subBatchRenew()" style="background:#3b82f6;border:none;color:#fff;padding:5px 12px;border-radius:7px;cursor:pointer;font-size:.8rem;font-weight:600">批量续期</button>';tbl+='<button onclick="_subSelected.clear();rSubList()" style="background:transparent;border:1.5px solid #a5b4fc;color:#4338ca;padding:5px 10px;border-radius:7px;cursor:pointer;font-size:.8rem">取消选择</button>';tbl+="</div>"}if(!filtered.length&&subscriptions.length===0){tbl+='<div style="min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 16px;gap:12px">';tbl+='<svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/><line x1="12" y1="2" x2="12" y2="3"/></svg>';tbl+='<div style="font-size:15px;color:#666;font-weight:500">暂无订阅记录</div>';tbl+='<div style="font-size:13px;color:#999">点击右上角 + 添加 开始记录</div>';tbl+='<button onclick="openSubModal()" style="margin-top:4px;background:transparent;border:1.5px solid #818cf8;color:#6366f1;padding:8px 20px;border-radius:10px;cursor:pointer;font-size:.88rem;font-weight:600;transition:all 150ms ease" onmouseenter="this.style.background=\'#eef2ff\'" onmouseleave="this.style.background=\'transparent\'">+ 添加订阅</button>';tbl+="</div>"}else if(!filtered.length){tbl+='<div style="padding:32px;text-align:center;color:var(--text3);font-size:.9rem">未找到匹配的订阅</div>'}else{filtered.forEach(function(s,i){var dl=calcDaysLeft(s.expireDate);var c=getSubColor(dl);var al=dl<=7;var sel=_subSelected.has(s.id);var bt=i===0?"":"border-top:1px solid var(--task-bd);";var nm=(s.icon?s.icon+" ":"")+esc(s.name);var rowBg=sel?"background:rgba(99,102,241,.07);":dl<=0?"background:rgba(239,68,68,.06);":dl<=7?"background:rgba(249,115,22,.06);":"";var costDisp=+s.cost>0?'<span style="font-size:.86rem;font-weight:600;color:var(--text)">¥'+(+s.cost).toFixed(2)+"</span>":'<span style="color:#bbb">——</span>';var dateDisp=s.expireDate+(s.expireTime?' <span style="font-size:12px;color:#94a3b8">'+s.expireTime+"</span>":"");var alIcon=dl<=0?"⚠️ ":dl<=30?"⚠️ ":"";var statusBadge=dl<=0?'<span style="display:inline-block;padding:1px 6px;border-radius:8px;font-size:.65rem;font-weight:700;background:#fef2f2;color:#ef4444;border:1px solid #fca5a5;margin-left:5px;vertical-align:middle;flex-shrink:0">已到期</span>':dl<=7?'<span style="display:inline-block;padding:1px 6px;border-radius:8px;font-size:.65rem;font-weight:700;background:#fff7ed;color:#ea580c;border:1px solid #fed7aa;margin-left:5px;vertical-align:middle;flex-shrink:0">即将到期</span>':"";tbl+='<div class="sub-row" data-id="'+s.id+'" style="display:grid;grid-template-columns:'+COL+";align-items:center;padding:0 14px;height:56px;"+bt+rowBg+'">';tbl+='<div style="display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden"><input type="checkbox" '+(sel?"checked":"")+' onclick="event.stopPropagation();_subToggleOne('+s.id+',this.checked)" style="cursor:pointer;width:14px;height:14px;flex-shrink:0"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.9rem;font-weight:600;color:var(--text)">'+nm+"</span>"+statusBadge+"</div>";tbl+='<div style="text-align:center;font-size:.81rem;color:var(--text2);overflow:hidden;white-space:nowrap">'+dateDisp+"</div>";tbl+='<div style="text-align:center"><span class="'+(al?"sub-shake":"")+'" style="display:inline-block;padding:2px 7px;border-radius:20px;background:'+c.bg+";color:"+c.text+";font-size:.77rem;font-weight:700;border:1px solid "+c.border+'">'+alIcon+dl+"</span></div>";tbl+='<div style="text-align:center;font-size:.81rem;color:var(--text2)">'+_clb(s.cycle,s.customDays)+"</div>";tbl+='<div style="text-align:center">'+costDisp+"</div>";tbl+='<div style="text-align:center"><span class="sub-renew-badge" style="background:'+(s.renewal==="auto"?"#eff6ff":"#f0fdf4")+";color:"+(s.renewal==="auto"?"#3b82f6":"#16a34a")+";border:1px solid "+(s.renewal==="auto"?"#bfdbfe":"#bbf7d0")+'">'+(s.renewal==="auto"?"自动":"手动")+"</span></div>";tbl+='<div class="sub-act-btns" style="display:flex;gap:4px;justify-content:center;align-items:center">';tbl+='<button onclick="editSub('+s.id+')" style="background:var(--acc-bg);border:1.5px solid var(--acc-bd);color:var(--acc);padding:3px 8px;border-radius:6px;cursor:pointer;font-size:.72rem;font-weight:500;white-space:nowrap">编辑</button>';tbl+='<button onclick="_subRenewOne('+s.id+')" style="background:#eff6ff;border:1.5px solid #bfdbfe;color:#3b82f6;padding:3px 8px;border-radius:6px;cursor:pointer;font-size:.72rem;font-weight:500;white-space:nowrap">续期</button>';tbl+='<button onclick="delSub('+s.id+')" style="background:#fef2f2;border:1.5px solid #fca5a5;color:#ef4444;padding:3px 8px;border-radius:6px;cursor:pointer;font-size:.72rem;font-weight:500;white-space:nowrap">删除</button>';tbl+="</div></div>"})}tbl+="</div>";var cards="";cards+='<div class="sub-card-list">';if(!filtered.length){cards+='<div style="padding:20px;text-align:center;color:var(--text3);font-size:.9rem">未找到匹配的订阅</div>'}else{filtered.forEach(function(s){var dl=calcDaysLeft(s.expireDate);var c=getSubColor(dl);var sel=_subSelected.has(s.id);var nm=(s.icon?s.icon+" ":"")+esc(s.name);var cardBg=sel?"rgba(99,102,241,.07)":dl<=0?"rgba(239,68,68,.04)":dl<=7?"rgba(249,115,22,.04)":"var(--task-bg)";var costDisp=+s.cost>0?"¥"+(+s.cost).toFixed(2):"——";var costColor=+s.cost>0?"color:var(--text);font-weight:600":"color:#bbb";var alIcon=dl<=0?"⚠️ ":dl<=30?"⚠️ ":"";var statusBadge=dl<=0?'<span style="display:inline-block;padding:1px 6px;border-radius:8px;font-size:.65rem;font-weight:700;background:#fef2f2;color:#ef4444;border:1px solid #fca5a5;margin-left:5px">已到期</span>':dl<=7?'<span style="display:inline-block;padding:1px 6px;border-radius:8px;font-size:.65rem;font-weight:700;background:#fff7ed;color:#ea580c;border:1px solid #fed7aa;margin-left:5px">即将到期</span>':"";cards+='<div style="background:'+cardBg+';border:1.5px solid var(--task-bd);border-radius:14px;padding:14px 16px;">';cards+='<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px">';cards+='<input type="checkbox" '+(sel?"checked":"")+' onclick="_subToggleOne('+s.id+',this.checked)" style="margin-top:3px;cursor:pointer;width:15px;height:15px;flex-shrink:0">';cards+='<div style="flex:1;min-width:0">';cards+='<div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-bottom:4px"><span style="font-size:.95rem;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+nm+"</span>"+statusBadge+"</div>";cards+='<div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">';cards+='<span style="font-size:.78rem;color:var(--text3)">'+s.expireDate+(s.expireTime?' <span style="color:#94a3b8">'+s.expireTime+"</span>":"")+"</span>";cards+='<span style="font-size:.78rem;color:var(--text3)">· '+_clb(s.cycle,s.customDays)+"</span>";cards+='<span style="font-size:.82rem;'+costColor+'">· '+costDisp+"</span>";cards+="</div></div>";cards+='<span class="'+(dl<=7?"sub-shake":"")+'" style="display:inline-block;padding:2px 9px;border-radius:20px;background:'+c.bg+";color:"+c.text+";font-size:.77rem;font-weight:700;border:1px solid "+c.border+'">'+alIcon+dl+"天</span>";cards+="</div>";cards+='<div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--task-bd)">';cards+='<span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:.74rem;font-weight:600;background:'+(s.renewal==="auto"?"#eff6ff":"#f0fdf4")+";color:"+(s.renewal==="auto"?"#3b82f6":"#16a34a")+";border:1px solid "+(s.renewal==="auto"?"#bfdbfe":"#bbf7d0")+'">'+(s.renewal==="auto"?"自动续期":"手动续期")+"</span>";cards+='<div style="display:flex;gap:6px">';cards+='<button onclick="editSub('+s.id+')" style="background:var(--acc-bg);border:1.5px solid var(--acc-bd);color:var(--acc);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:.8rem;font-weight:500">编辑</button>';cards+='<button onclick="_subRenewOne('+s.id+')" style="background:#eff6ff;border:1.5px solid #bfdbfe;color:#3b82f6;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:.8rem;font-weight:500">续期</button>';cards+='<button onclick="delSub('+s.id+')" style="background:#fef2f2;border:1.5px solid #fca5a5;color:#ef4444;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:.8rem;font-weight:500">删除</button>';cards+="</div></div></div>"})}cards+="</div>";list.innerHTML=toolbar+tbl+cards}
-function _subRowClick(e,id){document.querySelectorAll(".sub-row-actions.open").forEach(function(el){if(+el.getAttribute("data-for")!==id){el.classList.remove("open");el.style.display="none"}});var panel=document.querySelector('.sub-row-actions[data-for="'+id+'"]');if(!panel)return;var isOpen=panel.classList.contains("open");panel.classList.toggle("open",!isOpen);panel.style.display=isOpen?"none":"flex"}
-function _subRenewOne(id){var s=subscriptions.find(function(x){return x.id===id});if(!s)return;var base=new Date(s.expireDate);if(isNaN(base)){toast("无效到期日期");return}if(s.cycle==="month")base.setMonth(base.getMonth()+1);else if(s.cycle==="year")base.setFullYear(base.getFullYear()+1);else if(s.cycle==="quarter")base.setMonth(base.getMonth()+3);else if(s.cycle==="custom"&&s.customDays)base.setDate(base.getDate()+ +s.customDays);else base.setMonth(base.getMonth()+1);s.expireDate=base.toISOString().slice(0,10);localStorage.setItem("tuole_subs",JSON.stringify(subscriptions));if(typeof save==="function")save();rSubscriptions();toast("✅ 已续期："+esc(s.name))}
-function _subSyncHdrCb(){var hdrCb=document.getElementById("subHdrCb");if(!hdrCb)return;var rows=document.querySelectorAll("#subList .sub-row[data-id]");if(!rows.length)return;var selCount=0;rows.forEach(function(r){if(_subSelected.has(+r.getAttribute("data-id")))selCount++});if(selCount===0){hdrCb.checked=false;hdrCb.indeterminate=false}else if(selCount===rows.length){hdrCb.checked=true;hdrCb.indeterminate=false}else{hdrCb.checked=false;hdrCb.indeterminate=true}}
-function _subToggleOne(id,checked){if(checked)_subSelected.add(id);else _subSelected.delete(id);var row=document.querySelector('#subList .sub-row[data-id="'+id+'"]');if(row){var s=subscriptions.find(function(x){return x.id===id});var dl=s?calcDaysLeft(s.expireDate):99;var nat=dl<=0?"rgba(239,68,68,.06)":dl<=7?"rgba(249,115,22,.06)":"";row.style.background=checked?"rgba(99,102,241,.07)":nat;var cb=row.querySelector("input[type=checkbox]");if(cb)cb.checked=checked}_subSyncHdrCb();_subUpdateBatchBar()}
-function _subToggleAll(checked){var list=document.getElementById("subList");if(!list)return;var rows=list.querySelectorAll(".sub-row[data-id]");rows.forEach(function(row){var id=+row.getAttribute("data-id");if(checked)_subSelected.add(id);else _subSelected.delete(id)});var hdrCb=document.getElementById("subHdrCb");if(hdrCb){hdrCb.checked=checked;hdrCb.indeterminate=false}rows.forEach(function(row){var id=+row.getAttribute("data-id");var cb=row.querySelector("input[type=checkbox]");if(cb)cb.checked=checked;var s=subscriptions.find(function(x){return x.id===id});var dl=s?calcDaysLeft(s.expireDate):99;var nat=dl<=0?"rgba(239,68,68,.06)":dl<=7?"rgba(249,115,22,.06)":"";row.style.background=checked?"rgba(99,102,241,.07)":nat});_subUpdateBatchBar()}
+// 订阅页列表视图
+function _subEsc(v) {
+  if (typeof esc === "function") return esc(v == null ? "" : String(v));
+  var div = document.createElement("div");
+  div.textContent = v == null ? "" : String(v);
+  return div.innerHTML;
+}
+
+function _subAvatarHtml(item, meta) {
+  var icon = _subNormalizeText(item.icon);
+  if (icon) {
+    return '<span class="sub-service-avatar is-emoji">' + _subEsc(icon.slice(0, 2)) + "</span>";
+  }
+  var name = _subNormalizeText(item.name);
+  var first = name ? name.charAt(0).toUpperCase() : "?";
+  return '<span class="sub-service-avatar sub-service-avatar--' + meta.category.key + '">' + _subEsc(first) + "</span>";
+}
+
+function _subTabCounters(rows) {
+  return {
+    all: rows.length,
+    active: rows.filter(function (r) {
+      return r.meta.status.key === "active";
+    }).length,
+    soon: rows.filter(function (r) {
+      return r.meta.status.key === "soon";
+    }).length,
+    expired: rows.filter(function (r) {
+      return r.meta.status.key === "expired";
+    }).length,
+  };
+}
+
+function _subMatchesLabel(meta, key) {
+  if (!key || key === "all") return true;
+  if (meta.category.key === key) return true;
+  return meta.labels.some(function (label) {
+    return label.key === key;
+  });
+}
+
+function _subSortRows(rows) {
+  rows.sort(function (a, b) {
+    if (_subSort === "name") {
+      return (_subNormalizeText(a.item.name) || "").localeCompare(_subNormalizeText(b.item.name) || "");
+    }
+    if (_subSort === "cost") return b.meta.amount - a.meta.amount;
+    if (_subSort === "days_desc") return b.meta.days - a.meta.days;
+    if (_subSort === "expire") return new Date(a.item.expireDate) - new Date(b.item.expireDate);
+    return a.meta.days - b.meta.days;
+  });
+}
+
+function _subBuildLabelOptions(rows) {
+  var options = [{ key: "all", label: "全部标签" }];
+  var has = { all: true };
+
+  (_subCategorySnapshot || []).forEach(function (cat) {
+    if (!has[cat.key]) {
+      has[cat.key] = true;
+      options.push({ key: cat.key, label: cat.label });
+    }
+  });
+
+  [
+    { key: "important", label: "重要" },
+    { key: "auto", label: "自动" },
+    { key: "manual", label: "手动" },
+  ].forEach(function (opt) {
+    if (rows.some(function (r) { return _subMatchesLabel(r.meta, opt.key); }) && !has[opt.key]) {
+      has[opt.key] = true;
+      options.push(opt);
+    }
+  });
+
+  return options;
+}
+
+function _subBuildPager(totalPages) {
+  if (totalPages <= 1) return "";
+
+  var html = '<button class="sub-page-btn" type="button" onclick="_subSetPage(' + (_subPage - 1) + ')"' + (_subPage <= 1 ? " disabled" : "") + '><i class="ph ph-caret-left"></i></button>';
+
+  var start = Math.max(1, _subPage - 1);
+  var end = Math.min(totalPages, start + 2);
+  if (end - start < 2) start = Math.max(1, end - 2);
+
+  for (var i = start; i <= end; i++) {
+    html += '<button class="sub-page-btn' + (i === _subPage ? " is-active" : "") + '" type="button" onclick="_subSetPage(' + i + ')">' + i + "</button>";
+  }
+
+  html += '<button class="sub-page-btn" type="button" onclick="_subSetPage(' + (_subPage + 1) + ')"' + (_subPage >= totalPages ? " disabled" : "") + '><i class="ph ph-caret-right"></i></button>';
+  return html;
+}
+
+function _subRenderTableEmpty(kind) {
+  if (kind === "all") {
+    return (
+      '<div class="sub-table-empty">' +
+      '<i class="ph ph-bell-slash" style="font-size:2rem;color:var(--sub-text-3)"></i>' +
+      '<div class="sub-empty-title">暂无订阅记录</div>' +
+      '<div class="sub-empty-desc">点击右上角“新建项目”开始记录你的订阅服务</div>' +
+      '<button class="sub-empty-btn" type="button" onclick="openSubModal()">+ 添加订阅</button>' +
+      "</div>"
+    );
+  }
+
+  return (
+    '<div class="sub-table-empty">' +
+    '<i class="ph ph-magnifying-glass" style="font-size:2rem;color:var(--sub-text-3)"></i>' +
+    '<div class="sub-empty-title">未找到匹配结果</div>' +
+    '<div class="sub-empty-desc">尝试调整筛选条件或搜索关键词</div>' +
+    "</div>"
+  );
+}
+
+function rSubList() {
+  var list = document.getElementById("subList");
+  if (!list) return;
+
+  var rows = subscriptions.map(function (s) {
+    return { item: s, meta: _subMetaForEntry(s) };
+  });
+
+  if (_subMonthFilter) {
+    var now = new Date();
+    rows = rows.filter(function (r) {
+      var d = new Date(r.item.expireDate);
+      return !isNaN(d) && d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+    });
+  }
+
+  var counters = _subTabCounters(rows);
+
+  var filtered = rows.slice();
+  if (_subTabFilter === "active") {
+    filtered = filtered.filter(function (r) {
+      return r.meta.status.key === "active";
+    });
+  } else if (_subTabFilter === "soon") {
+    filtered = filtered.filter(function (r) {
+      return r.meta.status.key === "soon";
+    });
+  } else if (_subTabFilter === "expired") {
+    filtered = filtered.filter(function (r) {
+      return r.meta.status.key === "expired";
+    });
+  }
+
+  if (_subSearch) {
+    var q = _subSearch.toLowerCase();
+    filtered = filtered.filter(function (r) {
+      return (
+        _subNormalizeText(r.item.name).toLowerCase().indexOf(q) >= 0 ||
+        _subNormalizeText(r.item.note).toLowerCase().indexOf(q) >= 0
+      );
+    });
+  }
+
+  if (_subLabelFilter && _subLabelFilter !== "all") {
+    filtered = filtered.filter(function (r) {
+      return _subMatchesLabel(r.meta, _subLabelFilter);
+    });
+  }
+
+  _subSortRows(filtered);
+
+  var totalFiltered = filtered.length;
+  var pageSize = _subPageSize || 10;
+  var totalPages = Math.max(1, Math.ceil(totalFiltered / pageSize));
+  if (_subPage > totalPages) _subPage = totalPages;
+  if (_subPage < 1) _subPage = 1;
+
+  var startIndex = (_subPage - 1) * pageSize;
+  var pageRows = filtered.slice(startIndex, startIndex + pageSize);
+  var labelOptions = _subBuildLabelOptions(rows);
+
+  var tabs = [
+    { key: "all", label: "全部", count: counters.all },
+    { key: "active", label: "活跃中", count: counters.active },
+    { key: "soon", label: "即将续费", count: counters.soon },
+    { key: "expired", label: "已失效", count: counters.expired },
+  ];
+
+  var tabHtml = tabs
+    .map(function (t) {
+      return (
+        '<button class="sub-tab-btn' +
+        (_subTabFilter === t.key ? " is-active" : "") +
+        '" type="button" onclick="_subSetTab(\'' +
+        t.key +
+        '\')">' +
+        t.label +
+        '<span class="tab-count">(' +
+        t.count +
+        ")</span></button>"
+      );
+    })
+    .join("");
+
+  var labelSelect =
+    '<select class="sub-select" onchange="_subSetLabelFilter(this.value)">' +
+    labelOptions
+      .map(function (opt) {
+        return '<option value="' + opt.key + '"' + (_subLabelFilter === opt.key ? " selected" : "") + ">" + _subEsc(opt.label) + "</option>";
+      })
+      .join("") +
+    "</select>";
+
+  var sortSelect =
+    '<select class="sub-select" onchange="_subSetSort(this.value)">' +
+    '<option value="days"' + (_subSort === "days" ? " selected" : "") + ">按剩余天数（升序）</option>" +
+    '<option value="days_desc"' + (_subSort === "days_desc" ? " selected" : "") + ">按剩余天数（降序）</option>" +
+    '<option value="expire"' + (_subSort === "expire" ? " selected" : "") + ">按到期日期</option>" +
+    '<option value="cost"' + (_subSort === "cost" ? " selected" : "") + ">按费用高低</option>" +
+    '<option value="name"' + (_subSort === "name" ? " selected" : "") + ">按名称 A-Z</option>" +
+    "</select>";
+
+  var topBar =
+    '<div class="sub-list-topbar">' +
+    '<div class="sub-tab-strip">' +
+    tabHtml +
+    "</div>" +
+    '<div class="sub-tools">' +
+    '<div class="sub-search-wrap">' +
+    '<i class="ph ph-magnifying-glass"></i>' +
+    '<input id="subSearchInp" type="text" placeholder="搜索订阅服务..." value="' +
+    _subEsc(_subSearch) +
+    '" oninput="_subSetSearch(this.value);var c=document.getElementById(\'subSearchClear\');if(c)c.classList.toggle(\'show\',!!this.value)">' +
+    '<button class="sub-search-clear' +
+    (_subSearch ? " show" : "") +
+    '" id="subSearchClear" type="button" onclick="document.getElementById(\'subSearchInp\').value=\'\';_subSetSearch(\'\');this.classList.remove(\'show\')">×</button>' +
+    "</div>" +
+    labelSelect +
+    sortSelect +
+    "</div>" +
+    "</div>";
+
+  var batchBar = "";
+  if (_subSelected.size > 0) {
+    batchBar =
+      '<div class="sub-batch-bar">' +
+      '<span class="sub-batch-text">已选择 ' + _subSelected.size + " 项</span>" +
+      '<button class="sub-batch-btn danger" type="button" onclick="_subBatchDel()">批量删除</button>' +
+      '<button class="sub-batch-btn primary" type="button" onclick="_subBatchRenew()">批量续期</button>' +
+      '<button class="sub-batch-btn ghost" type="button" onclick="_subSelected.clear();rSubList()">取消选择</button>' +
+      "</div>";
+  }
+
+  var tableContent = "";
+  var mobileContent = "";
+
+  if (!totalFiltered) {
+    tableContent = _subRenderTableEmpty(subscriptions.length ? "filter" : "all");
+    mobileContent = '<div class="sub-mobile-list">' + tableContent + "</div>";
+  } else {
+    var tableRows = pageRows
+      .map(function (row) {
+        var item = row.item;
+        var meta = row.meta;
+        var checked = _subSelected.has(item.id);
+        var classes = "sub-table-row";
+        if (checked) classes += " is-selected";
+        else if (meta.status.key === "soon") classes += " is-soon";
+        else if (meta.status.key === "expired") classes += " is-expired";
+
+        var name = _subNormalizeText(item.name) || "未命名服务";
+        var subline = _subNormalizeText(item.note) || meta.category.label;
+        if (subline.length > 22) subline = subline.slice(0, 22) + "…";
+
+        var tags = meta.labels.slice(0, 2);
+        var tagHtml = tags
+          .map(function (tag) {
+            return '<span class="sub-tag sub-tag--' + tag.tone + '">' + _subEsc(tag.text) + "</span>";
+          })
+          .join("");
+
+        var dueClass = meta.status.dueClass ? " " + meta.status.dueClass : "";
+
+        var actionBtn =
+          meta.status.key === "expired"
+            ? '<button class="sub-op-btn is-danger" type="button" onclick="_subRenewOne(' + item.id + ')">重新订阅</button>'
+            : '<button class="sub-op-btn" type="button" onclick="editSub(' + item.id + ')">管理</button>';
+
+        return (
+          '<div class="' +
+          classes +
+          '" data-id="' +
+          item.id +
+          '">' +
+          '<div class="sub-service-cell">' +
+          '<input class="sub-service-check" type="checkbox"' +
+          (checked ? " checked" : "") +
+          ' onclick="event.stopPropagation();_subToggleOne(' +
+          item.id +
+          ',this.checked)">' +
+          _subAvatarHtml(item, meta) +
+          '<div class="sub-service-main"><div class="sub-service-name">' +
+          _subEsc(name) +
+          '</div><div class="sub-service-sub">' +
+          _subEsc(subline) +
+          "</div></div></div>" +
+          '<div class="sub-tag-group">' +
+          tagHtml +
+          "</div>" +
+          '<div class="sub-status-pill"><span class="sub-status-dot ' +
+          meta.status.dotClass +
+          '"></span><span>' +
+          meta.status.text +
+          "</span></div>" +
+          '<div><div class="sub-due-main' +
+          dueClass +
+          '">' +
+          meta.status.dueText +
+          '</div><div class="sub-due-sub">' +
+          _subEsc(_subFormatDateTime(item.expireDate, item.expireTime)) +
+          "</div></div>" +
+          '<div><span class="sub-cycle-pill">' +
+          _subEsc(_clb(item.cycle, item.customDays)) +
+          "</span></div>" +
+          '<div class="sub-amount">' +
+          _subEsc(_subFormatCurrency(item.cost)) +
+          "</div>" +
+          '<div class="sub-row-actions">' +
+          actionBtn +
+          '<button class="sub-more-btn" type="button" aria-label="更多操作" onclick="event.stopPropagation();editSub(' +
+          item.id +
+          ')"><i class="ph ph-dots-three-vertical"></i></button>' +
+          "</div>" +
+          "</div>"
+        );
+      })
+      .join("");
+
+    tableContent =
+      batchBar +
+      '<div class="sub-table-head">' +
+      '<div><label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="subHdrCb" onclick="_subToggleAll(this.checked)">服务</label></div>' +
+      "<div>标签</div>" +
+      "<div>状态</div>" +
+      "<div>到期时间</div>" +
+      "<div>周期</div>" +
+      "<div>金额</div>" +
+      "<div>操作</div>" +
+      "</div>" +
+      '<div class="sub-table-body">' +
+      tableRows +
+      "</div>" +
+      '<div class="sub-table-foot">' +
+      '<span class="sub-foot-total">共 ' +
+      totalFiltered +
+      " 项</span>" +
+      '<div class="sub-foot-right">' +
+      '<div class="sub-pager">' +
+      _subBuildPager(totalPages) +
+      "</div>" +
+      '<select class="sub-page-size" onchange="_subSetPageSize(this.value)">' +
+      '<option value="10"' + (_subPageSize === 10 ? " selected" : "") + ">10</option>" +
+      '<option value="20"' + (_subPageSize === 20 ? " selected" : "") + ">20</option>" +
+      '<option value="50"' + (_subPageSize === 50 ? " selected" : "") + ">50</option>" +
+      "</select>" +
+      "</div>" +
+      "</div>";
+
+    mobileContent =
+      '<div class="sub-mobile-list">' +
+      pageRows
+        .map(function (row) {
+          var item = row.item;
+          var meta = row.meta;
+          var checked = _subSelected.has(item.id);
+          var tags = meta.labels.slice(0, 2);
+
+          var actionBtn =
+            meta.status.key === "expired"
+              ? '<button class="sub-card-btn danger" type="button" onclick="_subRenewOne(' + item.id + ')">重新订阅</button>'
+              : '<button class="sub-card-btn primary" type="button" onclick="editSub(' + item.id + ')">管理</button>';
+
+          return (
+            '<div class="sub-mobile-card" data-id="' +
+            item.id +
+            '">' +
+            '<div class="sub-mobile-head">' +
+            '<input class="sub-service-check" type="checkbox"' +
+            (checked ? " checked" : "") +
+            ' onclick="_subToggleOne(' +
+            item.id +
+            ',this.checked)">' +
+            _subAvatarHtml(item, meta) +
+            '<div style="min-width:0;flex:1">' +
+            '<div class="sub-service-name">' +
+            _subEsc(_subNormalizeText(item.name) || "未命名服务") +
+            "</div>" +
+            '<div class="sub-tag-group" style="margin-top:6px">' +
+            tags
+              .map(function (tag) {
+                return '<span class="sub-tag sub-tag--' + tag.tone + '">' + _subEsc(tag.text) + "</span>";
+              })
+              .join("") +
+            "</div>" +
+            "</div>" +
+            '<span class="sub-status-pill"><span class="sub-status-dot ' + meta.status.dotClass + '"></span></span>' +
+            "</div>" +
+            '<div class="sub-mobile-meta">' +
+            '<div class="sub-mobile-kv"><small>到期时间</small><strong>' + _subEsc(_subFormatDateTime(item.expireDate, item.expireTime)) + "</strong></div>" +
+            '<div class="sub-mobile-kv"><small>计费周期</small><strong>' + _subEsc(_clb(item.cycle, item.customDays)) + "</strong></div>" +
+            '<div class="sub-mobile-kv"><small>剩余</small><strong>' + _subEsc(meta.status.dueText) + "</strong></div>" +
+            '<div class="sub-mobile-kv"><small>金额</small><strong>' + _subEsc(_subFormatCurrency(item.cost)) + "</strong></div>" +
+            "</div>" +
+            '<div class="sub-mobile-actions">' +
+            actionBtn +
+            '<button class="sub-card-btn" type="button" onclick="delSub(' + item.id + ')">删除</button>' +
+            "</div>" +
+            "</div>"
+          );
+        })
+        .join("") +
+      "</div>";
+  }
+
+  list.innerHTML =
+    topBar +
+    '<div class="sub-table-wrap">' +
+    tableContent +
+    "</div>" +
+    mobileContent;
+
+  _subSyncHdrCb();
+  _subSyncSideActiveState();
+}
+
+function _subRowClick() {}
+
+function _subRenewOne(id) {
+  var s = subscriptions.find(function (x) {
+    return x.id === id;
+  });
+  if (!s) return;
+  var base = new Date(s.expireDate);
+  if (isNaN(base)) {
+    toast("无效到期日期");
+    return;
+  }
+  if (s.cycle === "month") base.setMonth(base.getMonth() + 1);
+  else if (s.cycle === "year") base.setFullYear(base.getFullYear() + 1);
+  else if (s.cycle === "quarter") base.setMonth(base.getMonth() + 3);
+  else if (s.cycle === "custom" && s.customDays) base.setDate(base.getDate() + +s.customDays);
+  else base.setMonth(base.getMonth() + 1);
+  s.expireDate = base.toISOString().slice(0, 10);
+  localStorage.setItem("tuole_subs", JSON.stringify(subscriptions));
+  if (typeof save === "function") save();
+  rSubscriptions();
+  toast("✅ 已续期：" + _subNormalizeText(s.name));
+}
+
+function _subSyncHdrCb() {
+  var hdrCb = document.getElementById("subHdrCb");
+  if (!hdrCb) return;
+
+  var rows = document.querySelectorAll("#subList .sub-table-row[data-id]");
+  if (!rows.length) {
+    hdrCb.checked = false;
+    hdrCb.indeterminate = false;
+    return;
+  }
+
+  var selected = 0;
+  rows.forEach(function (row) {
+    if (_subSelected.has(+row.getAttribute("data-id"))) selected++;
+  });
+
+  if (selected === 0) {
+    hdrCb.checked = false;
+    hdrCb.indeterminate = false;
+  } else if (selected === rows.length) {
+    hdrCb.checked = true;
+    hdrCb.indeterminate = false;
+  } else {
+    hdrCb.checked = false;
+    hdrCb.indeterminate = true;
+  }
+}
+
+function _subToggleOne(id, checked) {
+  if (checked) _subSelected.add(id);
+  else _subSelected.delete(id);
+  rSubList();
+}
+
+function _subToggleAll(checked) {
+  var rows = document.querySelectorAll("#subList .sub-table-row[data-id]");
+  rows.forEach(function (row) {
+    var id = +row.getAttribute("data-id");
+    if (checked) _subSelected.add(id);
+    else _subSelected.delete(id);
+  });
+  rSubList();
+}
