@@ -304,16 +304,16 @@ var _subCategorySnapshot = [];
 
 #subscriptionsMode .sub-stat-card{
   border:1px solid var(--sub-line);
-  background:var(--sub-panel-soft);
-  border-radius:14px;
-  padding:7px 10px;
+  background:#fefdfd;
+  border-radius:13px;
+  padding:8px 11px;
   display:flex;
   flex-direction:column;
-  gap:3px;
+  gap:4px;
   box-sizing:border-box;
-  min-height:82px;
-  height:82px;
-  max-height:82px;
+  min-height:84px;
+  height:84px;
+  max-height:84px;
   overflow:hidden;
   transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;
 }
@@ -337,21 +337,21 @@ var _subCategorySnapshot = [];
   display:flex;
   align-items:flex-start;
   justify-content:space-between;
-  gap:5px;
+  gap:7px;
 }
 
 #subscriptionsMode .sub-stat-label{
   color:var(--sub-text-2);
-  font-size:.66rem;
+  font-size:.68rem;
   font-weight:680;
   letter-spacing:.01em;
-  line-height:1.15;
+  line-height:1.2;
 }
 
 #subscriptionsMode .sub-stat-icon{
-  width:30px;
-  height:30px;
-  border-radius:9px;
+  width:32px;
+  height:32px;
+  border-radius:10px;
   display:inline-flex;
   align-items:center;
   justify-content:center;
@@ -361,8 +361,8 @@ var _subCategorySnapshot = [];
 }
 
 #subscriptionsMode .sub-stat-icon svg{
-  width:14px;
-  height:14px;
+  width:15px;
+  height:15px;
 }
 
 #subscriptionsMode .sub-stat-icon--warn{
@@ -377,9 +377,9 @@ var _subCategorySnapshot = [];
 
 #subscriptionsMode .sub-stat-value{
   color:var(--sub-text);
-  font-size:clamp(1.06rem,0.34vw + .64rem,1.24rem);
+  font-size:clamp(1.14rem,0.38vw + .66rem,1.32rem);
   font-weight:730;
-  line-height:1.03;
+  line-height:1.08;
   letter-spacing:0;
   margin-top:0;
   white-space:nowrap;
@@ -389,14 +389,14 @@ var _subCategorySnapshot = [];
 
 #subscriptionsMode .sub-stat-value.is-alert{
   color:var(--sub-danger);
-  font-size:clamp(1rem,0.3vw + .62rem,1.16rem);
+  font-size:clamp(1.08rem,0.34vw + .64rem,1.26rem);
 }
 
 #subscriptionsMode .sub-stat-meta{
   color:var(--sub-text-3);
-  font-size:.62rem;
-  font-weight:600;
-  line-height:1.16;
+  font-size:.66rem;
+  font-weight:620;
+  line-height:1.2;
   margin-top:auto;
   white-space:nowrap;
   overflow:hidden;
@@ -404,13 +404,7 @@ var _subCategorySnapshot = [];
 }
 
 #subscriptionsMode .sub-stat-trend{
-  margin-top:0;
-  font-size:.62rem;
-  font-weight:700;
-  line-height:1.14;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+  display:none;
 }
 
 #subscriptionsMode .sub-stat-trend.up{color:var(--sub-danger)}
