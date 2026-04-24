@@ -704,10 +704,10 @@
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav {
     width: 100% !important;
     margin: 0 !important;
-    padding: 15px 18px 10px !important;
+    padding: 14px 18px 6px !important;
     box-sizing: border-box;
     border-bottom: 0;
-    gap: 8px;
+    gap: 10px;
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .view-sub {
@@ -722,14 +722,15 @@
   }
 
   .app.app--with-global-nav #taskMode .list-panel .batch-bar {
-    padding: 4px 18px 10px !important;
-    margin-top: -12px !important;
+    padding: 2px 18px 0 !important;
+    margin-top: 0 !important;
     border-bottom: 0 !important;
   }
 
   .app.app--with-global-nav #taskMode .batch-bar-row {
-    align-items: center;
-    gap: 10px;
+    align-items: flex-end;
+    gap: 12px;
+    min-height: 40px;
   }
 
   .app.app--with-global-nav #taskMode .batch-bar-left {
@@ -1350,13 +1351,13 @@
     --date-nav-title-slot-w: 150px;
     margin: 0 !important;
     width: 100% !important;
-    padding: 15px 28px 10px !important;
+    padding: 14px 28px 6px !important;
     box-sizing: border-box;
     border-bottom: 0;
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    gap: 3px;
+    gap: 10px;
     position: relative;
     z-index: 150;
     overflow: visible;
@@ -1383,19 +1384,23 @@
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow {
-    width: 34px;
-    height: 34px;
-    min-width: 34px;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
     border-radius: 999px;
-    border: 0;
-    background: transparent;
-    color: #98a2b3;
+    border: 1px solid #dbe4ef;
+    background: #f8fafc;
+    color: #94a3b8;
     font-size: 0;
     padding: 0;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     box-shadow: none;
+    transition:
+      color 0.16s ease,
+      border-color 0.16s ease,
+      background 0.16s ease;
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow svg {
@@ -1406,8 +1411,9 @@
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow:hover {
-    color: #6b778c;
-    background: rgba(148, 163, 184, 0.12);
+    color: #64748b;
+    border-color: #cfd9e6;
+    background: #eef4ff;
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 .date-nav-h3-ico {
@@ -1427,7 +1433,7 @@
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle .date-nav-date-main {
-    font-size: 30px;
+    font-size: 28px;
     font-weight: 700;
     line-height: 1.02;
     letter-spacing: -0.01em;
@@ -1436,18 +1442,18 @@
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle.is-relative .date-nav-date-main {
-    font-size: 30px;
+    font-size: 28px;
     letter-spacing: -0.015em;
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle .date-nav-date-sub {
-    font-size: 14px;
-    font-weight: 500;
+    font-size: 13px;
+    font-weight: 600;
     line-height: 1.1;
-    color: #94a3b8;
+    color: #7f8ea4;
     letter-spacing: 0;
     white-space: nowrap;
-    margin-top: 8px;
+    margin-top: 6px;
   }
 
 
@@ -1514,16 +1520,19 @@
   }
 
   .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle .date-nav-date-sub {
-    color: #94a3b8;
+    color: #9aa9bd;
   }
 
 
   .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow {
-    color: #64748b;
+    color: #8ea0b6;
+    border-color: rgba(148, 163, 184, 0.35);
+    background: rgba(148, 163, 184, 0.08);
   }
 
   .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow:hover {
-    color: #cbd5e1;
+    color: #dce5f2;
+    border-color: rgba(148, 163, 184, 0.5);
     background: rgba(148, 163, 184, 0.16);
   }
 
@@ -2246,8 +2255,8 @@
   }
 
   .app.app--with-global-nav #taskMode .list-panel .batch-bar {
-    padding: 0 28px 2px !important;
-    margin-top: -12px !important;
+    padding: 2px 28px 0 !important;
+    margin-top: 0 !important;
     border-bottom: 0 !important;
   }
 
@@ -2256,7 +2265,7 @@
     align-items: flex-end;
     justify-content: space-between;
     gap: 12px;
-    min-height: 52px;
+    min-height: 42px;
   }
 
   .app.app--with-global-nav #taskMode .batch-bar-left {
@@ -2281,7 +2290,7 @@
     box-shadow: none !important;
     border-radius: 0;
     padding: 0 !important;
-    gap: 18px !important;
+    gap: 14px !important;
     position: relative;
   }
 
@@ -2289,7 +2298,7 @@
     content: '';
     position: absolute;
     left: 0;
-    bottom: -3px;
+    bottom: -1px;
     width: calc(var(--seg-indicator-w, 0px) + 8px);
     height: 3px;
     border-radius: 999px;
@@ -2329,17 +2338,17 @@
   }
 
   .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-btn {
-    padding: 0 0 3px !important;
+    padding: 0 0 6px !important;
     border: 0 !important;
     border-radius: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
-    color: #64748b;
-    font-size: 0.86rem;
-    font-weight: 620;
-    line-height: 1.2;
+    color: #6f7f95;
+    font-size: 0.88rem;
+    font-weight: 640;
+    line-height: 1.1;
     position: relative;
-    gap: 7px;
+    gap: 8px;
   }
 
   .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-btn:hover {
@@ -2347,8 +2356,8 @@
   }
 
   .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-btn.is-active {
-    color: #7c3aed;
-    font-weight: 700;
+    color: #6536e8;
+    font-weight: 730;
     border: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
@@ -2359,7 +2368,7 @@
     position: absolute;
     left: -4px;
     right: -4px;
-    bottom: -3px;
+    bottom: -1px;
     height: 3px;
     border-radius: 999px;
     background: #8b5cf6;
@@ -2370,12 +2379,12 @@
   }
 
   .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-badge {
-    min-width: 24px;
-    height: 24px;
-    line-height: 24px;
+    min-width: 22px;
+    height: 22px;
+    line-height: 22px;
     border-radius: 999px;
-    font-size: 0.78rem;
-    font-weight: 680;
+    font-size: 0.76rem;
+    font-weight: 690;
     border: 0;
     background: #edf2f7;
     color: #64748b;
@@ -2388,9 +2397,32 @@
     color: #7c3aed;
   }
 
+  .dark .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-btn {
+    color: #95a7bd;
+  }
+
+  .dark .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-btn:hover {
+    color: #d7e0ee;
+  }
+
+  .dark .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-btn.is-active {
+    color: #c4b5fd;
+  }
+
+  .dark .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-badge {
+    background: rgba(148, 163, 184, 0.16);
+    color: #afbdd0;
+  }
+
+  .dark .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-btn.is-active .filter-seg-badge,
+  .dark .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-badge.filter-seg-badge--on {
+    background: rgba(99, 102, 241, 0.24);
+    color: #ddd6fe;
+  }
+
   .app.app--with-global-nav #taskMode .batch-bar-right {
     margin-left: auto;
-    padding-bottom: 8px;
+    padding-bottom: 6px;
     gap: 10px;
     align-items: center;
     position: relative;
@@ -2399,10 +2431,14 @@
   .app.app--with-global-nav #taskMode .batch-bar-right::before {
     content: '';
     width: 1px;
-    height: 20px;
+    height: 18px;
     background: #e2e8f0;
     order: 2;
     margin: 0 4px 0 2px;
+  }
+
+  .dark .app.app--with-global-nav #taskMode .batch-bar-right::before {
+    background: rgba(148, 163, 184, 0.35);
   }
 
   .app.app--with-global-nav #taskMode .batch-bar-right .sort-wrap {
@@ -2429,6 +2465,14 @@
   .app.app--with-global-nav #taskMode .batch-bar-right .batch-sort-btn:hover {
     color: #334155;
     background: transparent;
+  }
+
+  .dark .app.app--with-global-nav #taskMode .batch-bar-right .batch-sort-btn {
+    color: #8ea0b6;
+  }
+
+  .dark .app.app--with-global-nav #taskMode .batch-bar-right .batch-sort-btn:hover {
+    color: #d7e0ee;
   }
 
   .app.app--with-global-nav #taskMode .batch-bar-right .batch-sort-btn svg {
@@ -2506,7 +2550,7 @@
 
   .app.app--with-global-nav #taskMode .list-panel .tasks {
     width: 100%;
-    margin: 11px 0 14px;
+    margin: 8px 0 14px;
     padding: 0 28px !important;
     border: 0;
     border-radius: 0;
