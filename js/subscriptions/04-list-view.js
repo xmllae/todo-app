@@ -419,11 +419,13 @@ function rSubList() {
   }
 
   list.innerHTML =
+    '<div class="sub-list-card">' +
     topBar +
     '<div class="sub-table-wrap">' +
     tableContent +
     "</div>" +
-    mobileContent;
+    mobileContent +
+    "</div>";
 
   _subSyncHdrCb();
   _subSyncSideActiveState();
