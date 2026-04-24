@@ -31,7 +31,7 @@ var _subCategorySnapshot = [];
   --sub-text-3:#97a3c0;
   --sub-accent:#5960ff;
   --sub-accent-soft:#eef1ff;
-  --sub-shadow:0 22px 48px rgba(31,50,102,.08),0 3px 14px rgba(36,57,110,.06);
+  --sub-shadow:0 10px 18px -16px rgba(15,23,42,.24),0 1px 3px rgba(15,23,42,.05);
   --sub-success:#17a46d;
   --sub-warn:#f97316;
   --sub-danger:#ef4444;
@@ -57,7 +57,7 @@ var _subCategorySnapshot = [];
   --sub-text-3:#7f8daa;
   --sub-accent:#8f9dff;
   --sub-accent-soft:rgba(143,157,255,.18);
-  --sub-shadow:0 18px 46px rgba(0,0,0,.35),0 3px 16px rgba(0,0,0,.2);
+  --sub-shadow:0 10px 20px -16px rgba(0,0,0,.52),0 1px 3px rgba(0,0,0,.3);
   --sub-success:#34d399;
   --sub-warn:#fb923c;
   --sub-danger:#fb7185;
@@ -68,25 +68,23 @@ var _subCategorySnapshot = [];
   position:relative;
   display:grid;
   grid-template-columns:240px minmax(0,1fr);
-  gap:18px;
+  gap:14px;
   flex:1;
   min-height:0;
   height:100%;
   align-items:stretch;
   width:100%;
+  background:transparent;
+  border-radius:0;
+  isolation:isolate;
 }
 
 #subscriptionsMode .sub-premium-page::before{
-  content:"";
-  position:absolute;
-  inset:-8px;
-  border-radius:24px;
-  background:
-    radial-gradient(1400px 400px at 10% -12%, color-mix(in srgb,var(--sub-accent) 16%, transparent), transparent 58%),
-    radial-gradient(900px 320px at 100% -20%, color-mix(in srgb,var(--sub-info) 12%, transparent), transparent 65%),
-    linear-gradient(160deg,var(--sub-bg-0),var(--sub-bg-1));
-  pointer-events:none;
-  z-index:0;
+  content:none;
+}
+
+.dark #subscriptionsMode .sub-premium-page::before{
+  content:none;
 }
 
 #subscriptionsMode .sub-premium-page > *{
@@ -100,12 +98,12 @@ var _subCategorySnapshot = [];
   gap:14px;
   min-height:0;
   height:100%;
-  background:color-mix(in srgb,var(--sub-panel) 92%, transparent);
+  background:var(--sub-panel);
   border:1px solid var(--sub-line);
   border-radius:18px;
-  box-shadow:var(--sub-shadow);
+  box-shadow:none;
   padding:14px 12px;
-  backdrop-filter:blur(8px);
+  backdrop-filter:none;
 }
 
 #subscriptionsMode .sub-side-head{
@@ -236,7 +234,7 @@ var _subCategorySnapshot = [];
   background:var(--sub-panel);
   border:1px solid var(--sub-line);
   border-radius:20px;
-  box-shadow:var(--sub-shadow);
+  box-shadow:none;
   padding:20px;
   display:flex;
   flex-direction:column;
@@ -308,11 +306,15 @@ var _subCategorySnapshot = [];
   border:1px solid var(--sub-line);
   background:var(--sub-panel-soft);
   border-radius:14px;
-  padding:13px;
+  padding:7px 10px;
   display:flex;
   flex-direction:column;
-  gap:10px;
-  min-height:114px;
+  gap:3px;
+  box-sizing:border-box;
+  min-height:82px;
+  height:82px;
+  max-height:82px;
+  overflow:hidden;
   transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;
 }
 
@@ -333,26 +335,34 @@ var _subCategorySnapshot = [];
 
 #subscriptionsMode .sub-stat-head{
   display:flex;
-  align-items:center;
+  align-items:flex-start;
   justify-content:space-between;
-  gap:10px;
+  gap:5px;
 }
 
 #subscriptionsMode .sub-stat-label{
   color:var(--sub-text-2);
-  font-size:.83rem;
-  font-weight:700;
+  font-size:.66rem;
+  font-weight:680;
+  letter-spacing:.01em;
+  line-height:1.15;
 }
 
 #subscriptionsMode .sub-stat-icon{
-  width:46px;
-  height:46px;
-  border-radius:14px;
+  width:30px;
+  height:30px;
+  border-radius:9px;
   display:inline-flex;
   align-items:center;
   justify-content:center;
+  flex-shrink:0;
   color:var(--sub-accent);
   background:color-mix(in srgb,var(--sub-accent) 12%, transparent);
+}
+
+#subscriptionsMode .sub-stat-icon svg{
+  width:14px;
+  height:14px;
 }
 
 #subscriptionsMode .sub-stat-icon--warn{
@@ -367,27 +377,40 @@ var _subCategorySnapshot = [];
 
 #subscriptionsMode .sub-stat-value{
   color:var(--sub-text);
-  font-size:2rem;
-  font-weight:750;
-  line-height:1;
-  letter-spacing:.01em;
+  font-size:clamp(1.06rem,0.34vw + .64rem,1.24rem);
+  font-weight:730;
+  line-height:1.03;
+  letter-spacing:0;
+  margin-top:0;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 #subscriptionsMode .sub-stat-value.is-alert{
   color:var(--sub-danger);
+  font-size:clamp(1rem,0.3vw + .62rem,1.16rem);
 }
 
 #subscriptionsMode .sub-stat-meta{
   color:var(--sub-text-3);
-  font-size:.82rem;
+  font-size:.62rem;
   font-weight:600;
-  line-height:1.35;
+  line-height:1.16;
+  margin-top:auto;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 #subscriptionsMode .sub-stat-trend{
-  margin-top:2px;
-  font-size:.83rem;
+  margin-top:0;
+  font-size:.62rem;
   font-weight:700;
+  line-height:1.14;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 #subscriptionsMode .sub-stat-trend.up{color:var(--sub-danger)}
