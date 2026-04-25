@@ -683,6 +683,10 @@
   padding: 0 !important;
 }
 
+.task-item.task-item--collapse-ghost .task-row-center > .txt-line .txt {
+  color: #94a3b8 !important;
+}
+
 .task-item.task-item--collapse-ghost .task-row-center > .task-time-col {
   display: flex !important;
   flex-direction: row !important;
@@ -718,6 +722,10 @@
   font-weight: 500 !important;
   line-height: 1.25 !important;
   letter-spacing: 0 !important;
+}
+
+.dark .task-item.task-item--collapse-ghost .task-row-center > .txt-line .txt {
+  color: #a8b4c5 !important;
 }
 
 .task-item.task-item--collapse-ghost .task-row-center > .task-time-col .time-plain.time-disp::before {
