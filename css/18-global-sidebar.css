@@ -2722,11 +2722,13 @@
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-item.task-toggle-anim .task-row-center > .txt-line .txt {
     color: #94a3b8 !important;
+    font-weight: 700 !important;
   }
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-item.task-main-checked .task-row-center > .txt-line .txt,
   .app.app--with-global-nav #taskMode .list-panel #tList .task-item.task-main-checked .task-row-center > .txt-line .txt-edit {
     color: #94a3b8 !important;
+    font-weight: 700 !important;
     text-decoration-line: line-through !important;
     text-decoration-thickness: max(1px, 0.06em) !important;
     text-decoration-color: color-mix(in srgb, var(--text2) 38%, var(--text3)) !important;
