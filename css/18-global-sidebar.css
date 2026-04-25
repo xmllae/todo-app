@@ -3258,20 +3258,23 @@
 
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill.sub-task-pill--inline .stp-icon,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn.sub-task-pill--inline .stp-icon {
-  width: 12px !important;
-  height: 12px !important;
-  min-width: 12px !important;
-  min-height: 12px !important;
-  color: #92a0b0 !important;
+  width: 13px !important;
+  height: 13px !important;
+  min-width: 13px !important;
+  min-height: 13px !important;
+  color: #8798ae !important;
   opacity: 1 !important;
 }
 
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill.sub-task-pill--inline .stp-icon::before,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn.sub-task-pill--inline .stp-icon::before {
-  width: 12px !important;
-  height: 12px !important;
-  -webkit-mask-size: 12px 12px !important;
-  mask-size: 12px 12px !important;
+  content: "" !important;
+  display: block !important;
+  width: 13px !important;
+  height: 13px !important;
+  background: currentColor !important;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3.5 6.5 2 2 3-3'/%3E%3Cpath d='m3.5 12 2 2 3-3'/%3E%3Cpath d='m3.5 17.5 2 2 3-3'/%3E%3Cline x1='10.5' y1='6.5' x2='21' y2='6.5'/%3E%3Cline x1='10.5' y1='12' x2='21' y2='12'/%3E%3Cline x1='10.5' y1='17.5' x2='21' y2='17.5'/%3E%3C/svg%3E") center / 13px 13px no-repeat !important;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3.5 6.5 2 2 3-3'/%3E%3Cpath d='m3.5 12 2 2 3-3'/%3E%3Cpath d='m3.5 17.5 2 2 3-3'/%3E%3Cline x1='10.5' y1='6.5' x2='21' y2='6.5'/%3E%3Cline x1='10.5' y1='12' x2='21' y2='12'/%3E%3Cline x1='10.5' y1='17.5' x2='21' y2='17.5'/%3E%3C/svg%3E") center / 13px 13px no-repeat !important;
 }
 
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill.sub-task-pill--inline .stp-n,
