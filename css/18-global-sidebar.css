@@ -2261,16 +2261,19 @@
   }
 
   .app.app--with-global-nav #taskMode .batch-bar-row {
-    display: flex;
+    display: grid;
+    grid-template-columns: 36px 150px 36px minmax(0, 1fr) auto;
     align-items: flex-end;
-    justify-content: space-between;
-    gap: 12px;
+    column-gap: 10px;
     min-height: 42px;
   }
 
   .app.app--with-global-nav #taskMode .batch-bar-left {
-    flex: 1 1 auto;
+    grid-column: 1 / 4;
+    justify-self: center;
+    flex: 0 0 auto;
     min-width: 0;
+    width: max-content;
     gap: 0;
   }
 
@@ -2282,6 +2285,7 @@
     margin: 0 !important;
     display: flex !important;
     align-items: flex-end !important;
+    justify-content: center !important;
   }
 
   .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg {
@@ -2421,7 +2425,9 @@
   }
 
   .app.app--with-global-nav #taskMode .batch-bar-right {
-    margin-left: auto;
+    grid-column: 5;
+    justify-self: end;
+    margin-left: 0;
     padding-bottom: 6px;
     gap: 10px;
     align-items: center;
