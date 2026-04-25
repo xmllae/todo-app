@@ -142,7 +142,26 @@ cancelDelayedToggleExpand();
 if(window.openTaskDetail)window.openTaskDetail(id);else onTaskRowAsideClick(id)
 }
 function onTaskItemMultiBackdrop(e,id){if(!multiSelect)return;var item=e.currentTarget,row=item.querySelector(".task-row");if(e.target!==item&&e.target!==row)return;e.stopPropagation();cancelDelayedToggleExpand();toggleMSel(id)}
-function toggleExpand(id){cancelDelayedToggleExpand();const _nex=expandedId===id?null:id;expandedId=_nex;editingId=null;editingTimeId=null;editingSubId=null;subAddComposingId=null;ppOpenId=null;rT()}
+function isTaskSubExpanded(id){const t=(T[sel]||[]).find(x=>x.id===id);if(!t)return false;const subT=Array.isArray(t.subtasks)?t.subtasks.length:0;if(!subT)return false;const defaultExp=t.showSubtasksByDefault!==false;const collapsedByUser=!!(collapsedSubtaskIds&&collapsedSubtaskIds.has&&collapsedSubtaskIds.has(id));return(expandedId===id||defaultExp)&&!collapsedByUser}
+function toggleExpand(id){
+cancelDelayedToggleExpand();
+if(!collapsedSubtaskIds||typeof collapsedSubtaskIds.has!=="function")collapsedSubtaskIds=new Set();
+const t=(T[sel]||[]).find(x=>x.id===id);
+if(!t)return;
+const subT=Array.isArray(t.subtasks)?t.subtasks.length:0;
+if(!subT)return;
+const defaultExp=t.showSubtasksByDefault!==false;
+const collapsedByUser=collapsedSubtaskIds.has(id);
+const isExp=(expandedId===id||defaultExp)&&!collapsedByUser;
+if(isExp){
+expandedId=null;
+if(defaultExp)collapsedSubtaskIds.add(id)
+}else{
+collapsedSubtaskIds.delete(id);
+expandedId=defaultExp?null:id
+}
+editingId=null;editingTimeId=null;editingSubId=null;subAddComposingId=null;ppOpenId=null;rT()
+}
 function closeTaskMoreFloat(){if(_taskMoreFloatEl){_taskMoreFloatEl.remove();_taskMoreFloatEl=null}document.querySelectorAll(".task-more-btn.is-open").forEach(function(b){b.classList.remove("is-open")});document.querySelectorAll(".task-item--menu-open").forEach(function(i){i.classList.remove("task-item--menu-open")})}
 function taskMorePanelWrap(html){return'<div class="task-more-panel">'+html+"</div>"}
 function taskMoreFloatSwapContent(el,btn,innerHtml,isFreqPanel){var panel=el&&el.querySelector(".task-more-panel");var done=0;var tmo=null;function mount(){if(done)return;done=1;if(tmo){clearTimeout(tmo);tmo=null}try{if(panel)panel.removeEventListener("transitionend",onTe)}catch(e){}if(isFreqPanel)el.classList.add("task-more-drop--freq");else el.classList.remove("task-more-drop--freq");el.innerHTML=taskMorePanelWrap(innerHtml);var np=el.querySelector(".task-more-panel");requestAnimationFrame(function(){requestAnimationFrame(function(){if(np)np.classList.add("task-more-panel--visible");if(btn)requestAnimationFrame(function(){positionTaskMoreFloatNearButton(btn,el);var w=el.offsetWidth;if(w){el.style.width=w+"px";el.style.minWidth=w+"px";el.style.maxWidth=w+"px";el.style.boxSizing="border-box"}})})})}function onTe(e){if(e.target!==panel)return;if(e.propertyName!=="opacity"&&e.propertyName!=="transform")return;mount()}if(panel){panel.classList.add("task-more-panel--out");tmo=setTimeout(mount,180);panel.addEventListener("transitionend",onTe)}else mount()}
@@ -164,7 +183,7 @@ function taskMorePickPostpone(id){showTaskMorePostponePanel(id)}
 function taskMorePickRecur(id){showTaskMoreRecurFreqPanel(id)}
 function taskMorePickFreeze(id){closeTaskMoreFloat();taskMoreMenuId=null;toggleFreeze(id)}
 function clM(){document.getElementById("mBg").classList.remove("show")}
-function showMobileTaskSheet(id){const t=(T[sel]||[]).find(x=>x.id===id);if(!t)return;const isArch=!!t.archived;const exp=expandedId===id;let h="";if(isArch){h=`<div class="m-sheet-wrap"><p class="m-sheet-title">${esc(t.text)}</p><div class="m-sheet-actions"><button type="button" class="m-sheet-btn m-sheet-btn--secondary" onclick="clM();toggleExpand(${id})">展开详情</button><button type="button" class="m-sheet-btn m-sheet-btn--accent" onclick="clM();restoreArchived('${sel}',${id})">恢复任务</button><button type="button" class="m-sheet-btn m-sheet-btn--ghost" onclick="clM()">取消</button></div></div>`}else{h=`<div class="m-sheet-wrap"><p class="m-sheet-title">${esc(t.text)}</p><div class="m-sheet-actions"><button type="button" class="m-sheet-btn m-sheet-btn--secondary" onclick="clM();toggleExpand(${id})">${exp?"收起详情":"展开详情"}</button><button type="button" class="m-sheet-btn m-sheet-btn--danger" onclick="clM();del(${id})">删除任务</button><button type="button" class="m-sheet-btn m-sheet-btn--ghost" onclick="clM()">取消</button></div></div>`}document.getElementById("mBody").innerHTML=h;document.getElementById("mBg").classList.add("show")}
+function showMobileTaskSheet(id){const t=(T[sel]||[]).find(x=>x.id===id);if(!t)return;const isArch=!!t.archived;const exp=isTaskSubExpanded(id);let h="";if(isArch){h=`<div class="m-sheet-wrap"><p class="m-sheet-title">${esc(t.text)}</p><div class="m-sheet-actions"><button type="button" class="m-sheet-btn m-sheet-btn--secondary" onclick="clM();toggleExpand(${id})">展开详情</button><button type="button" class="m-sheet-btn m-sheet-btn--accent" onclick="clM();restoreArchived('${sel}',${id})">恢复任务</button><button type="button" class="m-sheet-btn m-sheet-btn--ghost" onclick="clM()">取消</button></div></div>`}else{h=`<div class="m-sheet-wrap"><p class="m-sheet-title">${esc(t.text)}</p><div class="m-sheet-actions"><button type="button" class="m-sheet-btn m-sheet-btn--secondary" onclick="clM();toggleExpand(${id})">${exp?"收起详情":"展开详情"}</button><button type="button" class="m-sheet-btn m-sheet-btn--danger" onclick="clM();del(${id})">删除任务</button><button type="button" class="m-sheet-btn m-sheet-btn--ghost" onclick="clM()">取消</button></div></div>`}document.getElementById("mBody").innerHTML=h;document.getElementById("mBg").classList.add("show")}
 function bindMobileTaskLongPress(){if(window._mlpBind)return;window._mlpBind=1;const list=document.getElementById("tList");if(!list)return;let lpT=null;function clr(){if(lpT){clearTimeout(lpT);lpT=null}}function mob(){return window.matchMedia("(max-width:640px)").matches}list.addEventListener("touchstart",function(e){if(!mob())return;const item=e.target.closest(".task-item");if(!item)return;if(e.target.closest(".task-expand-area,.drag-handle,.task-ck-slot,.ms-ck,.task-prio-pill,input,textarea,button,a[href]"))return;const id=+item.dataset.id;if(!id)return;clr();lpT=setTimeout(function(){lpT=null;if(navigator.vibrate)try{navigator.vibrate(10)}catch(_){}showMobileTaskSheet(id)},500)},{passive:true});list.addEventListener("touchmove",function(e){if(lpT)clr()},{passive:true});list.addEventListener("touchend",clr,{passive:true});list.addEventListener("touchcancel",clr,{passive:true})}
 bindMobileTaskLongPress();
 function batchDone(){flushPendingTogIfAny();pushUndo("全部完成");(T[sel]||[]).filter(t=>!t.frozen&&!t.archived).forEach(t=>{t.done=true;t.status="done"});rCal();rT();save();toast("✅ 全部已标记完成")}
@@ -174,7 +193,7 @@ function startEditSub(tid,sid){editingSubId=sid;rT();setTimeout(()=>{const inp=d
 function saveEditSub(tid,sid){const inp=document.getElementById("subEdit_"+sid);if(!inp)return;const txt=inp.value.trim();const t=(T[sel]||[]).find(x=>x.id===tid);if(t&&t.subtasks){const s=t.subtasks.find(x=>x.id===sid);if(s&&txt)s.text=txt}editingSubId=null;syncToRule(t);rT();save()}
 function openSubAddCompose(tid){subAddComposingId=tid;editingSubId=null;rT();setTimeout(()=>{const inp=document.getElementById("subAdd_"+tid);if(inp){inp.focus();inp.select&&inp.select()}},30)}
 function cancelSubAddCompose(tid){if(tid==null||subAddComposingId===tid)subAddComposingId=null;rT()}
-function addSubtask(tid){const inp=document.getElementById("subAdd_"+tid);if(!inp)return;const txt=inp.value.trim();if(!txt){inp.focus();return}const t=(T[sel]||[]).find(x=>x.id===tid);if(!t)return;if(!Array.isArray(t.subtasks))t.subtasks=[];t.subtasks.push({id:Date.now()+Math.floor(Math.random()*1e4),text:txt,done:false});subAddComposingId=null;editingSubId=null;expandedId=tid;syncToRule(t);rT();save()}
+function addSubtask(tid){const inp=document.getElementById("subAdd_"+tid);if(!inp)return;const txt=inp.value.trim();if(!txt){inp.focus();return}const t=(T[sel]||[]).find(x=>x.id===tid);if(!t)return;if(!Array.isArray(t.subtasks))t.subtasks=[];t.subtasks.push({id:Date.now()+Math.floor(Math.random()*1e4),text:txt,done:false});subAddComposingId=null;editingSubId=null;if(collapsedSubtaskIds&&collapsedSubtaskIds.delete)collapsedSubtaskIds.delete(tid);expandedId=tid;syncToRule(t);rT();save()}
 function saveNote(tid){const ta=document.getElementById("note_"+tid);if(!ta)return;const t=(T[sel]||[]).find(x=>x.id===tid);if(t){t.note=ta.value;syncToRule(t)}save()}
 function saveDuration(tid){const inp=document.getElementById("dur_"+tid);if(!inp)return;const t=(T[sel]||[]).find(x=>x.id===tid);if(t){t.duration=Math.max(0,parseInt(inp.value)||0);syncToRule(t)}rT();save()}
 function setTaskColor(tid,c){const t=(T[sel]||[]).find(x=>x.id===tid);if(t){t.color=c;syncToRule(t)}rT();save()}
