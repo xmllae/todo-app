@@ -207,10 +207,10 @@
 
 @keyframes task-check-ripple-cohesive {
   0% {
-    box-shadow: 0 0 0 0 rgba(209,69,59,.34);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--ck-prio, #94a3b8) 34%, transparent);
   }
   100% {
-    box-shadow: 0 0 0 10px rgba(209,69,59,0);
+    box-shadow: 0 0 0 10px transparent;
   }
 }
 
@@ -594,20 +594,24 @@
   --task-check-accent: #d1453b;
   --task-check-accent-bg: #faeceb;
   --task-check-accent-shadow: rgba(209,69,59,.24);
-  background: transparent !important;
-  border: 0 !important;
-  border-bottom: 1px solid #F0F0F5 !important;
-  box-shadow: none !important;
+  background: var(--card) !important;
+  border: 1px solid var(--task-bd, #dbe4ef) !important;
+  border-radius: 11px !important;
+  box-shadow: 0 1px 3px rgba(15,23,42,.035) !important;
   padding: 8px 12px 8px 10px !important;
+  overflow: hidden !important;
 }
 
 .dark .task-item.task-item--collapse-ghost {
-  border-bottom-color: rgba(255,255,255,.1) !important;
+  border-color: var(--task-bd) !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,.2) !important;
 }
 
 .task-item.task-item--collapse-ghost > .task-row {
   align-items: flex-start !important;
-  padding-right: 4px !important;
+  min-height: 46px !important;
+  padding: 12px 4px 12px 4px !important;
+  column-gap: 5px !important;
 }
 
 .task-item.task-item--collapse-ghost .task-ck-slot {
@@ -619,7 +623,7 @@
   align-items: center !important;
   justify-content: center !important;
   padding: 0 !important;
-  margin-top: 0 !important;
+  margin-top: -1px !important;
 }
 
 .task-item.task-item--collapse-ghost .task-ck-ring,
@@ -642,14 +646,15 @@
 }
 
 .task-item.task-item--collapse-ghost .chk-ring.checked {
-  background: var(--task-check-accent) !important;
-  border-color: var(--task-check-accent) !important;
-  box-shadow: 0 2px 6px var(--task-check-accent-shadow) !important;
+  background: var(--ck-prio, #94a3b8) !important;
+  border-color: var(--ck-prio, #94a3b8) !important;
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--ck-prio, #94a3b8) 32%, transparent) !important;
 }
 
 .task-item.task-item--collapse-ghost .task-ck-ring--prio-high .chk-ring.checked {
-  background: var(--task-check-accent) !important;
-  border-color: var(--task-check-accent) !important;
+  background: var(--ck-prio, #ef4444) !important;
+  border-color: var(--ck-prio, #ef4444) !important;
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--ck-prio, #ef4444) 32%, transparent) !important;
 }
 
 .task-item.task-item--collapse-ghost .chk-ring.checked .chk-ring-ico {
@@ -1087,13 +1092,11 @@
 
 /* Align the task check column with the primary add action. */
 @media (min-width: 641px) {
-  #taskMode .list-panel:not(.list-panel--multi) #tList .task-item:not(.archived-item) > .task-row > .priority-bar.priority-bar-spacer,
-  .task-item.task-item--collapse-ghost:not(:has(.ms-ck)) > .task-row > .priority-bar.priority-bar-spacer {
+  #taskMode .list-panel:not(.list-panel--multi) #tList .task-item:not(.archived-item) > .task-row > .priority-bar.priority-bar-spacer {
     display: none !important;
   }
 
-  #taskMode .list-panel:not(.list-panel--multi) #tList .task-item:not(.archived-item) > .task-row > .task-rail,
-  .task-item.task-item--collapse-ghost:not(:has(.ms-ck)) > .task-row > .task-rail {
+  #taskMode .list-panel:not(.list-panel--multi) #tList .task-item:not(.archived-item) > .task-row > .task-rail {
     width: 0 !important;
     min-width: 0 !important;
     flex: 0 0 0 !important;
@@ -1105,8 +1108,7 @@
     pointer-events: none !important;
   }
 
-  #taskMode .list-panel:not(.list-panel--multi) #tList .task-item:not(.archived-item) > .task-row,
-  .task-item.task-item--collapse-ghost:not(:has(.ms-ck)) > .task-row {
+  #taskMode .list-panel:not(.list-panel--multi) #tList .task-item:not(.archived-item) > .task-row {
     gap: 4px !important;
   }
 }
