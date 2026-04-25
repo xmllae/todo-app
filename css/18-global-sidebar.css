@@ -2284,36 +2284,24 @@
   .app.app--with-global-nav #taskMode .batch-bar-left .filters.filter-seg-host {
     margin: 0 !important;
     display: flex !important;
-    align-items: flex-end !important;
+    align-items: center !important;
     justify-content: center !important;
   }
 
   .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg {
-    background: transparent !important;
-    border: 0 !important;
-    box-shadow: none !important;
-    border-radius: 0;
-    padding: 0 !important;
-    gap: 14px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    padding: 4px !important;
+    gap: 4px !important;
+    border: 1px solid #e3e8f3 !important;
+    border-radius: 18px !important;
+    background: linear-gradient(180deg, #f8f9ff 0%, #f5f7ff 100%) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92) !important;
     position: relative;
   }
 
   .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg.filter-seg--indicator::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -1px;
-    width: calc(var(--seg-indicator-w, 0px) + 8px);
-    height: 3px;
-    border-radius: 999px;
-    background: #8b5cf6;
-    opacity: var(--seg-indicator-o, 0);
-    transform: translateX(calc(var(--seg-indicator-x, 0px) - 4px));
-    transition:
-      transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-      width 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 0.18s ease;
-    pointer-events: none;
+    display: none !important;
   }
 
   .app.app--with-global-nav #taskMode.task-mode--route-enter .batch-bar-left .filter-seg.filter-seg--indicator::after {
@@ -2321,9 +2309,6 @@
   }
 
   .app.app--with-global-nav #taskMode.task-mode--route-enter .batch-bar-left .filter-seg {
-    background: transparent !important;
-    border: 0 !important;
-    box-shadow: none !important;
     transition: none !important;
     animation: none !important;
   }
@@ -2336,86 +2321,126 @@
   }
 
   .app.app--with-global-nav #taskMode.task-mode--route-enter .batch-bar-left .filter-seg-btn.is-active {
-    background: transparent !important;
-    box-shadow: none !important;
-    border: 0 !important;
+    transition: none !important;
   }
 
   .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-btn {
-    padding: 0 0 6px !important;
-    border: 0 !important;
-    border-radius: 0 !important;
+    min-width: 108px;
+    min-height: 34px;
+    padding: 0 11px !important;
+    border: 1px solid transparent !important;
+    border-radius: 14px !important;
     background: transparent !important;
     box-shadow: none !important;
-    color: #6f7f95;
-    font-size: 0.88rem;
-    font-weight: 640;
-    line-height: 1.1;
+    color: #94a3b8;
+    font-size: 0.82rem;
+    font-weight: 720;
+    line-height: 1;
     position: relative;
-    gap: 8px;
+    gap: 7px;
+    justify-content: center;
+    transition:
+      color .22s ease,
+      background-color .22s ease,
+      border-color .22s ease,
+      box-shadow .22s ease !important;
+  }
+
+  .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-btn::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+    border-radius: 999px;
+    background: currentColor;
+    opacity: 0.72;
+  }
+
+  .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-btn:first-child::before {
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 7.8v4.8l3.2 1.8'/%3E%3C/svg%3E") center / 16px 16px no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 7.8v4.8l3.2 1.8'/%3E%3C/svg%3E") center / 16px 16px no-repeat;
+  }
+
+  .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-btn:last-child::before {
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='m8.4 12.3 2.4 2.4 4.8-5.1'/%3E%3C/svg%3E") center / 16px 16px no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='m8.4 12.3 2.4 2.4 4.8-5.1'/%3E%3C/svg%3E") center / 16px 16px no-repeat;
   }
 
   .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-btn:hover {
-    color: #334155;
+    color: #6f7f95;
+    background: rgba(255, 255, 255, 0.56) !important;
   }
 
   .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-btn.is-active {
-    color: #6536e8;
-    font-weight: 730;
-    border: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
+    color: #6d28d9;
+    border-color: rgba(231, 226, 255, 0.96) !important;
+    background: #ffffff !important;
+    box-shadow:
+      0 2px 6px rgba(15, 23, 42, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.96) !important;
   }
 
   .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-btn.is-active::after {
-    content: '';
-    position: absolute;
-    left: -4px;
-    right: -4px;
-    bottom: -1px;
-    height: 3px;
-    border-radius: 999px;
-    background: #8b5cf6;
+    display: none !important;
   }
 
   .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg.filter-seg--indicator .filter-seg-btn.is-active::after {
     display: none;
   }
 
+  .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-label {
+    white-space: nowrap;
+    letter-spacing: -0.01em;
+  }
+
   .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-badge {
-    min-width: 22px;
-    height: 22px;
-    line-height: 22px;
+    min-width: 24px;
+    height: 24px;
+    line-height: 24px;
     border-radius: 999px;
-    font-size: 0.76rem;
-    font-weight: 690;
+    font-size: 0.78rem;
+    font-weight: 760;
     border: 0;
-    background: #edf2f7;
+    background: #eef2f7;
     color: #64748b;
     padding: 0 7px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.88);
   }
 
   .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-btn.is-active .filter-seg-badge,
   .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-badge.filter-seg-badge--on {
-    background: #ede9fe;
-    color: #7c3aed;
+    background: #efe9ff;
+    color: #6d28d9;
+  }
+
+  .dark .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg {
+    border-color: rgba(129, 140, 248, 0.2) !important;
+    background: linear-gradient(180deg, rgba(30, 41, 59, 0.92) 0%, rgba(15, 23, 42, 0.96) 100%) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
   }
 
   .dark .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-btn {
-    color: #95a7bd;
+    color: #94a3b8;
   }
 
   .dark .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-btn:hover {
-    color: #d7e0ee;
+    color: #cbd5e1;
+    background: rgba(255, 255, 255, 0.03) !important;
   }
 
   .dark .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-btn.is-active {
-    color: #c4b5fd;
+    color: #ddd6fe;
+    border-color: rgba(129, 140, 248, 0.18) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    box-shadow:
+      0 2px 8px rgba(2, 6, 23, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
   }
 
   .dark .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-badge {
-    background: rgba(148, 163, 184, 0.16);
-    color: #afbdd0;
+    background: rgba(51, 65, 85, 0.9);
+    color: #b8c6d8;
+    box-shadow: none;
   }
 
   .dark .app.app--with-global-nav #taskMode .batch-bar-left .filter-seg-btn.is-active .filter-seg-badge,
