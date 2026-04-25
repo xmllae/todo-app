@@ -3237,10 +3237,16 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .task-time-sep {
   display: inline-block !important;
   width: 1px !important;
-  height: 12px !important;
-  margin: 0 7px 0 4px !important;
+  height: 11px !important;
+  margin: 0 4px 0 2px !important;
   border-radius: 999px !important;
-  background: color-mix(in srgb, #9aa8bb 42%, transparent) !important;
+  background: color-mix(in srgb, #9aa8bb 50%, transparent) !important;
+  transform: scaleX(0.35) !important;
+  transform-origin: center !important;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col {
+  column-gap: 6px !important;
 }
 
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill.sub-task-pill--inline,
