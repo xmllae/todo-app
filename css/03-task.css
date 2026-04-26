@@ -1593,7 +1593,7 @@
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-section-count {
-  display: inline-flex !important;
+  display: none !important;
   align-items: center !important;
   justify-content: center !important;
   min-width: 34px !important;
