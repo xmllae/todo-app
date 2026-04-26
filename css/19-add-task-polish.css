@@ -401,8 +401,8 @@
 }
 
 .modal.qi-modal-shell {
-  width: min(1080px, 94vw) !important;
-  max-width: min(1080px, 94vw) !important;
+  width: min(540px, 94vw) !important;
+  max-width: min(540px, 94vw) !important;
   padding: 0 !important;
   border-radius: 18px !important;
   border: 1px solid #d9e3f0 !important;
@@ -491,6 +491,10 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
   padding: 0 28px 12px;
+}
+
+.qi-tab-row.qi-tab-row--two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .qi-tab-btn {
@@ -661,6 +665,213 @@
   background: #faf7ff;
 }
 
+.qi-template-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.qi-template-add-btn {
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 9px;
+  border: 1px solid #d8e3f0;
+  background: #ffffff;
+  color: #5d7390;
+  font-size: 0.82rem;
+  font-weight: 650;
+  font-family: inherit;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.qi-template-add-btn:hover {
+  border-color: #c5d4e8;
+  color: #465f81;
+}
+
+.qi-template-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.qi-template-row {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  border: 1px solid #dbe5f1;
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 9px 10px;
+  transition: border-color 0.14s ease, background 0.14s ease;
+}
+
+.qi-template-row.is-editing {
+  border-color: #bda9ff;
+  background: #faf7ff;
+}
+
+.qi-template-row-main {
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.qi-template-row-title {
+  margin: 0;
+  color: #4d6584;
+  font-size: 0.9rem;
+  font-weight: 680;
+  line-height: 1.3;
+}
+
+.qi-template-row-sub {
+  margin: 2px 0 0;
+  color: #90a1b8;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.qi-template-row-actions {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.qi-template-action-btn {
+  height: 30px;
+  min-width: 48px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid #d7e2ef;
+  background: #ffffff;
+  color: #5b7392;
+  font-size: 0.79rem;
+  font-weight: 650;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.qi-template-action-btn:hover {
+  border-color: #c4d3e7;
+  color: #476184;
+}
+
+.qi-template-action-btn.is-soft {
+  background: #f8fbff;
+}
+
+.qi-template-editor {
+  display: none;
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px solid #e7eef7;
+}
+
+.qi-template-editor.is-open {
+  display: block;
+}
+
+.qi-template-editor-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.qi-template-editor-head strong {
+  color: #516a89;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.qi-template-name {
+  width: 100%;
+  height: 34px;
+  border-radius: 9px;
+  border: 1px solid #d8e3f0;
+  background: #ffffff;
+  color: #3f5878;
+  padding: 0 10px;
+  font-size: 0.84rem;
+  font-family: inherit;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.qi-template-name:focus {
+  border-color: #b8c8df;
+}
+
+.qi-template-editor-input {
+  width: 100%;
+  min-height: 120px;
+  border-radius: 10px;
+  border: 1px solid #d8e3f0;
+  background: #ffffff;
+  color: #3f5878;
+  padding: 10px;
+  margin-top: 8px;
+  resize: vertical;
+  font-size: 0.83rem;
+  line-height: 1.55;
+  font-family: inherit;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.qi-template-editor-input:focus {
+  border-color: #b8c8df;
+}
+
+.qi-template-editor-actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.qi-template-ghost-btn,
+.qi-template-save-btn {
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 9px;
+  font-size: 0.82rem;
+  font-weight: 660;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.qi-template-ghost-btn {
+  border: 1px solid #d7e2ef;
+  background: #ffffff;
+  color: #5b7392;
+}
+
+.qi-template-ghost-btn:hover {
+  border-color: #c4d3e7;
+  color: #476184;
+}
+
+.qi-template-save-btn {
+  border: 0;
+  color: #ffffff;
+  background: linear-gradient(135deg, #6948ea, #4f47de);
+}
+
+.qi-template-save-btn:hover {
+  filter: brightness(1.03);
+}
+
 .qi-hint-row {
   margin-top: 12px;
   padding: 0 28px;
@@ -668,6 +879,10 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+}
+
+.qi-hint-row.qi-hint-row--in-panel {
+  padding: 0;
 }
 
 .qi-hint-tip {
@@ -698,6 +913,11 @@
   border-radius: 12px;
   background: #ffffff;
   overflow: hidden;
+}
+
+.qi-preview-card.qi-preview-card--in-panel {
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .qi-preview-head {
@@ -836,7 +1056,7 @@
 
 @media (max-width: 900px) {
   .modal.qi-modal-shell {
-    width: min(96vw, 760px) !important;
+    width: min(96vw, 540px) !important;
   }
 
   .qi-modal-head,
@@ -865,6 +1085,23 @@
 
   .qi-template-grid {
     grid-template-columns: 1fr;
+  }
+
+  .qi-template-top {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .qi-template-add-btn {
+    width: 100%;
+  }
+
+  .qi-template-row {
+    flex-direction: column;
+  }
+
+  .qi-template-row-actions {
+    justify-content: flex-end;
   }
 
   .qi-upload-actions {
@@ -945,6 +1182,59 @@
   border-color: #8f78ef;
   background: #2b2948;
   color: #c8b8ff;
+}
+
+.dark .qi-template-row {
+  border-color: #4c6079;
+  background: #223246;
+}
+
+.dark .qi-template-row.is-editing {
+  border-color: #8f78ef;
+  background: #2b2948;
+}
+
+.dark .qi-template-row-title {
+  color: #c2d5eb;
+}
+
+.dark .qi-template-row-sub {
+  color: #93a8c0;
+}
+
+.dark .qi-template-add-btn,
+.dark .qi-template-action-btn,
+.dark .qi-template-ghost-btn {
+  border-color: #4f647e;
+  background: #24364b;
+  color: #b6c9df;
+}
+
+.dark .qi-template-add-btn:hover,
+.dark .qi-template-action-btn:hover,
+.dark .qi-template-ghost-btn:hover {
+  border-color: #677f9f;
+  color: #dbe7f6;
+}
+
+.dark .qi-template-editor {
+  border-top-color: #3f556f;
+}
+
+.dark .qi-template-editor-head strong {
+  color: #bfd3ea;
+}
+
+.dark .qi-template-name,
+.dark .qi-template-editor-input {
+  border-color: #4f647e;
+  background: #1f3044;
+  color: #dbe7f6;
+}
+
+.dark .qi-template-name:focus,
+.dark .qi-template-editor-input:focus {
+  border-color: #8f78ef;
 }
 
 .dark .qi-upload-zone {
