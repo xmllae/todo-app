@@ -100,7 +100,7 @@ function qiRenderPreview(){
   var hintEl=document.getElementById("qiPreviewHint");
   var confirmBtn=document.getElementById("qiConfirmBtn");
   if(!txt){
-    body.innerHTML='<tr class="qi-preview-empty"><td colspan="5">\u7c98\u8d34\u6587\u672c\u540e\uff0c\u5c06\u5728\u8fd9\u91cc\u663e\u793a\u9884\u89c8</td></tr>';
+    body.innerHTML='<tr class="qi-preview-empty"><td colspan="3">\u7c98\u8d34\u6587\u672c\u540e\uff0c\u5c06\u5728\u8fd9\u91cc\u663e\u793a\u9884\u89c8</td></tr>';
     if(countEl)countEl.textContent="\u5c06\u5bfc\u5165 0 \u6761\u4efb\u52a1";
     if(hintEl)hintEl.textContent="\u5f53\u524d\u672a\u68c0\u6d4b\u5230\u53ef\u5bfc\u5165\u6570\u636e";
     if(confirmBtn)confirmBtn.textContent="\u786e\u8ba4\u5bfc\u5165";
@@ -109,7 +109,7 @@ function qiRenderPreview(){
   var parsed=null;
   try{parsed=parseQuickImport(txt)}catch(e){}
   if(!parsed||!parsed.text){
-    body.innerHTML='<tr class="qi-preview-empty"><td colspan="5">\u672a\u8bc6\u522b\u5230\u4efb\u52a1\u6807\u9898\uff0c\u8bf7\u68c0\u67e5\u6587\u672c\u683c\u5f0f</td></tr>';
+    body.innerHTML='<tr class="qi-preview-empty"><td colspan="3">\u672a\u8bc6\u522b\u5230\u4efb\u52a1\u6807\u9898\uff0c\u8bf7\u68c0\u67e5\u6587\u672c\u683c\u5f0f</td></tr>';
     if(countEl)countEl.textContent="\u5c06\u5bfc\u5165 0 \u6761\u4efb\u52a1";
     if(hintEl)hintEl.textContent="\u5efa\u8bae\u4f7f\u7528\u6a21\u677f\u683c\u5f0f\uff0c\u53ef\u63d0\u9ad8\u8bc6\u522b\u51c6\u786e\u7387";
     if(confirmBtn)confirmBtn.textContent="\u786e\u8ba4\u5bfc\u5165";
@@ -117,14 +117,11 @@ function qiRenderPreview(){
   }
   var pLbl=parsed.priority==="high"?"\u9ad8":parsed.priority==="low"?"\u4f4e":"\u4e2d";
   var pCls=parsed.priority==="high"?"high":parsed.priority==="low"?"low":"mid";
-  var tags=((parsed.tags||[]).map(function(tid){
-    if(!Array.isArray(customTags))return"";
-    var t=customTags.find(function(x){return x.id===tid});
-    return t&&t.name?t.name:"";
-  }).filter(Boolean).join("\u3001"))||"\u2014";
   var dateTxt=parsed.execDate||sel||"\u2014";
   var timeTxt=parsed.planTime||"\u2014";
-  body.innerHTML='<tr><td>'+esc(parsed.text)+'</td><td>'+esc(dateTxt)+'</td><td>'+esc(timeTxt)+'</td><td><span class="qi-pri-badge qi-pri-'+pCls+'">'+pLbl+'</span></td><td>'+esc(tags)+'</td></tr>';
+  var dateTimeTxt=((dateTxt&&dateTxt!=="\u2014")?dateTxt:"")+((timeTxt&&timeTxt!=="\u2014")?(" "+timeTxt):"");
+  if(!dateTimeTxt.trim())dateTimeTxt="\u2014";
+  body.innerHTML='<tr><td>'+esc(parsed.text)+'</td><td>'+esc(dateTimeTxt.trim())+'</td><td><span class="qi-pri-badge qi-pri-'+pCls+'">'+pLbl+'</span></td></tr>';
   if(countEl)countEl.textContent="\u5c06\u5bfc\u5165 1 \u6761\u4efb\u52a1";
   if(hintEl)hintEl.textContent="\u9884\u89c8\u57fa\u4e8e\u5f53\u524d\u89e3\u6790\u7ed3\u679c\uff0c\u5bfc\u5165\u540e\u53ef\u7ee7\u7eed\u7f16\u8f91";
   if(confirmBtn)confirmBtn.textContent="\u786e\u8ba4\u5bfc\u5165 1 \u6761\u4efb\u52a1";
@@ -149,7 +146,7 @@ function openQuickImportModal(tab){
   body.innerHTML='<div class="qi-modal-wrap" data-tab="paste">'
     +'<div class="qi-modal-head"><div class="qi-modal-head-left"><span class="qi-modal-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 5 17 10"></polyline><line x1="12" y1="5" x2="12" y2="15"></line><line x1="8" y1="19" x2="16" y2="19"></line></svg></span><div class="qi-modal-head-text"><h3>\u5feb\u901f\u5bfc\u5165\u4efb\u52a1</h3><p>\u652f\u6301\u7c98\u8d34\u6587\u672c\u3001\u6a21\u677f\u5bfc\u5165\uff0c\u81ea\u52a8\u8bc6\u522b\u5e76\u521b\u5efa\u4efb\u52a1</p></div></div><button type="button" class="qi-modal-close" aria-label="\u5173\u95ed" onclick="closeQuickImportModal()">\u00d7</button></div>'
     +'<div class="qi-tab-row qi-tab-row--two" role="tablist" aria-label="\u5bfc\u5165\u65b9\u5f0f"><button type="button" class="qi-tab-btn is-active" data-qi-tab-btn="paste" onclick="setQuickImportTab(\'paste\')">\u7c98\u8d34\u6587\u672c</button><button type="button" class="qi-tab-btn" data-qi-tab-btn="template" onclick="setQuickImportTab(\'template\')">\u6a21\u677f\u5bfc\u5165</button></div>'
-    +'<div class="qi-panel is-active" data-qi-panel="paste"><textarea id="quickImportText" class="qi-textarea" placeholder="\u7c98\u8d34\u4efb\u52a1\u4fe1\u606f\uff0c\u4f8b\u5982\uff1a&#10;\u4efb\u52a1\u540d\u79f0\uff1a\u5199\u5468\u62a5&#10;\u6807\u7b7e\uff1a\u5de5\u4f5c&#10;\u4f18\u5148\u7ea7\uff1a\u9ad8&#10;\u5efa\u8bae\u65f6\u95f4\uff1a09:30&#10;\u9884\u8ba1\u8017\u65f6\uff1a45 \u5206\u949f"></textarea><div class="qi-hint-row qi-hint-row--in-panel"><div class="qi-hint-tip">\u5c0f\u8d34\u58eb\uff1a\u5efa\u8bae\u5148\u4f7f\u7528\u6a21\u677f\uff0c\u80fd\u660e\u663e\u63d0\u5347\u89e3\u6790\u51c6\u786e\u7387</div><button type="button" class="qi-link-btn" onclick="qiDownloadTemplate()">\u4e0b\u8f7d\u5bfc\u5165\u6a21\u677f</button></div><section class="qi-preview-card qi-preview-card--in-panel"><div class="qi-preview-head"><h4>\u6570\u636e\u9884\u89c8</h4><div class="qi-preview-meta"><span id="qiPreviewCount">\u5c06\u5bfc\u5165 0 \u6761\u4efb\u52a1</span><button type="button" class="qi-link-btn" onclick="qiPreviewParse()">\u9884\u89c8\u89e3\u6790</button></div></div><p class="qi-preview-hint" id="qiPreviewHint">\u5f53\u524d\u672a\u68c0\u6d4b\u5230\u53ef\u5bfc\u5165\u6570\u636e</p><div class="qi-preview-table-wrap"><table class="qi-preview-table"><thead><tr><th>\u4efb\u52a1\u6807\u9898</th><th>\u65e5\u671f</th><th>\u65f6\u95f4</th><th>\u4f18\u5148\u7ea7</th><th>\u6807\u7b7e</th></tr></thead><tbody id="qiPreviewBody"><tr class="qi-preview-empty"><td colspan="5">\u7c98\u8d34\u6587\u672c\u540e\uff0c\u5c06\u5728\u8fd9\u91cc\u663e\u793a\u9884\u89c8</td></tr></tbody></table></div></section></div>'
+    +'<div class="qi-panel is-active" data-qi-panel="paste"><textarea id="quickImportText" class="qi-textarea" placeholder="\u7c98\u8d34\u4efb\u52a1\u4fe1\u606f\uff0c\u4f8b\u5982\uff1a&#10;\u4efb\u52a1\u540d\u79f0\uff1a\u5199\u5468\u62a5&#10;\u6807\u7b7e\uff1a\u5de5\u4f5c&#10;\u4f18\u5148\u7ea7\uff1a\u9ad8&#10;\u5efa\u8bae\u65f6\u95f4\uff1a09:30&#10;\u9884\u8ba1\u8017\u65f6\uff1a45 \u5206\u949f"></textarea><section class="qi-preview-card qi-preview-card--in-panel"><div class="qi-preview-head"><h4>\u6570\u636e\u9884\u89c8</h4><div class="qi-preview-meta"><span id="qiPreviewCount">\u5c06\u5bfc\u5165 0 \u6761\u4efb\u52a1</span><button type="button" class="qi-link-btn" onclick="qiPreviewParse()">\u9884\u89c8\u89e3\u6790</button></div></div><p class="qi-preview-hint" id="qiPreviewHint">\u5f53\u524d\u672a\u68c0\u6d4b\u5230\u53ef\u5bfc\u5165\u6570\u636e</p><div class="qi-preview-table-wrap"><table class="qi-preview-table"><thead><tr><th>\u4efb\u52a1\u6807\u9898</th><th>\u65e5\u671f\u65f6\u95f4</th><th>\u4f18\u5148\u7ea7</th></tr></thead><tbody id="qiPreviewBody"><tr class="qi-preview-empty"><td colspan="3">\u7c98\u8d34\u6587\u672c\u540e\uff0c\u5c06\u5728\u8fd9\u91cc\u663e\u793a\u9884\u89c8</td></tr></tbody></table></div></section></div>'
     +'<div class="qi-panel" data-qi-panel="template"><div class="qi-template-box"><div class="qi-template-top"><div class="qi-template-tip">\u6a21\u677f\u53ef\u76f4\u63a5\u7f16\u8f91\uff0c\u4fdd\u5b58\u540e\u4f1a\u957f\u671f\u4fdd\u7559\u3002\u70b9\u51fb\u201c\u4f7f\u7528\u201d\u4f1a\u81ea\u52a8\u586b\u5145\u5230\u7c98\u8d34\u6587\u672c\u3002</div><button type="button" class="qi-template-add-btn" onclick="qiCreateCustomTemplate()">+ \u65b0\u5efa\u6a21\u677f</button></div><div class="qi-template-list" id="qiTemplateList"></div><div class="qi-template-editor" id="qiTemplateEditor"><div class="qi-template-editor-head"><strong id="qiTemplateEditorTitle">\u7f16\u8f91\u6a21\u677f</strong><button type="button" class="qi-link-btn" onclick="qiCloseTemplateEditor()">\u6536\u8d77</button></div><input type="text" id="qiTplName" class="qi-template-name" maxlength="20" placeholder="\u6a21\u677f\u540d\u79f0"><textarea id="qiTplContent" class="qi-template-editor-input" placeholder="\u6a21\u677f\u5185\u5bb9"></textarea><div class="qi-template-editor-actions"><button type="button" class="qi-template-ghost-btn" onclick="qiDeleteEditingTemplate()">\u5220\u9664</button><button type="button" class="qi-template-ghost-btn" onclick="qiUseEditingTemplate()">\u4f7f\u7528\u5185\u5bb9</button><button type="button" class="qi-template-save-btn" onclick="qiSaveEditingTemplate()">\u4fdd\u5b58\u6a21\u677f</button></div></div></div></div>'
     +'<div class="qi-modal-foot"><button type="button" class="qi-cancel-btn" onclick="closeQuickImportModal()">\u53d6\u6d88</button><button type="button" class="qi-primary-btn" id="qiConfirmBtn" onclick="doQuickImport()">\u786e\u8ba4\u5bfc\u5165</button></div>'
     +'</div>';
