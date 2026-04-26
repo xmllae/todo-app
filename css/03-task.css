@@ -1573,6 +1573,10 @@
   padding: 0 !important;
 }
 
+#taskMode .list-panel #tList .task-expand-area .exp-block.exp-block--sub {
+  --subtask-row-space: 10px !important;
+}
+
 #taskMode .list-panel #tList .task-expand-area .subtask-section-meta {
   display: inline-flex !important;
   align-items: center !important;
@@ -1629,7 +1633,7 @@
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-list {
-  gap: 8px !important;
+  gap: var(--subtask-row-space) !important;
   margin: 0 !important;
   padding: 0 !important;
 }
@@ -1759,14 +1763,18 @@
 }
 
 #taskMode .list-panel #tList .task-expand-area .sub-add-wrap--list {
-  margin-top: 8px !important;
+  margin-top: var(--subtask-row-space) !important;
   padding-top: 0 !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .sub-add-wrap--list:has(.sub-add-form:not(.sub-add-form--hidden)) {
+  margin-bottom: var(--subtask-row-space) !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .sub-add-wrap--list .sub-add-form {
   margin-left: 0 !important;
   padding: 8px 10px !important;
-  border-radius: 10px !important;
+  border-radius: 6px !important;
   border: 1px solid #dfe7f1 !important;
   background: #fefefe !important;
   box-shadow: 0 3px 10px rgba(15, 23, 42, 0.035) !important;
