@@ -2641,7 +2641,7 @@
   }
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .txt-line .txt {
-    font-size: 0.96rem;
+    font-size: 16px;
     font-weight: 650;
     line-height: 1.2;
     color: #1f2937;
@@ -2754,7 +2754,7 @@
   .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .txt-line.txt-line--edit {
     min-height: 20px !important;
     align-items: center !important;
-    font-size: 0.96rem !important;
+    font-size: 16px !important;
     font-weight: 650 !important;
     line-height: 1.2 !important;
     justify-self: stretch !important;
