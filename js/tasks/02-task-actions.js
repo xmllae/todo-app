@@ -191,6 +191,34 @@ function toggleSubtask(tid,sid){const t=(T[sel]||[]).find(x=>x.id===tid);if(!t)r
 function deleteSubtask(tid,sid){const t=(T[sel]||[]).find(x=>x.id===tid);if(!t)return;t.subtasks=(t.subtasks||[]).filter(x=>x.id!==sid);syncToRule(t);rT();save()}
 function startEditSub(tid,sid){editingSubId=sid;rT();setTimeout(()=>{const inp=document.getElementById("subEdit_"+sid);if(inp){inp.focus();inp.setSelectionRange(inp.value.length,inp.value.length)}},30)}
 function saveEditSub(tid,sid){const inp=document.getElementById("subEdit_"+sid);if(!inp)return;const txt=inp.value.trim();const t=(T[sel]||[]).find(x=>x.id===tid);if(t&&t.subtasks){const s=t.subtasks.find(x=>x.id===sid);if(s&&txt)s.text=txt}editingSubId=null;syncToRule(t);rT();save()}
+let _subAddToggleAnimTid=null,_subAddToggleAnimTimer=null;
+function toggleSubAddCompose(tid){
+if(tid==null)return;
+const willOpen=subAddComposingId!==tid;
+const item=document.querySelector('#taskMode .list-panel #tList .task-item[data-id="'+tid+'"]')||document.querySelector('.task-item[data-id="'+tid+'"]');
+const btn=item?item.querySelector(".subtask-section-add"):null;
+if(!btn){
+if(willOpen)openSubAddCompose(tid);else cancelSubAddCompose(tid);
+return
+}
+if(_subAddToggleAnimTid===tid)return;
+_subAddToggleAnimTid=tid;
+btn.classList.remove("is-opening","is-closing");
+btn.classList.add(willOpen?"is-opening":"is-closing");
+btn.classList.add("is-animating");
+btn.classList.toggle("is-active",willOpen);
+btn.setAttribute("aria-expanded",willOpen?"true":"false");
+btn.setAttribute("title",willOpen?"取消子任务":"添加子任务");
+btn.setAttribute("aria-label",willOpen?"取消子任务":"添加子任务");
+const lbl=btn.querySelector(".subtask-section-add-label");
+if(lbl)lbl.textContent=willOpen?"取消子任务":"添加子任务";
+if(_subAddToggleAnimTimer)clearTimeout(_subAddToggleAnimTimer);
+_subAddToggleAnimTimer=setTimeout(()=>{
+_subAddToggleAnimTid=null;
+_subAddToggleAnimTimer=null;
+if(willOpen)openSubAddCompose(tid);else cancelSubAddCompose(tid)
+},240)
+}
 function openSubAddCompose(tid){subAddComposingId=tid;editingSubId=null;rT();setTimeout(()=>{const inp=document.getElementById("subAdd_"+tid);if(inp){inp.focus();inp.select&&inp.select()}},30)}
 function cancelSubAddCompose(tid){if(tid==null||subAddComposingId===tid)subAddComposingId=null;rT()}
 function addSubtask(tid){const inp=document.getElementById("subAdd_"+tid);if(!inp)return;const txt=inp.value.trim();if(!txt){inp.focus();return}const t=(T[sel]||[]).find(x=>x.id===tid);if(!t)return;if(!Array.isArray(t.subtasks))t.subtasks=[];t.subtasks.push({id:Date.now()+Math.floor(Math.random()*1e4),text:txt,done:false});subAddComposingId=null;editingSubId=null;if(collapsedSubtaskIds&&collapsedSubtaskIds.delete)collapsedSubtaskIds.delete(tid);expandedId=tid;syncToRule(t);rT();save()}
