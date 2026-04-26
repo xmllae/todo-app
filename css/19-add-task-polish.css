@@ -420,6 +420,10 @@
   flex-direction: column;
 }
 
+.qi-modal-wrap[data-tab="template"] {
+  overflow: hidden;
+}
+
 .qi-modal-head {
   display: flex;
   align-items: flex-start;
@@ -627,6 +631,29 @@
   border-radius: 14px;
   background: #fbfdff;
   padding: 14px;
+}
+
+.qi-modal-wrap[data-tab="template"] .qi-panel[data-qi-panel="template"].is-active {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+.qi-modal-wrap[data-tab="template"] .qi-template-box {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.qi-modal-wrap[data-tab="template"] .qi-template-box::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  background: transparent;
 }
 
 .qi-template-tip {
