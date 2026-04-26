@@ -42,22 +42,39 @@
   min-height: 36px !important;
   padding: 0 11px !important;
   border-radius: 10px !important;
-  border: 1px solid #dbe4ef !important;
+  border: 1px solid #dfe7f1 !important;
   background: #ffffff !important;
   color: #5f728d !important;
   font-weight: 600 !important;
   box-shadow: none !important;
   transition:
-    border-color 0.16s ease,
-    background 0.16s ease,
-    color 0.16s ease !important;
+    border-color 0.14s ease,
+    color 0.14s ease !important;
 }
 
 .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-attr-btn:hover {
-  border-color: #c7d4e4 !important;
-  background: #f9fbfe !important;
+  border-color: #d4dfec !important;
+  background: #ffffff !important;
+  color: #5b6f89 !important;
   box-shadow: none !important;
   transform: none !important;
+  filter: none !important;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-btn:hover,
+.app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-btn:hover,
+.app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-dur-inline-wrap:hover {
+  border-color: #d4dfec !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-dur-inline-wrap:focus-within {
+  border-color: #d4dfec !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
 }
 
 .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-attr-btn svg {
@@ -175,7 +192,7 @@
 }
 
 .dark .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-attr-btn {
-  border-color: #52647d !important;
+  border-color: #576b84 !important;
   background: #1d2a3b !important;
   color: #d5dfec !important;
   box-shadow: none !important;
@@ -187,10 +204,22 @@
   .list-panel
   #addTaskInlineHold
   .task-ghost-attr-btn:hover {
-  border-color: #6a7f9c !important;
-  background: #213246 !important;
+  border-color: #687e9b !important;
+  background: #1d2a3b !important;
   color: #e2e8f0 !important;
   box-shadow: none !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+.dark .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-btn:hover,
+.dark .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-btn:hover,
+.dark .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-dur-inline-wrap:hover {
+  border-color: #687e9b !important;
+  background: #1d2a3b !important;
+  box-shadow: none !important;
+  transform: none !important;
+  filter: none !important;
 }
 
 .dark .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-attr-btn svg {
