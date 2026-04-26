@@ -194,17 +194,12 @@ function saveEditSub(tid,sid){const inp=document.getElementById("subEdit_"+sid);
 function _getTaskItemElById(tid){return document.querySelector('#taskMode .list-panel #tList .task-item[data-id="'+tid+'"]')||document.querySelector('.task-item[data-id="'+tid+'"]')}
 function _applySubAddBtnState(btn,open){
 if(!btn)return;
-btn.classList.remove("is-animating");
-void btn.offsetWidth;
-btn.classList.add("is-animating");
 btn.classList.toggle("is-active",!!open);
 btn.setAttribute("aria-expanded",open?"true":"false");
 btn.setAttribute("title",open?"取消子任务":"添加子任务");
 btn.setAttribute("aria-label",open?"取消子任务":"添加子任务");
 const lbl=btn.querySelector(".subtask-section-add-label");
 if(lbl)lbl.textContent=open?"取消子任务":"添加子任务";
-if(btn._subAddAnimTimer)clearTimeout(btn._subAddAnimTimer);
-btn._subAddAnimTimer=setTimeout(()=>{btn.classList.remove("is-animating");btn._subAddAnimTimer=null},240)
 }
 function _applySubAddComposeDom(tid,open){
 const item=_getTaskItemElById(tid);
@@ -226,7 +221,7 @@ if(subAddComposingId!=null&&subAddComposingId!==tid)_applySubAddComposeDom(subAd
 subAddComposingId=tid;
 editingSubId=null;
 if(!_applySubAddComposeDom(tid,true))rT();
-setTimeout(()=>{const inp=document.getElementById("subAdd_"+tid);if(inp){inp.focus();inp.select&&inp.select()}},16)
+setTimeout(()=>{const inp=document.getElementById("subAdd_"+tid);if(inp){try{inp.focus({preventScroll:true})}catch(e){inp.focus()}inp.select&&inp.select()}},16)
 }
 function cancelSubAddCompose(tid){
 const target=tid==null?subAddComposingId:tid;

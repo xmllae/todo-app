@@ -1610,7 +1610,9 @@
 #taskMode .list-panel #tList .task-expand-area .subtask-section-add {
   display: inline-flex !important;
   align-items: center !important;
+  justify-content: flex-end !important;
   gap: 5px !important;
+  min-width: 98px !important;
   position: relative !important;
   padding: 0 !important;
   border: 0 !important;
@@ -1619,6 +1621,7 @@
   font-size: 12px !important;
   font-weight: 400 !important;
   line-height: 1.1 !important;
+  white-space: nowrap !important;
   cursor: pointer !important;
   user-select: none !important;
   transition: color .24s cubic-bezier(0.16, 1, 0.3, 1) !important;
@@ -1635,15 +1638,8 @@
 #taskMode .list-panel #tList .task-expand-area .subtask-section-add .subtask-section-add-label {
   display: inline-block !important;
   line-height: 1.1 !important;
-  transition: color .24s cubic-bezier(0.16, 1, 0.3, 1), opacity .24s cubic-bezier(0.16, 1, 0.3, 1), transform .24s cubic-bezier(0.16, 1, 0.3, 1) !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .subtask-section-add.is-animating {
-  pointer-events: none !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .subtask-section-add.is-animating .subtask-section-add-label {
-  animation: subtask-add-label-switch .24s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  white-space: nowrap !important;
+  transition: color .24s cubic-bezier(0.16, 1, 0.3, 1), opacity .16s ease !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-section-add-plus {
@@ -1653,7 +1649,7 @@
   height: 12px !important;
   min-width: 12px !important;
   min-height: 12px !important;
-  transform: translateY(-1px) rotate(0deg) !important;
+  transform: rotate(0deg) !important;
   transform-origin: 50% 50% !important;
   transition: transform .24s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
@@ -1680,18 +1676,7 @@
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-section-add.is-active .subtask-section-add-plus {
-  transform: translateY(-1px) rotate(45deg) !important;
-}
-
-@keyframes subtask-add-label-switch {
-  0% {
-    opacity: .58;
-    transform: translateY(1.5px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  transform: rotate(45deg) !important;
 }
 
 
