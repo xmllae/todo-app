@@ -191,36 +191,49 @@ function toggleSubtask(tid,sid){const t=(T[sel]||[]).find(x=>x.id===tid);if(!t)r
 function deleteSubtask(tid,sid){const t=(T[sel]||[]).find(x=>x.id===tid);if(!t)return;t.subtasks=(t.subtasks||[]).filter(x=>x.id!==sid);syncToRule(t);rT();save()}
 function startEditSub(tid,sid){editingSubId=sid;rT();setTimeout(()=>{const inp=document.getElementById("subEdit_"+sid);if(inp){inp.focus();inp.setSelectionRange(inp.value.length,inp.value.length)}},30)}
 function saveEditSub(tid,sid){const inp=document.getElementById("subEdit_"+sid);if(!inp)return;const txt=inp.value.trim();const t=(T[sel]||[]).find(x=>x.id===tid);if(t&&t.subtasks){const s=t.subtasks.find(x=>x.id===sid);if(s&&txt)s.text=txt}editingSubId=null;syncToRule(t);rT();save()}
-let _subAddToggleAnimTid=null,_subAddToggleAnimTimer=null;
+function _getTaskItemElById(tid){return document.querySelector('#taskMode .list-panel #tList .task-item[data-id="'+tid+'"]')||document.querySelector('.task-item[data-id="'+tid+'"]')}
+function _applySubAddBtnState(btn,open){
+if(!btn)return;
+btn.classList.remove("is-animating");
+void btn.offsetWidth;
+btn.classList.add("is-animating");
+btn.classList.toggle("is-active",!!open);
+btn.setAttribute("aria-expanded",open?"true":"false");
+btn.setAttribute("title",open?"取消子任务":"添加子任务");
+btn.setAttribute("aria-label",open?"取消子任务":"添加子任务");
+const lbl=btn.querySelector(".subtask-section-add-label");
+if(lbl)lbl.textContent=open?"取消子任务":"添加子任务";
+if(btn._subAddAnimTimer)clearTimeout(btn._subAddAnimTimer);
+btn._subAddAnimTimer=setTimeout(()=>{btn.classList.remove("is-animating");btn._subAddAnimTimer=null},240)
+}
+function _applySubAddComposeDom(tid,open){
+const item=_getTaskItemElById(tid);
+if(!item)return false;
+const btn=item.querySelector(".subtask-section-add");
+const form=item.querySelector(".sub-add-wrap--list .sub-add-form");
+_applySubAddBtnState(btn,open);
+if(form)form.classList.toggle("sub-add-form--hidden",!open);
+return !!(btn||form)
+}
 function toggleSubAddCompose(tid){
 if(tid==null)return;
-const willOpen=subAddComposingId!==tid;
-const item=document.querySelector('#taskMode .list-panel #tList .task-item[data-id="'+tid+'"]')||document.querySelector('.task-item[data-id="'+tid+'"]');
-const btn=item?item.querySelector(".subtask-section-add"):null;
-if(!btn){
-if(willOpen)openSubAddCompose(tid);else cancelSubAddCompose(tid);
-return
+if(subAddComposingId===tid){cancelSubAddCompose(tid);return}
+openSubAddCompose(tid)
 }
-if(_subAddToggleAnimTid===tid)return;
-_subAddToggleAnimTid=tid;
-btn.classList.remove("is-opening","is-closing");
-btn.classList.add(willOpen?"is-opening":"is-closing");
-btn.classList.add("is-animating");
-btn.classList.toggle("is-active",willOpen);
-btn.setAttribute("aria-expanded",willOpen?"true":"false");
-btn.setAttribute("title",willOpen?"取消子任务":"添加子任务");
-btn.setAttribute("aria-label",willOpen?"取消子任务":"添加子任务");
-const lbl=btn.querySelector(".subtask-section-add-label");
-if(lbl)lbl.textContent=willOpen?"取消子任务":"添加子任务";
-if(_subAddToggleAnimTimer)clearTimeout(_subAddToggleAnimTimer);
-_subAddToggleAnimTimer=setTimeout(()=>{
-_subAddToggleAnimTid=null;
-_subAddToggleAnimTimer=null;
-if(willOpen)openSubAddCompose(tid);else cancelSubAddCompose(tid)
-},240)
+function openSubAddCompose(tid){
+if(tid==null)return;
+if(subAddComposingId!=null&&subAddComposingId!==tid)_applySubAddComposeDom(subAddComposingId,false);
+subAddComposingId=tid;
+editingSubId=null;
+if(!_applySubAddComposeDom(tid,true))rT();
+setTimeout(()=>{const inp=document.getElementById("subAdd_"+tid);if(inp){inp.focus();inp.select&&inp.select()}},16)
 }
-function openSubAddCompose(tid){subAddComposingId=tid;editingSubId=null;rT();setTimeout(()=>{const inp=document.getElementById("subAdd_"+tid);if(inp){inp.focus();inp.select&&inp.select()}},30)}
-function cancelSubAddCompose(tid){if(tid==null||subAddComposingId===tid)subAddComposingId=null;rT()}
+function cancelSubAddCompose(tid){
+const target=tid==null?subAddComposingId:tid;
+if(target==null)return;
+if(tid==null||subAddComposingId===target)subAddComposingId=null;
+if(!_applySubAddComposeDom(target,false))rT()
+}
 function addSubtask(tid){const inp=document.getElementById("subAdd_"+tid);if(!inp)return;const txt=inp.value.trim();if(!txt){inp.focus();return}const t=(T[sel]||[]).find(x=>x.id===tid);if(!t)return;if(!Array.isArray(t.subtasks))t.subtasks=[];t.subtasks.push({id:Date.now()+Math.floor(Math.random()*1e4),text:txt,done:false});subAddComposingId=null;editingSubId=null;if(collapsedSubtaskIds&&collapsedSubtaskIds.delete)collapsedSubtaskIds.delete(tid);expandedId=tid;syncToRule(t);rT();save()}
 function saveNote(tid){const ta=document.getElementById("note_"+tid);if(!ta)return;const t=(T[sel]||[]).find(x=>x.id===tid);if(t){t.note=ta.value;syncToRule(t)}save()}
 function saveDuration(tid){const inp=document.getElementById("dur_"+tid);if(!inp)return;const t=(T[sel]||[]).find(x=>x.id===tid);if(t){t.duration=Math.max(0,parseInt(inp.value)||0);syncToRule(t)}rT();save()}
