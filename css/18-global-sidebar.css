@@ -874,7 +874,7 @@
     grid-template-rows: auto auto;
     align-items: start !important;
     column-gap: 0 !important;
-    row-gap: 4px !important;
+    row-gap: 6px !important;
     width: 100%;
     min-width: 0;
     min-height: 34px;
@@ -954,7 +954,7 @@
     .task-row-center {
     grid-template-columns: minmax(0, 1fr);
     align-items: start !important;
-    row-gap: 4px !important;
+    row-gap: 6px !important;
   }
 
   .app.app--with-global-nav
@@ -2624,7 +2624,7 @@
   }
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center {
-    row-gap: 4px !important;
+    row-gap: 6px !important;
     min-height: 0;
   }
 
@@ -3152,10 +3152,13 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .task-recur-badge {
   display: inline-flex !important;
   align-items: center !important;
+  justify-content: flex-start !important;
   gap: 5px !important;
   min-height: 16px !important;
   padding: 0 !important;
+  padding-left: 0 !important;
   margin: 0 !important;
+  margin-left: 0 !important;
   border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
@@ -3186,6 +3189,7 @@
   width: 11px !important;
   height: 11px !important;
   flex: 0 0 11px !important;
+  margin: 0 !important;
   opacity: .72 !important;
   transform: translateY(0) !important;
 }
