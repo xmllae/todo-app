@@ -394,3 +394,592 @@
   border-color: #51637c !important;
   color: #c6d2e1 !important;
 }
+
+/* Quick import now uses modal, hide old inline box permanently */
+#quickImportBox {
+  display: none !important;
+}
+
+.modal.qi-modal-shell {
+  width: min(1080px, 94vw) !important;
+  max-width: min(1080px, 94vw) !important;
+  padding: 0 !important;
+  border-radius: 18px !important;
+  border: 1px solid #d9e3f0 !important;
+  background: #ffffff !important;
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.14) !important;
+  overflow: hidden !important;
+  text-align: left !important;
+}
+
+.qi-modal-wrap {
+  background: #ffffff;
+  max-height: min(86vh, 880px);
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.qi-modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 28px 14px;
+}
+
+.qi-modal-head-left {
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.qi-modal-ico {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3edff;
+  color: #6844e4;
+  flex-shrink: 0;
+}
+
+.qi-modal-ico svg {
+  width: 20px;
+  height: 20px;
+}
+
+.qi-modal-head-text h3 {
+  margin: 0 0 4px;
+  font-size: 1.6rem;
+  line-height: 1.2;
+  color: #1f2e44;
+  font-weight: 760;
+  letter-spacing: -0.015em;
+}
+
+.qi-modal-head-text p {
+  margin: 0;
+  color: #7d8fa8;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.qi-modal-close {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #93a5be;
+  font-size: 1.45rem;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.qi-modal-close:hover {
+  background: #f3f6fb;
+  color: #6f82a0;
+}
+
+.qi-tab-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding: 0 28px 12px;
+}
+
+.qi-tab-btn {
+  height: 50px;
+  border-radius: 12px;
+  border: 1px solid #dde6f2;
+  background: #ffffff;
+  color: #667c98;
+  font-size: 0.94rem;
+  font-weight: 670;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.14s ease, color 0.14s ease, background 0.14s ease;
+}
+
+.qi-tab-btn:hover {
+  border-color: #ccd8e8;
+  color: #4f6886;
+  background: #fbfdff;
+}
+
+.qi-tab-btn.is-active {
+  border-color: #bea9ff;
+  color: #5f43d7;
+  background: #faf7ff;
+}
+
+.qi-panel {
+  display: none;
+  padding: 0 28px;
+}
+
+.qi-panel.is-active {
+  display: block;
+}
+
+.qi-upload-zone {
+  min-height: 236px;
+  border: 1px dashed #cbb8ff;
+  border-radius: 14px;
+  background: #fcfbff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 28px 20px;
+  text-align: center;
+}
+
+.qi-upload-zone.is-dragover {
+  border-color: #a182ff;
+  background: #f6f2ff;
+}
+
+.qi-upload-ring {
+  width: 50px;
+  height: 50px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #efe8ff;
+  color: #6b49e8;
+}
+
+.qi-upload-ring svg {
+  width: 20px;
+  height: 20px;
+}
+
+.qi-upload-title {
+  margin: 2px 0 0;
+  color: #5f44d7;
+  font-size: 1.02rem;
+  font-weight: 700;
+}
+
+.qi-upload-sub {
+  margin: 0;
+  color: #8ea0b8;
+  font-size: 0.88rem;
+}
+
+.qi-upload-actions {
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.qi-upload-name {
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #7e90a9;
+  font-size: 0.86rem;
+}
+
+.qi-file-input {
+  display: none;
+}
+
+.qi-textarea {
+  width: 100%;
+  min-height: 230px;
+  max-height: 320px;
+  border-radius: 14px;
+  border: 1px solid #d9e4f1;
+  background: #ffffff;
+  color: #324963;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  font-family: inherit;
+  padding: 14px 15px;
+  box-sizing: border-box;
+  outline: none;
+  resize: vertical;
+}
+
+.qi-textarea:focus {
+  border-color: #bca8ff;
+  box-shadow: 0 0 0 2px rgba(122, 87, 236, 0.11);
+}
+
+.qi-template-box {
+  min-height: 230px;
+  border: 1px solid #e3ebf4;
+  border-radius: 14px;
+  background: #fbfdff;
+  padding: 14px;
+}
+
+.qi-template-tip {
+  margin: 0 0 10px;
+  color: #7f91a9;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.qi-template-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.qi-template-btn {
+  height: 44px;
+  border-radius: 10px;
+  border: 1px solid #dbe4f1;
+  background: #ffffff;
+  color: #5f748f;
+  font-size: 0.9rem;
+  font-weight: 640;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.qi-template-btn:hover {
+  border-color: #c8d6e8;
+  color: #4f6686;
+}
+
+.qi-template-btn.is-std {
+  border-color: #c8b6ff;
+  color: #5f44d7;
+  background: #faf7ff;
+}
+
+.qi-hint-row {
+  margin-top: 12px;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.qi-hint-tip {
+  color: #91a1b8;
+  font-size: 0.84rem;
+}
+
+.qi-link-btn {
+  border: 0;
+  background: transparent;
+  color: #6b4ce6;
+  font-size: 0.85rem;
+  font-weight: 650;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.qi-link-btn:hover {
+  color: #5636d8;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.qi-preview-card {
+  margin: 12px 28px 0;
+  border: 1px solid #e2e8f2;
+  border-radius: 12px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.qi-preview-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px 8px;
+}
+
+.qi-preview-head h4 {
+  margin: 0;
+  color: #2a3b53;
+  font-size: 1rem;
+  font-weight: 720;
+}
+
+.qi-preview-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: #8194ad;
+  font-size: 0.82rem;
+}
+
+.qi-preview-hint {
+  margin: 0;
+  padding: 0 14px 10px;
+  color: #8b9cb3;
+  font-size: 0.82rem;
+}
+
+.qi-preview-table-wrap {
+  overflow: auto;
+  border-top: 1px solid #edf1f7;
+}
+
+.qi-preview-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.qi-preview-table th,
+.qi-preview-table td {
+  border-bottom: 1px solid #eef2f7;
+  padding: 9px 12px;
+  text-align: left;
+  color: #5d718d;
+  font-size: 0.84rem;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.qi-preview-table th {
+  color: #7d90a9;
+  font-weight: 650;
+  background: #fbfcff;
+}
+
+.qi-preview-empty td {
+  text-align: center;
+  color: #9aacbf;
+  padding: 14px 10px;
+}
+
+.qi-pri-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 20px;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 680;
+}
+
+.qi-pri-high {
+  color: #c63f3f;
+  background: #ffeceb;
+}
+
+.qi-pri-mid {
+  color: #c07b20;
+  background: #fff7e8;
+}
+
+.qi-pri-low {
+  color: #2a8c4e;
+  background: #eaf8f0;
+}
+
+.qi-modal-foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 18px 28px 22px;
+}
+
+.qi-cancel-btn,
+.qi-primary-btn {
+  min-width: 120px;
+  height: 48px;
+  border-radius: 12px;
+  padding: 0 20px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.qi-cancel-btn {
+  border: 1px solid #d8e2ef;
+  background: #ffffff;
+  color: #7388a5;
+}
+
+.qi-cancel-btn:hover {
+  border-color: #c9d7e8;
+  color: #5f7898;
+}
+
+.qi-primary-btn {
+  border: 0;
+  background: linear-gradient(135deg, #6d48ef, #4b45dd);
+  color: #ffffff;
+  box-shadow: 0 8px 18px rgba(82, 74, 223, 0.22);
+}
+
+.qi-primary-btn:hover {
+  filter: brightness(1.03);
+}
+
+@media (max-width: 900px) {
+  .modal.qi-modal-shell {
+    width: min(96vw, 760px) !important;
+  }
+
+  .qi-modal-head,
+  .qi-tab-row,
+  .qi-panel,
+  .qi-hint-row,
+  .qi-modal-foot {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .qi-preview-card {
+    margin-left: 18px;
+    margin-right: 18px;
+  }
+
+  .qi-modal-head-text h3 {
+    font-size: 1.32rem;
+  }
+}
+
+@media (max-width: 760px) {
+  .qi-tab-row {
+    grid-template-columns: 1fr;
+  }
+
+  .qi-template-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .qi-upload-actions {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .qi-upload-name {
+    max-width: none;
+  }
+
+  .qi-hint-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .qi-preview-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .qi-modal-foot {
+    flex-direction: column-reverse;
+  }
+
+  .qi-cancel-btn,
+  .qi-primary-btn {
+    width: 100%;
+  }
+}
+
+.dark .modal.qi-modal-shell {
+  border-color: #40546e !important;
+  background: #1e2d40 !important;
+  box-shadow: 0 24px 54px rgba(0, 0, 0, 0.42) !important;
+}
+
+.dark .qi-modal-wrap {
+  background: #1e2d40;
+}
+
+.dark .qi-modal-head-text h3 {
+  color: #ebf3ff;
+}
+
+.dark .qi-modal-head-text p,
+.dark .qi-upload-sub,
+.dark .qi-upload-name,
+.dark .qi-template-tip,
+.dark .qi-hint-tip,
+.dark .qi-preview-hint,
+.dark .qi-preview-meta {
+  color: #9eb2c8;
+}
+
+.dark .qi-modal-close:hover {
+  background: #2a3a4f;
+  color: #c9d8ea;
+}
+
+.dark .qi-tab-btn,
+.dark .qi-template-btn,
+.dark .qi-cancel-btn {
+  border-color: #4c6079;
+  background: #223246;
+  color: #b6c9df;
+}
+
+.dark .qi-tab-btn:hover,
+.dark .qi-template-btn:hover,
+.dark .qi-cancel-btn:hover {
+  border-color: #647d9c;
+  color: #dbe7f6;
+}
+
+.dark .qi-tab-btn.is-active,
+.dark .qi-template-btn.is-std {
+  border-color: #8f78ef;
+  background: #2b2948;
+  color: #c8b8ff;
+}
+
+.dark .qi-upload-zone {
+  border-color: #7360c1;
+  background: #243145;
+}
+
+.dark .qi-upload-zone.is-dragover {
+  background: #2a3550;
+}
+
+.dark .qi-textarea,
+.dark .qi-template-box,
+.dark .qi-preview-card {
+  border-color: #475d76;
+  background: #1f2f43;
+  color: #dce8f7;
+}
+
+.dark .qi-textarea:focus {
+  border-color: #8f78ef;
+  box-shadow: 0 0 0 2px rgba(143, 120, 239, 0.23);
+}
+
+.dark .qi-preview-table-wrap {
+  border-top-color: #344960;
+}
+
+.dark .qi-preview-table th,
+.dark .qi-preview-table td {
+  border-bottom-color: #30475e;
+  color: #aec2d8;
+}
+
+.dark .qi-preview-table th {
+  color: #bfd2e6;
+  background: #25364b;
+}
