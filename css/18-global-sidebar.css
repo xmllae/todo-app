@@ -874,7 +874,7 @@
     grid-template-rows: auto auto;
     align-items: start !important;
     column-gap: 0 !important;
-    row-gap: 2px !important;
+    row-gap: 4px !important;
     width: 100%;
     min-width: 0;
     min-height: 34px;
@@ -954,7 +954,7 @@
     .task-row-center {
     grid-template-columns: minmax(0, 1fr);
     align-items: start !important;
-    row-gap: 1px !important;
+    row-gap: 4px !important;
   }
 
   .app.app--with-global-nav
@@ -2624,7 +2624,7 @@
   }
 
   .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center {
-    row-gap: 1px !important;
+    row-gap: 4px !important;
     min-height: 0;
   }
 
