@@ -3,9 +3,9 @@
 
 .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-card {
   border-radius: 12px !important;
-  border: 1px solid #ccd7e4 !important;
+  border: 1px solid #b8c3ff !important;
   background: #ffffff !important;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+  box-shadow: none !important;
   overflow: hidden !important;
 }
 
@@ -18,8 +18,8 @@
 }
 
 .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-card:focus-within {
-  border-color: #b4c4d8 !important;
-  box-shadow: 0 0 0 1px rgba(180, 196, 216, 0.42) !important;
+  border-color: #9eabff !important;
+  box-shadow: none !important;
 }
 
 .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-card .task-ghost-input-row.task-row {
@@ -162,9 +162,9 @@
 }
 
 .dark .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-card {
-  border-color: #4d5f78 !important;
+  border-color: #6f7cd4 !important;
   background: #1b2839 !important;
-  box-shadow: 0 1px 2px rgba(2, 6, 23, 0.35) !important;
+  box-shadow: none !important;
 }
 
 .dark
@@ -173,8 +173,8 @@
   .list-panel
   #addTaskInlineHold
   .task-ghost-card:focus-within {
-  border-color: #6a7f9f !important;
-  box-shadow: 0 0 0 1px rgba(106, 127, 159, 0.4) !important;
+  border-color: #8794ef !important;
+  box-shadow: none !important;
 }
 
 .dark .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-card .task-ghost-input-row.task-row {
