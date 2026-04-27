@@ -265,7 +265,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #d97706;
+  color: #6674d9;
 }
 
 .header-context-icon svg {
@@ -302,6 +302,23 @@
   font-size: 0.98rem;
   font-weight: 520;
   font-variant-numeric: tabular-nums;
+}
+
+.header-context[data-segment="late-night"] .header-context-icon,
+.header-context[data-segment="evening"] .header-context-icon,
+.header-context[data-segment="midnight"] .header-context-icon {
+  color: #5b67d8;
+}
+
+.header-context[data-segment="early-morning"] .header-context-icon {
+  color: #7a88d8;
+}
+
+.header-context[data-segment="morning"] .header-context-icon,
+.header-context[data-segment="noon"] .header-context-icon,
+.header-context[data-segment="afternoon"] .header-context-icon,
+.header-context[data-segment="dusk"] .header-context-icon {
+  color: #6f7ce0;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -349,7 +366,17 @@
 }
 
 .dark .header-context-icon {
-  color: #f59e0b;
+  color: #8ea0ff;
+}
+
+.dark .header-context[data-segment="late-night"] .header-context-icon,
+.dark .header-context[data-segment="evening"] .header-context-icon,
+.dark .header-context[data-segment="midnight"] .header-context-icon {
+  color: #a7b4ff;
+}
+
+.dark .header-context[data-segment="early-morning"] .header-context-icon {
+  color: #95a6f6;
 }
 
 .dark .header-context-chat {
