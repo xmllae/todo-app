@@ -1315,3 +1315,30 @@
   height: 0;
   background: transparent;
 }
+
+/* 子任务标签：全部完成时整颗标签（图标 + 数字）播放划线动画 */
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill.sub-task-pill--inline,
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn.sub-task-pill--inline,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill.sub-task-pill--inline,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn.sub-task-pill--inline {
+  position: relative !important;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill .stp-strike-line,
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn .stp-strike-line,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill .stp-strike-line,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn .stp-strike-line {
+  display: block !important;
+  position: absolute !important;
+  left: 1px !important;
+  right: 1px !important;
+  top: 50% !important;
+  height: 1.5px !important;
+  border-radius: 999px !important;
+  background: currentColor !important;
+  transform: translateY(-50%) scaleX(0);
+  transform-origin: left center !important;
+  opacity: 1 !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
+}
