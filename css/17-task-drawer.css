@@ -2163,13 +2163,15 @@
     --subtask-icon-size: 16px;
     --subtask-hit-size: 22px;
     --subtask-icon-inset: 3px;
-    --subtask-icon-gap: 10px;
+    --subtask-icon-gap: 12px;
     --subtask-add-icon-left: calc(var(--subtask-row-pad-x) + var(--subtask-icon-inset));
     --subtask-text-start: calc(var(--subtask-row-pad-x) + var(--subtask-hit-size) + var(--subtask-icon-gap));
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
     margin-bottom: var(--drawer-module-gap);
+    background: transparent;
+    border-radius: 0;
 }
 
 .subtask-row {
@@ -2178,19 +2180,23 @@
     display: flex;
     align-items: center;
     gap: var(--subtask-icon-gap);
-    min-height: 34px;
-    padding: 5px calc(var(--subtask-row-pad-x) - 1px);
-    border: 1px solid transparent;
-    border-radius: 8px;
-    cursor: text;
-    transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+    min-height: 44px;
+    padding: 12px var(--subtask-row-pad-x);
+    border: 0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
     background: transparent;
     box-shadow: none;
 }
 
-.subtask-row:hover,
+.subtask-row:hover {
+    background: #f3f4f6;
+    box-shadow: none;
+}
+
 .subtask-row:focus-within {
-    background: color-mix(in srgb, var(--text) 4%, transparent);
+    background: transparent;
     box-shadow: none;
 }
 
@@ -2410,27 +2416,30 @@
     border: none;
     border-radius: 6px;
     background: transparent;
-    color: var(--text3);
+    color: #9ca3af;
     cursor: pointer;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transform: translateX(3px);
-    transition: opacity 0.15s ease, visibility 0.15s ease, transform 0.15s ease, background 0.15s ease, color 0.15s ease;
+    transform: none;
+    transition: all 0.2s ease;
     flex-shrink: 0;
 }
 
-.subtask-row:hover .subtask-delete-btn,
-.subtask-row:focus-within .subtask-delete-btn {
+.subtask-row:hover .subtask-delete-btn {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    transform: translateX(0);
+    transform: none;
 }
 
 .subtask-delete-btn:hover {
     background: #fef2f2;
-    color: #dc2626;
+    color: #ef4444;
+}
+
+.subtask-delete-btn:active {
+    transform: scale(0.94);
 }
 
 .subtask-delete-btn svg {
@@ -2758,11 +2767,19 @@
     box-shadow: none;
 }
 
+.dark .drawer-subtasks-list {
+    background: transparent;
+}
+
 .dark .drawer-header-btn:hover,
 .dark .subtask-row:hover,
-.dark .subtask-row:focus-within,
 .dark .drawer-footer-btn:hover {
     background: color-mix(in srgb, var(--hov) 88%, transparent);
+}
+
+.dark .subtask-row:hover {
+    border-color: color-mix(in srgb, var(--inp-bd) 78%, transparent);
+    box-shadow: none;
 }
 
 .dark .drawer-footer {
@@ -2884,6 +2901,15 @@
 }
 
 .dark .subtask-drag-handle:hover {
+    background: color-mix(in srgb, var(--hov) 84%, transparent);
+    color: color-mix(in srgb, var(--text2) 92%, #e2e8f0);
+}
+
+.dark .subtask-delete-btn {
+    color: color-mix(in srgb, var(--text3) 84%, #94a3b8);
+}
+
+.dark .subtask-delete-btn:hover {
     background: color-mix(in srgb, var(--hov) 84%, transparent);
     color: color-mix(in srgb, var(--text2) 92%, #e2e8f0);
 }

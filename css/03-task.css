@@ -1376,7 +1376,7 @@
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-item + .subtask-item {
-  border-top: 1px solid var(--subtask-surface-line) !important;
+  border-top: 0 !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-item:hover {
@@ -1578,7 +1578,7 @@
 }
 
 #taskMode .list-panel #tList .task-expand-area .exp-block.exp-block--sub {
-  --subtask-row-space: 10px !important;
+  --subtask-row-space: 4px !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-section-meta {
@@ -1697,20 +1697,20 @@
   align-items: center !important;
   gap: 8px !important;
   margin: 0 !important;
-  padding: 9px 12px !important;
-  border: 1px solid #d9e2ee !important;
-  border-radius: 6px !important;
-  background: #ffffff !important;
+  padding: 6px 10px !important;
+  border: 0 !important;
+  border-radius: 10px !important;
+  background: transparent !important;
   background-image: none !important;
   box-shadow: none !important;
-  transition: border-color .18s ease, background-color .18s ease !important;
+  transition: border-color .22s ease, background-color .22s ease, box-shadow .24s ease !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-item:hover {
-  background: #ffffff !important;
+  background: #f8fafc !important;
   background-image: none !important;
-  border-color: #ccd8e6 !important;
-  box-shadow: none !important;
+  border-color: color-mix(in srgb, #cbd5e1 56%, transparent) !important;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05) !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-item:active {
@@ -1718,9 +1718,10 @@
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-item.subtask-item--done {
-  background: #ffffff !important;
+  background: transparent !important;
   background-image: none !important;
-  border-color: #d6e0ec !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .sub-main {
@@ -1805,13 +1806,30 @@
   color: #99a7b7 !important;
   font-size: 15px !important;
   line-height: 1 !important;
-  opacity: 1 !important;
-  transform: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transform: translateX(2px) scale(.94) !important;
+  transition: opacity .2s ease, visibility .2s ease, transform .2s ease, background .18s ease, color .18s ease !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-item:hover .sub-del {
+  opacity: .86 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transform: translateX(0) scale(1) !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-item:focus-within:not(:hover) .sub-del {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transform: translateX(2px) scale(.94) !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .sub-del:hover {
-  background: #eef2f6 !important;
-  color: #7a8a9d !important;
+  background: #f1f5f9 !important;
+  color: #64748b !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .sub-add-wrap--list {
@@ -1917,22 +1935,22 @@
 
 .dark #taskMode .list-panel #tList .task-expand-area .subtask-item,
 .dark #taskMode .list-panel #tList .task-expand-area .subtask-item:first-child {
-  border-color: color-mix(in srgb, #94a3b8 34%, transparent) !important;
-  background: rgba(23, 33, 47, 0.9) !important;
+  border-color: transparent !important;
+  background: transparent !important;
   background-image: none !important;
   box-shadow: none !important;
 }
 
 .dark #taskMode .list-panel #tList .task-expand-area .subtask-item:hover {
-  border-color: color-mix(in srgb, #cbd5e1 38%, transparent) !important;
-  background: rgba(27, 39, 56, 0.92) !important;
+  border-color: color-mix(in srgb, #94a3b8 36%, transparent) !important;
+  background: rgba(27, 39, 56, 0.72) !important;
   background-image: none !important;
-  box-shadow: none !important;
+  box-shadow: 0 8px 18px rgba(2, 6, 23, 0.28) !important;
 }
 
 .dark #taskMode .list-panel #tList .task-expand-area .subtask-item.subtask-item--done {
-  border-color: color-mix(in srgb, #4ade80 28%, transparent) !important;
-  background: rgba(20, 40, 30, 0.9) !important;
+  border-color: transparent !important;
+  background: transparent !important;
   background-image: none !important;
   box-shadow: none !important;
 }
