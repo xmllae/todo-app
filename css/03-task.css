@@ -1379,17 +1379,8 @@
   border-top: 0 !important;
 }
 
-#taskMode .list-panel #tList .task-expand-area .subtask-item:hover {
-  background: transparent !important;
-}
-
 #taskMode .list-panel #tList .task-expand-area .subtask-item:active {
   background: transparent !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .subtask-item:hover .sub-text:not(.sub-done),
-#taskMode .list-panel #tList .task-expand-area .subtask-item:focus-within .sub-text:not(.sub-done) {
-  color: var(--subtask-row-hover-text) !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .sub-ck {
@@ -1401,10 +1392,6 @@
   background: transparent !important;
   transform: translateX(var(--subtask-ring-shift)) !important;
   transition: border-color .18s ease, background .18s ease, box-shadow .18s ease, transform .18s ease !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .subtask-item:hover .sub-ck {
-  border-color: color-mix(in srgb, var(--subtask-ck-on) 40%, var(--subtask-ck-bd)) !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .sub-ck.checked {
@@ -1427,17 +1414,6 @@
   opacity: 0 !important;
   transform: translateX(2px) !important;
   transition: opacity .15s ease, transform .15s ease, color .15s ease !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .subtask-item:hover .sub-del,
-#taskMode .list-panel #tList .task-expand-area .subtask-item:focus-within .sub-del {
-  opacity: .72 !important;
-  transform: translateX(0) !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .sub-del:hover {
-  opacity: 1 !important;
-  color: #ef4444 !important;
 }
 
 .dark #taskMode .list-panel #tList {
@@ -1707,10 +1683,10 @@
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-item:hover {
-  background: #f8fafc !important;
+  background: #f9fafb !important;
   background-image: none !important;
-  border-color: color-mix(in srgb, #cbd5e1 56%, transparent) !important;
-  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05) !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-item:active {
@@ -1752,7 +1728,7 @@
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-item:hover .sub-ck {
-  border-color: #bac8d7 !important;
+  border-color: #60a5fa !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .sub-ck.checked {
@@ -1809,15 +1785,15 @@
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
-  transform: translateX(2px) scale(.94) !important;
-  transition: opacity .2s ease, visibility .2s ease, transform .2s ease, background .18s ease, color .18s ease !important;
+  transform: none !important;
+  transition: all .15s ease !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-item:hover .sub-del {
-  opacity: .86 !important;
+  opacity: 1 !important;
   visibility: visible !important;
   pointer-events: auto !important;
-  transform: translateX(0) scale(1) !important;
+  transform: none !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-item:focus-within:not(:hover) .sub-del {
@@ -1828,8 +1804,8 @@
 }
 
 #taskMode .list-panel #tList .task-expand-area .sub-del:hover {
-  background: #f1f5f9 !important;
-  color: #64748b !important;
+  background: #fef2f2 !important;
+  color: #ef4444 !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .sub-add-wrap--list {
