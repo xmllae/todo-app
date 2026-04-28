@@ -1300,3 +1300,18 @@
   color: #bfd2e6;
   background: #25364b;
 }
+
+#taskMode .list-panel.task-main-scroll-host {
+  position: relative;
+}
+
+#taskMode .list-panel.task-main-scroll-host .tasks {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+#taskMode .list-panel.task-main-scroll-host .tasks::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  background: transparent;
+}
