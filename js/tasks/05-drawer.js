@@ -1331,12 +1331,12 @@ function renderSubtasksList(task) {
         return `
             <div class="subtask-row"
                  data-subtask-id="${sub.id}"
-                 title="\u5b50\u4efb\u52a1"
-                 onclick="handleSubtaskRowClickInDrawer(event, ${task.id}, ${sub.id})"
+                 title="\u53cc\u51fb\u7f16\u8f91\u5b50\u4efb\u52a1"
+                 onclick="event.stopPropagation()"
                  ondragover="handleSubtaskDragOver(event, ${task.id}, ${sub.id})"
                  ondragleave="handleSubtaskDragLeave(event)"
                  ondrop="handleSubtaskDrop(event, ${task.id}, ${sub.id})"
-                 ondblclick="event.stopPropagation()">
+                 ondblclick="event.stopPropagation();startSubtaskEditInDrawer(${task.id}, ${sub.id})">
                 <div class="subtask-check task-ck-slot ${isDone ? 'task-ck-ring--done' : ''}"
                      onclick="event.stopPropagation();toggleSubtaskInDrawer(${task.id}, ${sub.id})"
                      ondblclick="event.stopPropagation()"
@@ -1349,8 +1349,8 @@ function renderSubtasksList(task) {
                     </div>
                 </div>
                 <span class="subtask-text ${isDone ? 'done' : ''}"
-                      title="\u5b50\u4efb\u52a1"
-                      ondblclick="event.stopPropagation()">${escapeHtml(sub.text)}</span>
+                      title="\u53cc\u51fb\u7f16\u8f91\u5b50\u4efb\u52a1"
+                      ondblclick="event.stopPropagation();startSubtaskEditInDrawer(${task.id}, ${sub.id})">${escapeHtml(sub.text)}</span>
                 <input type="text"
                        class="subtask-edit-input"
                        value="${escapeHtml(sub.text)}"
@@ -1657,18 +1657,6 @@ function toggleSubtaskInDrawer(taskId, subtaskId) {
     persistTaskDetailChanges(task, { kanban: true });
 }
 
-function handleSubtaskRowClickInDrawer(event, taskId, subtaskId) {
-    if (!event) return;
-    const target = event.target;
-    if (target && target.closest('.subtask-delete-btn, .subtask-drag-handle, .subtask-edit-input, .subtask-check')) {
-        return;
-    }
-    const row = event.currentTarget;
-    if (row && row.classList.contains('is-editing')) return;
-    event.stopPropagation();
-    toggleSubtaskInDrawer(taskId, subtaskId);
-}
-
 function startSubtaskEditInDrawer(taskId, subtaskId) {
     const task = findTaskById(taskId);
     if (!task) return;
@@ -1698,7 +1686,12 @@ function startSubtaskEditInDrawer(taskId, subtaskId) {
 
     window.requestAnimationFrame(function() {
         input.focus();
-        input.select();
+        const length = input.value.length;
+        try {
+            input.setSelectionRange(length, length);
+        } catch (_err) {
+            // 部分浏览器输入法环境下可能抛错，忽略并保持可编辑状态
+        }
     });
 }
 

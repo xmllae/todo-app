@@ -2184,7 +2184,7 @@
     padding: 12px var(--subtask-row-pad-x);
     border: 0;
     border-radius: 12px;
-    cursor: pointer;
+    cursor: default;
     transition: background-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
     background: transparent;
     box-shadow: none;
@@ -2200,9 +2200,12 @@
     box-shadow: none;
 }
 
-.subtask-row.is-editing {
-    border-color: color-mix(in srgb, var(--acc2) 68%, #a5b4fc);
-    background: color-mix(in srgb, var(--acc2) 4%, #ffffff);
+.subtask-row.is-editing,
+.subtask-row.is-editing:hover,
+.subtask-row.is-editing:focus-within {
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
 }
 
 /* Subtask check - uses same ring styles */
@@ -2882,8 +2885,9 @@
 .dark .subtask-row.is-editing,
 .dark .subtask-row.is-editing:hover,
 .dark .subtask-row.is-editing:focus-within {
-    border-color: color-mix(in srgb, var(--acc2, var(--acc)) 68%, #a5b4fc);
-    background: color-mix(in srgb, var(--card) 78%, #111827);
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
 }
 
 .dark .subtask-row.is-subtask-dragging {
