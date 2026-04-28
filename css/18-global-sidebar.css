@@ -3975,6 +3975,20 @@
 }
 /* #endregion */
 
+/* #region 待办行与上方间隔-对齐 shili.html */
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav,
+#taskMode .task-main-col > .task-card > .date-nav {
+  padding-top: 24px !important;
+  margin-bottom: 24px !important;
+  padding-bottom: 0 !important;
+}
+
+.app.app--with-global-nav #taskMode .list-panel .batch-bar,
+#taskMode .list-panel .batch-bar {
+  padding-top: 0 !important;
+}
+/* #endregion */
+
 /* #region 右侧模块-最终覆盖（直接对齐 shili.html） */
 .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions,
 #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions {
