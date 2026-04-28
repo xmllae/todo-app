@@ -2249,11 +2249,11 @@
 
 .subtask-check.task-ck-slot .chk-ring.hover-check .chk-ring-ico,
 .subtask-check.task-ck-slot .chk-ring:hover .chk-ring-ico {
-    color: var(--acc2);
+    color: transparent;
 }
 
 .subtask-check.task-ck-slot .chk-ring:hover {
-    border-color: color-mix(in srgb, var(--inp-bd) 22%, #6b7280);
+    border-color: color-mix(in srgb, var(--inp-bd) 30%, #9ca3af);
     background: var(--card);
     box-shadow: none;
 }

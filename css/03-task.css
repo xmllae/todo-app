@@ -1728,7 +1728,7 @@
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-item:hover .sub-ck {
-  border-color: #60a5fa !important;
+  border-color: #cfd8e3 !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .sub-ck.checked {
