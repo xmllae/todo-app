@@ -1336,9 +1336,18 @@
   height: 1.5px !important;
   border-radius: 999px !important;
   background: currentColor !important;
-  transform: translateY(-50%) scaleX(0);
+  transform: translateY(-50%) scaleX(1);
   transform-origin: left center !important;
-  opacity: 1 !important;
+  opacity: 1;
   pointer-events: none !important;
   z-index: 2 !important;
+  will-change: transform, opacity;
+}
+
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill .stp-strike-line[data-strike-animate="1"],
+#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn .stp-strike-line[data-strike-animate="1"],
+.app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill .stp-strike-line[data-strike-animate="1"],
+.app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn .stp-strike-line[data-strike-animate="1"] {
+  transform: translateY(-50%) scaleX(0);
+  opacity: 0.76;
 }
