@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10分高级感任务管理头部</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+            background-color: #F8FAFC; /* 更柔和的背景色，衬托白色卡片 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* 丝滑的过渡动画 */
+        .smooth-transition {
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); /* 带有轻微回弹的曲线 */
+        }
+        
+        .date-transition {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* 隐藏滚动条但保留滚动功能（如果需要的话） */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 主容器卡片 -->
+    <div class="bg-white rounded-[24px] shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-slate-100/80 p-6 w-full max-w-[900px]">
+        
+        <!-- 上半部分：日期与主操作 -->
+        <div class="flex items-center justify-between mb-6">
+            
+            <!-- 左侧：日期导航 (优化了亲密性，去掉了边框) -->
+            <div class="flex items-center gap-2">
+                <button id="prev-btn" class="w-10 h-10 rounded-full flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-slate-200 active:scale-95">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                </button>
+
+                <!-- 日期文字容器 (固定宽度防止抖动) -->
+                <div class="relative w-[140px] h-[50px] flex justify-center items-center overflow-hidden">
+                    <div id="date-text-container" class="absolute flex flex-col items-center justify-center date-transition transform translate-x-0 opacity-100">
+                        <h2 id="date-title" class="text-[24px] font-bold text-slate-900 leading-none tracking-tight mb-1">今天</h2>
+                        <span id="date-sub" class="text-[13px] font-medium text-slate-500 tracking-wide">4月27日 周一</span>
+                    </div>
+                </div>
+
+                <button id="next-btn" class="w-10 h-10 rounded-full flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-slate-200 active:scale-95">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+            </div>
+
+            <!-- 右侧：全局操作 -->
+            <div class="flex items-center gap-3">
+                <!-- 分享按钮 (去边框的幽灵按钮) -->
+                <button class="w-10 h-10 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-100 hover:text-slate-800 transition-colors duration-200 focus:outline-none active:scale-95">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/></svg>
+                </button>
+
+                <!-- 添加任务按钮 (加入同色系柔和发光阴影) -->
+                <button class="group relative px-5 py-2.5 rounded-full bg-[#7C3AED] text-white font-medium flex items-center gap-2 transition-all duration-300 hover:bg-[#6D28D9] hover:-translate-y-[1px] shadow-[0_6px_16px_-4px_rgba(124,58,237,0.4)] hover:shadow-[0_8px_20px_-4px_rgba(124,58,237,0.5)] active:translate-y-[1px] active:shadow-none focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-hover:rotate-90 duration-300"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                    <span>添加任务</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 下半部分：视图切换与过滤 -->
+        <div class="flex items-center justify-between">
+            
+            <!-- 左侧：具有物理滑动感的 Tab 切换 (iOS 风格) -->
+            <div class="relative bg-slate-50/80 p-1 rounded-full border border-slate-100/60 inline-flex items-center">
+                <!-- 滑动背景块 -->
+                <div id="tab-slider" class="absolute left-1 top-1 bottom-1 w-[108px] bg-white rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.06)] border border-slate-100/50 smooth-transition translate-x-0"></div>
+                
+                <!-- 待办 Tab -->
+                <button onclick="switchTab(0)" class="relative z-10 w-[108px] h-9 flex items-center justify-center gap-1.5 focus:outline-none">
+                    <svg id="icon-todo" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#7C3AED] transition-colors duration-300"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <span id="text-todo" class="text-[13px] font-semibold text-[#7C3AED] transition-colors duration-300">待办</span>
+                    <span id="badge-todo" class="ml-0.5 bg-violet-100 text-[#7C3AED] px-1.5 py-0.5 rounded-full text-[11px] font-bold transition-colors duration-300">1</span>
+                </button>
+
+                <!-- 已完成 Tab -->
+                <button onclick="switchTab(1)" class="relative z-10 w-[108px] h-9 flex items-center justify-center gap-1.5 focus:outline-none">
+                    <svg id="icon-done" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 transition-colors duration-300"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    <span id="text-done" class="text-[13px] font-medium text-slate-500 transition-colors duration-300">已完成</span>
+                    <span id="badge-done" class="ml-0.5 bg-slate-200/60 text-slate-500 px-1.5 py-0.5 rounded-full text-[11px] font-bold transition-colors duration-300">0</span>
+                </button>
+            </div>
+
+            <!-- 右侧：过滤与辅助操作 -->
+            <div class="flex items-center gap-3">
+                <!-- 截止日期下拉 (保留微弱边框，增加圆角) -->
+                <button class="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-slate-200/80 bg-white text-[13px] font-medium text-slate-600 hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                    截止日期
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 ml-1"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+
+                <!-- 优化后的分割线：更短、更淡 -->
+                <div class="w-[1px] h-4 bg-slate-200/80 rounded-full"></div>
+
+                <!-- 多选/打勾按钮 -->
+                <button class="w-[34px] h-[34px] rounded-xl border border-slate-200/80 bg-white flex items-center justify-center text-slate-400 hover:bg-slate-50 hover:text-slate-600 hover:border-slate-300 transition-all duration-200 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- 1. 日期切换动画逻辑 ---
+        const dates = [
+            { title: "前天", sub: "4月25日 周六" },
+            { title: "昨天", sub: "4月26日 周日" },
+            { title: "今天", sub: "4月27日 周一" },
+            { title: "明天", sub: "4月28日 周二" },
+            { title: "后天", sub: "4月29日 周三" }
+        ];
+        let currentDateIndex = 2; // 默认"今天"
+        let isDateAnimating = false;
+
+        const dateContainer = document.getElementById('date-text-container');
+        const titleEl = document.getElementById('date-title');
+        const subEl = document.getElementById('date-sub');
+
+        function changeDate(direction) {
+            if (isDateAnimating) return;
+            if (currentDateIndex + direction < 0 || currentDateIndex + direction >= dates.length) return;
+
+            isDateAnimating = true;
+            const slideOutClass = direction === 1 ? '-translate-x-8' : 'translate-x-8';
+            const slideInStartClass = direction === 1 ? 'translate-x-8' : '-translate-x-8';
+
+            // 滑出
+            dateContainer.classList.add('opacity-0', slideOutClass);
+
+            setTimeout(() => {
+                // 更新文字
+                currentDateIndex += direction;
+                titleEl.innerText = dates[currentDateIndex].title;
+                subEl.innerText = dates[currentDateIndex].sub;
+
+                // 瞬间移动到另一侧准备滑入
+                dateContainer.classList.remove('date-transition', slideOutClass);
+                dateContainer.classList.add(slideInStartClass);
+                
+                void dateContainer.offsetWidth; // 触发重绘
+
+                // 滑入
+                dateContainer.classList.add('date-transition');
+                dateContainer.classList.remove('opacity-0', slideInStartClass);
+
+                setTimeout(() => { isDateAnimating = false; }, 300);
+            }, 300);
+        }
+
+        document.getElementById('prev-btn').addEventListener('click', () => changeDate(-1));
+        document.getElementById('next-btn').addEventListener('click', () => changeDate(1));
+
+
+        // --- 2. Tab 切换动画逻辑 ---
+        const tabSlider = document.getElementById('tab-slider');
+        
+        // 获取所有需要改变颜色的元素
+        const els = {
+            todo: {
+                icon: document.getElementById('icon-todo'),
+                text: document.getElementById('text-todo'),
+                badge: document.getElementById('badge-todo')
+            },
+            done: {
+                icon: document.getElementById('icon-done'),
+                text: document.getElementById('text-done'),
+                badge: document.getElementById('badge-done')
+            }
+        };
+
+        function switchTab(index) {
+            if (index === 0) {
+                // 移动滑块到左侧 (0px)
+                tabSlider.style.transform = 'translateX(0)';
+                
+                // 激活待办样式 (紫色)
+                els.todo.icon.classList.replace('text-slate-400', 'text-[#7C3AED]');
+                els.todo.text.classList.replace('text-slate-500', 'text-[#7C3AED]');
+                els.todo.text.classList.replace('font-medium', 'font-semibold');
+                els.todo.badge.classList.replace('bg-slate-200/60', 'bg-violet-100');
+                els.todo.badge.classList.replace('text-slate-500', 'text-[#7C3AED]');
+
+                // 恢复已完成样式 (灰色)
+                els.done.icon.classList.replace('text-[#7C3AED]', 'text-slate-400');
+                els.done.text.classList.replace('text-[#7C3AED]', 'text-slate-500');
+                els.done.text.classList.replace('font-semibold', 'font-medium');
+                els.done.badge.classList.replace('bg-violet-100', 'bg-slate-200/60');
+                els.done.badge.classList.replace('text-[#7C3AED]', 'text-slate-500');
+
+            } else {
+                // 移动滑块到右侧 (108px 是按钮宽度)
+                tabSlider.style.transform = 'translateX(108px)';
+                
+                // 激活已完成样式 (紫色)
+                els.done.icon.classList.replace('text-slate-400', 'text-[#7C3AED]');
+                els.done.text.classList.replace('text-slate-500', 'text-[#7C3AED]');
+                els.done.text.classList.replace('font-medium', 'font-semibold');
+                els.done.badge.classList.replace('bg-slate-200/60', 'bg-violet-100');
+                els.done.badge.classList.replace('text-slate-500', 'text-[#7C3AED]');
+
+                // 恢复待办样式 (灰色)
+                els.todo.icon.classList.replace('text-[#7C3AED]', 'text-slate-400');
+                els.todo.text.classList.replace('text-[#7C3AED]', 'text-slate-500');
+                els.todo.text.classList.replace('font-semibold', 'font-medium');
+                els.todo.badge.classList.replace('bg-violet-100', 'bg-slate-200/60');
+                els.todo.badge.classList.replace('text-[#7C3AED]', 'text-slate-500');
+            }
+        }
+    </script>
+</body>
+</html>

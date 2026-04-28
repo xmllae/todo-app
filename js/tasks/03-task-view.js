@@ -138,9 +138,29 @@ el.innerHTML='<span class="date-nav-date-main"></span><span class="date-nav-date
 mainEl=el.querySelector(".date-nav-date-main");
 subEl=el.querySelector(".date-nav-date-sub")
 }
+mainEl.style.display="block";
+mainEl.style.fontFamily='-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif';
+mainEl.style.fontSize="24px";
+mainEl.style.fontWeight="700";
+mainEl.style.lineHeight="1";
+mainEl.style.letterSpacing="-0.025em";
+mainEl.style.color="#0f172a";
+mainEl.style.margin="0 0 4px 0";
+subEl.style.display="block";
+subEl.style.fontFamily='-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif';
+subEl.style.fontSize="13px";
+subEl.style.fontWeight="500";
+subEl.style.lineHeight="1.5";
+subEl.style.letterSpacing="0.025em";
+subEl.style.color="#64748b";
+subEl.style.margin="0";
 if(!el.dataset.animBound){
 el.dataset.animBound="1";
-el.addEventListener("animationend",function(){el.classList.remove("is-animating")})
+el.addEventListener("animationend",function(){
+el.classList.remove("is-animating");
+el.classList.remove("is-animating-prev");
+el.classList.remove("is-animating-next")
+})
 }
 const text=String(disp(ds)||"");
 const splitIdx=text.lastIndexOf(" ");
@@ -181,7 +201,20 @@ el.classList.toggle("is-plain-date",!useRangeOffset&&!useRelative);
 subEl.classList.toggle("is-empty",!subText);
 const shouldAnimate=!!prevDs&&prevDs!==ds;
 el.classList.remove("is-animating");
+el.classList.remove("is-animating-prev");
+el.classList.remove("is-animating-next");
 if(shouldAnimate){
+let dirCls="";
+try{
+const prevDate=parseDS(prevDs),nextDate=parseDS(ds);
+if(prevDate&&nextDate){
+const prevTime=new Date(prevDate.getFullYear(),prevDate.getMonth(),prevDate.getDate()).getTime();
+const nextTime=new Date(nextDate.getFullYear(),nextDate.getMonth(),nextDate.getDate()).getTime();
+if(nextTime>prevTime)dirCls="is-animating-next";
+else if(nextTime<prevTime)dirCls="is-animating-prev"
+}
+}catch(e){}
+if(dirCls)el.classList.add(dirCls);
 void el.offsetWidth;
 el.classList.add("is-animating")
 }
@@ -190,6 +223,8 @@ el.dataset.lastDs=ds
 }else{
 // Keep stable when route changes but date content does not.
 el.classList.remove("is-animating");
+el.classList.remove("is-animating-prev");
+el.classList.remove("is-animating-next");
 el.classList.toggle("is-range-offset",useRangeOffset);
 el.classList.toggle("is-relative",useRelative);
 el.classList.toggle("is-plain-date",!useRangeOffset&&!useRelative);
