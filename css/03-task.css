@@ -1505,6 +1505,49 @@
   min-width: 0 !important;
 }
 
+#taskMode .list-panel #tList .task-expand-area .subtask-section-actions {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-completed-toggle {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  height: 22px !important;
+  padding: 0 8px !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: #eef2f7 !important;
+  color: #64748b !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: color .2s ease, background-color .2s ease !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-completed-toggle:hover {
+  color: #475569 !important;
+  background: #e7edf5 !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-completed-toggle-chev {
+  width: 10px !important;
+  height: 10px !important;
+  display: inline-block !important;
+  background: currentColor !important;
+  opacity: .84 !important;
+  transform: rotate(0deg) !important;
+  transition: transform .2s ease !important;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / 10px 10px no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / 10px 10px no-repeat;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-completed-toggle.is-collapsed .subtask-completed-toggle-chev {
+  transform: rotate(-90deg) !important;
+}
+
 #taskMode .list-panel #tList .task-expand-area .subtask-section-title {
   font-size: 12px !important;
   font-weight: 400 !important;
@@ -1606,6 +1649,27 @@
   gap: var(--subtask-row-space) !important;
   margin: 0 !important;
   padding: 0 !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-completed-wrap {
+  overflow: hidden !important;
+  max-height: 640px !important;
+  opacity: 1 !important;
+  transition: max-height .28s cubic-bezier(0.16, 1, 0.3, 1), opacity .2s ease !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-completed-wrap.is-collapsed {
+  max-height: 0 !important;
+  opacity: 0 !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-completed-hidden-hint {
+  margin: 4px 0 2px 24px !important;
+  color: #94a3b8 !important;
+  font-size: 11px !important;
+  line-height: 1.4 !important;
+  cursor: pointer !important;
+  user-select: none !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-list::before {
