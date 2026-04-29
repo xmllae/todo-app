@@ -1713,7 +1713,7 @@
   height: 16px !important;
   min-width: 16px !important;
   border-radius: 5px !important;
-  border: 1.5px solid #d1d5db !important;
+  border: 0 !important;
   background: #e5e7eb !important;
   color: transparent !important;
   font-size: 0 !important;
@@ -1737,13 +1737,13 @@
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-item:hover .sub-ck:not(.checked) {
-  border-color: #d1d5db !important;
+  border-color: transparent !important;
   background: #e5e7eb !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .sub-ck.checked {
   background: #e5e7eb !important;
-  border-color: #d1d5db !important;
+  border-color: transparent !important;
   box-shadow: none !important;
   color: #64748b !important;
 }
