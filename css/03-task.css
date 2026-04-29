@@ -1493,7 +1493,7 @@
 }
 
 #taskMode .list-panel #tList .task-expand-area .exp-block.exp-block--sub {
-  --subtask-row-space: 4px !important;
+  --subtask-row-space: 2px !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-section-meta {
@@ -1610,9 +1610,9 @@
   display: grid !important;
   grid-template-columns: auto minmax(0,1fr) auto !important;
   align-items: center !important;
-  gap: 12px !important;
+  gap: 10px !important;
   margin: 0 -2px !important;
-  padding: 10px !important;
+  padding: 8px !important;
   border: 0 !important;
   border-radius: 12px !important;
   background: transparent !important;
@@ -1665,12 +1665,12 @@
   justify-content: center !important;
   position: relative !important;
   overflow: hidden !important;
-  width: 20px !important;
-  height: 20px !important;
-  min-width: 20px !important;
-  border-radius: 6px !important;
-  border: 2px solid #e5e7eb !important;
-  background: #fff !important;
+  width: 14px !important;
+  height: 14px !important;
+  min-width: 14px !important;
+  border-radius: 4px !important;
+  border: 1.5px solid #d5dde7 !important;
+  background: #f5f7fa !important;
   color: transparent !important;
   font-size: 0 !important;
   font-weight: 700 !important;
@@ -1681,27 +1681,27 @@
 
 #taskMode .list-panel #tList .task-expand-area .sub-ck::before {
   content: "" !important;
-  width: 12px !important;
-  height: 12px !important;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") !important;
+  width: 8px !important;
+  height: 8px !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364758b' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") !important;
   background-repeat: no-repeat !important;
   background-position: center !important;
-  background-size: 12px 12px !important;
+  background-size: 8px 8px !important;
   opacity: 0 !important;
   transform: scale(0.5) !important;
   transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-item:hover .sub-ck:not(.checked) {
-  border-color: #34d399 !important;
-  background: #ecfdf5 !important;
+  border-color: #cfd8e3 !important;
+  background: #eef2f7 !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .sub-ck.checked {
-  background: #10b981 !important;
-  border-color: #10b981 !important;
+  background: #cbd5e1 !important;
+  border-color: #cbd5e1 !important;
   box-shadow: none !important;
-  color: #fff !important;
+  color: #64748b !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .sub-ck.checked::before {
@@ -1912,8 +1912,8 @@
 }
 
 .dark #taskMode .list-panel #tList .task-expand-area .sub-ck {
-  background: #fff !important;
-  border-color: #e5e7eb !important;
+  background: #f5f7fa !important;
+  border-color: #d5dde7 !important;
   box-shadow: none !important;
 }
 
