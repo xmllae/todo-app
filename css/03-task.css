@@ -1493,7 +1493,7 @@
 }
 
 #taskMode .list-panel #tList .task-expand-area .exp-block.exp-block--sub {
-  --subtask-row-space: 3px !important;
+  --subtask-row-space: 1px !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-section-meta {
@@ -1610,10 +1610,10 @@
   display: grid !important;
   grid-template-columns: auto minmax(0,1fr) auto !important;
   align-items: center !important;
-  gap: 9px !important;
+  gap: 8px !important;
   margin: 0 !important;
-  min-height: 34px !important;
-  padding: 7px 8px !important;
+  min-height: 30px !important;
+  padding: 5px 8px !important;
   border: 0 !important;
   border-radius: 10px !important;
   background: transparent !important;
@@ -1714,7 +1714,7 @@
   font-size: 13px !important;
   font-weight: 400 !important;
   font-synthesis: none !important;
-  line-height: 1.45 !important;
+  line-height: 1.35 !important;
   letter-spacing: 0 !important;
   color: #334155 !important;
   transition: color 0.25s cubic-bezier(0.4, 0, 0.2, 1), text-decoration-color 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
