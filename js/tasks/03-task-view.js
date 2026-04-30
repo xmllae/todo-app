@@ -5,9 +5,9 @@ function taskRowFormatTimeMinutes(total){const n=((Math.trunc(total)%1440)+1440)
 function taskRowDurationMinutes(t){const n=parseInt(t&&t.duration,10);if(!Number.isFinite(n)||n<=0)return 0;return Math.min(1440,Math.trunc(n))}
 function taskRowPlainTimeText(t,fallback){const raw=t&&t.planTime?String(t.planTime).trim():"";const start=raw?(typeof formatPlanTimeDisp==="function"?formatPlanTimeDisp(raw):raw):fallback;const startMin=taskRowParseTimeMinutes(raw);const dur=taskRowDurationMinutes(t);if(startMin===null||!dur)return start;const endTotal=startMin+dur;return start+" - "+taskRowFormatTimeMinutes(endTotal)+(endTotal>=1440?" \u6b21\u65e5":"")}
 function taskRowTimePlainHtml(t,fallback,showTitle){const title=showTitle?' title="\u8ba1\u5212\u65f6\u95f4\uff08\u5728\u4efb\u52a1\u8be6\u60c5\u4e2d\u4fee\u6539\uff09"':"";return `<span class="time-plain time-disp task-time-range"${title}>${esc(taskRowPlainTimeText(t,fallback))}</span>`}
-let _subtaskAnchorResizeBound=false;
-let _subtaskAnchorResizeTimer=null;
-function measureTextFirstCharCenterX(textEl){
+let _subtaskGeometryResizeBound=false;
+let _subtaskGeometryResizeTimer=null;
+function measureFirstVisibleCharCenterX(textEl){
 if(!textEl)return null;
 try{
 const walker=document.createTreeWalker(textEl,NodeFilter.SHOW_TEXT,{acceptNode:function(node){return node&&node.nodeValue&&node.nodeValue.trim()?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_SKIP}});
@@ -28,7 +28,7 @@ if(!fallbackRect||fallbackRect.width<=0)return null;
 const half=Math.min(10,Math.max(4,fallbackRect.width*.5));
 return fallbackRect.left+half
 }
-function syncSubtaskAnchorAlignment(){
+function syncSubtaskGeometry(){
 const root=document.getElementById("tList");
 if(!root)return;
 const blocks=root.querySelectorAll(".task-item .task-exp-sub-bg");
@@ -43,24 +43,26 @@ if(mainRingSlot){
 const ringRect=mainRingSlot.getBoundingClientRect();
 if(ringRect&&ringRect.width>0){
 const ringCenterX=ringRect.left+ringRect.width/2;
-const ringX=Math.max(-64,Math.min(blockRect.width+64,ringCenterX-blockRect.left));
-block.style.setProperty("--subtask-main-ring-x",ringX.toFixed(2)+"px")
+const guideX=Math.max(-96,Math.min(blockRect.width+96,ringCenterX-blockRect.left));
+block.style.setProperty("--subtask-guide-x",guideX.toFixed(2)+"px")
 }
 }
 const title=item.querySelector(".task-row-center > .txt-line .txt");
-if(!title)return;
-const anchorAbs=measureTextFirstCharCenterX(title);
-if(!Number.isFinite(anchorAbs))return;
-const anchorX=Math.max(8,Math.min(blockRect.width-8,anchorAbs-blockRect.left));
-block.style.setProperty("--subtask-anchor-x",anchorX.toFixed(2)+"px")
+if(title){
+const firstCharCenterAbs=measureFirstVisibleCharCenterX(title);
+if(Number.isFinite(firstCharCenterAbs)){
+const subRingX=Math.max(12,Math.min(blockRect.width-12,firstCharCenterAbs-blockRect.left));
+block.style.setProperty("--subtask-ring-x",subRingX.toFixed(2)+"px")
+}
+}
 })
 }
-function ensureSubtaskAnchorResizeSync(){
-if(_subtaskAnchorResizeBound)return;
-_subtaskAnchorResizeBound=true;
+function ensureSubtaskGeometryResizeSync(){
+if(_subtaskGeometryResizeBound)return;
+_subtaskGeometryResizeBound=true;
 window.addEventListener("resize",function(){
-if(_subtaskAnchorResizeTimer)clearTimeout(_subtaskAnchorResizeTimer);
-_subtaskAnchorResizeTimer=setTimeout(function(){_subtaskAnchorResizeTimer=null;syncSubtaskAnchorAlignment()},80)
+if(_subtaskGeometryResizeTimer)clearTimeout(_subtaskGeometryResizeTimer);
+_subtaskGeometryResizeTimer=setTimeout(function(){_subtaskGeometryResizeTimer=null;syncSubtaskGeometry()},80)
 })
 }
 const subtaskStrikeStateByTaskId=new Map();
@@ -342,4 +344,4 @@ if(subEl.classList.contains("is-empty")===!!subText)subEl.classList.toggle("is-e
 setTaskBackTodayBtn(ds)
 }
 function animateSubtaskStrikeLines(){const root=document.getElementById("tList");if(!root)return;const lines=root.querySelectorAll('.stp-strike-line[data-strike-animate="1"]:not([data-strike-animated="1"])');if(!lines.length)return;lines.forEach(function(line){line.dataset.strikeAnimated="1";line.style.transition="none";line.style.transform="translateY(-50%) scaleX(0)";line.style.opacity=".36";line.setAttribute("data-strike-animate","0");void line.offsetWidth;line.style.transition="transform 420ms cubic-bezier(0.22, 1, 0.36, 1), opacity 420ms cubic-bezier(0.22, 1, 0.36, 1)";line.style.transform="translateY(-50%) scaleX(1)";line.style.opacity=".50"})}
-function rT(){if(_togPendingDoneId!=null){flushPendingTogIfAny();return}hydrateCompletedSubtaskCollapseState();hydrateSortModes();generateRecurring(sel);checkUnfreeze();const list=document.getElementById("tList");setTaskDateTitle(sel);updateHeaderContext();const dt=T[sel]||[];const nonArchived=dt.filter(t=>!t.archived);const archivedTasks=dt.filter(t=>t.archived);const pn=nonArchived.filter(t=>!t.done&&!t.frozen).length;const dn=nonArchived.filter(t=>t.done).length;const archDn=archivedTasks.length;const tot=nonArchived.length;document.getElementById("batchBar").style.display="flex";updateSortUI();renderOverdue();let fl=nonArchived.filter(t=>passesFMulti(t));if(FTag)fl=fl.filter(t=>(t.tags||[]).includes(FTag));let archVisible=[];if(showArchivedInList&&archivedTasks.length>0){let af=archivedTasks;if(FTag)af=af.filter(t=>(t.tags||[]).includes(FTag));archVisible=af}const totalForProg=tot+archDn;const doneForProg=dn+archDn;const pct=totalForProg>0?Math.round(doneForProg/totalForProg*100):0;let displayList=fl;let activeSortMode="";if(sortStates&&sortStates[sel])activeSortMode=normalizeSortMode(sortStates[sel]);else if(autoSortEnabled)activeSortMode=normalizeSortMode(defaultSortMode||lastSort||"created");if(activeSortMode&&displayList.length>1){displayList=sortDisplayList([...displayList],activeSortMode)}if(!displayList.length&&!archVisible.length){const isZero=tot===0&&archDn===0;list.innerHTML=`<div class="empty"><div class="em">🎉</div><p class="empty-main">${isZero?"今天任务已全部完成":"没有匹配的任务"}</p><p class="empty-sub">${isZero?"休息一下，或添加新任务":"试试其他筛选条件"}</p></div>`;renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,sel);focusTimerAfterRender();return}let h=displayList.map(t=>taskHTML(t,false)).join("");if(archVisible.length>0)h+=archVisible.map(t=>taskHTML(t,true)).join("");list.innerHTML=h;ensureSubtaskAnchorResizeSync();syncSubtaskAnchorAlignment();requestAnimationFrame(syncSubtaskAnchorAlignment);animateSubtaskStrikeLines();renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,sel);focusTimerAfterRender()}
+function rT(){if(_togPendingDoneId!=null){flushPendingTogIfAny();return}hydrateCompletedSubtaskCollapseState();hydrateSortModes();generateRecurring(sel);checkUnfreeze();const list=document.getElementById("tList");setTaskDateTitle(sel);updateHeaderContext();const dt=T[sel]||[];const nonArchived=dt.filter(t=>!t.archived);const archivedTasks=dt.filter(t=>t.archived);const pn=nonArchived.filter(t=>!t.done&&!t.frozen).length;const dn=nonArchived.filter(t=>t.done).length;const archDn=archivedTasks.length;const tot=nonArchived.length;document.getElementById("batchBar").style.display="flex";updateSortUI();renderOverdue();let fl=nonArchived.filter(t=>passesFMulti(t));if(FTag)fl=fl.filter(t=>(t.tags||[]).includes(FTag));let archVisible=[];if(showArchivedInList&&archivedTasks.length>0){let af=archivedTasks;if(FTag)af=af.filter(t=>(t.tags||[]).includes(FTag));archVisible=af}const totalForProg=tot+archDn;const doneForProg=dn+archDn;const pct=totalForProg>0?Math.round(doneForProg/totalForProg*100):0;let displayList=fl;let activeSortMode="";if(sortStates&&sortStates[sel])activeSortMode=normalizeSortMode(sortStates[sel]);else if(autoSortEnabled)activeSortMode=normalizeSortMode(defaultSortMode||lastSort||"created");if(activeSortMode&&displayList.length>1){displayList=sortDisplayList([...displayList],activeSortMode)}if(!displayList.length&&!archVisible.length){const isZero=tot===0&&archDn===0;list.innerHTML=`<div class="empty"><div class="em">🎉</div><p class="empty-main">${isZero?"今天任务已全部完成":"没有匹配的任务"}</p><p class="empty-sub">${isZero?"休息一下，或添加新任务":"试试其他筛选条件"}</p></div>`;renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,sel);focusTimerAfterRender();return}let h=displayList.map(t=>taskHTML(t,false)).join("");if(archVisible.length>0)h+=archVisible.map(t=>taskHTML(t,true)).join("");list.innerHTML=h;ensureSubtaskGeometryResizeSync();syncSubtaskGeometry();requestAnimationFrame(syncSubtaskGeometry);animateSubtaskStrikeLines();renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,sel);focusTimerAfterRender()}

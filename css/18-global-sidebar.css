@@ -3104,7 +3104,7 @@
 }
 
 .app.app--with-global-nav #taskMode .list-panel #tList .task-exp-sub-bg {
-  margin: 0 14px 0 50px !important;
+  margin: 0 14px 0 38px !important;
   padding: 0 !important;
   border: 0 !important;
   border-radius: 0 !important;
@@ -3113,22 +3113,21 @@
 }
 
 .app.app--with-global-nav #taskMode .list-panel.list-panel--multi #tList .task-exp-sub-bg {
-  margin-left: 74px !important;
+  margin-left: 62px !important;
 }
 
-/* Subtask Anchor Refactor: one anchor controls title and checkbox alignment */
-#taskMode .list-panel #tList .task-exp-sub-bg {
-  --subtask-anchor-x: 22px;
-}
-
+/* Subtask Row Rebuild: fixed geometry, symmetric hover radius */
 #taskMode .list-panel #tList .task-expand-area .subtask-item,
 #taskMode .list-panel #tList .task-expand-area .subtask-item:first-child {
   grid-template-columns: 16px minmax(0, 1fr) auto !important;
-  padding-left: calc(var(--subtask-anchor-x, 22px) - 8px) !important;
+  gap: 10px !important;
+  margin: 0 !important;
+  padding: 6px 12px 6px calc(var(--subtask-ring-x, 22px) - 8px) !important;
+  border-radius: 12px !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-list::before {
-  left: calc(var(--subtask-main-ring-x, var(--subtask-anchor-x, 22px)) - .5px) !important;
+  left: calc(var(--subtask-guide-x, 21.5px) - .5px) !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-item::before {
@@ -3136,7 +3135,7 @@
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-completed-hidden-hint {
-  margin-left: calc(var(--subtask-anchor-x, 22px) + 12px) !important;
+  margin-left: calc(var(--subtask-ring-x, 22px) + 12px) !important;
 }
 
 /* Quick Import Panel Refresh */
