@@ -2159,40 +2159,83 @@
    ========================================= */
 
 .drawer-subtasks-list {
-    --subtask-row-pad-x: 12px;
+    --subtask-row-pad-x: 8px;
     --subtask-icon-size: 16px;
-    --subtask-hit-size: 22px;
-    --subtask-icon-inset: 3px;
-    --subtask-icon-gap: 12px;
+    --subtask-hit-size: 16px;
+    --subtask-icon-inset: 0px;
+    --subtask-icon-gap: 8px;
+    --subtask-guide-line: color-mix(in srgb, #94a3b8 42%, transparent);
+    --subtask-guide-line-soft: color-mix(in srgb, #94a3b8 28%, transparent);
     --subtask-add-icon-left: calc(var(--subtask-row-pad-x) + var(--subtask-icon-inset));
     --subtask-text-start: calc(var(--subtask-row-pad-x) + var(--subtask-hit-size) + var(--subtask-icon-gap));
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    position: relative;
+    gap: 1px;
     margin-bottom: var(--drawer-module-gap);
     background: transparent;
     border-radius: 0;
 }
 
+.drawer-subtasks-list::before {
+    content: "";
+    position: absolute;
+    left: calc(var(--subtask-row-pad-x) + var(--subtask-hit-size) / 2);
+    top: 10px;
+    bottom: 40px;
+    width: 1px;
+    border-radius: 999px;
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        var(--subtask-guide-line-soft) 10%,
+        var(--subtask-guide-line) 50%,
+        var(--subtask-guide-line-soft) 90%,
+        transparent 100%
+    );
+    pointer-events: none;
+    z-index: 0;
+}
+
 .subtask-row {
     box-sizing: border-box;
     position: relative;
-    display: flex;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
     align-items: center;
     gap: var(--subtask-icon-gap);
-    min-height: 44px;
-    padding: 12px var(--subtask-row-pad-x);
+    min-height: 30px;
+    padding: 5px var(--subtask-row-pad-x);
     border: 0;
-    border-radius: 12px;
+    border-radius: 10px;
     cursor: default;
     transition: background-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
     background: transparent;
     box-shadow: none;
 }
 
+.subtask-row::before {
+    content: "";
+    position: absolute;
+    left: calc(var(--subtask-row-pad-x) + var(--subtask-hit-size) / 2);
+    top: 50%;
+    width: 10px;
+    height: 1px;
+    border-radius: 999px;
+    background: var(--subtask-guide-line-soft);
+    transform: translateY(-50%);
+    pointer-events: none;
+    transition: background-color 0.2s ease;
+}
+
 .subtask-row:hover {
-    background: #f3f4f6;
+    background: #f5f7fb;
     box-shadow: none;
+}
+
+.subtask-row:hover::before {
+    background: var(--subtask-guide-line);
 }
 
 .subtask-row:focus-within {
@@ -2231,10 +2274,10 @@
     box-sizing: border-box;
     width: var(--subtask-icon-size);
     height: var(--subtask-icon-size);
-    border-radius: 50%;
-    border: 1.5px solid color-mix(in srgb, var(--inp-bd) 30%, #9ca3af);
-    background: var(--card);
-    box-shadow: 0 1px 2px rgba(15, 23, 42, .05);
+    border-radius: 5px;
+    border: 0;
+    background: #e5e7eb;
+    box-shadow: none;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2244,41 +2287,48 @@
 }
 
 .subtask-check.task-ck-slot .chk-ring .chk-ring-ico {
-    color: transparent;
+    color: #64748b;
     font-size: 10px;
     line-height: 1;
-    transition: color .15s;
+    opacity: 0;
+    transition: opacity .2s ease;
+}
+
+.subtask-check.task-ck-slot .chk-ring svg {
+    color: #64748b;
+    opacity: 0;
+    transition: opacity .2s ease;
 }
 
 .subtask-check.task-ck-slot .chk-ring.hover-check .chk-ring-ico,
 .subtask-check.task-ck-slot .chk-ring:hover .chk-ring-ico {
-    color: transparent;
+    opacity: 0;
 }
 
 .subtask-check.task-ck-slot .chk-ring:hover {
-    border-color: color-mix(in srgb, var(--inp-bd) 30%, #9ca3af);
-    background: var(--card);
+    border-color: transparent;
+    background: #e5e7eb;
     box-shadow: none;
 }
 
 .subtask-check.task-ck-slot.task-ck-ring--done .chk-ring {
-    background: #94a3b8 !important;
-    border-color: #94a3b8 !important;
+    background: #e5e7eb !important;
+    border-color: transparent !important;
 }
 
 .subtask-check.task-ck-slot.task-ck-ring--done .chk-ring:hover {
-    background: #94a3b8 !important;
-    border-color: #94a3b8 !important;
+    background: #e5e7eb !important;
+    border-color: transparent !important;
 }
 
 .subtask-check.task-ck-slot.task-ck-ring--done .chk-ring:hover .chk-ring-ico {
-    color: #fff !important;
+    color: #64748b !important;
 }
 
-.subtask-check.task-ck-slot .chk-ring svg,
 .subtask-check.task-ck-slot .chk-ring.checked svg,
 .subtask-check.task-ck-slot .chk-ring.checked .chk-ring-ico {
-    color: #fff;
+    color: #64748b;
+    opacity: 1;
 }
 
 .subtask-text {
@@ -2308,7 +2358,7 @@
     display: none;
     flex: 1;
     min-width: 0;
-    height: var(--subtask-hit-size);
+    height: 22px;
     margin: 0;
     padding: 0;
     border: 0;
@@ -2772,6 +2822,8 @@
 
 .dark .drawer-subtasks-list {
     background: transparent;
+    --subtask-guide-line: color-mix(in srgb, #94a3b8 50%, transparent);
+    --subtask-guide-line-soft: color-mix(in srgb, #94a3b8 34%, transparent);
 }
 
 .dark .drawer-header-btn:hover,
