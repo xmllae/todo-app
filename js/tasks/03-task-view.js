@@ -39,7 +39,7 @@ function shouldCollapseCompletedSubtasks(taskId,doneCount,totalCount){
 if(doneCount<=0||totalCount<=0)return false;
 const id=+taskId;
 if(completedSubtaskCollapseStateById.has(id))return !!completedSubtaskCollapseStateById.get(id);
-return doneCount>=3
+return true
 }
 function toggleCompletedSubtasksCollapse(taskId){
 if(taskId==null)return;
