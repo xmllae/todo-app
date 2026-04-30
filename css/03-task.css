@@ -110,7 +110,14 @@
 .task-detail-trigger:focus-visible,.task-more-btn:focus-visible{outline:none;color:var(--acc);background:color-mix(in srgb,var(--acc) 8%,var(--card));border-color:color-mix(in srgb,var(--acc) 34%,var(--inp-bd));box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 14%,transparent)}
 .task-detail-trigger.is-active,.task-item--detail-active .task-detail-trigger,.task-more-btn.is-open,.task-item--menu-open .task-more-btn{color:var(--acc);background:color-mix(in srgb,var(--acc) 10%,var(--card));border-color:color-mix(in srgb,var(--acc) 28%,var(--inp-bd));box-shadow:0 10px 18px -18px color-mix(in srgb,var(--acc) 72%,transparent)}
 @media(hover:hover) and (pointer:fine){
-  .task-item.task-item--detail-active .task-actions{opacity:1}
+  #taskMode .list-panel #tList .task-item:not(.archived-item) > .task-row > .task-actions{
+    opacity:0 !important;
+    transition:opacity .18s ease !important;
+  }
+  #taskMode .list-panel #tList .task-item:not(.archived-item):hover > .task-row > .task-actions,
+  #taskMode .list-panel #tList .task-item.task-item--menu-open:not(.archived-item) > .task-row > .task-actions{
+    opacity:1 !important;
+  }
 }
 .list-panel .task-item.task-item--hover-suspended:hover .txt--editable,.list-panel .task-item.task-item--hover-suspended:focus-within .txt--editable{color:inherit}
 .dark .list-panel .task-row-center .txt--editable:hover,.dark .list-panel .task-item:focus-within .task-row-center .txt--editable{color:color-mix(in srgb,var(--text) 82%,var(--acc2) 18%)}
