@@ -3121,10 +3121,6 @@
   --subtask-anchor-x: 22px;
 }
 
-#taskMode .list-panel #tList .task-expand-area .subtask-section-meta {
-  margin-left: calc(var(--subtask-anchor-x, 22px) - 0.5em) !important;
-}
-
 #taskMode .list-panel #tList .task-expand-area .subtask-item,
 #taskMode .list-panel #tList .task-expand-area .subtask-item:first-child {
   grid-template-columns: 16px minmax(0, 1fr) auto !important;
@@ -3141,10 +3137,6 @@
 
 #taskMode .list-panel #tList .task-expand-area .subtask-completed-hidden-hint {
   margin-left: calc(var(--subtask-anchor-x, 22px) + 12px) !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .sub-add-wrap--list .sub-add-form {
-  padding-left: calc(var(--subtask-anchor-x, 22px) - 8px) !important;
 }
 
 /* Quick Import Panel Refresh */

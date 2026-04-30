@@ -18,7 +18,7 @@ const DEFAULT_PRIO_TEMPLATE_IDS={high:3};
 const ARCH_PAGE=15;
 let authToken=null,isGuest=false,currentUser=null,selAvatar=AVATARS[0];
 let cY,cM,sel,T={},FMulti=new Set(["pending"]),addSplitOpen=false,FTag="",statP="week",statTag="",isDark=false;
-let editingId=null,editingTimeId=null,expandedId=null,editingSubId=null,subAddComposingId=null,collapsedSubtaskIds=new Set();
+let editingId=null,editingTimeId=null,expandedId=null,editingSubId=null,collapsedSubtaskIds=new Set();
 let templates=[],sortStates={},recurRules=[],customTags=[],autoArchive=false,showArchivedInList=false;
 let priorityColors={...DEFAULT_PRIO_COLORS};
 let priorityTemplateIds={...DEFAULT_PRIO_TEMPLATE_IDS};

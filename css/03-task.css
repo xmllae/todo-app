@@ -1492,146 +1492,12 @@
   border-top: 1px solid color-mix(in srgb, var(--task-bd) 82%, #e9eff6) !important;
 }
 
-#taskMode .list-panel #tList .task-expand-area .subtask-section-head {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 12px !important;
-  min-height: 26px !important;
-  margin: 0 0 9px !important;
-  padding: 0 !important;
-}
-
 #taskMode .list-panel #tList .task-expand-area .exp-block.exp-block--sub {
   --subtask-row-space: 2px !important;
   --subtask-guide-line: color-mix(in srgb, #94a3b8 42%, transparent) !important;
   --subtask-guide-line-soft: color-mix(in srgb, #94a3b8 28%, transparent) !important;
   --subtask-guide-line-faint: color-mix(in srgb, #94a3b8 24%, transparent) !important;
   --subtask-action-height: 24px !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .subtask-section-meta {
-  display: inline-flex !important;
-  align-items: center !important;
-  flex: 1 1 auto !important;
-  gap: 8px !important;
-  min-width: 0 !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .subtask-section-actions {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: flex-end !important;
-  flex: 0 0 auto !important;
-  min-height: var(--subtask-action-height) !important;
-  gap: 12px !important;
-  padding: 0 !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .subtask-section-title {
-  font-size: 12px !important;
-  font-weight: 400 !important;
-  font-synthesis: none !important;
-  letter-spacing: 0 !important;
-  color: #172234 !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .subtask-section-count {
-  display: none !important;
-  align-items: center !important;
-  justify-content: center !important;
-  min-width: 34px !important;
-  height: 20px !important;
-  padding: 0 8px !important;
-  border-radius: 7px !important;
-  background: #edf1f6 !important;
-  color: #75859b !important;
-  font-size: 11px !important;
-  font-weight: 500 !important;
-  font-variant-numeric: tabular-nums !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .subtask-section-add {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 4px !important;
-  height: var(--subtask-action-height) !important;
-  flex-shrink: 0 !important;
-  min-width: 0 !important;
-  padding: 0 2px !important;
-  position: relative !important;
-  border: 0 !important;
-  background: transparent !important;
-  color: #2f66da !important;
-  font-size: 10.5px !important;
-  font-weight: 400 !important;
-  line-height: 1.1 !important;
-  white-space: nowrap !important;
-  cursor: pointer !important;
-  user-select: none !important;
-  transition: color .2s ease, transform .2s ease !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .subtask-section-add::before {
-  content: none !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .subtask-section-add:hover {
-  color: #2359cd !important;
-  transform: translateY(-0.5px) !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .subtask-section-add.is-active {
-  color: #1f57c8 !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .subtask-section-add .subtask-section-add-label {
-  display: inline-block !important;
-  line-height: 1 !important;
-  white-space: nowrap !important;
-  transition: color .2s ease !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .subtask-section-add-plus {
-  display: inline-block !important;
-  position: relative !important;
-  width: 9px !important;
-  height: 9px !important;
-  min-width: 9px !important;
-  min-height: 9px !important;
-  transform: rotate(0deg) !important;
-  transform-origin: 50% 50% !important;
-  transition: transform .24s cubic-bezier(0.16, 1, 0.3, 1) !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .subtask-section-add-plus::before,
-#taskMode .list-panel #tList .task-expand-area .subtask-section-add-plus::after {
-  content: "" !important;
-  position: absolute !important;
-  left: 50% !important;
-  top: 50% !important;
-  width: 9px !important;
-  height: 1.5px !important;
-  border-radius: 999px !important;
-  background: currentColor !important;
-  transform-origin: 50% 50% !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .subtask-section-add-plus::before {
-  transform: translate(-50%, -50%) rotate(0deg) !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .subtask-section-add-plus::after {
-  transform: translate(-50%, -50%) rotate(90deg) !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .subtask-section-add.is-active .subtask-section-add-plus {
-  transform: rotate(45deg) !important;
 }
 
 
@@ -1859,54 +1725,6 @@
   color: #64748b !important;
 }
 
-#taskMode .list-panel #tList .task-expand-area .sub-add-wrap--list {
-  margin-top: var(--subtask-row-space) !important;
-  padding-top: 0 !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .sub-add-wrap--list:has(.sub-add-form:not(.sub-add-form--hidden)) {
-  margin-bottom: var(--subtask-row-space) !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .sub-add-wrap--list .sub-add-form {
-  margin-left: 0 !important;
-  padding: 8px 10px !important;
-  border-radius: 6px !important;
-  border: 1px solid #dfe7f1 !important;
-  background: #fefefe !important;
-  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.035) !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .sub-add-wrap--list .sub-add-input {
-  margin-left: 8px !important;
-  font-size: 12px !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .sub-add-wrap--list .sub-add-actions {
-  gap: 5px !important;
-  margin-left: 8px !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .sub-add-wrap--list .sub-add-cancel,
-#taskMode .list-panel #tList .task-expand-area .sub-add-wrap--list .sub-add-save {
-  height: 24px !important;
-  padding: 0 9px !important;
-  border-radius: 7px !important;
-  font-size: 10px !important;
-  font-weight: 700 !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .sub-add-wrap--list .sub-add-cancel {
-  background: #eef2f6 !important;
-  color: #5c6d82 !important;
-}
-
-#taskMode .list-panel #tList .task-expand-area .sub-add-wrap--list .sub-add-save {
-  background: #2d6cf4 !important;
-  color: #fff !important;
-  box-shadow: none !important;
-}
-
 .dark #taskMode .list-panel #tList .task-row-center > .task-time-col .task-time-sep {
   background: color-mix(in srgb, #94a3b8 45%, transparent) !important;
 }
@@ -1947,33 +1765,10 @@
   border-top-color: color-mix(in srgb, #94a3b8 28%, transparent) !important;
 }
 
-.dark #taskMode .list-panel #tList .task-expand-area .subtask-section-title {
-  color: #dbe6f5 !important;
-}
-
 .dark #taskMode .list-panel #tList .task-expand-area .exp-block.exp-block--sub {
   --subtask-guide-line: color-mix(in srgb, #94a3b8 48%, transparent) !important;
   --subtask-guide-line-soft: color-mix(in srgb, #94a3b8 32%, transparent) !important;
   --subtask-guide-line-faint: color-mix(in srgb, #94a3b8 20%, transparent) !important;
-}
-
-.dark #taskMode .list-panel #tList .task-expand-area .subtask-section-count {
-  background: color-mix(in srgb, #94a3b8 16%, transparent) !important;
-  color: #bdcbdb !important;
-}
-
-.dark #taskMode .list-panel #tList .task-expand-area .subtask-section-actions {
-  border-color: transparent !important;
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-.dark #taskMode .list-panel #tList .task-expand-area .subtask-section-add {
-  color: #9ec1ff !important;
-}
-
-.dark #taskMode .list-panel #tList .task-expand-area .subtask-section-add::before {
-  content: none !important;
 }
 
 .dark #taskMode .list-panel #tList .task-expand-area .subtask-item,
@@ -2043,13 +1838,3 @@
   color: #64748b !important;
 }
 
-.dark #taskMode .list-panel #tList .task-expand-area .sub-add-wrap--list .sub-add-form {
-  border-color: color-mix(in srgb, #94a3b8 26%, transparent) !important;
-  background: linear-gradient(180deg, rgba(30,41,59,.82) 0%, rgba(15,23,42,.76) 100%) !important;
-  box-shadow: 0 12px 26px rgba(2,6,23,.24) !important;
-}
-
-.dark #taskMode .list-panel #tList .task-expand-area .sub-add-wrap--list .sub-add-cancel {
-  background: rgba(148,163,184,.14) !important;
-  color: #c8d3e2 !important;
-}
