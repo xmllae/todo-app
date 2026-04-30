@@ -1489,18 +1489,18 @@
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
-  flex-wrap: nowrap !important;
-  gap: 10px !important;
-  min-height: 22px !important;
-  margin: 0 0 8px !important;
+  gap: 14px !important;
+  min-height: 30px !important;
+  margin: 0 0 10px !important;
   padding: 0 !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .exp-block.exp-block--sub {
-  --subtask-row-space: 1px !important;
+  --subtask-row-space: 2px !important;
   --subtask-guide-line: color-mix(in srgb, #94a3b8 42%, transparent) !important;
   --subtask-guide-line-soft: color-mix(in srgb, #94a3b8 28%, transparent) !important;
-  --subtask-action-height: 22px !important;
+  --subtask-action-height: 28px !important;
+  --subtask-action-gap: 8px !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-section-meta {
@@ -1514,30 +1514,37 @@
 #taskMode .list-panel #tList .task-expand-area .subtask-section-actions {
   display: inline-flex !important;
   align-items: center !important;
+  justify-content: flex-end !important;
   flex: 0 0 auto !important;
   min-height: var(--subtask-action-height) !important;
-  gap: 10px !important;
+  gap: var(--subtask-action-gap) !important;
+  padding: 3px 6px !important;
+  border: 1px solid #e5ebf3 !important;
+  border-radius: 12px !important;
+  background: linear-gradient(180deg, #f9fbfe 0%, #f4f7fb 100%) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-completed-toggle {
   display: inline-flex !important;
   align-items: center !important;
-  gap: 4px !important;
+  gap: 5px !important;
   height: var(--subtask-action-height) !important;
-  padding: 0 8px !important;
-  border: 0 !important;
-  border-radius: 999px !important;
-  background: #eef2f7 !important;
-  color: #64748b !important;
+  padding: 0 10px !important;
+  border: 1px solid transparent !important;
+  border-radius: 10px !important;
+  background: #eef3f9 !important;
+  color: #5f6f86 !important;
   font-size: 11px !important;
   font-weight: 600 !important;
   cursor: pointer !important;
-  transition: color .2s ease, background-color .2s ease !important;
+  transition: color .2s ease, background-color .2s ease, border-color .2s ease !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-completed-toggle:hover {
-  color: #475569 !important;
-  background: #e7edf5 !important;
+  color: #44546c !important;
+  background: #e7eef8 !important;
+  border-color: #d7e2f0 !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-completed-toggle-chev {
@@ -1582,38 +1589,51 @@
 #taskMode .list-panel #tList .task-expand-area .subtask-section-add {
   display: inline-flex !important;
   align-items: center !important;
-  justify-content: flex-end !important;
-  gap: 5px !important;
+  justify-content: center !important;
+  gap: 6px !important;
   height: var(--subtask-action-height) !important;
   flex-shrink: 0 !important;
-  min-width: 98px !important;
+  min-width: 0 !important;
+  padding: 0 2px 0 11px !important;
   position: relative !important;
-  padding: 0 !important;
   border: 0 !important;
   background: transparent !important;
-  color: #2d6cf4 !important;
+  color: #2f67d8 !important;
   font-size: 12px !important;
-  font-weight: 400 !important;
+  font-weight: 500 !important;
   line-height: 1.1 !important;
   white-space: nowrap !important;
   cursor: pointer !important;
   user-select: none !important;
-  transition: color .24s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: color .2s ease !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-section-add::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 50% !important;
+  width: 1px !important;
+  height: 14px !important;
+  border-radius: 999px !important;
+  background: #d8e2ef !important;
+  transform: translateY(-50%) !important;
+  pointer-events: none !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-section-add:hover {
-  color: #1959e5 !important;
+  color: #1f57c8 !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-section-add.is-active {
-  color: #2563eb !important;
+  color: #1f57c8 !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-section-add .subtask-section-add-label {
   display: inline-block !important;
-  line-height: 1.1 !important;
+  line-height: 1 !important;
   white-space: nowrap !important;
-  transition: color .24s cubic-bezier(0.16, 1, 0.3, 1), opacity .16s ease !important;
+  transition: color .2s ease !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-section-add-plus {
@@ -2003,8 +2023,30 @@
   color: #bdcbdb !important;
 }
 
+.dark #taskMode .list-panel #tList .task-expand-area .subtask-section-actions {
+  border-color: color-mix(in srgb, #94a3b8 28%, transparent) !important;
+  background: linear-gradient(180deg, rgba(30, 41, 59, 0.72) 0%, rgba(15, 23, 42, 0.56) 100%) !important;
+  box-shadow: inset 0 1px 0 rgba(148, 163, 184, 0.16) !important;
+}
+
+.dark #taskMode .list-panel #tList .task-expand-area .subtask-completed-toggle {
+  background: color-mix(in srgb, #94a3b8 18%, transparent) !important;
+  border-color: transparent !important;
+  color: #9fb0c6 !important;
+}
+
+.dark #taskMode .list-panel #tList .task-expand-area .subtask-completed-toggle:hover {
+  background: color-mix(in srgb, #94a3b8 26%, transparent) !important;
+  border-color: color-mix(in srgb, #94a3b8 32%, transparent) !important;
+  color: #c8d4e5 !important;
+}
+
 .dark #taskMode .list-panel #tList .task-expand-area .subtask-section-add {
-  color: #8fb6ff !important;
+  color: #9ec1ff !important;
+}
+
+.dark #taskMode .list-panel #tList .task-expand-area .subtask-section-add::before {
+  background: color-mix(in srgb, #94a3b8 36%, transparent) !important;
 }
 
 .dark #taskMode .list-panel #tList .task-expand-area .subtask-item,
