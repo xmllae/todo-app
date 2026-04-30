@@ -1088,7 +1088,8 @@ function renderDrawerContent(task) {
     const content = document.getElementById('taskDetailContent');
     if (!content) return;
 
-    const subtasksHtml = renderSubtasksList(task);
+    const subtasksState = renderSubtasksList(task);
+    const subtasksHtml = subtasksState.listHtml;
     const tagsHtml = renderTagsList(task);
     const isDone = taskAppearsDoneInDrawer(task);
     const normalizedPriority = task.priority === 'high' ? 'high' : 'normal';
@@ -1105,6 +1106,12 @@ function renderDrawerContent(task) {
         ? ' chk-ring--ripple'
         : '';
     const showSubtasksByDefault = task.showSubtasksByDefault !== false;
+    const doneSubtasksCount = subtasksState.doneCount;
+    const totalSubtasksCount = subtasksState.totalCount;
+    const collapseCompletedRows = subtasksState.collapseCompletedRows;
+    const completedToggleLabel = collapseCompletedRows
+        ? `\u663e\u793a\u5df2\u5b8c\u6210 ${doneSubtasksCount}`
+        : `\u6298\u53e0\u5df2\u5b8c\u6210 ${doneSubtasksCount}`;
 
     content.innerHTML = `
         <div class="drawer-task-title ${isDone ? 'drawer-task-title--done' : ''}" data-task-id="${task.id}">
@@ -1252,11 +1259,14 @@ function renderDrawerContent(task) {
         </div>
         ` : ''}
 
-        <div class="drawer-section-header">
+        <div class="drawer-section-header drawer-section-header--subtasks">
             <div class="drawer-section-label drawer-section-label--subtasks">
                 <span class="drawer-section-title">\u5b50\u4efb\u52a1</span>
             </div>
-            ${(task.subtasks || []).length > 0 ? `<span class="drawer-section-count">${getSubtaskDoneCount(task)}/${task.subtasks.length}</span>` : ''}
+            <div class="drawer-subtasks-head-actions">
+                ${doneSubtasksCount > 0 ? `<button type="button" class="drawer-subtasks-fold-toggle${collapseCompletedRows ? ' is-collapsed' : ''}" aria-expanded="${collapseCompletedRows ? 'false' : 'true'}" aria-label="${completedToggleLabel}" title="${completedToggleLabel}" onclick="event.stopPropagation();toggleDrawerCompletedSubtasks(${task.id})"><span class="drawer-subtasks-fold-toggle-label">${completedToggleLabel}</span><span class="drawer-subtasks-fold-toggle-chev" aria-hidden="true"></span></button>` : ''}
+                ${totalSubtasksCount > 0 ? `<span class="drawer-section-count">${doneSubtasksCount}/${totalSubtasksCount}</span>` : ''}
+            </div>
         </div>
 
         <label class="drawer-subtasks-pref" onclick="event.stopPropagation()">
@@ -1324,11 +1334,26 @@ function renderDrawerContent(task) {
 
 function renderSubtasksList(task) {
     const subtasks = task.subtasks || [];
-    if (subtasks.length === 0) return '';
+    const state = {
+        listHtml: '',
+        doneCount: 0,
+        totalCount: subtasks.length,
+        collapseCompletedRows: false
+    };
+    if (subtasks.length === 0) return state;
 
-    return subtasks.map(function(sub) {
+    const doneCount = subtasks.reduce(function(count, sub) {
+        return count + (sub.done ? 1 : 0);
+    }, 0);
+    const collapseCompletedRows = typeof shouldCollapseCompletedSubtasks === 'function'
+        ? shouldCollapseCompletedSubtasks(task.id, doneCount, subtasks.length)
+        : false;
+    const todoRows = [];
+    const doneRows = [];
+
+    subtasks.forEach(function(sub) {
         const isDone = sub.done;
-        return `
+        const rowHtml = `
             <div class="subtask-row"
                  data-subtask-id="${sub.id}"
                  title="\u53cc\u51fb\u7f16\u8f91\u5b50\u4efb\u52a1"
@@ -1379,13 +1404,31 @@ function renderSubtasksList(task) {
                 </button>
             </div>
         `;
-    }).join('');
+
+        if (isDone) {
+            doneRows.push(rowHtml);
+        } else {
+            todoRows.push(rowHtml);
+        }
+    });
+
+    const doneRowsHtml = doneRows.length
+        ? `<div class="drawer-subtasks-completed-wrap${collapseCompletedRows ? ' is-collapsed' : ''}">${doneRows.join('')}</div>`
+        : '';
+    const doneHiddenHint = doneRows.length && collapseCompletedRows
+        ? `<button type="button" class="drawer-subtasks-collapsed-hint" onclick="event.stopPropagation();toggleDrawerCompletedSubtasks(${task.id})">已有${doneCount}个已完成子任务被折叠</button>`
+        : '';
+
+    state.listHtml = `${todoRows.join('')}${doneRowsHtml}${doneHiddenHint}`;
+    state.doneCount = doneCount;
+    state.collapseCompletedRows = collapseCompletedRows;
+    return state;
 }
 
-function getSubtaskDoneCount(task) {
-    return (task.subtasks || []).filter(function(subtask) {
-        return subtask.done;
-    }).length;
+function toggleDrawerCompletedSubtasks(taskId) {
+    if (typeof toggleCompletedSubtasksCollapse === 'function') {
+        toggleCompletedSubtasksCollapse(taskId);
+    }
 }
 
 function renderTagsList(task) {
