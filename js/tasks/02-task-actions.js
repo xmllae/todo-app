@@ -187,7 +187,15 @@ function showMobileTaskSheet(id){const t=(T[sel]||[]).find(x=>x.id===id);if(!t)r
 function bindMobileTaskLongPress(){if(window._mlpBind)return;window._mlpBind=1;const list=document.getElementById("tList");if(!list)return;let lpT=null;function clr(){if(lpT){clearTimeout(lpT);lpT=null}}function mob(){return window.matchMedia("(max-width:640px)").matches}list.addEventListener("touchstart",function(e){if(!mob())return;const item=e.target.closest(".task-item");if(!item)return;if(e.target.closest(".task-expand-area,.drag-handle,.task-ck-slot,.ms-ck,.task-prio-pill,input,textarea,button,a[href]"))return;const id=+item.dataset.id;if(!id)return;clr();lpT=setTimeout(function(){lpT=null;if(navigator.vibrate)try{navigator.vibrate(10)}catch(_){}showMobileTaskSheet(id)},500)},{passive:true});list.addEventListener("touchmove",function(e){if(lpT)clr()},{passive:true});list.addEventListener("touchend",clr,{passive:true});list.addEventListener("touchcancel",clr,{passive:true})}
 bindMobileTaskLongPress();
 function batchDone(){flushPendingTogIfAny();pushUndo("全部完成");(T[sel]||[]).filter(t=>!t.frozen&&!t.archived).forEach(t=>{t.done=true;t.status="done"});rCal();rT();save();toast("✅ 全部已标记完成")}
-function toggleSubtask(tid,sid){const t=(T[sel]||[]).find(x=>x.id===tid);if(!t)return;const s=(t.subtasks||[]).find(x=>x.id===sid);if(s)s.done=!s.done;rT();save()}
+function toggleSubtask(tid,sid){
+const t=(T[sel]||[]).find(x=>x.id===tid);
+if(!t)return;
+const s=(t.subtasks||[]).find(x=>x.id===sid);
+if(!s)return;
+s.done=!s.done;
+rT();
+save()
+}
 function deleteSubtask(tid,sid){const t=(T[sel]||[]).find(x=>x.id===tid);if(!t)return;t.subtasks=(t.subtasks||[]).filter(x=>x.id!==sid);syncToRule(t);rT();save()}
 function startEditSub(tid,sid){editingSubId=sid;rT();setTimeout(()=>{const inp=document.getElementById("subEdit_"+sid);if(inp){inp.focus();inp.setSelectionRange(inp.value.length,inp.value.length)}},30)}
 function saveEditSub(tid,sid){const inp=document.getElementById("subEdit_"+sid);if(!inp)return;const txt=inp.value.trim();const t=(T[sel]||[]).find(x=>x.id===tid);if(t&&t.subtasks){const s=t.subtasks.find(x=>x.id===sid);if(s&&txt)s.text=txt}editingSubId=null;syncToRule(t);rT();save()}
