@@ -1496,7 +1496,7 @@
   --subtask-row-space: 2px !important;
   --subtask-guide-line: color-mix(in srgb, #94a3b8 42%, transparent) !important;
   --subtask-guide-line-soft: color-mix(in srgb, #94a3b8 28%, transparent) !important;
-  --subtask-guide-line-faint: color-mix(in srgb, #94a3b8 24%, transparent) !important;
+  --subtask-guide-line-faint: color-mix(in srgb, #94a3b8 16%, transparent) !important;
   --subtask-action-height: 24px !important;
 }
 
@@ -1768,7 +1768,7 @@
 .dark #taskMode .list-panel #tList .task-expand-area .exp-block.exp-block--sub {
   --subtask-guide-line: color-mix(in srgb, #94a3b8 48%, transparent) !important;
   --subtask-guide-line-soft: color-mix(in srgb, #94a3b8 32%, transparent) !important;
-  --subtask-guide-line-faint: color-mix(in srgb, #94a3b8 20%, transparent) !important;
+  --subtask-guide-line-faint: color-mix(in srgb, #94a3b8 14%, transparent) !important;
 }
 
 .dark #taskMode .list-panel #tList .task-expand-area .subtask-item,
