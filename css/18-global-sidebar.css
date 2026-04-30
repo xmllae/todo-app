@@ -1,12 +1,34 @@
-/* 桌面三栏重构：左导航、任务区、右功能区独立，并统一间距。 */
-.app.app--with-global-nav {
+/* 桌面三栏：统一宽度变量，保证与顶部导航始终对齐。 */
+#appMain.show:has(.app.app--with-global-nav) {
+  --schedule-left-col: 220px;
+  --schedule-right-col: 316px;
+  --schedule-main-col-min: 620px;
+  --schedule-main-col-max: 980px;
   --schedule-col-gap: 16px;
+  --schedule-shell-max-width: calc(
+    var(--schedule-left-col) +
+    var(--schedule-main-col-max) +
+    var(--schedule-right-col) +
+    var(--schedule-col-gap) * 2
+  );
+}
+
+@media (min-width: 1181px) {
+  #appMain.show:has(.app.app--with-global-nav) .site-header-inner {
+    max-width: var(--schedule-shell-max-width);
+  }
+}
+
+.app.app--with-global-nav {
   display: grid;
-  grid-template-columns: 220px minmax(620px, 980px) 316px;
+  grid-template-columns:
+    var(--schedule-left-col, 220px)
+    minmax(var(--schedule-main-col-min, 620px), var(--schedule-main-col-max, 980px))
+    var(--schedule-right-col, 316px);
   grid-template-rows: minmax(0, 1fr);
   align-items: stretch;
   justify-content: center;
-  column-gap: var(--schedule-col-gap);
+  column-gap: var(--schedule-col-gap, 16px);
   row-gap: 0;
   max-width: none;
   margin: 0;
