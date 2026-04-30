@@ -36,12 +36,21 @@ if(!blocks.length)return;
 blocks.forEach(function(block){
 const item=block.closest(".task-item");
 if(!item)return;
+const blockRect=block.getBoundingClientRect();
+if(!blockRect||blockRect.width<=0)return;
+const mainRingSlot=item.querySelector(".task-row > .task-ck-slot");
+if(mainRingSlot){
+const ringRect=mainRingSlot.getBoundingClientRect();
+if(ringRect&&ringRect.width>0){
+const ringCenterX=ringRect.left+ringRect.width/2;
+const ringX=Math.max(-64,Math.min(blockRect.width+64,ringCenterX-blockRect.left));
+block.style.setProperty("--subtask-main-ring-x",ringX.toFixed(2)+"px")
+}
+}
 const title=item.querySelector(".task-row-center > .txt-line .txt");
 if(!title)return;
 const anchorAbs=measureTextFirstCharCenterX(title);
 if(!Number.isFinite(anchorAbs))return;
-const blockRect=block.getBoundingClientRect();
-if(!blockRect||blockRect.width<=0)return;
 const anchorX=Math.max(8,Math.min(blockRect.width-8,anchorAbs-blockRect.left));
 block.style.setProperty("--subtask-anchor-x",anchorX.toFixed(2)+"px")
 })

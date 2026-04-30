@@ -3131,9 +3131,12 @@
   padding-left: calc(var(--subtask-anchor-x, 22px) - 8px) !important;
 }
 
-#taskMode .list-panel #tList .task-expand-area .subtask-list::before,
+#taskMode .list-panel #tList .task-expand-area .subtask-list::before {
+  left: calc(var(--subtask-main-ring-x, var(--subtask-anchor-x, 22px)) - .5px) !important;
+}
+
 #taskMode .list-panel #tList .task-expand-area .subtask-item::before {
-  left: var(--subtask-anchor-x, 22px) !important;
+  content: none !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-completed-hidden-hint {
@@ -3229,7 +3232,7 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill.sub-task-pill--inline .stp-n,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn.sub-task-pill--inline .stp-n {
   font-size: 12px !important;
-  font-weight: 650 !important;
+  font-weight: 400 !important;
   line-height: 1.2 !important;
   color: inherit !important;
 }
