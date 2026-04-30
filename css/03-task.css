@@ -1768,9 +1768,9 @@
   width: 16px !important;
   height: 16px !important;
   min-width: 16px !important;
-  border-radius: 5px !important;
-  border: 0 !important;
-  background: #e5e7eb !important;
+  border-radius: 999px !important;
+  border: 1.5px solid #b8c7d9 !important;
+  background: transparent !important;
   color: transparent !important;
   font-size: 0 !important;
   font-weight: 700 !important;
@@ -1781,27 +1781,25 @@
 
 #taskMode .list-panel #tList .task-expand-area .sub-ck::before {
   content: "" !important;
-  width: 9px !important;
-  height: 9px !important;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364758b' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") !important;
-  background-repeat: no-repeat !important;
-  background-position: center !important;
-  background-size: 9px 9px !important;
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 999px !important;
+  background: currentColor !important;
   opacity: 0 !important;
-  transform: scale(0.5) !important;
+  transform: scale(0.35) !important;
   transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-item:hover .sub-ck:not(.checked) {
-  border-color: transparent !important;
-  background: #e5e7eb !important;
+  border-color: #97abc5 !important;
+  background: color-mix(in srgb, #eff5fd 75%, transparent) !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .sub-ck.checked {
-  background: #e5e7eb !important;
-  border-color: transparent !important;
+  background: color-mix(in srgb, var(--acc2, var(--acc)) 10%, transparent) !important;
+  border-color: color-mix(in srgb, var(--acc2, var(--acc)) 44%, #9bb0ca) !important;
   box-shadow: none !important;
-  color: #64748b !important;
+  color: color-mix(in srgb, var(--acc2, var(--acc)) 70%, #455f7f) !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .sub-ck.checked::before {
@@ -2027,9 +2025,20 @@
 }
 
 .dark #taskMode .list-panel #tList .task-expand-area .sub-ck {
-  background: #223347 !important;
-  border-color: #50637a !important;
+  background: transparent !important;
+  border-color: color-mix(in srgb, #8ea2bc 56%, transparent) !important;
   box-shadow: none !important;
+}
+
+.dark #taskMode .list-panel #tList .task-expand-area .subtask-item:hover .sub-ck:not(.checked) {
+  border-color: color-mix(in srgb, #a9bfd9 70%, transparent) !important;
+  background: color-mix(in srgb, #2d415b 42%, transparent) !important;
+}
+
+.dark #taskMode .list-panel #tList .task-expand-area .sub-ck.checked {
+  background: color-mix(in srgb, var(--acc2, var(--acc)) 18%, transparent) !important;
+  border-color: color-mix(in srgb, var(--acc2, var(--acc)) 58%, #7084a0) !important;
+  color: color-mix(in srgb, var(--acc2, var(--acc)) 78%, #dce7f6) !important;
 }
 
 .dark #taskMode .list-panel #tList .task-expand-area .sub-text {
