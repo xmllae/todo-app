@@ -65,6 +65,7 @@
   height: var(--header-tool-btn-size);
   padding: 0 8px 0 12px;
   gap: 8px;
+  align-items: center;
   border-radius: 14px;
   justify-content: flex-start;
   background: var(--header-search-bg);
@@ -77,11 +78,15 @@
 
 .site-header-inner .header-tools .header-search-trigger .header-utility-ico {
   display: inline-flex;
+  align-self: center;
   color: var(--header-search-icon-color);
 }
 
 .header-search-placeholder {
+  display: inline-flex;
+  align-items: center;
   flex: 1;
+  height: 100%;
   min-width: 0;
   text-align: left;
   color: var(--header-search-placeholder-color);
@@ -111,6 +116,7 @@
   letter-spacing: 0.01em;
   line-height: 1;
   font-variant-numeric: tabular-nums;
+  align-self: center;
   margin-left: auto;
 }
 
