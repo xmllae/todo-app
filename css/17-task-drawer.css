@@ -2038,6 +2038,9 @@
 }
 
 .drawer-subtasks-pref {
+    --subtask-row-pad-x: 8px;
+    --subtask-hit-size: 16px;
+    --subtask-icon-gap: 8px;
     position: relative;
     display: block;
     margin: -1px 0 10px;
@@ -2060,9 +2063,9 @@
 .drawer-subtasks-pref-inner {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--subtask-icon-gap);
     min-height: 34px;
-    padding: 0 10px;
+    padding: 0 10px 0 var(--subtask-row-pad-x);
     border-radius: 8px;
     border: 1px solid color-mix(in srgb, var(--inp-bd) 66%, transparent);
     background: color-mix(in srgb, var(--card) 88%, #f8fafc);
@@ -2074,15 +2077,15 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 15px;
-    height: 15px;
+    width: var(--subtask-hit-size);
+    height: var(--subtask-hit-size);
     color: color-mix(in srgb, var(--text3) 92%, #94a3b8);
     flex-shrink: 0;
 }
 
 .drawer-subtasks-pref-icon .ph {
-    width: 15px;
-    height: 15px;
+    width: 14px;
+    height: 14px;
     stroke-width: 2;
 }
 
