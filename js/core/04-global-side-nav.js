@@ -114,12 +114,16 @@
   }
 
   function todayCalendarIcon() {
+    var dayText = String(new Date().getDate()).padStart(2, "0");
     return (
-      '<span class="gsn-today-cal" aria-hidden="true">' +
-      '<span class="gsn-today-cal-top"></span>' +
-      '<span class="gsn-today-cal-day">' +
-      String(new Date().getDate()) +
-      "</span>" +
+      '<span class="gsn-filter-icon gsn-today-calendar-ico" aria-hidden="true">' +
+      '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">' +
+      '<rect x="2.5" y="1.5" width="19" height="21" rx="2.75" stroke="currentColor" stroke-width="1.8"></rect>' +
+      '<path d="M2.5 6.8H21.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>' +
+      '<text x="12" y="19.2" text-anchor="middle" font-size="10" font-weight="800" letter-spacing="0.1" fill="currentColor" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Arial, sans-serif">' +
+      dayText +
+      "</text>" +
+      "</svg>" +
       "</span>"
     );
   }
