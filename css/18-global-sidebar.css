@@ -4011,11 +4011,6 @@
   transition: transform 0.3s ease !important;
 }
 
-.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut .add-split-main:hover svg,
-#taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut .add-split-main:hover svg {
-  transform: rotate(90deg) !important;
-}
-
 .app.app--with-global-nav #taskMode .batch-bar-right,
 #taskMode .batch-bar-right {
   padding-bottom: 0 !important;
@@ -4186,10 +4181,6 @@
   height: 18px !important;
   stroke-width: 2.5 !important;
   transition: transform 0.3s ease !important;
-}
-
-.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut .add-split-main:hover svg {
-  transform: rotate(90deg) !important;
 }
 
 .app.app--with-global-nav #taskMode .batch-bar-right {
