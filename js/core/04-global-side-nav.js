@@ -116,7 +116,7 @@
   function todayCalendarIcon() {
     var dayText = String(new Date().getDate()).padStart(2, "0");
     return (
-      '<span class="gsn-filter-icon gsn-today-calendar-ico" aria-hidden="true">' +
+      '<span class="gsn-filter-icon gsn-today-calendar-ico gsn-nav-date-icon gsn-nav-date-icon--today" aria-hidden="true">' +
       '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">' +
       '<rect x="2.5" y="1.5" width="19" height="21" rx="2.75" stroke="currentColor" stroke-width="1.8"></rect>' +
       '<path d="M2.5 6.8H21.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>' +
@@ -131,10 +131,15 @@
   function navButton(kind, icon, label, count, action, arg, active) {
     var cls = "gsn-" + kind + (active ? " is-active" : "");
     var dataArg = arg == null ? "" : ' data-gsn-arg="' + escapeHtml(arg) + '"';
+    var iconToneClass = icon ? " gsn-nav-date-icon--" + icon : "";
     var iconHtml =
       icon === "today-calendar"
         ? todayCalendarIcon()
-        : '<i class="ph ' + icon + '" aria-hidden="true"></i>';
+        : '<i class="ph ' +
+          icon +
+          " gsn-nav-date-icon gsn-nav-date-icon--ph" +
+          iconToneClass +
+          '" aria-hidden="true"></i>';
     return (
       '<button type="button" class="' +
       cls +
