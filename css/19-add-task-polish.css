@@ -112,11 +112,16 @@
 }
 
 .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-btn {
-  min-width: 140px !important;
+  min-width: 124px !important;
   gap: 6px !important;
 }
 
-.app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-btn #tgTimeLabel {
+.app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-end-time-btn {
+  min-width: 124px !important;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-btn #tgTimeLabel,
+.app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-btn #tgEndTimeLabel {
   display: none !important;
 }
 
@@ -173,11 +178,11 @@
 }
 
 .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-btn {
-  min-width: 120px !important;
+  min-width: 114px !important;
 }
 
 .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-dur-inline-wrap {
-  min-width: 148px !important;
+  min-width: 138px !important;
   gap: 5px !important;
 }
 
