@@ -571,6 +571,12 @@
   color: #e11d48;
 }
 
+.gsn-filter-ico--frozen {
+  font-size: 16px;
+  transform: scale(1.12);
+  transform-origin: center;
+}
+
 .gsn-filter-ico-fallback {
   width: 6px;
   height: 6px;
