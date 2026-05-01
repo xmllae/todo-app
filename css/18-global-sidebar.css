@@ -3135,7 +3135,8 @@
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-completed-hidden-hint {
-  margin-left: calc(var(--subtask-ring-x, 22px) + 12px) !important;
+  margin-left: var(--subtask-ring-x, 22px) !important;
+  text-indent: -0.5em !important;
 }
 
 /* Quick Import Panel Refresh */

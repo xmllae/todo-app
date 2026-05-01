@@ -2223,6 +2223,7 @@
     --subtask-hit-size: 16px;
     --subtask-icon-inset: 0px;
     --subtask-icon-gap: 8px;
+    --subtask-ring-center-x: calc(var(--subtask-row-pad-x) + var(--subtask-hit-size) / 2);
     --subtask-ring-border: #b8c7d9;
     --subtask-ring-hover-border: #97abc5;
     --subtask-ring-hover-bg: color-mix(in srgb, #eff5fd 75%, transparent);
@@ -2430,10 +2431,11 @@
 }
 
 .drawer-subtasks-collapsed-hint {
-    margin: 2px 0 2px var(--subtask-text-start);
+    margin: 2px 0 2px var(--subtask-ring-center-x);
     border: 0;
     padding: 0;
     background: transparent;
+    text-indent: -0.5em;
     color: #9aa7b8;
     font-size: 0.75rem;
     line-height: 1.35;

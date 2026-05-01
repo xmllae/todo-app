@@ -1494,6 +1494,7 @@
 
 #taskMode .list-panel #tList .task-expand-area .exp-block.exp-block--sub {
   --subtask-row-space: 2px !important;
+  --subtask-ring-center-x: var(--subtask-guide-x, 21.5px) !important;
   --subtask-guide-line: color-mix(in srgb, #94a3b8 42%, transparent) !important;
   --subtask-guide-line-soft: color-mix(in srgb, #94a3b8 28%, transparent) !important;
   --subtask-guide-line-faint: color-mix(in srgb, #94a3b8 10%, transparent) !important;
@@ -1523,7 +1524,8 @@
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-completed-hidden-hint {
-  margin: 4px 0 2px 24px !important;
+  margin: 4px 0 2px var(--subtask-ring-center-x) !important;
+  text-indent: -0.5em !important;
   color: #94a3b8 !important;
   font-size: 11px !important;
   line-height: 1.4 !important;
