@@ -272,13 +272,13 @@
 .gsn-project,
 .gsn-filter {
   width: 100%;
-  min-height: 36px;
+  min-height: 34px;
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 7px 9px;
+  padding: 6px 9px;
   border: 1px solid transparent;
-  border-radius: 10px;
+  border-radius: 9px;
   background: transparent;
   color: var(--gsn-item-fg);
   cursor: pointer;
@@ -294,6 +294,18 @@
     border-color 0.2s ease,
     background 0.2s ease,
     box-shadow 0.2s ease;
+}
+
+.gsn-section > .gsn-item + .gsn-item,
+.gsn-section > .gsn-project + .gsn-project,
+.gsn-section > .gsn-filter + .gsn-filter,
+.gsn-section > .gsn-item + .gsn-project,
+.gsn-section > .gsn-item + .gsn-filter,
+.gsn-section > .gsn-project + .gsn-item,
+.gsn-section > .gsn-project + .gsn-filter,
+.gsn-section > .gsn-filter + .gsn-item,
+.gsn-section > .gsn-filter + .gsn-project {
+  margin-top: 3px;
 }
 
 .gsn-item:hover,
