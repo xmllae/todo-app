@@ -1458,9 +1458,9 @@
     height: 36px;
     min-width: 36px;
     border-radius: 999px;
-    border: 1px solid #dbe4ef;
-    background: #f8fafc;
-    color: #94a3b8;
+    border: 1px solid transparent;
+    background: transparent;
+    color: #a7b4c6;
     font-size: 0;
     padding: 0;
     display: inline-flex;
@@ -1470,7 +1470,8 @@
     transition:
       color 0.16s ease,
       border-color 0.16s ease,
-      background 0.16s ease;
+      background 0.16s ease,
+      box-shadow 0.16s ease;
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow svg {
@@ -1481,9 +1482,18 @@
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow:hover {
-    color: #64748b;
-    border-color: #cfd9e6;
-    background: #eef4ff;
+    color: #5d6f88;
+    border-color: #d5dfea;
+    background: #f2f6fb;
+    box-shadow: 0 2px 8px rgba(148, 163, 184, 0.2);
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow:focus-visible {
+    color: #5d6f88;
+    border-color: #d5dfea;
+    background: #f2f6fb;
+    box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.26);
+    outline: none;
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 .date-nav-h3-ico {
@@ -1595,15 +1605,24 @@
 
 
   .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow {
-    color: #8ea0b6;
-    border-color: rgba(148, 163, 184, 0.35);
-    background: rgba(148, 163, 184, 0.08);
+    color: rgba(195, 209, 226, 0.66);
+    border-color: transparent;
+    background: transparent;
   }
 
   .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow:hover {
-    color: #dce5f2;
-    border-color: rgba(148, 163, 184, 0.5);
+    color: #e8f1ff;
+    border-color: rgba(148, 163, 184, 0.46);
     background: rgba(148, 163, 184, 0.16);
+    box-shadow: 0 2px 10px rgba(2, 6, 23, 0.26);
+  }
+
+  .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow:focus-visible {
+    color: #e8f1ff;
+    border-color: rgba(148, 163, 184, 0.46);
+    background: rgba(148, 163, 184, 0.16);
+    box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.28);
+    outline: none;
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split {
@@ -3734,8 +3753,29 @@
     border-radius: 999px !important;
     border: 0 !important;
     background: transparent !important;
-    color: #94a3b8 !important;
+    color: #aab6c7 !important;
     box-shadow: none !important;
+  }
+
+  #taskMode .task-main-col > .task-card > .date-nav .nav-arrow:hover,
+  #taskMode .task-main-col > .task-card > .date-nav .nav-arrow:focus-visible {
+    color: #5d6f88 !important;
+    border: 1px solid #d5dfea !important;
+    background: #f2f6fb !important;
+    box-shadow: 0 2px 8px rgba(148, 163, 184, 0.2) !important;
+    outline: none !important;
+  }
+
+  .dark #taskMode .task-main-col > .task-card > .date-nav .nav-arrow {
+    color: rgba(195, 209, 226, 0.66) !important;
+  }
+
+  .dark #taskMode .task-main-col > .task-card > .date-nav .nav-arrow:hover,
+  .dark #taskMode .task-main-col > .task-card > .date-nav .nav-arrow:focus-visible {
+    color: #e8f1ff !important;
+    border: 1px solid rgba(148, 163, 184, 0.46) !important;
+    background: rgba(148, 163, 184, 0.16) !important;
+    box-shadow: 0 2px 10px rgba(2, 6, 23, 0.26) !important;
   }
 
   #taskMode .task-main-col > .task-card > .date-nav .nav-arrow svg {
