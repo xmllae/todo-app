@@ -123,11 +123,13 @@
   --gsn-kicker-color: #8b9cb2;
   --gsn-item-fg: #586a83;
   --gsn-item-fg-hover: #25364c;
-  --gsn-item-hover-bg: rgba(108, 130, 158, 0.09);
-  --gsn-item-active-bg: rgba(97, 114, 135, 0.3);
-  --gsn-item-active-border: rgba(85, 103, 126, 0.42);
+  --gsn-item-hover-bg: rgba(108, 130, 158, 0.07);
+  --gsn-item-active-bg: rgba(108, 130, 158, 0.09);
+  --gsn-item-active-border: rgba(88, 108, 134, 0.54);
   --gsn-item-active-fg: #1f334d;
-  --gsn-item-active-shadow: 0 10px 20px -18px rgba(32, 53, 79, 0.42);
+  --gsn-item-active-shadow:
+    0 0 0 1px rgba(145, 162, 184, 0.2),
+    0 6px 14px -16px rgba(32, 53, 79, 0.22);
   --gsn-count-bg: rgba(100, 116, 139, 0.1);
   --gsn-count-fg: #667890;
   --gsn-count-active-bg: #ffffff;
@@ -302,6 +304,12 @@
   border-color: color-mix(in srgb, var(--gsn-item-active-border) 56%, transparent);
 }
 
+.gsn-item:not(.is-active):hover,
+.gsn-project:not(.is-active):hover,
+.gsn-filter:not(.is-active):hover {
+  transform: translateX(0.5px);
+}
+
 .gsn-item:active,
 .gsn-project:active,
 .gsn-filter:active {
@@ -323,6 +331,14 @@
   border-color: var(--gsn-item-active-border);
   background: var(--gsn-item-active-bg);
   box-shadow: var(--gsn-item-active-shadow);
+}
+
+.gsn-item.is-active:hover,
+.gsn-project.is-active:hover,
+.gsn-filter.is-active:hover {
+  background: var(--gsn-item-active-bg);
+  border-color: color-mix(in srgb, var(--gsn-item-active-border) 90%, #91a5c0);
+  transform: none;
 }
 
 .gsn-head-action::after,
@@ -534,11 +550,13 @@
   --gsn-kicker-color: #8ca0bb;
   --gsn-item-fg: #c2cedd;
   --gsn-item-fg-hover: #f2f7fd;
-  --gsn-item-hover-bg: rgba(148, 163, 184, 0.14);
-  --gsn-item-active-bg: rgba(119, 140, 166, 0.34);
-  --gsn-item-active-border: rgba(165, 190, 215, 0.52);
+  --gsn-item-hover-bg: rgba(148, 163, 184, 0.12);
+  --gsn-item-active-bg: rgba(148, 163, 184, 0.14);
+  --gsn-item-active-border: rgba(165, 190, 215, 0.58);
   --gsn-item-active-fg: #eef6ff;
-  --gsn-item-active-shadow: 0 10px 20px -16px rgba(149, 183, 206, 0.46);
+  --gsn-item-active-shadow:
+    0 0 0 1px rgba(203, 221, 240, 0.16),
+    0 8px 16px -16px rgba(149, 183, 206, 0.36);
   --gsn-count-bg: rgba(148, 163, 184, 0.2);
   --gsn-count-fg: #d6e0ed;
   --gsn-count-active-bg: #f8fbff;
