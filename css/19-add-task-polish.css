@@ -123,28 +123,28 @@
 .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-inline {
   -webkit-appearance: none !important;
   appearance: none !important;
-  width: 56px !important;
-  min-width: 56px !important;
-  max-width: 56px !important;
+  width: 64px !important;
+  min-width: 64px !important;
+  max-width: 64px !important;
   height: 22px !important;
   margin: 0 !important;
   padding: 0 !important;
   border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
-  color: #3f5675 !important;
-  font-size: 0.8rem !important;
-  font-weight: 620 !important;
+  color: #1f3a5a !important;
+  font-size: 0.86rem !important;
+  font-weight: 700 !important;
   line-height: 22px !important;
   font-family: inherit !important;
   font-variant-numeric: tabular-nums !important;
-  letter-spacing: 0.01em !important;
+  letter-spacing: 0 !important;
   text-align: left !important;
   outline: none !important;
   box-shadow: none !important;
   transform: none !important;
-  cursor: pointer !important;
-  caret-color: #2f5d9d !important;
+  cursor: text !important;
+  caret-color: #1f4d8b !important;
 }
 
 .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-inline:focus,
@@ -156,40 +156,14 @@
   transform: none !important;
 }
 
-.app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-inline::-webkit-calendar-picker-indicator {
-  width: 0 !important;
-  min-width: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
-
-.app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-inline::-webkit-datetime-edit,
-.app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-inline::-webkit-datetime-edit-fields-wrapper,
-.app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-inline::-webkit-datetime-edit-hour-field,
-.app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-inline::-webkit-datetime-edit-minute-field,
-.app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-inline::-webkit-datetime-edit-ampm-field,
-.app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-inline::-webkit-datetime-edit-text {
-  padding: 0 !important;
-  color: inherit !important;
-}
-
-.app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-inline::-webkit-datetime-edit-text {
+.app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-inline::placeholder {
   color: #6f84a0 !important;
-}
-
-.app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-inline::-webkit-datetime-edit-hour-field:focus,
-.app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-inline::-webkit-datetime-edit-minute-field:focus,
-.app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-inline::-webkit-datetime-edit-ampm-field:focus {
-  color: #133b73 !important;
-  background: #d8e7ff !important;
-  border-radius: 4px !important;
+  background: transparent !important;
 }
 
 .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-inline::selection {
-  color: #0f2f58 !important;
-  background: #d8e7ff !important;
+  color: inherit !important;
+  background: rgba(126, 146, 255, 0.28) !important;
 }
 
 .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-btn:focus-within {
@@ -376,20 +350,13 @@
   caret-color: #a9c3eb !important;
 }
 
-.dark .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-inline::-webkit-datetime-edit-text {
+.dark .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-inline::placeholder {
   color: #9cb0c7 !important;
 }
 
-.dark .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-inline::-webkit-datetime-edit-hour-field:focus,
-.dark .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-inline::-webkit-datetime-edit-minute-field:focus,
-.dark .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-inline::-webkit-datetime-edit-ampm-field:focus {
-  color: #f3f7ff !important;
-  background: #304869 !important;
-}
-
 .dark .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-inline::selection {
-  color: #f3f7ff !important;
-  background: #3b567a !important;
+  color: inherit !important;
+  background: rgba(146, 170, 255, 0.36) !important;
 }
 
 .dark .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-time-btn:focus-within {
