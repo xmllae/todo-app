@@ -2223,8 +2223,12 @@
     --subtask-hit-size: 16px;
     --subtask-icon-inset: 0px;
     --subtask-icon-gap: 8px;
-    --subtask-guide-line: color-mix(in srgb, #94a3b8 42%, transparent);
-    --subtask-guide-line-soft: color-mix(in srgb, #94a3b8 28%, transparent);
+    --subtask-ring-border: #b8c7d9;
+    --subtask-ring-hover-border: #97abc5;
+    --subtask-ring-hover-bg: color-mix(in srgb, #eff5fd 75%, transparent);
+    --subtask-ring-done-bg: color-mix(in srgb, var(--acc2, var(--acc)) 10%, transparent);
+    --subtask-ring-done-border: color-mix(in srgb, var(--acc2, var(--acc)) 44%, #9bb0ca);
+    --subtask-ring-done-dot: color-mix(in srgb, var(--acc2, var(--acc)) 70%, #455f7f);
     --subtask-add-icon-left: calc(var(--subtask-row-pad-x) + var(--subtask-icon-inset));
     --subtask-text-start: calc(var(--subtask-row-pad-x) + var(--subtask-hit-size) + var(--subtask-icon-gap));
     display: flex;
@@ -2237,23 +2241,7 @@
 }
 
 .drawer-subtasks-list::before {
-    content: "";
-    position: absolute;
-    left: calc(var(--subtask-row-pad-x) + var(--subtask-hit-size) / 2);
-    top: 10px;
-    bottom: 40px;
-    width: 1px;
-    border-radius: 999px;
-    background: linear-gradient(
-        180deg,
-        transparent 0%,
-        var(--subtask-guide-line-soft) 10%,
-        var(--subtask-guide-line) 50%,
-        var(--subtask-guide-line-soft) 90%,
-        transparent 100%
-    );
-    pointer-events: none;
-    z-index: 0;
+    content: none;
 }
 
 .subtask-row {
@@ -2274,27 +2262,11 @@
     box-shadow: none;
 }
 
-.subtask-row::before {
-    content: "";
-    position: absolute;
-    left: calc(var(--subtask-row-pad-x) + var(--subtask-hit-size) / 2);
-    top: 50%;
-    width: 10px;
-    height: 1px;
-    border-radius: 999px;
-    background: var(--subtask-guide-line-soft);
-    transform: translateY(-50%);
-    pointer-events: none;
-    transition: background-color 0.2s ease;
-}
+.subtask-row::before { content: none; }
 
 .subtask-row:hover {
     background: #f5f7fb;
     box-shadow: none;
-}
-
-.subtask-row:hover::before {
-    background: var(--subtask-guide-line);
 }
 
 .subtask-row:focus-within {
@@ -2310,84 +2282,70 @@
     box-shadow: none;
 }
 
-/* Subtask check - uses same ring styles */
-.subtask-check.task-ck-slot {
+/* Subtask check - isolated from global task ring rules */
+.subtask-check {
     width: var(--subtask-hit-size);
     height: var(--subtask-hit-size);
     flex-shrink: 0;
     cursor: pointer;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    -webkit-appearance: none;
+    appearance: none;
 }
 
-.subtask-check.task-ck-slot .tc-check {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.subtask-check.task-ck-slot .chk-ring {
+.subtask-ring {
     box-sizing: border-box;
     width: var(--subtask-icon-size);
     height: var(--subtask-icon-size);
-    border-radius: 5px;
-    border: 0;
-    background: #e5e7eb;
+    border-radius: 999px;
+    border: 1.5px solid var(--subtask-ring-border);
+    background: transparent;
     box-shadow: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all .25s;
-    font-size: 10px;
+    transition: border-color .2s ease, background-color .2s ease, transform .2s ease, color .2s ease;
+    font-size: 0;
     color: transparent;
+    position: relative;
+    overflow: hidden;
 }
 
-.subtask-check.task-ck-slot .chk-ring .chk-ring-ico {
-    color: #64748b;
-    font-size: 10px;
-    line-height: 1;
+.subtask-ring::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: currentColor;
     opacity: 0;
-    transition: opacity .2s ease;
+    transform: scale(0.35);
+    transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.subtask-check.task-ck-slot .chk-ring svg {
-    color: #64748b;
-    opacity: 0;
-    transition: opacity .2s ease;
-}
-
-.subtask-check.task-ck-slot .chk-ring.hover-check .chk-ring-ico,
-.subtask-check.task-ck-slot .chk-ring:hover .chk-ring-ico {
-    opacity: 0;
-}
-
-.subtask-check.task-ck-slot .chk-ring:hover {
-    border-color: transparent;
-    background: #e5e7eb;
+.subtask-row:hover .subtask-check:not(.is-done) .subtask-ring:not(.is-checked),
+.subtask-ring.hover-check:not(.is-checked),
+.subtask-check:not(.is-done):hover .subtask-ring:not(.is-checked) {
+    border-color: var(--subtask-ring-hover-border);
+    background: var(--subtask-ring-hover-bg);
     box-shadow: none;
 }
 
-.subtask-check.task-ck-slot.task-ck-ring--done .chk-ring {
-    background: #e5e7eb !important;
-    border-color: transparent !important;
+.subtask-ring.is-checked,
+.subtask-check.is-done .subtask-ring {
+    background: var(--subtask-ring-done-bg);
+    border-color: var(--subtask-ring-done-border);
+    color: var(--subtask-ring-done-dot);
 }
 
-.subtask-check.task-ck-slot.task-ck-ring--done .chk-ring:hover {
-    background: #e5e7eb !important;
-    border-color: transparent !important;
-}
-
-.subtask-check.task-ck-slot.task-ck-ring--done .chk-ring:hover .chk-ring-ico {
-    color: #64748b !important;
-}
-
-.subtask-check.task-ck-slot .chk-ring.checked svg,
-.subtask-check.task-ck-slot .chk-ring.checked .chk-ring-ico {
-    color: #64748b;
+.subtask-ring.is-checked::before {
     opacity: 1;
+    transform: scale(1);
 }
 
 .subtask-text {
@@ -2908,8 +2866,12 @@
 
 .dark .drawer-subtasks-list {
     background: transparent;
-    --subtask-guide-line: color-mix(in srgb, #94a3b8 50%, transparent);
-    --subtask-guide-line-soft: color-mix(in srgb, #94a3b8 34%, transparent);
+    --subtask-ring-border: color-mix(in srgb, #8ea2bc 56%, transparent);
+    --subtask-ring-hover-border: color-mix(in srgb, #a9bfd9 70%, transparent);
+    --subtask-ring-hover-bg: color-mix(in srgb, #2d415b 42%, transparent);
+    --subtask-ring-done-bg: color-mix(in srgb, var(--acc2, var(--acc)) 18%, transparent);
+    --subtask-ring-done-border: color-mix(in srgb, var(--acc2, var(--acc)) 58%, #7084a0);
+    --subtask-ring-done-dot: color-mix(in srgb, var(--acc2, var(--acc)) 78%, #dce7f6);
 }
 
 .dark .drawer-header-btn:hover,

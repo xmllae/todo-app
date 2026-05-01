@@ -1362,17 +1362,15 @@ function renderSubtasksList(task) {
                  ondragleave="handleSubtaskDragLeave(event)"
                  ondrop="handleSubtaskDrop(event, ${task.id}, ${sub.id})"
                  ondblclick="event.stopPropagation();startSubtaskEditInDrawer(${task.id}, ${sub.id})">
-                <div class="subtask-check task-ck-slot ${isDone ? 'task-ck-ring--done' : ''}"
-                     onclick="event.stopPropagation();toggleSubtaskInDrawer(${task.id}, ${sub.id})"
-                     ondblclick="event.stopPropagation()"
-                     onmouseenter="handleSubtaskCheckHover(this, true)"
-                     onmouseleave="handleSubtaskCheckHover(this, false)">
-                    <div class="tc-check">
-                        <div class="chk-ring ${isDone ? 'checked' : ''}">
-                            ${getDrawerCheckIconMarkup()}
-                        </div>
-                    </div>
-                </div>
+                <button type="button"
+                        class="subtask-check ${isDone ? 'is-done' : ''}"
+                        aria-label="\u6807\u8bb0\u5b50\u4efb\u52a1\u5b8c\u6210"
+                        onclick="event.stopPropagation();toggleSubtaskInDrawer(${task.id}, ${sub.id})"
+                        ondblclick="event.stopPropagation()"
+                        onmouseenter="handleSubtaskCheckHover(this, true)"
+                        onmouseleave="handleSubtaskCheckHover(this, false)">
+                    <span class="subtask-ring ${isDone ? 'is-checked' : ''}" aria-hidden="true"></span>
+                </button>
                 <span class="subtask-text ${isDone ? 'done' : ''}"
                       title="\u53cc\u51fb\u7f16\u8f91\u5b50\u4efb\u52a1"
                       ondblclick="event.stopPropagation();startSubtaskEditInDrawer(${task.id}, ${sub.id})">${escapeHtml(sub.text)}</span>
@@ -1674,23 +1672,15 @@ function toggleSubtaskInDrawer(taskId, subtaskId) {
     const subtaskRow = document.querySelector(`.subtask-row[data-subtask-id="${subtaskId}"]`);
     if (subtaskRow) {
         const checkSlot = subtaskRow.querySelector('.subtask-check');
-        const chkRing = subtaskRow.querySelector('.chk-ring');
+        const subtaskRing = subtaskRow.querySelector('.subtask-ring');
         const textSpan = subtaskRow.querySelector('.subtask-text');
 
         if (checkSlot) {
-            checkSlot.classList.toggle('task-ck-ring--done', subtask.done);
-            // Update hover handlers
-            if (subtask.done) {
-                checkSlot.onmouseenter = null;
-                checkSlot.onmouseleave = null;
-            } else {
-                checkSlot.onmouseenter = function() { handleSubtaskCheckHover(this, true); };
-                checkSlot.onmouseleave = function() { handleSubtaskCheckHover(this, false); };
-            }
+            checkSlot.classList.toggle('is-done', subtask.done);
         }
-        if (chkRing) {
-            chkRing.classList.toggle('checked', subtask.done);
-            chkRing.classList.remove('hover-check');
+        if (subtaskRing) {
+            subtaskRing.classList.toggle('is-checked', subtask.done);
+            subtaskRing.classList.remove('hover-check');
         }
         if (textSpan) {
             textSpan.classList.toggle('done', subtask.done);
@@ -2013,16 +2003,16 @@ function handleCheckRingHover(element, isEntering) {
 }
 
 function handleSubtaskCheckHover(element, isEntering) {
-    const chkRing = element.querySelector('.chk-ring');
-    if (!chkRing) return;
+    const subtaskRing = element.querySelector('.subtask-ring');
+    if (!subtaskRing) return;
 
     // Don't show checkmark if already done
-    if (chkRing.classList.contains('checked')) return;
+    if (subtaskRing.classList.contains('is-checked')) return;
 
     if (isEntering) {
-        chkRing.classList.add('hover-check');
+        subtaskRing.classList.add('hover-check');
     } else {
-        chkRing.classList.remove('hover-check');
+        subtaskRing.classList.remove('hover-check');
     }
 }
 
