@@ -227,21 +227,18 @@
 
     nav.innerHTML =
       '<div class="gsn-head">' +
-      "<div>" +
-      '<div class="gsn-kicker">导航</div>' +
       '<div class="gsn-heading">快速入口</div>' +
-      "</div>" +
       '<button type="button" class="gsn-head-action" data-gsn-action="today" title="回到今天" aria-label="回到今天"><i class="ph ph-arrow-clockwise" aria-hidden="true"></i></button>' +
       "</div>" +
       '<section class="gsn-section" aria-labelledby="gsnDateTitle">' +
-      '<h4 class="gsn-section-title" id="gsnDateTitle">日期快捷</h4>' +
+      '<h4 class="gsn-section-title" id="gsnDateTitle">日期</h4>' +
       navButton("item", "today-calendar", "今天", pendingFor(todayKey()).length, "today", "", activeDate === "today") +
       navButton("item", "ph-arrow-fat-lines-right", "明天", null, "tomorrow", "", activeDate === "tomorrow") +
       navButton("item", "ph-calendar-dots", "本周", countWeek(), "week", "", activeDate === "week") +
       navButton("item", "ph-warning-circle", "逾期", null, "overdue", "", activeDate === "overdue") +
       "</section>" +
       '<section class="gsn-section" aria-labelledby="gsnFilterTitle">' +
-      '<h4 class="gsn-section-title" id="gsnFilterTitle">筛选器</h4>' +
+      '<h4 class="gsn-section-title" id="gsnFilterTitle">筛选</h4>' +
       filterButton(
         "高优先级",
         "high",
