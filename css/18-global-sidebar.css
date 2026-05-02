@@ -3297,12 +3297,18 @@
 }
 
 /* Subtask Row Rebuild: fixed geometry, symmetric hover radius */
+#taskMode .list-panel #tList .task-expand-area .exp-block.exp-block--sub {
+  --subtask-row-pad-y: 6px !important;
+  --subtask-row-outer-height: max(30px, calc(var(--subtask-row-pad-y) * 2 + 22px)) !important;
+}
+
 #taskMode .list-panel #tList .task-expand-area .subtask-item,
 #taskMode .list-panel #tList .task-expand-area .subtask-item:first-child {
   grid-template-columns: 16px minmax(0, 1fr) auto !important;
   gap: 10px !important;
   margin: 0 !important;
-  padding: 6px 12px 6px calc(var(--subtask-ring-x, 22px) - 8px) !important;
+  min-height: var(--subtask-row-outer-height) !important;
+  padding: var(--subtask-row-pad-y, 6px) 12px var(--subtask-row-pad-y, 6px) calc(var(--subtask-ring-x, 22px) - 8px) !important;
   border-radius: 12px !important;
 }
 
@@ -3315,8 +3321,10 @@
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-completed-hidden-hint {
-  margin-left: var(--subtask-ring-x, 22px) !important;
-  text-indent: -0.5em !important;
+  min-height: var(--subtask-row-outer-height) !important;
+  margin: 0 !important;
+  padding: var(--subtask-row-pad-y, 6px) 12px var(--subtask-row-pad-y, 6px) calc(var(--subtask-ring-x, 22px) - 0.5em) !important;
+  text-indent: 0 !important;
 }
 
 /* Quick Import Panel Refresh */

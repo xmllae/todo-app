@@ -1499,6 +1499,10 @@
   --subtask-guide-line-soft: color-mix(in srgb, #94a3b8 28%, transparent) !important;
   --subtask-guide-line-faint: color-mix(in srgb, #94a3b8 10%, transparent) !important;
   --subtask-action-height: 24px !important;
+  --subtask-row-pad-y: 5px !important;
+  --subtask-row-min-height: 30px !important;
+  --subtask-row-control-height: 22px !important;
+  --subtask-row-outer-height: max(var(--subtask-row-min-height), calc(var(--subtask-row-pad-y) * 2 + var(--subtask-row-control-height))) !important;
 }
 
 
@@ -1524,11 +1528,19 @@
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-completed-hidden-hint {
-  margin: 4px 0 2px var(--subtask-ring-center-x) !important;
-  text-indent: -0.5em !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  min-height: var(--subtask-row-outer-height) !important;
+  margin: 0 !important;
+  padding: var(--subtask-row-pad-y) 8px var(--subtask-row-pad-y) calc(var(--subtask-ring-center-x) - 0.5em) !important;
+  text-indent: 0 !important;
   color: #94a3b8 !important;
-  font-size: 11px !important;
-  line-height: 1.4 !important;
+  font-size: 13px !important;
+  line-height: 1.35 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
   cursor: default !important;
   user-select: none !important;
 }
@@ -1553,8 +1565,8 @@
   align-items: center !important;
   gap: 8px !important;
   margin: 0 !important;
-  min-height: 30px !important;
-  padding: 5px 8px !important;
+  min-height: var(--subtask-row-outer-height) !important;
+  padding: var(--subtask-row-pad-y) 8px !important;
   border: 0 !important;
   border-radius: 10px !important;
   background: transparent !important;

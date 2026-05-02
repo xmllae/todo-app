@@ -2219,6 +2219,10 @@
 
 .drawer-subtasks-list {
     --subtask-row-pad-x: 8px;
+    --subtask-row-pad-y: 5px;
+    --subtask-row-min-height: 30px;
+    --subtask-row-control-height: 24px;
+    --subtask-row-outer-height: max(var(--subtask-row-min-height), calc(var(--subtask-row-pad-y) * 2 + var(--subtask-row-control-height)));
     --subtask-icon-size: 16px;
     --subtask-hit-size: 16px;
     --subtask-icon-inset: 0px;
@@ -2253,8 +2257,8 @@
     grid-template-columns: auto minmax(0, 1fr) auto auto;
     align-items: center;
     gap: var(--subtask-icon-gap);
-    min-height: 30px;
-    padding: 5px var(--subtask-row-pad-x);
+    min-height: var(--subtask-row-outer-height);
+    padding: var(--subtask-row-pad-y) var(--subtask-row-pad-x);
     border: 0;
     border-radius: 10px;
     cursor: default;
@@ -2431,14 +2435,22 @@
 }
 
 .drawer-subtasks-collapsed-hint {
-    margin: 2px 0 2px var(--subtask-ring-center-x);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: var(--subtask-row-outer-height);
+    margin: 0;
     border: 0;
-    padding: 0;
+    padding: var(--subtask-row-pad-y) var(--subtask-row-pad-x) var(--subtask-row-pad-y) calc(var(--subtask-ring-center-x) - 0.5em);
     background: transparent;
-    text-indent: -0.5em;
+    text-indent: 0;
     color: #9aa7b8;
-    font-size: 0.75rem;
-    line-height: 1.35;
+    font-size: 0.875rem;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     text-align: left;
     cursor: pointer;
     transition: color 0.2s ease;
