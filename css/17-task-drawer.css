@@ -2231,9 +2231,9 @@
     --subtask-ring-border: #b8c7d9;
     --subtask-ring-hover-border: #97abc5;
     --subtask-ring-hover-bg: color-mix(in srgb, #eff5fd 75%, transparent);
-    --subtask-ring-done-bg: color-mix(in srgb, var(--acc2, var(--acc)) 10%, transparent);
-    --subtask-ring-done-border: color-mix(in srgb, var(--acc2, var(--acc)) 44%, #9bb0ca);
-    --subtask-ring-done-dot: color-mix(in srgb, var(--acc2, var(--acc)) 70%, #455f7f);
+    --subtask-ring-done-bg: #c7d0dc;
+    --subtask-ring-done-border: #c7d0dc;
+    --subtask-ring-done-dot: #ffffff;
     --subtask-add-icon-left: calc(var(--subtask-row-pad-x) + var(--subtask-icon-inset));
     --subtask-text-start: calc(var(--subtask-row-pad-x) + var(--subtask-hit-size) + var(--subtask-icon-gap));
     display: flex;
@@ -2324,12 +2324,12 @@
 
 .subtask-ring::before {
     content: "";
-    width: 6px;
-    height: 6px;
+    width: 7px;
+    height: 7px;
     border-radius: 999px;
     background: currentColor;
     opacity: 0;
-    transform: scale(0.35);
+    transform: scale(0.45);
     transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -2883,9 +2883,9 @@
     --subtask-ring-border: color-mix(in srgb, #8ea2bc 56%, transparent);
     --subtask-ring-hover-border: color-mix(in srgb, #a9bfd9 70%, transparent);
     --subtask-ring-hover-bg: color-mix(in srgb, #2d415b 42%, transparent);
-    --subtask-ring-done-bg: color-mix(in srgb, var(--acc2, var(--acc)) 18%, transparent);
-    --subtask-ring-done-border: color-mix(in srgb, var(--acc2, var(--acc)) 58%, #7084a0);
-    --subtask-ring-done-dot: color-mix(in srgb, var(--acc2, var(--acc)) 78%, #dce7f6);
+    --subtask-ring-done-bg: #c7d0dc;
+    --subtask-ring-done-border: #c7d0dc;
+    --subtask-ring-done-dot: #ffffff;
 }
 
 .dark .drawer-header-btn:hover,
