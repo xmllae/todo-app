@@ -97,11 +97,10 @@
 
   function dateActiveKey() {
     if (gsnActiveQuick === "overdue" || gsnActiveQuick === "week") return gsnActiveQuick;
-    if (hasSingleFilter("scheduled")) return "scheduled";
-    if (typeof sel !== "undefined" && sel === offsetKey(1) && hasSingleFilter("pending") && !FTag) {
+    if (typeof sel !== "undefined" && sel === offsetKey(1)) {
       return "tomorrow";
     }
-    if (typeof sel !== "undefined" && sel === todayKey() && hasSingleFilter("pending") && !FTag) {
+    if (typeof sel !== "undefined" && sel === todayKey()) {
       return "today";
     }
     return "";
