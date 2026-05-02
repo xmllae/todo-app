@@ -1326,6 +1326,10 @@
   padding-bottom: 0 !important;
 }
 
+#taskMode .list-panel #tList .task-item:has(.task-expand-area--tabbed.task-expand-area--open) > .task-row {
+  padding-bottom: 6px !important;
+}
+
 #taskMode .list-panel #tList .task-item > .exp-bg-wrap:has(.task-expand-area--tabbed.task-expand-area--open) {
   margin: 0 !important;
   width: 100% !important;
@@ -1360,7 +1364,7 @@
 
 #taskMode .list-panel #tList .task-exp-sub-bg {
   position: relative !important;
-  margin: 4px 0 0 38px !important;
+  margin: 0 0 0 38px !important;
   padding: 0 !important;
   border: 0 !important;
   border-radius: 0 !important;

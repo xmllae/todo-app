@@ -3170,6 +3170,10 @@
   padding-bottom: 0 !important;
 }
 
+.app.app--with-global-nav #taskMode .list-panel #tList .task-item:has(.task-expand-area--tabbed.task-expand-area--open) > .task-row {
+  padding-bottom: 6px !important;
+}
+
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill {
   min-height: 16px !important;
@@ -3297,7 +3301,7 @@
 
 .app.app--with-global-nav #taskMode .list-panel #tList .task-exp-sub-bg {
   position: relative !important;
-  margin: 4px 0 0 38px !important;
+  margin: 0 0 0 38px !important;
   padding: 0 !important;
   border: 0 !important;
   border-radius: 0 !important;
