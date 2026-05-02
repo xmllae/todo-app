@@ -3154,8 +3154,20 @@
 }
 
 /* Subtask UI Refresh (Global Nav Mode Parity) */
-.app.app--with-global-nav #taskMode .list-panel #tList .task-item > .exp-bg-wrap:has(.task-expand-area--tabbed) {
-  margin-top: 0 !important;
+.app.app--with-global-nav #taskMode .list-panel #tList .task-item > .exp-bg-wrap:has(.task-expand-area--tabbed.task-expand-area--open) {
+  margin: 0 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  flex: 0 0 auto !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  border-radius: 0 0 12px 12px !important;
+  background: transparent !important;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .task-item:has(.task-expand-area--tabbed.task-expand-area--open) {
+  padding-right: 0 !important;
+  padding-bottom: 0 !important;
 }
 
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn,
@@ -3284,16 +3296,50 @@
 }
 
 .app.app--with-global-nav #taskMode .list-panel #tList .task-exp-sub-bg {
-  margin: 0 14px 0 38px !important;
+  position: relative !important;
+  margin: 4px 0 0 38px !important;
   padding: 0 !important;
   border: 0 !important;
-  border-radius: 0 !important;
-  background: transparent !important;
+  border-radius: 10px 0 0 0 !important;
+  background: var(--subtask-panel-bg) !important;
   box-shadow: none !important;
+  overflow: hidden !important;
+  transition: background-color .22s ease, filter .22s ease !important;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .task-exp-sub-bg::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.42), rgba(255,255,255,0) 48%) !important;
+  opacity: .68 !important;
+  pointer-events: none !important;
+  transition: opacity .22s ease !important;
+}
+
+.dark .app.app--with-global-nav #taskMode .list-panel #tList .task-exp-sub-bg::before {
+  background: linear-gradient(180deg, rgba(148,163,184,.16), rgba(148,163,184,0) 54%) !important;
+  opacity: .56 !important;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .task-exp-sub-bg > .exp-block {
+  position: relative !important;
+  z-index: 1 !important;
 }
 
 .app.app--with-global-nav #taskMode .list-panel.list-panel--multi #tList .task-exp-sub-bg {
   margin-left: 62px !important;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .task-item:hover .task-exp-sub-bg,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-item:focus-within .task-exp-sub-bg {
+  background: var(--subtask-panel-bg-hover) !important;
+  filter: saturate(1.02) !important;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .task-item:hover .task-exp-sub-bg::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-item:focus-within .task-exp-sub-bg::before {
+  opacity: .86 !important;
 }
 
 /* Subtask Row Rebuild: fixed geometry, symmetric hover radius */

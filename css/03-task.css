@@ -1134,6 +1134,11 @@
   --subtask-pill-open-bg: #e8eef8;
   --subtask-pill-open-bd: #cfdcf0;
   --subtask-pill-open-fg: #233750;
+  --subtask-panel-bg: #fafafa;
+  --subtask-panel-bg-hover: #fcfcfc;
+  --subtask-panel-bd: color-mix(in srgb, #d5dbe5 62%, transparent);
+  --subtask-panel-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 6px 16px rgba(15, 23, 42, 0.04);
+  --subtask-row-press-bg: color-mix(in srgb, var(--acc) 8%, #ffffff);
   --subtask-ring-align-pad: 0px;
   --subtask-ring-shift: -6px;
   --subtask-row-v-pad: 7px;
@@ -1315,21 +1320,32 @@
   display: none !important;
 }
 
-#taskMode .list-panel #tList .task-item > .exp-bg-wrap:has(.task-expand-area--tabbed) {
-  margin-top: 0 !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
+/* 子任务展开区重构：去掉负边距+扩宽，避免右侧溢出 */
+#taskMode .list-panel #tList .task-item:has(.task-expand-area--tabbed.task-expand-area--open) {
+  padding-right: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+#taskMode .list-panel #tList .task-item > .exp-bg-wrap:has(.task-expand-area--tabbed.task-expand-area--open) {
+  margin: 0 !important;
   width: 100% !important;
+  min-width: 0 !important;
+  flex: 0 0 auto !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  border-radius: 0 0 12px 12px !important;
+  background: transparent !important;
 }
 
 #taskMode .list-panel #tList .task-item > .exp-bg-wrap .task-expand-area.task-expand-area--tabbed {
+  margin: 0 !important;
   margin-left: 0 !important;
   margin-right: 0 !important;
   border-radius: 0 !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area--tabbed {
-  padding: 0 0 4px !important;
+  padding: 0 !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area--tabbed.task-expand-area--open .task-expand-drop {
@@ -1340,22 +1356,53 @@
   border-top: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
-  max-height: none !important;
-  opacity: 1 !important;
-  transition: none !important;
 }
 
 #taskMode .list-panel #tList .task-exp-sub-bg {
-  margin: 0 14px 0 38px !important;
+  position: relative !important;
+  margin: 4px 0 0 38px !important;
   padding: 0 !important;
   border: 0 !important;
-  border-radius: 0 !important;
-  background: transparent !important;
+  border-radius: 10px 0 0 0 !important;
+  background: var(--subtask-panel-bg) !important;
   box-shadow: none !important;
+  overflow: hidden !important;
+  transition: background-color .22s ease, filter .22s ease !important;
+}
+
+#taskMode .list-panel #tList .task-exp-sub-bg::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.42), rgba(255,255,255,0) 48%) !important;
+  opacity: .68 !important;
+  pointer-events: none !important;
+  transition: opacity .22s ease !important;
+}
+
+.dark #taskMode .list-panel #tList .task-exp-sub-bg::before {
+  background: linear-gradient(180deg, rgba(148,163,184,.16), rgba(148,163,184,0) 54%) !important;
+  opacity: .56 !important;
+}
+
+#taskMode .list-panel #tList .task-exp-sub-bg > .exp-block {
+  position: relative !important;
+  z-index: 1 !important;
 }
 
 #taskMode .list-panel.list-panel--multi #tList .task-exp-sub-bg {
   margin-left: 62px !important;
+}
+
+#taskMode .list-panel #tList .task-item:hover .task-exp-sub-bg,
+#taskMode .list-panel #tList .task-item:focus-within .task-exp-sub-bg {
+  background: var(--subtask-panel-bg-hover) !important;
+  filter: saturate(1.02) !important;
+}
+
+#taskMode .list-panel #tList .task-item:hover .task-exp-sub-bg::before,
+#taskMode .list-panel #tList .task-item:focus-within .task-exp-sub-bg::before {
+  opacity: .86 !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .exp-block.exp-block--sub {
@@ -1369,6 +1416,11 @@
   --subtask-pill-open-bg: color-mix(in srgb, #818cf8 22%, transparent);
   --subtask-pill-open-bd: color-mix(in srgb, #818cf8 34%, transparent);
   --subtask-pill-open-fg: #dbe1ff;
+  --subtask-panel-bg: color-mix(in srgb, #94a3b8 9%, transparent);
+  --subtask-panel-bg-hover: color-mix(in srgb, #94a3b8 13%, transparent);
+  --subtask-panel-bd: color-mix(in srgb, #94a3b8 20%, transparent);
+  --subtask-panel-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 10px 24px rgba(2, 6, 23, 0.2);
+  --subtask-row-press-bg: color-mix(in srgb, var(--acc2) 13%, transparent);
   --subtask-ring-align-pad: 0px;
   --subtask-ring-shift: -6px;
   --subtask-row-v-pad: 7px;
@@ -1488,8 +1540,8 @@
 }
 
 #taskMode .list-panel #tList .task-expand-area .exp-block.exp-block--sub {
-  padding: 12px 0 0 !important;
-  border-top: 1px solid color-mix(in srgb, var(--task-bd) 82%, #e9eff6) !important;
+  padding: 8px 0 4px !important;
+  border-top: 0 !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .exp-block.exp-block--sub {
@@ -1572,9 +1624,10 @@
   background: transparent !important;
   background-image: none !important;
   box-shadow: none !important;
-  transition: background-color .2s ease, color .2s ease, border-color .2s ease !important;
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease, transform .16s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
   position: relative !important;
   z-index: 1 !important;
+  transform: translateZ(0) !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-item::before {
@@ -1582,13 +1635,15 @@
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-item:hover {
-  background: #eef3f9 !important;
+  background: color-mix(in srgb, var(--acc) 7%, #ffffff) !important;
   border-color: transparent !important;
   box-shadow: none !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-item:active {
   box-shadow: none !important;
+  transform: scale(.995) translateY(.5px) !important;
+  background: var(--subtask-row-press-bg) !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-item.subtask-item--done {
@@ -1599,7 +1654,7 @@
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-item.subtask-item--done:hover {
-  background: #ebf1f8 !important;
+  background: color-mix(in srgb, var(--acc) 6%, #ffffff) !important;
   border-color: transparent !important;
   box-shadow: none !important;
 }
