@@ -3300,26 +3300,19 @@
   margin: 4px 0 0 38px !important;
   padding: 0 !important;
   border: 0 !important;
-  border-radius: 10px 0 0 0 !important;
-  background: var(--subtask-panel-bg) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
   box-shadow: none !important;
-  overflow: hidden !important;
-  transition: background-color .22s ease, filter .22s ease !important;
+  overflow: visible !important;
+  transition: none !important;
 }
 
 .app.app--with-global-nav #taskMode .list-panel #tList .task-exp-sub-bg::before {
-  content: "" !important;
-  position: absolute !important;
-  inset: 0 !important;
-  background: linear-gradient(180deg, rgba(255,255,255,.42), rgba(255,255,255,0) 48%) !important;
-  opacity: .68 !important;
-  pointer-events: none !important;
-  transition: opacity .22s ease !important;
+  content: none !important;
 }
 
 .dark .app.app--with-global-nav #taskMode .list-panel #tList .task-exp-sub-bg::before {
-  background: linear-gradient(180deg, rgba(148,163,184,.16), rgba(148,163,184,0) 54%) !important;
-  opacity: .56 !important;
+  content: none !important;
 }
 
 .app.app--with-global-nav #taskMode .list-panel #tList .task-exp-sub-bg > .exp-block {
@@ -3333,13 +3326,12 @@
 
 .app.app--with-global-nav #taskMode .list-panel #tList .task-item:hover .task-exp-sub-bg,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-item:focus-within .task-exp-sub-bg {
-  background: var(--subtask-panel-bg-hover) !important;
-  filter: saturate(1.02) !important;
+  background: transparent !important;
 }
 
 .app.app--with-global-nav #taskMode .list-panel #tList .task-item:hover .task-exp-sub-bg::before,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-item:focus-within .task-exp-sub-bg::before {
-  opacity: .86 !important;
+  content: none !important;
 }
 
 /* Subtask Row Rebuild: fixed geometry, symmetric hover radius */
