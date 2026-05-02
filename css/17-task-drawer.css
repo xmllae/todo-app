@@ -2324,8 +2324,8 @@
 
 .subtask-ring::before {
     content: "";
-    width: 7px;
-    height: 7px;
+    width: 5px;
+    height: 5px;
     border-radius: 999px;
     background: currentColor;
     opacity: 0;
