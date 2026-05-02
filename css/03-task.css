@@ -1570,9 +1570,75 @@
   transition: none !important;
 }
 
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-wrap {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: var(--subtask-row-space) !important;
+  overflow: hidden !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-wrap.is-collapsed {
+  display: none !important;
+}
+
 #taskMode .list-panel #tList .task-expand-area .subtask-completed-wrap.is-collapsed {
   display: none !important;
   opacity: 0 !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint {
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  min-height: var(--subtask-row-outer-height) !important;
+  margin: 0 !important;
+  border: 0 !important;
+  padding: var(--subtask-row-pad-y) 8px var(--subtask-row-pad-y) calc(var(--subtask-ring-center-x) - 0.5em) !important;
+  background: transparent !important;
+  color: #2563eb !important;
+  font-size: 13px !important;
+  line-height: 1.35 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  text-align: left !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  transition: color 0.2s ease !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint:hover {
+  color: #1d4ed8 !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint-arrow {
+  flex: 0 0 auto !important;
+  width: 7px !important;
+  height: 7px !important;
+  margin-right: 8px !important;
+  border-right: 1.7px solid currentColor !important;
+  border-bottom: 1.7px solid currentColor !important;
+  transform: translateY(-1px) rotate(45deg) !important;
+  transform-origin: 50% 50% !important;
+  transition: transform 0.2s ease !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint.is-open .subtask-todo-expand-hint-arrow {
+  transform: translateY(1px) rotate(-135deg) !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint-main {
+  min-width: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint-sep {
+  color: color-mix(in srgb, currentColor 42%, #ffffff) !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-completed-hidden-hint {
@@ -1859,6 +1925,18 @@
   background: color-mix(in srgb, #ffffff 10%, transparent) !important;
   border-color: transparent !important;
   box-shadow: none !important;
+}
+
+.dark #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint {
+  color: #8fb0ff !important;
+}
+
+.dark #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint:hover {
+  color: #bdd1ff !important;
+}
+
+.dark #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint-sep {
+  color: color-mix(in srgb, currentColor 46%, transparent) !important;
 }
 
 .dark #taskMode .list-panel #tList .task-expand-area .sub-ck {
