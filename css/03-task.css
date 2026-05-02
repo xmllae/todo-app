@@ -1614,18 +1614,25 @@
 
 #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint-arrow {
   flex: 0 0 auto !important;
-  width: 7px !important;
-  height: 7px !important;
+  align-self: center !important;
+  display: block !important;
+  width: 10px !important;
+  height: 10px !important;
   margin-right: 8px !important;
-  border-right: 1.7px solid currentColor !important;
-  border-bottom: 1.7px solid currentColor !important;
-  transform: translateY(-1px) rotate(45deg) !important;
+  transform: rotate(0deg) !important;
   transform-origin: 50% 50% !important;
   transition: transform 0.2s ease !important;
 }
 
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint-arrow path {
+  stroke: currentColor !important;
+  stroke-width: 1.8 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+
 #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint.is-open .subtask-todo-expand-hint-arrow {
-  transform: translateY(1px) rotate(-135deg) !important;
+  transform: rotate(180deg) !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint-main {
