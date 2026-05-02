@@ -1294,7 +1294,7 @@ function renderDrawerContent(task) {
                        id="subtask-add-input-${task.id}"
                        placeholder="\u8f93\u5165\u5b50\u4efb\u52a1\u5185\u5bb9\uff0c\u6309\u56de\u8f66\u6dfb\u52a0..."
                        onclick="event.stopPropagation()"
-                       onblur="hideSubtaskAddInline(${task.id})"
+                       onblur="handleSubtaskAddInlineBlur(${task.id})"
                        onkeydown="if(event.key==='Enter'){addSubtaskFromDrawer(${task.id});}if(event.key==='Escape'){hideSubtaskAddInline(${task.id})}">
             </div>
         </div>
@@ -1941,6 +1941,19 @@ function hideSubtaskAddInline(taskId) {
 
     inputWrap.classList.remove('is-editing');
     input.value = '';
+}
+
+function handleSubtaskAddInlineBlur(taskId) {
+    const input = document.getElementById('subtask-add-input-' + taskId);
+    if (!input) return;
+
+    const hasContent = input.value.trim().length > 0;
+    if (hasContent) {
+        addSubtaskFromDrawer(taskId);
+        return;
+    }
+
+    hideSubtaskAddInline(taskId);
 }
 
 function addSubtaskFromDrawer(taskId) {
