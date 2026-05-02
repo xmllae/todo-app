@@ -2446,8 +2446,8 @@
     background: transparent;
     text-indent: 0;
     color: #9aa7b8;
-    font-size: 0.875rem;
-    line-height: 1.2;
+    font-size: 13px;
+    line-height: 1.35;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
