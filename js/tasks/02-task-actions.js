@@ -147,6 +147,7 @@ const SUBTASK_WRAP_OPEN_CLASS="is-subtask-open";
 const SUBTASK_WRAP_OPENING_CLASS="is-subtask-opening";
 const SUBTASK_WRAP_OPEN_MS=280;
 const SUBTASK_WRAP_EASE="cubic-bezier(.22, 1, .36, 1)";
+let _subtaskOpenAnimClearTimer=null;
 function cleanupSubtaskWrapMotion(wrap){
 if(!wrap)return;
 if(wrap.__subtaskOpenTimer){clearTimeout(wrap.__subtaskOpenTimer);wrap.__subtaskOpenTimer=null}
@@ -159,6 +160,27 @@ function getSubtaskWrapTargetHeight(wrap){
 const area=wrap&&wrap.querySelector(".task-expand-area");
 if(!area)return 0;
 return Math.max(0,Math.ceil(area.scrollHeight||0))
+}
+function syncSubtaskExpandGeometry(){
+if(typeof ensureSubtaskGeometryResizeSync==="function")ensureSubtaskGeometryResizeSync();
+if(typeof syncSubtaskGeometry==="function"){
+syncSubtaskGeometry();
+requestAnimationFrame(syncSubtaskGeometry);
+setTimeout(function(){if(typeof syncSubtaskGeometry==="function")syncSubtaskGeometry()},SUBTASK_WRAP_OPEN_MS+40)
+}
+if(typeof animateSubtaskStrikeLines==="function")animateSubtaskStrikeLines()
+}
+function markSubtaskOpenAnimating(taskId){
+if(_subtaskOpenAnimClearTimer){
+clearTimeout(_subtaskOpenAnimClearTimer);
+_subtaskOpenAnimClearTimer=null
+}
+window._subtaskOpenAnimTaskId=taskId==null?null:taskId;
+if(taskId==null)return;
+_subtaskOpenAnimClearTimer=setTimeout(function(){
+if(window._subtaskOpenAnimTaskId===taskId)window._subtaskOpenAnimTaskId=null;
+_subtaskOpenAnimClearTimer=null
+},SUBTASK_WRAP_OPEN_MS+180)
 }
 function setSubtaskWrapOpenState(wrap,isOpen){
 if(!wrap)return;
@@ -247,10 +269,7 @@ return true
 }
 if(oldWrap.dataset.subtaskSig===subtaskSig&&oldWrap.querySelector(".task-expand-area")){
 setSubtaskWrapOpenState(oldWrap,true);
-if(typeof ensureSubtaskGeometryResizeSync==="function")ensureSubtaskGeometryResizeSync();
-if(typeof syncSubtaskGeometry==="function"){syncSubtaskGeometry();requestAnimationFrame(syncSubtaskGeometry)}
-setTimeout(function(){if(typeof syncSubtaskGeometry==="function")syncSubtaskGeometry()},SUBTASK_WRAP_OPEN_MS+40);
-if(typeof animateSubtaskStrikeLines==="function")animateSubtaskStrikeLines();
+syncSubtaskExpandGeometry();
 return true
 }
 if(typeof taskExpandAreaHTML!=="function")return false;
@@ -261,10 +280,7 @@ return true
 oldWrap.innerHTML=html;
 oldWrap.dataset.subtaskSig=subtaskSig;
 setSubtaskWrapOpenState(oldWrap,true);
-if(typeof ensureSubtaskGeometryResizeSync==="function")ensureSubtaskGeometryResizeSync();
-if(typeof syncSubtaskGeometry==="function"){syncSubtaskGeometry();requestAnimationFrame(syncSubtaskGeometry)}
-setTimeout(function(){if(typeof syncSubtaskGeometry==="function")syncSubtaskGeometry()},SUBTASK_WRAP_OPEN_MS+40);
-if(typeof animateSubtaskStrikeLines==="function")animateSubtaskStrikeLines();
+syncSubtaskExpandGeometry();
 return true
 }
 function toggleExpand(id){
@@ -280,14 +296,11 @@ const isExp=(expandedId===id||defaultExp)&&!collapsedByUser;
 if(isExp){
 expandedId=null;
 if(defaultExp)collapsedSubtaskIds.add(id)
-if(window._subtaskOpenAnimTaskId===id)window._subtaskOpenAnimTaskId=null
+markSubtaskOpenAnimating(null)
 }else{
 collapsedSubtaskIds.delete(id);
 expandedId=defaultExp?null:id
-window._subtaskOpenAnimTaskId=id;
-setTimeout(function(){
-if(window._subtaskOpenAnimTaskId===id)window._subtaskOpenAnimTaskId=null
-},SUBTASK_WRAP_OPEN_MS+180)
+markSubtaskOpenAnimating(id)
 }
 const needFullRerender=editingId!=null||editingTimeId!=null||editingSubId!=null;
 editingId=null;editingTimeId=null;editingSubId=null;ppOpenId=null;
