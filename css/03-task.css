@@ -1532,7 +1532,7 @@
 }
 
 #taskMode .list-panel #tList .task-expand-area .exp-block.exp-block--sub {
-  padding: 8px 0 4px !important;
+  padding: 4px 0 4px !important;
   border-top: 0 !important;
 }
 
@@ -1666,7 +1666,7 @@
   content: "" !important;
   position: absolute !important;
   left: calc(var(--subtask-guide-x, 21.5px) - .5px) !important;
-  top: 6px !important;
+  top: 4px !important;
   bottom: 6px !important;
   width: 1px !important;
   border-radius: 999px !important;

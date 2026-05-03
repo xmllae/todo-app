@@ -1362,6 +1362,11 @@
   min-width: 0;
 }
 
+#taskMode .list-panel #tList .task-item.task-item--has-subtasks > .task-row,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-item.task-item--has-subtasks > .task-row {
+  padding-bottom: 6px !important;
+}
+
 #taskMode .list-panel #tList .task-item:not(.archived-item) > .task-row > .task-actions,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-item:not(.archived-item) > .task-row > .task-actions {
   flex: 0 0 114px !important;
