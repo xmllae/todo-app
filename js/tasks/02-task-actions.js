@@ -290,18 +290,13 @@ const t=(T[sel]||[]).find(x=>x.id===id);
 if(!t)return;
 const subT=Array.isArray(t.subtasks)?t.subtasks.length:0;
 if(!subT)return;
-const defaultExp=t.showSubtasksByDefault!==false;
-const collapsedByUser=collapsedSubtaskIds.has(id);
-const isExp=(expandedId===id||defaultExp)&&!collapsedByUser;
-if(isExp){
-expandedId=null;
-if(defaultExp)collapsedSubtaskIds.add(id)
-markSubtaskOpenAnimating(null)
-}else{
+const isExp=isTaskSubExpanded(id);
+const nextOpen=!isExp;
+t.showSubtasksByDefault=nextOpen;
 collapsedSubtaskIds.delete(id);
-expandedId=defaultExp?null:id
-markSubtaskOpenAnimating(id)
-}
+if(expandedId===id||nextOpen)expandedId=null;
+markSubtaskOpenAnimating(nextOpen?id:null);
+save();
 const needFullRerender=editingId!=null||editingTimeId!=null||editingSubId!=null;
 editingId=null;editingTimeId=null;editingSubId=null;ppOpenId=null;
 if(needFullRerender||!refreshTaskSubtaskExpandDOM(id)){rT();return}
