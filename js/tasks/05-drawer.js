@@ -500,9 +500,6 @@ function enhanceTaskRowInteractions() {
         const moreWrap = actions && actions.querySelector('.task-more-wrap');
         if (!actions || !moreWrap || !taskId) return;
 
-        if (!actions.querySelector('.task-detail-trigger')) {
-            actions.insertBefore(createTaskDetailTrigger(taskId), moreWrap);
-        }
 
         // 鈹€鈹€ 鑳屾櫙鐐瑰嚮鐩戝惉鍣紙鍏辩敤鎺掗櫎閫昏緫锛夆攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
         // stopPropagation 鍙樆姝簨浠跺啋娉″埌鐖跺厓绱狅紝涓嶅奖鍝嶅悓涓€鍏冪礌涓婄殑鍏朵粬鐩戝惉鍣ㄣ€?
@@ -599,21 +596,6 @@ function releaseTaskRowInteractionState(taskId) {
     // Closing the drawer should return the row to its natural hover state.
     // If the pointer is still over the task, keep the corner accents visible.
     item.classList.remove('task-item--hover-suspended');
-}
-
-function createTaskDetailTrigger(taskId) {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'act-btn task-detail-trigger';
-    button.setAttribute('title', '\u67e5\u770b\u8be6\u60c5');
-    button.setAttribute('aria-label', '\u67e5\u770b\u8be6\u60c5');
-    button.setAttribute('aria-pressed', 'false');
-    button.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h10"/><path d="M9 12h10"/><path d="M9 18h6"/><path d="M5 6h.01"/><path d="M5 12h.01"/><path d="M5 18h.01"/></svg>';
-    button.addEventListener('click', function(event) {
-        event.stopPropagation();
-        openTaskDrawer(Number(taskId));
-    });
-    return button;
 }
 
 function refreshTaskViews(options) {

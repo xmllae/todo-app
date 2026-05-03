@@ -1321,16 +1321,12 @@
 }
 
 /* 子任务展开区重构：去掉负边距+扩宽，避免右侧溢出 */
-#taskMode .list-panel #tList .task-item:has(.task-expand-area--tabbed.task-expand-area--open) {
-  padding-right: 0 !important;
-  padding-bottom: 0 !important;
+/* 子任务展开区域重构：父层几何固定，避免右侧操作区抖动 */
+#taskMode .list-panel .tasks {
+  scrollbar-gutter: stable;
 }
 
-#taskMode .list-panel #tList .task-item:has(.task-expand-area--tabbed.task-expand-area--open) > .task-row {
-  padding-bottom: 6px !important;
-}
-
-#taskMode .list-panel #tList .task-item > .exp-bg-wrap:has(.task-expand-area--tabbed.task-expand-area--open) {
+#taskMode .list-panel #tList .task-item.task-item--has-subtasks > .exp-bg-wrap {
   margin: 0 !important;
   width: 100% !important;
   min-width: 0 !important;
