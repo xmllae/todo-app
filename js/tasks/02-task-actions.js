@@ -143,6 +143,43 @@ if(window.openTaskDetail)window.openTaskDetail(id);else onTaskRowAsideClick(id)
 }
 function onTaskItemMultiBackdrop(e,id){if(!multiSelect)return;var item=e.currentTarget,row=item.querySelector(".task-row");if(e.target!==item&&e.target!==row)return;e.stopPropagation();cancelDelayedToggleExpand();toggleMSel(id)}
 function isTaskSubExpanded(id){const t=(T[sel]||[]).find(x=>x.id===id);if(!t)return false;const subT=Array.isArray(t.subtasks)?t.subtasks.length:0;if(!subT)return false;const defaultExp=t.showSubtasksByDefault!==false;const collapsedByUser=!!(collapsedSubtaskIds&&collapsedSubtaskIds.has&&collapsedSubtaskIds.has(id));return(expandedId===id||defaultExp)&&!collapsedByUser}
+function refreshTaskSubtaskExpandDOM(taskId){
+const item=document.querySelector('#tList .task-item[data-id="'+taskId+'"]');
+if(!item)return false;
+const t=(T[sel]||[]).find(x=>x.id===taskId);
+if(!t)return false;
+const subT=Array.isArray(t.subtasks)?t.subtasks.length:0;
+if(!subT)return false;
+const isExp=isTaskSubExpanded(taskId);
+const subD=(t.subtasks||[]).filter(function(s){return!!s.done}).length;
+const subPill=item.querySelector(".sub-task-pill-btn");
+if(subPill){
+subPill.classList.toggle("sub-task-pill--open",isExp);
+subPill.classList.toggle("sub-task-pill--all-done",subT>0&&subD===subT);
+subPill.setAttribute("aria-expanded",isExp?"true":"false");
+subPill.setAttribute("title","\u5b50\u4efb\u52a1 "+subD+"/"+subT);
+subPill.setAttribute("aria-label","\u5b50\u4efb\u52a1 "+subD+"/"+subT)
+}
+const oldWrap=item.querySelector(".exp-bg-wrap");
+if(!isExp){
+if(oldWrap)oldWrap.remove();
+return true
+}
+if(typeof taskExpandAreaHTML!=="function")return false;
+const html=taskExpandAreaHTML(t);
+if(!html){
+if(oldWrap)oldWrap.remove();
+return true
+}
+const nextWrap=document.createElement("div");
+nextWrap.className="exp-bg-wrap";
+nextWrap.innerHTML=html;
+if(oldWrap)oldWrap.replaceWith(nextWrap);else item.appendChild(nextWrap);
+if(typeof ensureSubtaskGeometryResizeSync==="function")ensureSubtaskGeometryResizeSync();
+if(typeof syncSubtaskGeometry==="function"){syncSubtaskGeometry();requestAnimationFrame(syncSubtaskGeometry)}
+if(typeof animateSubtaskStrikeLines==="function")animateSubtaskStrikeLines();
+return true
+}
 function toggleExpand(id){
 cancelDelayedToggleExpand();
 if(!collapsedSubtaskIds||typeof collapsedSubtaskIds.has!=="function")collapsedSubtaskIds=new Set();
@@ -160,7 +197,9 @@ if(defaultExp)collapsedSubtaskIds.add(id)
 collapsedSubtaskIds.delete(id);
 expandedId=defaultExp?null:id
 }
-editingId=null;editingTimeId=null;editingSubId=null;ppOpenId=null;rT()
+const needFullRerender=editingId!=null||editingTimeId!=null||editingSubId!=null;
+editingId=null;editingTimeId=null;editingSubId=null;ppOpenId=null;
+if(needFullRerender||!refreshTaskSubtaskExpandDOM(id)){rT();return}
 }
 function closeTaskMoreFloat(){if(_taskMoreFloatEl){_taskMoreFloatEl.remove();_taskMoreFloatEl=null}document.querySelectorAll(".task-more-btn.is-open").forEach(function(b){b.classList.remove("is-open")});document.querySelectorAll(".task-item--menu-open").forEach(function(i){i.classList.remove("task-item--menu-open")})}
 function taskMorePanelWrap(html){return'<div class="task-more-panel">'+html+"</div>"}

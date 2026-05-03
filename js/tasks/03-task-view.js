@@ -148,17 +148,48 @@ persistTodoSubtaskCollapseState();
 rT()
 }
 function subtaskStrikeShouldAnimate(taskId,hasSubtasks,isAllDone){const key=String(taskId);if(!hasSubtasks){subtaskStrikeStateByTaskId.delete(key);return false}const prev=subtaskStrikeStateByTaskId.has(key)?subtaskStrikeStateByTaskId.get(key):null;const next=!!isAllDone;subtaskStrikeStateByTaskId.set(key,next);return prev===false&&next===true}
+function taskExpandAreaHTML(t){
+const subs=t.subtasks||[];
+const subT=subs.length;
+if(!subT)return"";
+const subD=subs.filter(s=>s.done).length;
+const subTodo=subT-subD;
+const collapseCompletedRows=shouldCollapseCompletedSubtasks(t.id,subD,subT);
+const collapseTodoRows=shouldCollapseTodoSubtasks(t.id,subTodo);
+let subRowsTodo=[];
+let subRowsDone=[];
+subs.forEach(s=>{
+const subToggleAria=s.done?"\u53d6\u6d88\u5b50\u4efb\u52a1\u5b8c\u6210":"\u6807\u8bb0\u5b50\u4efb\u52a1\u5b8c\u6210";
+const subStateH=s.done?'<span class="sub-state sub-state--done">\u5df2\u5b8c\u6210</span>':"";
+if(editingSubId===s.id){
+const rowEditing=`<div class="subtask-item subtask-item--editing"><button type="button" class="sub-ck ${s.done?"checked":""}" aria-label="${subToggleAria}" onclick="event.stopPropagation();toggleSubtask(${t.id},${s.id})"></button><input class="sub-text-edit" id="subEdit_${s.id}" value="${esc(s.text)}" onkeydown="if(event.key==='Enter')saveEditSub(${t.id},${s.id})" onblur="setTimeout(()=>saveEditSub(${t.id},${s.id}),120)"><div class="sub-tail"><button type="button" class="sub-del" title="\u5220\u9664\u5b50\u4efb\u52a1" aria-label="\u5220\u9664\u5b50\u4efb\u52a1" onclick="event.stopPropagation();deleteSubtask(${t.id},${s.id})">&times;</button></div></div>`;
+if(s.done)subRowsDone.push(rowEditing);else subRowsTodo.push(rowEditing)
+}else{
+const rowNormal=`<div class="subtask-item${s.done?" subtask-item--done":""}" onclick="event.stopPropagation();toggleSubtask(${t.id},${s.id})"><button type="button" class="sub-ck ${s.done?"checked":""}" aria-label="${subToggleAria}" onclick="event.stopPropagation();toggleSubtask(${t.id},${s.id})"></button><div class="sub-main"><span class="sub-text ${s.done?"sub-done":""}" ondblclick="event.stopPropagation()">${esc(s.text)}</span></div><div class="sub-tail">${subStateH}<button type="button" class="sub-del" title="\u5220\u9664\u5b50\u4efb\u52a1" aria-label="\u5220\u9664\u5b50\u4efb\u52a1" onclick="event.stopPropagation();deleteSubtask(${t.id},${s.id})">&times;</button></div></div>`;
+if(s.done)subRowsDone.push(rowNormal);else subRowsTodo.push(rowNormal)
+}
+});
+const hasOverflowTodoRows=subTodo>5;
+const todoVisibleRows=hasOverflowTodoRows?subRowsTodo.slice(0,5):subRowsTodo;
+const todoOverflowRows=hasOverflowTodoRows?subRowsTodo.slice(5):[];
+const todoRowsHtml=todoVisibleRows.join("");
+const todoOverflowCount=todoOverflowRows.length;
+const todoOverflowHtml=hasOverflowTodoRows&&todoOverflowCount>0?`<div class="subtask-todo-wrap${collapseTodoRows?" is-collapsed":""}">${todoOverflowRows.join("")}</div>`:"";
+const todoHintAction=collapseTodoRows?`\u5c55\u5f00\u5269\u4f59 ${todoOverflowCount} \u4e2a`:`\u6536\u8d77\u989d\u5916 ${todoOverflowCount} \u4e2a`;
+const todoExpandHint=hasOverflowTodoRows&&todoOverflowCount>0?`<button type="button" class="subtask-todo-expand-hint${collapseTodoRows?"":" is-open"}" onclick="event.stopPropagation();toggleTodoSubtasksCollapse(${t.id})"><svg class="subtask-todo-expand-hint-arrow" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 4.25L6 7.75L9.5 4.25"/></svg><span class="subtask-todo-expand-hint-main"><span class="subtask-todo-expand-hint-action">${todoHintAction}</span><span class="subtask-todo-expand-hint-sep" aria-hidden="true">|</span><span class="subtask-todo-expand-hint-target">\u672a\u5b8c\u6210\u4efb\u52a1</span></span></button>`:"";
+const hasDoneRows=subD>0;
+const doneRowsHtml=hasDoneRows?`<div class="subtask-completed-wrap${collapseCompletedRows?" is-collapsed":""}">${subRowsDone.join("")}</div>`:"";
+const doneHiddenHint=hasDoneRows&&collapseCompletedRows?`<div class="subtask-completed-hidden-hint">\u5df2\u6709${subD}\u4e2a\u5b50\u4efb\u52a1\u5b8c\u6210\u540e\u88ab\u6298\u53e0</div>`:"";
+return`<div class="task-expand-area task-expand-area--tabbed task-expand-area--open"><div class="task-expand-drop"><div class="task-exp-sub-bg"><div class="exp-block exp-block--sub"><div class="subtask-list">${todoRowsHtml}${todoOverflowHtml}${todoExpandHint}${doneRowsHtml}${doneHiddenHint}</div></div></div></div></div>`
+}
 function taskHTML(t,isArchived){
 const pt=t.planTime||"";
 const subs=t.subtasks||[];
 const subD=subs.filter(s=>s.done).length;
 const subT=subs.length;
-const subTodo=subT-subD;
 const subAllDone=subT===0||subD===subT;
 const subPillAllDone=subT>0&&subD===subT;
 const subStrikeAnimate=subtaskStrikeShouldAnimate(t.id,subT>0,subPillAllDone);
-const collapseCompletedRows=shouldCollapseCompletedSubtasks(t.id,subD,subT);
-const collapseTodoRows=shouldCollapseTodoSubtasks(t.id,subTodo);
 const hasRecur=t.recurRuleId;
 const showSubtasksByDefault=t.showSubtasksByDefault!==false;
 const collapsedByUser=!!(collapsedSubtaskIds&&collapsedSubtaskIds.has&&collapsedSubtaskIds.has(t.id));
@@ -200,33 +231,7 @@ acc=taskTimeAccent("",sel)
 const tcColor=editingTimeId===t.id?acc.text:t.frozen?acc.text:hasRecur?"var(--task-time-recur-fg)":"var(--text3)";
 const tcRail=editingTimeId===t.id?acc.rail:!t.frozen?"var(--task-bd)":acc.rail;
 const timeColH=`<div class="task-time-col${subT>0?"":" task-time-col--no-sub"}${editingTimeId===t.id?" task-time-col--editing task-time-col--pill-edit":""}" style="color:${tcColor};--task-time-rail:${tcRail}">${timeH}${subTimeSep}${subTitleSuffix}</div>`;
-let expandH="";
-if(isExp&&subT>0){
-let subRowsTodo=[];
-let subRowsDone=[];
-subs.forEach(s=>{
-const subToggleAria=s.done?"\u53d6\u6d88\u5b50\u4efb\u52a1\u5b8c\u6210":"\u6807\u8bb0\u5b50\u4efb\u52a1\u5b8c\u6210";
-const subStateH=s.done?'<span class="sub-state sub-state--done">\u5df2\u5b8c\u6210</span>':"";
-if(editingSubId===s.id){
-const rowEditing=`<div class="subtask-item subtask-item--editing"><button type="button" class="sub-ck ${s.done?"checked":""}" aria-label="${subToggleAria}" onclick="event.stopPropagation();toggleSubtask(${t.id},${s.id})"></button><input class="sub-text-edit" id="subEdit_${s.id}" value="${esc(s.text)}" onkeydown="if(event.key==='Enter')saveEditSub(${t.id},${s.id})" onblur="setTimeout(()=>saveEditSub(${t.id},${s.id}),120)"><div class="sub-tail"><button type="button" class="sub-del" title="\u5220\u9664\u5b50\u4efb\u52a1" aria-label="\u5220\u9664\u5b50\u4efb\u52a1" onclick="event.stopPropagation();deleteSubtask(${t.id},${s.id})">&times;</button></div></div>`;
-if(s.done)subRowsDone.push(rowEditing);else subRowsTodo.push(rowEditing)
-}else{
-const rowNormal=`<div class="subtask-item${s.done?" subtask-item--done":""}" onclick="event.stopPropagation();toggleSubtask(${t.id},${s.id})"><button type="button" class="sub-ck ${s.done?"checked":""}" aria-label="${subToggleAria}" onclick="event.stopPropagation();toggleSubtask(${t.id},${s.id})"></button><div class="sub-main"><span class="sub-text ${s.done?"sub-done":""}" ondblclick="event.stopPropagation()">${esc(s.text)}</span></div><div class="sub-tail">${subStateH}<button type="button" class="sub-del" title="\u5220\u9664\u5b50\u4efb\u52a1" aria-label="\u5220\u9664\u5b50\u4efb\u52a1" onclick="event.stopPropagation();deleteSubtask(${t.id},${s.id})">&times;</button></div></div>`;
-if(s.done)subRowsDone.push(rowNormal);else subRowsTodo.push(rowNormal)
-}
-});
-const hasOverflowTodoRows=subTodo>5;
-const todoVisibleRows=hasOverflowTodoRows?subRowsTodo.slice(0,5):subRowsTodo;
-const todoOverflowRows=hasOverflowTodoRows?subRowsTodo.slice(5):[];
-const todoRowsHtml=todoVisibleRows.join("");
-const todoOverflowCount=todoOverflowRows.length;
-const todoOverflowHtml=hasOverflowTodoRows&&todoOverflowCount>0?`<div class="subtask-todo-wrap${collapseTodoRows?" is-collapsed":""}">${todoOverflowRows.join("")}</div>`:"";
-const todoHintAction=collapseTodoRows?`\u5c55\u5f00\u5269\u4f59 ${todoOverflowCount} \u4e2a`:`\u6536\u8d77\u989d\u5916 ${todoOverflowCount} \u4e2a`;
-const todoExpandHint=hasOverflowTodoRows&&todoOverflowCount>0?`<button type="button" class="subtask-todo-expand-hint${collapseTodoRows?"":" is-open"}" onclick="event.stopPropagation();toggleTodoSubtasksCollapse(${t.id})"><svg class="subtask-todo-expand-hint-arrow" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 4.25L6 7.75L9.5 4.25"/></svg><span class="subtask-todo-expand-hint-main"><span class="subtask-todo-expand-hint-action">${todoHintAction}</span><span class="subtask-todo-expand-hint-sep" aria-hidden="true">|</span><span class="subtask-todo-expand-hint-target">\u672a\u5b8c\u6210\u4efb\u52a1</span></span></button>`:"";
-const hasDoneRows=subD>0;
-const doneRowsHtml=hasDoneRows?`<div class="subtask-completed-wrap${collapseCompletedRows?" is-collapsed":""}">${subRowsDone.join("")}</div>`:"";
-const doneHiddenHint=hasDoneRows&&collapseCompletedRows?`<div class="subtask-completed-hidden-hint">\u5df2\u6709${subD}\u4e2a\u5b50\u4efb\u52a1\u5b8c\u6210\u540e\u88ab\u6298\u53e0</div>`:"";
-expandH=`<div class="task-expand-area task-expand-area--tabbed task-expand-area--open"><div class="task-expand-drop"><div class="task-exp-sub-bg"><div class="exp-block exp-block--sub"><div class="subtask-list">${todoRowsHtml}${todoOverflowHtml}${todoExpandHint}${doneRowsHtml}${doneHiddenHint}</div></div></div></div></div>`}
+const expandH=isExp&&subT>0?taskExpandAreaHTML(t):"";
 return`<div class="task-item${t.done&&subAllDone?" done":""}${t.done?" task-main-checked task-row-done":""}${frozenCls}${prioHighRowCls}${ftFocusCls}${taskMoreOpen?" task-item--menu-open":""}${subT>0?" task-item--has-subtasks":""} relative group"${ftAria} data-id="${t.id}" onclick="onTaskItemMultiBackdrop(event,${t.id})" style="--task-prio:${borderColor}"><div class="task-row${prioListRowTierClass(t)}">${taskRowCornersHTML()}${prioListRail(t,false)}<div class="task-rail" onclick="event.stopPropagation()"><div class="drag-handle dh-head" onmousedown="sDrag(event,${t.id})" ontouchstart="sDrag(event,${t.id})" title="\u62d6\u52a8\u6392\u5e8f" onclick="event.stopPropagation()"></div>${multiSelect?`<div class="ms-ck${selectedIds.has(t.id)?" checked":""}" onclick="event.stopPropagation();toggleMSel(${t.id})">${selectedIds.has(t.id)?"&#10003;":""}</div>`:""}</div><div class="task-ck-slot" onclick="event.stopPropagation()">${taskListCkRing(t.id,taskRingAppearsDone(t),t.priority,false,borderColor)}</div><div class="task-strike-wrap" onclick="onTaskStrikeWrapPaddingClick(event,${t.id})"><div class="task-strike-content"><div class="task-row-center" onclick="onTaskRowCenterClick(event,${t.id})"><div class="txt-line"><span class="txt">${esc(t.text)}</span></div>${timeColH}</div></div></div><div class="task-actions" style="position:relative" onclick="event.stopPropagation()"><button type="button" class="act-btn task-detail-trigger" title="\u67e5\u770b\u8be6\u60c5" aria-label="\u67e5\u770b\u8be6\u60c5" aria-pressed="false" onclick="event.stopPropagation();openTaskDrawer(${t.id})"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h10"/><path d="M9 12h10"/><path d="M9 18h6"/><path d="M5 6h.01"/><path d="M5 12h.01"/><path d="M5 18h.01"/></svg></button><div class="task-more-wrap"><button type="button" class="act-btn task-more-btn${taskMoreOpen?" is-open":""}" title="\u66f4\u591a\u64cd\u4f5c" aria-label="\u66f4\u591a\u64cd\u4f5c" aria-expanded="${taskMoreOpen?"true":"false"}" aria-haspopup="true" onclick="event.stopPropagation();toggleTaskMoreMenu(${t.id})">${SVG_TM_ELL}</button></div><button type="button" class="act-btn del" title="\u5220\u9664" aria-label="\u5220\u9664" onclick="event.stopPropagation();del(${t.id})"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button></div></div>${subT>0?`<div class="exp-bg-wrap">${expandH}</div>`:expandH}</div>`
 }
 
