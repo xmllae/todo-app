@@ -1382,7 +1382,7 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .task-item.task-item--has-subtasks .task-row-center > .task-time-col {
   display: inline-flex !important;
   flex-wrap: nowrap !important;
-  align-items: center !important;
+  align-items: baseline !important;
   column-gap: 10px !important;
   row-gap: 0 !important;
   margin: 0 !important;
@@ -1425,6 +1425,7 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn.sub-task-pill--inline {
   display: inline-flex !important;
   align-items: center !important;
+  align-self: baseline !important;
   gap: 4px !important;
   min-height: 22px !important;
   padding: 2px 0 !important;
@@ -1433,8 +1434,8 @@
   background: transparent !important;
   color: #4a90e4 !important;
   font-size: 12px !important;
-  font-weight: 500 !important;
-  line-height: 1.25 !important;
+  font-weight: 540 !important;
+  line-height: 1.2 !important;
   box-shadow: none !important;
   text-decoration: none !important;
   vertical-align: middle !important;
@@ -1551,7 +1552,7 @@
   align-items: center !important;
   align-self: center !important;
   font-size: 12px !important;
-  font-weight: 500 !important;
+  font-weight: 540 !important;
   line-height: 1.2 !important;
   font-variant-numeric: tabular-nums !important;
 }
