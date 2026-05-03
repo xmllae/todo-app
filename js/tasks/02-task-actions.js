@@ -152,6 +152,7 @@ const subT=Array.isArray(t.subtasks)?t.subtasks.length:0;
 if(!subT)return false;
 const isExp=isTaskSubExpanded(taskId);
 const subD=(t.subtasks||[]).filter(function(s){return!!s.done}).length;
+const subtaskSig=(t.subtasks||[]).map(function(s){return String(s.id)+":"+ (s.done?"1":"0")+":"+String(s.text||"")}).join("|");
 const subPill=item.querySelector(".sub-task-pill-btn");
 if(subPill){
 subPill.classList.toggle("sub-task-pill--open",isExp);
@@ -162,18 +163,29 @@ subPill.setAttribute("aria-label","\u5b50\u4efb\u52a1 "+subD+"/"+subT)
 }
 const oldWrap=item.querySelector(".exp-bg-wrap");
 if(!isExp){
-if(oldWrap)oldWrap.remove();
+if(oldWrap){
+oldWrap.style.display="none";
+oldWrap.setAttribute("aria-hidden","true")
+}
+return true
+}
+if(oldWrap&&oldWrap.dataset.subtaskSig===subtaskSig){
+oldWrap.style.display="";
+oldWrap.removeAttribute("aria-hidden");
+if(typeof ensureSubtaskGeometryResizeSync==="function")ensureSubtaskGeometryResizeSync();
+if(typeof syncSubtaskGeometry==="function"){syncSubtaskGeometry();requestAnimationFrame(syncSubtaskGeometry)}
+if(typeof animateSubtaskStrikeLines==="function")animateSubtaskStrikeLines();
 return true
 }
 if(typeof taskExpandAreaHTML!=="function")return false;
 const html=taskExpandAreaHTML(t);
 if(!html){
-if(oldWrap)oldWrap.remove();
 return true
 }
 const nextWrap=document.createElement("div");
 nextWrap.className="exp-bg-wrap";
 nextWrap.innerHTML=html;
+nextWrap.dataset.subtaskSig=subtaskSig;
 if(oldWrap)oldWrap.replaceWith(nextWrap);else item.appendChild(nextWrap);
 if(typeof ensureSubtaskGeometryResizeSync==="function")ensureSubtaskGeometryResizeSync();
 if(typeof syncSubtaskGeometry==="function"){syncSubtaskGeometry();requestAnimationFrame(syncSubtaskGeometry)}
