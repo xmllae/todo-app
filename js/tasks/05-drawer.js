@@ -1087,13 +1087,12 @@ function renderDrawerContent(task) {
     const ringRippleClass = isPendingDone || (window._chkRippleTaskId != null && window._chkRippleTaskId == task.id)
         ? ' chk-ring--ripple'
         : '';
-    const showSubtasksByDefault = task.showSubtasksByDefault !== false;
     const doneSubtasksCount = subtasksState.doneCount;
     const totalSubtasksCount = subtasksState.totalCount;
     const collapseCompletedRows = subtasksState.collapseCompletedRows;
-    const completedToggleLabel = collapseCompletedRows
-        ? `\u663e\u793a\u5df2\u5b8c\u6210 ${doneSubtasksCount}`
-        : `\u6298\u53e0\u5df2\u5b8c\u6210 ${doneSubtasksCount}`;
+    const collapseCompletedByDefault = typeof shouldCollapseCompletedSubtasks === 'function'
+        ? shouldCollapseCompletedSubtasks(task.id, Math.max(doneSubtasksCount, 1), Math.max(totalSubtasksCount, 1))
+        : collapseCompletedRows;
 
     content.innerHTML = `
         <div class="drawer-task-title ${isDone ? 'drawer-task-title--done' : ''}" data-task-id="${task.id}">
@@ -1246,7 +1245,6 @@ function renderDrawerContent(task) {
                 <span class="drawer-section-title">\u5b50\u4efb\u52a1</span>
             </div>
             <div class="drawer-subtasks-head-actions">
-                ${doneSubtasksCount > 0 ? `<button type="button" class="drawer-subtasks-fold-toggle${collapseCompletedRows ? ' is-collapsed' : ''}" aria-expanded="${collapseCompletedRows ? 'false' : 'true'}" aria-label="${completedToggleLabel}" title="${completedToggleLabel}" onclick="event.stopPropagation();toggleDrawerCompletedSubtasks(${task.id})"><span class="drawer-subtasks-fold-toggle-label">${completedToggleLabel}</span><span class="drawer-subtasks-fold-toggle-chev" aria-hidden="true"></span></button>` : ''}
                 ${totalSubtasksCount > 0 ? `<span class="drawer-section-count">${doneSubtasksCount}/${totalSubtasksCount}</span>` : ''}
             </div>
         </div>
@@ -1255,11 +1253,11 @@ function renderDrawerContent(task) {
             <input type="checkbox"
                    class="drawer-subtasks-pref-checkbox"
                    id="drawer-subtasks-default-toggle-${task.id}"
-                   ${showSubtasksByDefault ? 'checked' : ''}
-                   onchange="toggleDrawerDefaultSubtasks(${task.id}, this.checked)">
+                   ${collapseCompletedByDefault ? 'checked' : ''}
+                   onchange="toggleDrawerCompletedDefault(${task.id}, this.checked)">
             <span class="drawer-subtasks-pref-inner">
                 <span class="drawer-subtasks-pref-icon" aria-hidden="true">${getDrawerPhosphorIcon('list-checks')}</span>
-                <span class="drawer-subtasks-pref-text">\u9ed8\u8ba4\u5c55\u793a\u5b50\u4efb\u52a1</span>
+                <span class="drawer-subtasks-pref-text">\u9ed8\u8ba4\u6298\u53e0\u5df2\u5b8c\u6210\u4efb\u52a1</span>
                 <span class="drawer-subtasks-pref-switch" aria-hidden="true">
                     <span class="drawer-subtasks-pref-knob"></span>
                 </span>
@@ -1626,17 +1624,19 @@ function autoResizeDrawerNotes(textarea) {
     scheduleDrawerScrollbarSync();
 }
 
-function toggleDrawerDefaultSubtasks(taskId, checked) {
+function toggleDrawerCompletedDefault(taskId, checked) {
     const task = findTaskById(taskId);
     if (!task) return;
-
-    task.showSubtasksByDefault = !!checked;
-
-    if (!checked && typeof expandedId !== 'undefined' && expandedId === task.id) {
-        expandedId = null;
-    }
-
-    persistTaskDetailChanges(task, { kanban: true });
+    if (typeof shouldCollapseCompletedSubtasks !== 'function' || typeof toggleCompletedSubtasksCollapse !== 'function') return;
+    const subtasks = task.subtasks || [];
+    const doneCount = subtasks.reduce(function(count, item) {
+        return count + (item && item.done ? 1 : 0);
+    }, 0);
+    const totalCount = subtasks.length;
+    const current = shouldCollapseCompletedSubtasks(task.id, Math.max(doneCount, 1), Math.max(totalCount, 1));
+    if (!!checked === current) return;
+    toggleCompletedSubtasksCollapse(task.id);
+    syncTaskDetailPanel();
 }
 
 function toggleSubtaskInDrawer(taskId, subtaskId) {
