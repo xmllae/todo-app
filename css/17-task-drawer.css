@@ -1967,7 +1967,7 @@
     min-width: 0;
     display: inline-flex;
     align-items: center;
-    gap: 10px;
+    gap: 6px;
 }
 
 .drawer-subtasks-head-actions .drawer-section-count {
@@ -2041,17 +2041,20 @@
 }
 
 .drawer-section-count {
-    margin-left: auto;
-    min-width: 46px;
-    padding: 6px 11px;
+    margin-left: 0;
+    min-width: 38px;
+    padding: 4px 9px;
     border-radius: 999px;
-    font-size: 0.82rem;
-    font-weight: 700;
-    line-height: 1;
-    color: var(--text3);
-    background: var(--drawer-surface-strong);
+    border: 1px solid color-mix(in srgb, var(--inp-bd) 56%, transparent);
+    font-size: 0.76rem;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: 0.01em;
+    font-variant-numeric: tabular-nums;
+    color: color-mix(in srgb, var(--text3) 92%, #64748b);
+    background: color-mix(in srgb, var(--drawer-surface-strong) 84%, #ffffff);
     text-align: center;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
+    box-shadow: none;
 }
 
 .drawer-subtasks-pref {
@@ -2885,9 +2888,10 @@
 }
 
 .dark .drawer-section-count {
-    background: linear-gradient(180deg, color-mix(in srgb, var(--card) 86%, #1f2937) 0%, color-mix(in srgb, var(--hov) 74%, #111827) 100%);
+    color: color-mix(in srgb, var(--text3) 92%, #cbd5e1);
+    background: color-mix(in srgb, var(--card) 78%, #111827);
     border-color: color-mix(in srgb, var(--inp-bd) 62%, transparent);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    box-shadow: none;
 }
 
 .dark .drawer-subtasks-pref {
@@ -3092,9 +3096,9 @@
     }
 
     .drawer-section-count {
-        min-width: 42px;
-        padding: 5px 10px;
-        font-size: 0.78rem;
+        min-width: 36px;
+        padding: 4px 8px;
+        font-size: 0.74rem;
     }
 
     .drawer-header,

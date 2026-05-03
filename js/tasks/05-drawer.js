@@ -1245,7 +1245,7 @@ function renderDrawerContent(task) {
                 <span class="drawer-section-title">\u5b50\u4efb\u52a1</span>
             </div>
             <div class="drawer-subtasks-head-actions">
-                ${totalSubtasksCount > 0 ? `<span class="drawer-section-count">${doneSubtasksCount}/${totalSubtasksCount}</span>` : ''}
+                ${totalSubtasksCount > 0 ? `<span class="drawer-section-count">${doneSubtasksCount} / ${totalSubtasksCount}</span>` : ''}
             </div>
         </div>
 
