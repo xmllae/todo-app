@@ -1378,7 +1378,7 @@
   display: inline-flex !important;
   flex-wrap: nowrap !important;
   align-items: center !important;
-  column-gap: 6px !important;
+  column-gap: 8px !important;
   row-gap: 0 !important;
   margin: 0 !important;
   padding: 0 !important;
@@ -1393,7 +1393,8 @@
   height: 11px !important;
   margin: 0 !important;
   border-radius: 999px !important;
-  transform: none !important;
+  transform: scaleX(.65) !important;
+  transform-origin: center !important;
   opacity: .5 !important;
   background: color-mix(in srgb, #9aa8bb 48%, transparent) !important;
 }
