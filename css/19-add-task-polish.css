@@ -1644,6 +1644,55 @@
 #taskMode .list-panel #tList .task-item.task-item--has-subtasks > .exp-bg-wrap.is-subtask-opening .subtask-item:nth-child(5),
 .app.app--with-global-nav #taskMode .list-panel #tList .task-item.task-item--has-subtasks > .exp-bg-wrap.is-subtask-opening .subtask-item:nth-child(5) { animation-delay: .14s; }
 
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint-arrow,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint-arrow {
+  flex: 0 0 10px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  align-self: center !important;
+  position: relative !important;
+  width: 10px !important;
+  height: 14px !important;
+  min-width: 10px !important;
+  min-height: 14px !important;
+  margin-right: 5px !important;
+  color: currentColor !important;
+  transform: rotate(90deg) !important;
+  transform-origin: 50% 50% !important;
+  transition: transform .28s cubic-bezier(.4, 0, .2, 1) !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint-arrow::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint-arrow::before {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  width: 0 !important;
+  height: 0 !important;
+  border-top: 4px solid transparent !important;
+  border-bottom: 4px solid transparent !important;
+  border-left: 6px solid currentColor !important;
+  transform: translate(-42%, -50%) !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint.is-open .subtask-todo-expand-hint-arrow,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint.is-open .subtask-todo-expand-hint-arrow {
+  transform: rotate(-90deg) !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint-action,
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint-target,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint-action,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint-target {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 1.35 !important;
+  letter-spacing: 0 !important;
+}
+
 @keyframes subtask-row-reveal {
   from { opacity: 0; transform: translateY(-3px); }
   to { opacity: 1; transform: translateY(0); }

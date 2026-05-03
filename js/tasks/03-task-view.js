@@ -176,10 +176,10 @@ const todoRowsHtml=todoVisibleRows.join("");
 const todoOverflowCount=todoOverflowRows.length;
 const todoOverflowHtml=hasOverflowTodoRows&&todoOverflowCount>0?`<div class="subtask-todo-wrap${collapseTodoRows?" is-collapsed":""}">${todoOverflowRows.join("")}</div>`:"";
 const todoHintAction=collapseTodoRows?`\u5c55\u5f00\u5269\u4f59 ${todoOverflowCount} \u4e2a`:`\u6536\u8d77\u989d\u5916 ${todoOverflowCount} \u4e2a`;
-const todoExpandHint=hasOverflowTodoRows&&todoOverflowCount>0?`<button type="button" class="subtask-todo-expand-hint${collapseTodoRows?"":" is-open"}" onclick="event.stopPropagation();toggleTodoSubtasksCollapse(${t.id})"><svg class="subtask-todo-expand-hint-arrow" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 4.25L6 7.75L9.5 4.25"/></svg><span class="subtask-todo-expand-hint-main"><span class="subtask-todo-expand-hint-action">${todoHintAction}</span><span class="subtask-todo-expand-hint-sep" aria-hidden="true">|</span><span class="subtask-todo-expand-hint-target">\u672a\u5b8c\u6210\u4efb\u52a1</span></span></button>`:"";
+const todoExpandHint=hasOverflowTodoRows&&todoOverflowCount>0?`<button type="button" class="subtask-todo-expand-hint${collapseTodoRows?"":" is-open"}" onclick="event.stopPropagation();toggleTodoSubtasksCollapse(${t.id})"><span class="subtask-todo-expand-hint-arrow" aria-hidden="true"></span><span class="subtask-todo-expand-hint-main"><span class="subtask-todo-expand-hint-action">${todoHintAction}</span><span class="subtask-todo-expand-hint-sep" aria-hidden="true">|</span><span class="subtask-todo-expand-hint-target">\u672a\u5b8c\u6210\u4efb\u52a1</span></span></button>`:"";
 const hasDoneRows=subD>0;
 const doneRowsHtml=hasDoneRows?`<div class="subtask-completed-wrap${collapseCompletedRows?" is-collapsed":""}">${subRowsDone.join("")}</div>`:"";
-const doneHiddenHint=hasDoneRows&&collapseCompletedRows?`<div class="subtask-completed-hidden-hint">\u5df2\u6709${subD}\u4e2a\u5b50\u4efb\u52a1\u5b8c\u6210\u540e\u88ab\u6298\u53e0</div>`:"";
+const doneHiddenHint=hasDoneRows&&collapseCompletedRows?`<div class="subtask-completed-hidden-hint">\u5df2\u6709 ${subD} \u4e2a\u5b50\u4efb\u52a1\u5b8c\u6210\u540e\u88ab\u6298\u53e0</div>`:"";
 return`<div class="task-expand-area task-expand-area--tabbed task-expand-area--open"><div class="task-expand-drop"><div class="task-exp-sub-bg"><div class="exp-block exp-block--sub"><div class="subtask-list">${todoRowsHtml}${todoOverflowHtml}${todoExpandHint}${doneRowsHtml}${doneHiddenHint}</div></div></div></div></div>`
 }
 function taskHTML(t,isArchived){
