@@ -1458,7 +1458,7 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn.sub-task-pill--inline::before {
   content: "" !important;
   position: absolute !important;
-  inset: -2px -5.25px -2px -5.25px !important;
+  inset: -0.5px -5.25px -0.5px -5.25px !important;
   border-radius: 8px !important;
   background: #eef5ff !important;
   box-shadow: inset 0 0 0 1px rgba(74, 144, 228, .06), 0 1px 3px rgba(74, 144, 228, .08) !important;
