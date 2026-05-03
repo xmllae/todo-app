@@ -1389,6 +1389,21 @@
   padding: 0 !important;
 }
 
+#taskMode .list-panel #tList,
+.app.app--with-global-nav #taskMode .list-panel #tList {
+  --task-guide-line-tone: #d8dde5 !important;
+}
+
+.dark #taskMode .list-panel #tList,
+.dark .app.app--with-global-nav #taskMode .list-panel #tList {
+  --task-guide-line-tone: #d8dde5 !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .exp-block.exp-block--sub,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-expand-area .exp-block.exp-block--sub {
+  --subtask-guide-line-faint: var(--task-guide-line-tone) !important;
+}
+
 #taskMode .list-panel #tList .task-item.task-item--has-subtasks .task-row-center > .task-time-col .task-time-sep,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-item.task-item--has-subtasks .task-row-center > .task-time-col .task-time-sep {
   display: inline-flex !important;
@@ -1400,8 +1415,8 @@
   border-radius: 999px !important;
   transform: scaleX(.32) !important;
   transform-origin: center !important;
-  opacity: .45 !important;
-  background: color-mix(in srgb, #9aa8bb 48%, transparent) !important;
+  opacity: 1 !important;
+  background: var(--task-guide-line-tone) !important;
 }
 
 #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill.sub-task-pill--inline,
