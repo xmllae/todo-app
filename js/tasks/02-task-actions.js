@@ -143,6 +143,83 @@ if(window.openTaskDetail)window.openTaskDetail(id);else onTaskRowAsideClick(id)
 }
 function onTaskItemMultiBackdrop(e,id){if(!multiSelect)return;var item=e.currentTarget,row=item.querySelector(".task-row");if(e.target!==item&&e.target!==row)return;e.stopPropagation();cancelDelayedToggleExpand();toggleMSel(id)}
 function isTaskSubExpanded(id){const t=(T[sel]||[]).find(x=>x.id===id);if(!t)return false;const subT=Array.isArray(t.subtasks)?t.subtasks.length:0;if(!subT)return false;const defaultExp=t.showSubtasksByDefault!==false;const collapsedByUser=!!(collapsedSubtaskIds&&collapsedSubtaskIds.has&&collapsedSubtaskIds.has(id));return(expandedId===id||defaultExp)&&!collapsedByUser}
+const SUBTASK_WRAP_OPEN_CLASS="is-subtask-open";
+const SUBTASK_WRAP_OPENING_CLASS="is-subtask-opening";
+const SUBTASK_WRAP_OPEN_MS=280;
+const SUBTASK_WRAP_EASE="cubic-bezier(.22, 1, .36, 1)";
+function cleanupSubtaskWrapMotion(wrap){
+if(!wrap)return;
+if(wrap.__subtaskOpenTimer){clearTimeout(wrap.__subtaskOpenTimer);wrap.__subtaskOpenTimer=null}
+if(wrap.__subtaskEndHandler){
+try{wrap.removeEventListener("transitionend",wrap.__subtaskEndHandler)}catch(e){}
+wrap.__subtaskEndHandler=null
+}
+}
+function getSubtaskWrapTargetHeight(wrap){
+const area=wrap&&wrap.querySelector(".task-expand-area");
+if(!area)return 0;
+return Math.max(0,Math.ceil(area.scrollHeight||0))
+}
+function setSubtaskWrapOpenState(wrap,isOpen){
+if(!wrap)return;
+cleanupSubtaskWrapMotion(wrap);
+const targetH=getSubtaskWrapTargetHeight(wrap);
+const startH=Math.max(0,Math.ceil(wrap.getBoundingClientRect().height||0));
+wrap.style.overflow="hidden";
+wrap.style.willChange="height, opacity, transform";
+wrap.style.transition="height "+SUBTASK_WRAP_OPEN_MS+"ms "+SUBTASK_WRAP_EASE+", opacity 220ms ease, transform "+SUBTASK_WRAP_OPEN_MS+"ms "+SUBTASK_WRAP_EASE;
+if(isOpen){
+wrap.classList.add(SUBTASK_WRAP_OPEN_CLASS);
+wrap.classList.add(SUBTASK_WRAP_OPENING_CLASS);
+wrap.removeAttribute("aria-hidden");
+wrap.style.height=startH+"px";
+wrap.style.opacity=startH>0?"1":"0";
+void wrap.offsetHeight;
+requestAnimationFrame(function(){
+wrap.style.height=Math.max(targetH,1)+"px";
+wrap.style.opacity="1"
+});
+const endHandler=function(ev){
+if(ev.target!==wrap||ev.propertyName!=="height")return;
+cleanupSubtaskWrapMotion(wrap);
+wrap.classList.remove(SUBTASK_WRAP_OPENING_CLASS);
+wrap.style.height="auto";
+wrap.style.willChange=""
+};
+wrap.__subtaskEndHandler=endHandler;
+wrap.addEventListener("transitionend",endHandler);
+wrap.__subtaskOpenTimer=setTimeout(function(){
+cleanupSubtaskWrapMotion(wrap);
+wrap.classList.remove(SUBTASK_WRAP_OPENING_CLASS);
+wrap.style.height="auto";
+wrap.style.willChange=""
+},SUBTASK_WRAP_OPEN_MS+120);
+return
+}
+const nextStart=Math.max(startH,targetH,1);
+wrap.style.height=nextStart+"px";
+wrap.style.opacity="1";
+void wrap.offsetHeight;
+requestAnimationFrame(function(){
+wrap.classList.remove(SUBTASK_WRAP_OPENING_CLASS);
+wrap.classList.remove(SUBTASK_WRAP_OPEN_CLASS);
+wrap.style.height="0px";
+wrap.style.opacity="0"
+});
+const closeHandler=function(ev){
+if(ev.target!==wrap||ev.propertyName!=="height")return;
+cleanupSubtaskWrapMotion(wrap);
+wrap.setAttribute("aria-hidden","true");
+wrap.style.willChange=""
+};
+wrap.__subtaskEndHandler=closeHandler;
+wrap.addEventListener("transitionend",closeHandler);
+wrap.__subtaskOpenTimer=setTimeout(function(){
+cleanupSubtaskWrapMotion(wrap);
+wrap.setAttribute("aria-hidden","true");
+wrap.style.willChange=""
+},SUBTASK_WRAP_OPEN_MS+120)
+}
 function refreshTaskSubtaskExpandDOM(taskId){
 const item=document.querySelector('#tList .task-item[data-id="'+taskId+'"]');
 if(!item)return false;
@@ -162,18 +239,17 @@ subPill.setAttribute("title","\u5b50\u4efb\u52a1 "+subD+"/"+subT);
 subPill.setAttribute("aria-label","\u5b50\u4efb\u52a1 "+subD+"/"+subT)
 }
 const oldWrap=item.querySelector(".exp-bg-wrap");
+if(!oldWrap)return false;
+if(!oldWrap.dataset.subtaskSig&&oldWrap.querySelector(".task-expand-area"))oldWrap.dataset.subtaskSig=subtaskSig;
 if(!isExp){
-if(oldWrap){
-oldWrap.style.display="none";
-oldWrap.setAttribute("aria-hidden","true")
-}
+setSubtaskWrapOpenState(oldWrap,false);
 return true
 }
-if(oldWrap&&oldWrap.dataset.subtaskSig===subtaskSig){
-oldWrap.style.display="";
-oldWrap.removeAttribute("aria-hidden");
+if(oldWrap.dataset.subtaskSig===subtaskSig&&oldWrap.querySelector(".task-expand-area")){
+setSubtaskWrapOpenState(oldWrap,true);
 if(typeof ensureSubtaskGeometryResizeSync==="function")ensureSubtaskGeometryResizeSync();
 if(typeof syncSubtaskGeometry==="function"){syncSubtaskGeometry();requestAnimationFrame(syncSubtaskGeometry)}
+setTimeout(function(){if(typeof syncSubtaskGeometry==="function")syncSubtaskGeometry()},SUBTASK_WRAP_OPEN_MS+40);
 if(typeof animateSubtaskStrikeLines==="function")animateSubtaskStrikeLines();
 return true
 }
@@ -182,13 +258,12 @@ const html=taskExpandAreaHTML(t);
 if(!html){
 return true
 }
-const nextWrap=document.createElement("div");
-nextWrap.className="exp-bg-wrap";
-nextWrap.innerHTML=html;
-nextWrap.dataset.subtaskSig=subtaskSig;
-if(oldWrap)oldWrap.replaceWith(nextWrap);else item.appendChild(nextWrap);
+oldWrap.innerHTML=html;
+oldWrap.dataset.subtaskSig=subtaskSig;
+setSubtaskWrapOpenState(oldWrap,true);
 if(typeof ensureSubtaskGeometryResizeSync==="function")ensureSubtaskGeometryResizeSync();
 if(typeof syncSubtaskGeometry==="function"){syncSubtaskGeometry();requestAnimationFrame(syncSubtaskGeometry)}
+setTimeout(function(){if(typeof syncSubtaskGeometry==="function")syncSubtaskGeometry()},SUBTASK_WRAP_OPEN_MS+40);
 if(typeof animateSubtaskStrikeLines==="function")animateSubtaskStrikeLines();
 return true
 }
@@ -205,9 +280,14 @@ const isExp=(expandedId===id||defaultExp)&&!collapsedByUser;
 if(isExp){
 expandedId=null;
 if(defaultExp)collapsedSubtaskIds.add(id)
+if(window._subtaskOpenAnimTaskId===id)window._subtaskOpenAnimTaskId=null
 }else{
 collapsedSubtaskIds.delete(id);
 expandedId=defaultExp?null:id
+window._subtaskOpenAnimTaskId=id;
+setTimeout(function(){
+if(window._subtaskOpenAnimTaskId===id)window._subtaskOpenAnimTaskId=null
+},SUBTASK_WRAP_OPEN_MS+180)
 }
 const needFullRerender=editingId!=null||editingTimeId!=null||editingSubId!=null;
 editingId=null;editingTimeId=null;editingSubId=null;ppOpenId=null;

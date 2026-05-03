@@ -1524,3 +1524,68 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn.sub-task-pill--inline:active {
   transform: scale(.985) !important;
 }
+
+#taskMode .list-panel #tList .task-item.task-item--has-subtasks > .exp-bg-wrap,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-item.task-item--has-subtasks > .exp-bg-wrap {
+  height: 0;
+  opacity: 0 !important;
+  transform: translateY(-4px) !important;
+  transform-origin: top left !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  transition: height .28s cubic-bezier(.22, 1, .36, 1), opacity .22s ease, transform .28s cubic-bezier(.22, 1, .36, 1) !important;
+}
+
+#taskMode .list-panel #tList .task-item.task-item--has-subtasks > .exp-bg-wrap > .task-expand-area,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-item.task-item--has-subtasks > .exp-bg-wrap > .task-expand-area {
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+#taskMode .list-panel #tList .task-item.task-item--has-subtasks > .exp-bg-wrap.is-subtask-open,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-item.task-item--has-subtasks > .exp-bg-wrap.is-subtask-open {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  pointer-events: auto !important;
+}
+
+#taskMode .list-panel #tList .task-item.task-item--has-subtasks > .exp-bg-wrap.is-subtask-opening .subtask-item,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-item.task-item--has-subtasks > .exp-bg-wrap.is-subtask-opening .subtask-item {
+  animation: subtask-row-reveal .28s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+#taskMode .list-panel #tList .task-item.task-item--has-subtasks > .exp-bg-wrap.is-subtask-opening,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-item.task-item--has-subtasks > .exp-bg-wrap.is-subtask-opening {
+  animation: subtask-wrap-reveal .28s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+#taskMode .list-panel #tList .task-item.task-item--has-subtasks > .exp-bg-wrap.is-subtask-opening .subtask-item:nth-child(1),
+.app.app--with-global-nav #taskMode .list-panel #tList .task-item.task-item--has-subtasks > .exp-bg-wrap.is-subtask-opening .subtask-item:nth-child(1) { animation-delay: .02s; }
+#taskMode .list-panel #tList .task-item.task-item--has-subtasks > .exp-bg-wrap.is-subtask-opening .subtask-item:nth-child(2),
+.app.app--with-global-nav #taskMode .list-panel #tList .task-item.task-item--has-subtasks > .exp-bg-wrap.is-subtask-opening .subtask-item:nth-child(2) { animation-delay: .05s; }
+#taskMode .list-panel #tList .task-item.task-item--has-subtasks > .exp-bg-wrap.is-subtask-opening .subtask-item:nth-child(3),
+.app.app--with-global-nav #taskMode .list-panel #tList .task-item.task-item--has-subtasks > .exp-bg-wrap.is-subtask-opening .subtask-item:nth-child(3) { animation-delay: .08s; }
+#taskMode .list-panel #tList .task-item.task-item--has-subtasks > .exp-bg-wrap.is-subtask-opening .subtask-item:nth-child(4),
+.app.app--with-global-nav #taskMode .list-panel #tList .task-item.task-item--has-subtasks > .exp-bg-wrap.is-subtask-opening .subtask-item:nth-child(4) { animation-delay: .11s; }
+#taskMode .list-panel #tList .task-item.task-item--has-subtasks > .exp-bg-wrap.is-subtask-opening .subtask-item:nth-child(5),
+.app.app--with-global-nav #taskMode .list-panel #tList .task-item.task-item--has-subtasks > .exp-bg-wrap.is-subtask-opening .subtask-item:nth-child(5) { animation-delay: .14s; }
+
+@keyframes subtask-row-reveal {
+  from { opacity: 0; transform: translateY(-3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes subtask-wrap-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+    clip-path: inset(0 0 100% 0);
+    -webkit-clip-path: inset(0 0 100% 0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    clip-path: inset(0 0 0 0);
+    -webkit-clip-path: inset(0 0 0 0);
+  }
+}
