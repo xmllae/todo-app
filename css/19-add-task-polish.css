@@ -1395,10 +1395,10 @@
   align-self: center !important;
   flex: 0 0 1px !important;
   width: 1px !important;
-  height: 11px !important;
+  height: 15px !important;
   margin: 0 !important;
   border-radius: 999px !important;
-  transform: scaleX(.65) !important;
+  transform: scaleX(.32) !important;
   transform-origin: center !important;
   opacity: .45 !important;
   background: color-mix(in srgb, #9aa8bb 48%, transparent) !important;
