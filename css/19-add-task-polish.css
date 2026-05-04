@@ -1659,9 +1659,19 @@
   min-height: 14px !important;
   margin-right: 5px !important;
   color: currentColor !important;
-  transform: rotate(90deg) !important;
+  transform: rotate(0deg) !important;
   transform-origin: 50% 50% !important;
   transition: transform .28s cubic-bezier(.4, 0, .2, 1) !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint-action,
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint-target,
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint-sep,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint-action,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint-target,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint-sep {
+  display: inline-flex !important;
+  align-items: center !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint-arrow::before,
