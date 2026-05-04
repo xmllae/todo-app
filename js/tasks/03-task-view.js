@@ -70,7 +70,9 @@ const completedSubtaskCollapseStateById=new Map();
 const SUBTASK_COMPLETED_COLLAPSE_LS_KEY="tuole_subtasks_completed_collapsed_v1";
 const todoSubtaskCollapseStateById=new Map();
 const SUBTASK_TODO_COLLAPSE_LS_KEY="tuole_subtasks_todo_collapsed_v1";
-const TODO_SUBTASK_WRAP_OPEN_MS=260;
+const TODO_SUBTASK_WRAP_OPEN_MS=320;
+const TODO_SUBTASK_WRAP_CLOSE_MS=280;
+const TODO_SUBTASK_WRAP_ROW_MS=220;
 const TODO_SUBTASK_WRAP_EASE="cubic-bezier(.22, 1, .36, 1)";
 let _subtaskCompletedCollapseHydrated=false;
 let _subtaskTodoCollapseHydrated=false;
@@ -152,10 +154,13 @@ if(action)action.textContent=isOpen?"\u6536\u8d77\u989d\u5916 "+overflowCount+" 
 }
 function cleanupTodoSubtaskWrapMotion(wrap){
 if(!wrap)return;
-if(wrap.__todoMotionTimer){clearTimeout(wrap.__todoMotionTimer);wrap.__todoMotionTimer=null}
-if(wrap.__todoMotionEndHandler){
-try{wrap.removeEventListener("transitionend",wrap.__todoMotionEndHandler)}catch(e){}
-wrap.__todoMotionEndHandler=null
+if(wrap.__todoMotionAnim){
+try{wrap.__todoMotionAnim.cancel()}catch(e){}
+wrap.__todoMotionAnim=null
+}
+if(wrap.__todoRowAnims&&wrap.__todoRowAnims.length){
+wrap.__todoRowAnims.forEach(function(anim){try{anim.cancel()}catch(e){}});
+wrap.__todoRowAnims=[]
 }
 }
 function syncTodoSubtaskGeometry(){
@@ -164,45 +169,64 @@ syncSubtaskGeometry();
 requestAnimationFrame(syncSubtaskGeometry);
 setTimeout(function(){if(typeof syncSubtaskGeometry==="function")syncSubtaskGeometry()},TODO_SUBTASK_WRAP_OPEN_MS+40)
 }
+function animateTodoSubtaskRows(wrap,isOpen,reduceMotion){
+if(!wrap||reduceMotion)return;
+const rows=[].slice.call(wrap.querySelectorAll(".subtask-item"));
+if(!rows.length)return;
+const baseDelay=isOpen?18:0;
+wrap.__todoRowAnims=rows.map(function(row,idx){
+const delay=Math.min(110,baseDelay+idx*22);
+const keyframes=isOpen
+?[{opacity:.18,transform:"translateY(-2px)"},{opacity:1,transform:"translateY(0)"}]
+:[{opacity:1,transform:"translateY(0)"},{opacity:.14,transform:"translateY(-2px)"}];
+try{
+return row.animate(keyframes,{duration:TODO_SUBTASK_WRAP_ROW_MS,easing:TODO_SUBTASK_WRAP_EASE,delay:delay,fill:"both"})
+}catch(e){
+return null
+}
+}).filter(Boolean)
+}
 function setTodoSubtaskWrapOpenState(wrap,isOpen){
 if(!wrap)return;
 cleanupTodoSubtaskWrapMotion(wrap);
+const reduceMotion=typeof window!=="undefined"&&window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const openDur=reduceMotion?170:TODO_SUBTASK_WRAP_OPEN_MS;
+const closeDur=reduceMotion?150:TODO_SUBTASK_WRAP_CLOSE_MS;
 wrap.style.overflow="hidden";
 wrap.style.willChange="height, opacity, transform";
-wrap.style.transition="height "+TODO_SUBTASK_WRAP_OPEN_MS+"ms "+TODO_SUBTASK_WRAP_EASE+", opacity 220ms ease, transform "+TODO_SUBTASK_WRAP_OPEN_MS+"ms "+TODO_SUBTASK_WRAP_EASE;
 if(isOpen){
 wrap.classList.remove("is-collapsed");
-wrap.classList.add("is-opening");
 wrap.removeAttribute("aria-hidden");
 const targetH=Math.max(1,Math.ceil(wrap.scrollHeight||0));
 wrap.style.height="0px";
 wrap.style.opacity="0";
 wrap.style.transform="translateY(-4px)";
 void wrap.offsetHeight;
-requestAnimationFrame(function(){
+try{
+wrap.__todoMotionAnim=wrap.animate([
+{height:"0px",opacity:0,transform:"translateY(-4px)"},
+{height:targetH+"px",opacity:1,transform:"translateY(0)"}
+],{duration:openDur,easing:TODO_SUBTASK_WRAP_EASE,fill:"forwards"});
+}catch(e){
 wrap.style.height=targetH+"px";
 wrap.style.opacity="1";
-wrap.style.transform="translateY(0)"
-});
-const endHandler=function(ev){
-if(ev.target!==wrap||ev.propertyName!=="height")return;
-cleanupTodoSubtaskWrapMotion(wrap);
-wrap.classList.remove("is-opening");
-wrap.style.height="auto";
+wrap.style.transform="translateY(0)";
 wrap.style.willChange="";
 wrap.style.overflow="";
-wrap.style.transform=""
+return
+}
+animateTodoSubtaskRows(wrap,true,reduceMotion);
+wrap.__todoMotionAnim.onfinish=function(){
+wrap.__todoMotionAnim=null;
+wrap.style.height="auto";
+wrap.style.opacity="1";
+wrap.style.transform="";
+wrap.style.willChange="";
+wrap.style.overflow=""
 };
-wrap.__todoMotionEndHandler=endHandler;
-wrap.addEventListener("transitionend",endHandler);
-wrap.__todoMotionTimer=setTimeout(function(){
-cleanupTodoSubtaskWrapMotion(wrap);
-wrap.classList.remove("is-opening");
-wrap.style.height="auto";
-wrap.style.willChange="";
-wrap.style.overflow="";
-wrap.style.transform=""
-},TODO_SUBTASK_WRAP_OPEN_MS+140);
+wrap.__todoMotionAnim.oncancel=function(){
+wrap.__todoMotionAnim=null
+};
 return
 }
 const startH=Math.max(1,Math.ceil(wrap.getBoundingClientRect().height||wrap.scrollHeight||0));
@@ -210,15 +234,24 @@ wrap.style.height=startH+"px";
 wrap.style.opacity="1";
 wrap.style.transform="translateY(0)";
 void wrap.offsetHeight;
-requestAnimationFrame(function(){
-wrap.style.height="0px";
-wrap.style.opacity="0";
-wrap.style.transform="translateY(-3px)"
-});
-const closeHandler=function(ev){
-if(ev.target!==wrap||ev.propertyName!=="height")return;
-cleanupTodoSubtaskWrapMotion(wrap);
-wrap.classList.remove("is-opening");
+try{
+wrap.__todoMotionAnim=wrap.animate([
+{height:startH+"px",opacity:1,transform:"translateY(0)"},
+{height:"0px",opacity:0,transform:"translateY(-3px)"}
+],{duration:closeDur,easing:TODO_SUBTASK_WRAP_EASE,fill:"forwards"});
+}catch(e){
+wrap.classList.add("is-collapsed");
+wrap.setAttribute("aria-hidden","true");
+wrap.style.willChange="";
+wrap.style.overflow="";
+wrap.style.height="";
+wrap.style.opacity="";
+wrap.style.transform="";
+return
+}
+animateTodoSubtaskRows(wrap,false,reduceMotion);
+wrap.__todoMotionAnim.onfinish=function(){
+wrap.__todoMotionAnim=null;
 wrap.classList.add("is-collapsed");
 wrap.setAttribute("aria-hidden","true");
 wrap.style.willChange="";
@@ -227,19 +260,9 @@ wrap.style.height="";
 wrap.style.opacity="";
 wrap.style.transform=""
 };
-wrap.__todoMotionEndHandler=closeHandler;
-wrap.addEventListener("transitionend",closeHandler);
-wrap.__todoMotionTimer=setTimeout(function(){
-cleanupTodoSubtaskWrapMotion(wrap);
-wrap.classList.remove("is-opening");
-wrap.classList.add("is-collapsed");
-wrap.setAttribute("aria-hidden","true");
-wrap.style.willChange="";
-wrap.style.overflow="";
-wrap.style.height="";
-wrap.style.opacity="";
-wrap.style.transform=""
-},TODO_SUBTASK_WRAP_OPEN_MS+140)
+wrap.__todoMotionAnim.oncancel=function(){
+wrap.__todoMotionAnim=null
+}
 }
 function shouldCollapseTodoSubtasks(taskId,todoCount){
 if(todoCount<=5)return false;
