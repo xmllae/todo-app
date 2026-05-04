@@ -168,7 +168,6 @@ syncSubtaskGeometry();
 requestAnimationFrame(syncSubtaskGeometry);
 setTimeout(function(){if(typeof syncSubtaskGeometry==="function")syncSubtaskGeometry()},SUBTASK_WRAP_OPEN_MS+40)
 }
-if(typeof animateSubtaskStrikeLines==="function")animateSubtaskStrikeLines()
 }
 function markSubtaskOpenAnimating(taskId){
 if(_subtaskOpenAnimClearTimer){
@@ -182,11 +181,12 @@ if(window._subtaskOpenAnimTaskId===taskId)window._subtaskOpenAnimTaskId=null;
 _subtaskOpenAnimClearTimer=null
 },SUBTASK_WRAP_OPEN_MS+180)
 }
-function setSubtaskWrapOpenState(wrap,isOpen){
+function setSubtaskWrapOpenState(wrap,isOpen,startHeightOverride){
 if(!wrap)return;
 cleanupSubtaskWrapMotion(wrap);
 const targetH=getSubtaskWrapTargetHeight(wrap);
-const startH=Math.max(0,Math.ceil(wrap.getBoundingClientRect().height||0));
+const measuredStartH=Math.max(0,Math.ceil(wrap.getBoundingClientRect().height||0));
+const startH=Number.isFinite(startHeightOverride)&&startHeightOverride>=0?Math.ceil(startHeightOverride):measuredStartH;
 wrap.style.overflow="hidden";
 wrap.style.willChange="height, opacity, transform";
 wrap.style.transition="height "+SUBTASK_WRAP_OPEN_MS+"ms "+SUBTASK_WRAP_EASE+", opacity 220ms ease, transform "+SUBTASK_WRAP_OPEN_MS+"ms "+SUBTASK_WRAP_EASE;
@@ -277,9 +277,14 @@ const html=taskExpandAreaHTML(t);
 if(!html){
 return true
 }
+const prevH=Math.max(0,Math.ceil(oldWrap.getBoundingClientRect().height||0));
+if(prevH>0){
+oldWrap.style.height=prevH+"px";
+oldWrap.style.overflow="hidden"
+}
 oldWrap.innerHTML=html;
 oldWrap.dataset.subtaskSig=subtaskSig;
-setSubtaskWrapOpenState(oldWrap,true);
+setSubtaskWrapOpenState(oldWrap,true,prevH);
 syncSubtaskExpandGeometry();
 return true
 }
@@ -326,14 +331,70 @@ function showMobileTaskSheet(id){const t=(T[sel]||[]).find(x=>x.id===id);if(!t)r
 function bindMobileTaskLongPress(){if(window._mlpBind)return;window._mlpBind=1;const list=document.getElementById("tList");if(!list)return;let lpT=null;function clr(){if(lpT){clearTimeout(lpT);lpT=null}}function mob(){return window.matchMedia("(max-width:640px)").matches}list.addEventListener("touchstart",function(e){if(!mob())return;const item=e.target.closest(".task-item");if(!item)return;if(e.target.closest(".task-expand-area,.drag-handle,.task-ck-slot,.ms-ck,.task-prio-pill,input,textarea,button,a[href]"))return;const id=+item.dataset.id;if(!id)return;clr();lpT=setTimeout(function(){lpT=null;if(navigator.vibrate)try{navigator.vibrate(10)}catch(_){}showMobileTaskSheet(id)},500)},{passive:true});list.addEventListener("touchmove",function(e){if(lpT)clr()},{passive:true});list.addEventListener("touchend",clr,{passive:true});list.addEventListener("touchcancel",clr,{passive:true})}
 bindMobileTaskLongPress();
 function batchDone(){flushPendingTogIfAny();pushUndo("全部完成");(T[sel]||[]).filter(t=>!t.frozen&&!t.archived).forEach(t=>{t.done=true;t.status="done"});rCal();rT();save();toast("✅ 全部已标记完成")}
+const _pendingSubtaskToggleKeys=new Set();
+function animateSubtaskWrapMorph(taskId,fromHeight){
+if(!(fromHeight>0))return;
+const item=document.querySelector('#tList .task-item[data-id="'+taskId+'"]');
+const wrap=item&&item.querySelector(".exp-bg-wrap");
+if(!wrap)return;
+const toHeight=Math.max(0,Math.ceil(wrap.getBoundingClientRect().height||0));
+if(Math.abs(toHeight-fromHeight)<2)return;
+wrap.style.overflow="hidden";
+wrap.style.willChange="height, opacity, transform";
+wrap.style.transition="height 260ms cubic-bezier(.22, 1, .36, 1), opacity 220ms ease, transform 260ms cubic-bezier(.22, 1, .36, 1)";
+wrap.style.height=fromHeight+"px";
+wrap.style.opacity="1";
+wrap.style.transform="translateY(0)";
+void wrap.offsetHeight;
+requestAnimationFrame(function(){wrap.style.height=Math.max(toHeight,1)+"px"});
+setTimeout(function(){
+wrap.style.height="auto";
+wrap.style.overflow="";
+wrap.style.willChange="";
+wrap.style.transition="";
+wrap.style.opacity="";
+wrap.style.transform=""
+},340)
+}
 function toggleSubtask(tid,sid){
 const t=(T[sel]||[]).find(x=>x.id===tid);
 if(!t)return;
 const s=(t.subtasks||[]).find(x=>x.id===sid);
 if(!s)return;
-s.done=!s.done;
+const key=String(tid)+":"+String(sid);
+if(_pendingSubtaskToggleKeys.has(key))return;
+const item=document.querySelector('#tList .task-item[data-id="'+tid+'"]');
+const wrap=item&&item.querySelector(".exp-bg-wrap");
+const row=item&&item.querySelector('.subtask-item[data-sub-id="'+sid+'"]');
+const fromHeight=wrap?Math.max(0,Math.ceil(wrap.getBoundingClientRect().height||0)):0;
+const nextDone=!s.done;
+const commit=function(){
+s.done=nextDone;
+syncToRule(t);
 rT();
+animateSubtaskWrapMorph(tid,fromHeight);
 save()
+};
+if(nextDone&&row&&typeof row.animate==="function"){
+_pendingSubtaskToggleKeys.add(key);
+let completed=false;
+const finish=function(){
+if(completed)return;
+completed=true;
+_pendingSubtaskToggleKeys.delete(key);
+commit()
+};
+try{
+const anim=row.animate([{opacity:1,transform:"translateY(0)"},{opacity:.08,transform:"translateY(-3px)"}],{duration:120,easing:"cubic-bezier(.22, 1, .36, 1)",fill:"forwards"});
+anim.onfinish=finish;
+anim.oncancel=finish;
+setTimeout(finish,170)
+}catch(e){
+finish()
+}
+return
+}
+commit()
 }
 function deleteSubtask(tid,sid){const t=(T[sel]||[]).find(x=>x.id===tid);if(!t)return;t.subtasks=(t.subtasks||[]).filter(x=>x.id!==sid);syncToRule(t);rT();save()}
 function startEditSub(tid,sid){editingSubId=sid;rT();setTimeout(()=>{const inp=document.getElementById("subEdit_"+sid);if(inp){inp.focus();inp.setSelectionRange(inp.value.length,inp.value.length)}},30)}
