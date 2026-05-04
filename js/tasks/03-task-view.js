@@ -70,6 +70,8 @@ const completedSubtaskCollapseStateById=new Map();
 const SUBTASK_COMPLETED_COLLAPSE_LS_KEY="tuole_subtasks_completed_collapsed_v1";
 const todoSubtaskCollapseStateById=new Map();
 const SUBTASK_TODO_COLLAPSE_LS_KEY="tuole_subtasks_todo_collapsed_v1";
+const TODO_SUBTASK_WRAP_OPEN_MS=260;
+const TODO_SUBTASK_WRAP_EASE="cubic-bezier(.22, 1, .36, 1)";
 let _subtaskCompletedCollapseHydrated=false;
 let _subtaskTodoCollapseHydrated=false;
 function hydrateCompletedSubtaskCollapseState(){
@@ -133,6 +135,112 @@ todoSubtaskCollapseStateById.forEach(function(v,k){obj[String(k)]=!!v});
 localStorage.setItem(SUBTASK_TODO_COLLAPSE_LS_KEY,JSON.stringify(obj));
 }catch(e){}
 }
+function getTodoSubtaskMeta(taskId){
+const t=(T[sel]||[]).find(function(x){return+x.id===+taskId});
+if(!t)return null;
+const subs=Array.isArray(t.subtasks)?t.subtasks:[];
+const subDone=subs.reduce(function(n,s){return n+(s&&s.done?1:0)},0);
+const subTodo=Math.max(0,subs.length-subDone);
+return{subTodo:subTodo,overflowCount:Math.max(0,subTodo-5)}
+}
+function updateTodoExpandHintState(hint,overflowCount,isOpen){
+if(!hint)return;
+hint.classList.toggle("is-open",!!isOpen);
+hint.setAttribute("aria-expanded",isOpen?"true":"false");
+const action=hint.querySelector(".subtask-todo-expand-hint-action");
+if(action)action.textContent=isOpen?"\u6536\u8d77\u989d\u5916 "+overflowCount+" \u4e2a":"\u5c55\u5f00\u5269\u4f59 "+overflowCount+" \u4e2a"
+}
+function cleanupTodoSubtaskWrapMotion(wrap){
+if(!wrap)return;
+if(wrap.__todoMotionTimer){clearTimeout(wrap.__todoMotionTimer);wrap.__todoMotionTimer=null}
+if(wrap.__todoMotionEndHandler){
+try{wrap.removeEventListener("transitionend",wrap.__todoMotionEndHandler)}catch(e){}
+wrap.__todoMotionEndHandler=null
+}
+}
+function syncTodoSubtaskGeometry(){
+if(typeof syncSubtaskGeometry!=="function")return;
+syncSubtaskGeometry();
+requestAnimationFrame(syncSubtaskGeometry);
+setTimeout(function(){if(typeof syncSubtaskGeometry==="function")syncSubtaskGeometry()},TODO_SUBTASK_WRAP_OPEN_MS+40)
+}
+function setTodoSubtaskWrapOpenState(wrap,isOpen){
+if(!wrap)return;
+cleanupTodoSubtaskWrapMotion(wrap);
+wrap.style.overflow="hidden";
+wrap.style.willChange="height, opacity, transform";
+wrap.style.transition="height "+TODO_SUBTASK_WRAP_OPEN_MS+"ms "+TODO_SUBTASK_WRAP_EASE+", opacity 220ms ease, transform "+TODO_SUBTASK_WRAP_OPEN_MS+"ms "+TODO_SUBTASK_WRAP_EASE;
+if(isOpen){
+wrap.classList.remove("is-collapsed");
+wrap.classList.add("is-opening");
+wrap.removeAttribute("aria-hidden");
+const targetH=Math.max(1,Math.ceil(wrap.scrollHeight||0));
+wrap.style.height="0px";
+wrap.style.opacity="0";
+wrap.style.transform="translateY(-4px)";
+void wrap.offsetHeight;
+requestAnimationFrame(function(){
+wrap.style.height=targetH+"px";
+wrap.style.opacity="1";
+wrap.style.transform="translateY(0)"
+});
+const endHandler=function(ev){
+if(ev.target!==wrap||ev.propertyName!=="height")return;
+cleanupTodoSubtaskWrapMotion(wrap);
+wrap.classList.remove("is-opening");
+wrap.style.height="auto";
+wrap.style.willChange="";
+wrap.style.overflow="";
+wrap.style.transform=""
+};
+wrap.__todoMotionEndHandler=endHandler;
+wrap.addEventListener("transitionend",endHandler);
+wrap.__todoMotionTimer=setTimeout(function(){
+cleanupTodoSubtaskWrapMotion(wrap);
+wrap.classList.remove("is-opening");
+wrap.style.height="auto";
+wrap.style.willChange="";
+wrap.style.overflow="";
+wrap.style.transform=""
+},TODO_SUBTASK_WRAP_OPEN_MS+140);
+return
+}
+const startH=Math.max(1,Math.ceil(wrap.getBoundingClientRect().height||wrap.scrollHeight||0));
+wrap.style.height=startH+"px";
+wrap.style.opacity="1";
+wrap.style.transform="translateY(0)";
+void wrap.offsetHeight;
+requestAnimationFrame(function(){
+wrap.style.height="0px";
+wrap.style.opacity="0";
+wrap.style.transform="translateY(-3px)"
+});
+const closeHandler=function(ev){
+if(ev.target!==wrap||ev.propertyName!=="height")return;
+cleanupTodoSubtaskWrapMotion(wrap);
+wrap.classList.remove("is-opening");
+wrap.classList.add("is-collapsed");
+wrap.setAttribute("aria-hidden","true");
+wrap.style.willChange="";
+wrap.style.overflow="";
+wrap.style.height="";
+wrap.style.opacity="";
+wrap.style.transform=""
+};
+wrap.__todoMotionEndHandler=closeHandler;
+wrap.addEventListener("transitionend",closeHandler);
+wrap.__todoMotionTimer=setTimeout(function(){
+cleanupTodoSubtaskWrapMotion(wrap);
+wrap.classList.remove("is-opening");
+wrap.classList.add("is-collapsed");
+wrap.setAttribute("aria-hidden","true");
+wrap.style.willChange="";
+wrap.style.overflow="";
+wrap.style.height="";
+wrap.style.opacity="";
+wrap.style.transform=""
+},TODO_SUBTASK_WRAP_OPEN_MS+140)
+}
 function shouldCollapseTodoSubtasks(taskId,todoCount){
 if(todoCount<=5)return false;
 const id=+taskId;
@@ -142,10 +250,20 @@ return true
 function toggleTodoSubtasksCollapse(taskId){
 if(taskId==null)return;
 const id=+taskId;
-const current=shouldCollapseTodoSubtasks(id,6);
-todoSubtaskCollapseStateById.set(id,!current);
+const meta=getTodoSubtaskMeta(id);
+if(!meta||meta.overflowCount<=0){rT();return}
+const current=shouldCollapseTodoSubtasks(id,meta.subTodo);
+const nextCollapsed=!current;
+todoSubtaskCollapseStateById.set(id,nextCollapsed);
 persistTodoSubtaskCollapseState();
-rT()
+const item=document.querySelector('#tList .task-item[data-id="'+id+'"]');
+const wrap=item&&item.querySelector(".subtask-todo-wrap");
+const hint=item&&item.querySelector(".subtask-todo-expand-hint");
+if(!wrap||!hint){rT();return}
+const nextOpen=!nextCollapsed;
+updateTodoExpandHintState(hint,meta.overflowCount,nextOpen);
+setTodoSubtaskWrapOpenState(wrap,nextOpen);
+syncTodoSubtaskGeometry()
 }
 function subtaskStrikeShouldAnimate(taskId,hasSubtasks,isAllDone){const key=String(taskId);if(!hasSubtasks){subtaskStrikeStateByTaskId.delete(key);return false}const prev=subtaskStrikeStateByTaskId.has(key)?subtaskStrikeStateByTaskId.get(key):null;const next=!!isAllDone;subtaskStrikeStateByTaskId.set(key,next);return prev===false&&next===true}
 function taskExpandAreaHTML(t){
@@ -174,9 +292,9 @@ const todoVisibleRows=hasOverflowTodoRows?subRowsTodo.slice(0,5):subRowsTodo;
 const todoOverflowRows=hasOverflowTodoRows?subRowsTodo.slice(5):[];
 const todoRowsHtml=todoVisibleRows.join("");
 const todoOverflowCount=todoOverflowRows.length;
-const todoOverflowHtml=hasOverflowTodoRows&&todoOverflowCount>0?`<div class="subtask-todo-wrap${collapseTodoRows?" is-collapsed":""}">${todoOverflowRows.join("")}</div>`:"";
+const todoOverflowHtml=hasOverflowTodoRows&&todoOverflowCount>0?`<div class="subtask-todo-wrap${collapseTodoRows?" is-collapsed":""}" aria-hidden="${collapseTodoRows?"true":"false"}">${todoOverflowRows.join("")}</div>`:"";
 const todoHintAction=collapseTodoRows?`\u5c55\u5f00\u5269\u4f59 ${todoOverflowCount} \u4e2a`:`\u6536\u8d77\u989d\u5916 ${todoOverflowCount} \u4e2a`;
-const todoExpandHint=hasOverflowTodoRows&&todoOverflowCount>0?`<button type="button" class="subtask-todo-expand-hint${collapseTodoRows?"":" is-open"}" onclick="event.stopPropagation();toggleTodoSubtasksCollapse(${t.id})"><span class="subtask-todo-expand-hint-arrow" aria-hidden="true"></span><span class="subtask-todo-expand-hint-main"><span class="subtask-todo-expand-hint-action">${todoHintAction}</span><span class="subtask-todo-expand-hint-sep" aria-hidden="true">|</span><span class="subtask-todo-expand-hint-target">\u672a\u5b8c\u6210\u4efb\u52a1</span></span></button>`:"";
+const todoExpandHint=hasOverflowTodoRows&&todoOverflowCount>0?`<button type="button" class="subtask-todo-expand-hint${collapseTodoRows?"":" is-open"}" aria-expanded="${collapseTodoRows?"false":"true"}" onclick="event.stopPropagation();toggleTodoSubtasksCollapse(${t.id})"><span class="subtask-todo-expand-hint-arrow" aria-hidden="true"></span><span class="subtask-todo-expand-hint-main"><span class="subtask-todo-expand-hint-action">${todoHintAction}</span><span class="subtask-todo-expand-hint-sep" aria-hidden="true">|</span><span class="subtask-todo-expand-hint-target">\u672a\u5b8c\u6210\u4efb\u52a1</span></span></button>`:"";
 const hasDoneRows=subD>0;
 const doneRowsHtml=hasDoneRows?`<div class="subtask-completed-wrap${collapseCompletedRows?" is-collapsed":""}">${subRowsDone.join("")}</div>`:"";
 const doneHiddenHint=hasDoneRows&&collapseCompletedRows?`<div class="subtask-completed-hidden-hint">\u5df2\u6709 ${subD} \u4e2a\u5b50\u4efb\u52a1\u5b8c\u6210\u540e\u88ab\u6298\u53e0</div>`:"";

@@ -1538,7 +1538,7 @@
 
 #taskMode .list-panel #tList .task-expand-area .exp-block.exp-block--sub {
   --subtask-row-space: 2px !important;
-  --subtask-ring-center-x: var(--subtask-guide-x, 21.5px) !important;
+  --subtask-ring-center-x: var(--subtask-ring-x, var(--subtask-guide-x, 21.5px)) !important;
   --subtask-guide-line: color-mix(in srgb, #94a3b8 42%, transparent) !important;
   --subtask-guide-line-soft: color-mix(in srgb, #94a3b8 28%, transparent) !important;
   --subtask-guide-line-faint: color-mix(in srgb, #94a3b8 14%, transparent) !important;
@@ -1699,13 +1699,15 @@
   content: none !important;
 }
 
-#taskMode .list-panel #tList .task-expand-area .subtask-item:hover {
+#taskMode .list-panel #tList .task-expand-area .subtask-item:hover,
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint:hover {
   background: color-mix(in srgb, var(--acc) 7%, #ffffff) !important;
   border-color: transparent !important;
   box-shadow: none !important;
 }
 
-#taskMode .list-panel #tList .task-expand-area .subtask-item:active {
+#taskMode .list-panel #tList .task-expand-area .subtask-item:active,
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint:active {
   box-shadow: none !important;
   transform: scale(.995) translateY(.5px) !important;
   background: var(--subtask-row-press-bg) !important;
@@ -1911,7 +1913,8 @@
   box-shadow: none !important;
 }
 
-.dark #taskMode .list-panel #tList .task-expand-area .subtask-item:hover {
+.dark #taskMode .list-panel #tList .task-expand-area .subtask-item:hover,
+.dark #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint:hover {
   background: color-mix(in srgb, #ffffff 8%, transparent) !important;
   border-color: transparent !important;
   box-shadow: none !important;

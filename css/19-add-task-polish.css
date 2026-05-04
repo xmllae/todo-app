@@ -1645,19 +1645,52 @@
 #taskMode .list-panel #tList .task-item.task-item--has-subtasks > .exp-bg-wrap.is-subtask-opening .subtask-item:nth-child(5),
 .app.app--with-global-nav #taskMode .list-panel #tList .task-item.task-item--has-subtasks > .exp-bg-wrap.is-subtask-opening .subtask-item:nth-child(5) { animation-delay: .14s; }
 
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint {
+  position: relative !important;
+  padding: var(--subtask-row-pad-y, 6px) 12px var(--subtask-row-pad-y, 6px) calc(var(--subtask-ring-center-x, 22px) - 8px) !important;
+  border-radius: 12px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transition: color .22s ease, background-color .22s ease, transform .22s ease !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint:hover,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint:hover {
+  background: color-mix(in srgb, var(--acc) 7%, #ffffff) !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.dark #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint:hover,
+.dark .app.app--with-global-nav #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint:hover {
+  background: color-mix(in srgb, #ffffff 8%, transparent) !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint:active,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint:active {
+  transform: translateY(1px) scale(.996) !important;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint:focus-visible,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint:focus-visible {
+  outline: 2px solid color-mix(in srgb, #2563eb 38%, transparent) !important;
+  outline-offset: 1px !important;
+}
+
 #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint-arrow,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint-arrow {
-  flex: 0 0 10px !important;
+  flex: 0 0 16px !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   align-self: center !important;
   position: relative !important;
-  width: 10px !important;
-  height: 14px !important;
-  min-width: 10px !important;
-  min-height: 14px !important;
-  margin-right: 5px !important;
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 16px !important;
+  min-height: 16px !important;
+  margin-right: 4px !important;
   color: currentColor !important;
   transform: rotate(0deg) !important;
   transform-origin: 50% 50% !important;
@@ -1686,7 +1719,7 @@
   border-top: 4px solid transparent !important;
   border-bottom: 4px solid transparent !important;
   border-left: 6px solid currentColor !important;
-  transform: translate(-42%, -50%) !important;
+  transform: translate(-50%, -50%) !important;
 }
 
 #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint.is-open .subtask-todo-expand-hint-arrow,
@@ -1703,6 +1736,27 @@
   line-height: 1.35 !important;
   letter-spacing: 0 !important;
 }
+
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-wrap.is-opening,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-expand-area .subtask-todo-wrap.is-opening {
+  animation: subtask-todo-wrap-reveal .26s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-wrap.is-opening .subtask-item,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-expand-area .subtask-todo-wrap.is-opening .subtask-item {
+  animation: subtask-todo-row-reveal .24s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-wrap.is-opening .subtask-item:nth-child(1),
+.app.app--with-global-nav #taskMode .list-panel #tList .task-expand-area .subtask-todo-wrap.is-opening .subtask-item:nth-child(1) { animation-delay: .02s; }
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-wrap.is-opening .subtask-item:nth-child(2),
+.app.app--with-global-nav #taskMode .list-panel #tList .task-expand-area .subtask-todo-wrap.is-opening .subtask-item:nth-child(2) { animation-delay: .05s; }
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-wrap.is-opening .subtask-item:nth-child(3),
+.app.app--with-global-nav #taskMode .list-panel #tList .task-expand-area .subtask-todo-wrap.is-opening .subtask-item:nth-child(3) { animation-delay: .08s; }
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-wrap.is-opening .subtask-item:nth-child(4),
+.app.app--with-global-nav #taskMode .list-panel #tList .task-expand-area .subtask-todo-wrap.is-opening .subtask-item:nth-child(4) { animation-delay: .11s; }
+#taskMode .list-panel #tList .task-expand-area .subtask-todo-wrap.is-opening .subtask-item:nth-child(5),
+.app.app--with-global-nav #taskMode .list-panel #tList .task-expand-area .subtask-todo-wrap.is-opening .subtask-item:nth-child(5) { animation-delay: .14s; }
 
 @keyframes subtask-row-reveal {
   from { opacity: 0; transform: translateY(-3px); }
@@ -1721,5 +1775,29 @@
     transform: translateY(0);
     clip-path: inset(0 0 0 0);
     -webkit-clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes subtask-todo-wrap-reveal {
+  from { opacity: 0; transform: translateY(-3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes subtask-todo-row-reveal {
+  from { opacity: 0; transform: translateY(-2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #taskMode .list-panel #tList .task-expand-area .subtask-todo-wrap,
+  #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint,
+  #taskMode .list-panel #tList .task-expand-area .subtask-todo-wrap.is-opening,
+  #taskMode .list-panel #tList .task-expand-area .subtask-todo-wrap.is-opening .subtask-item,
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-expand-area .subtask-todo-wrap,
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-expand-area .subtask-todo-expand-hint,
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-expand-area .subtask-todo-wrap.is-opening,
+  .app.app--with-global-nav #taskMode .list-panel #tList .task-expand-area .subtask-todo-wrap.is-opening .subtask-item {
+    transition: none !important;
+    animation: none !important;
   }
 }
