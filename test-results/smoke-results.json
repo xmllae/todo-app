@@ -1,0 +1,26 @@
+[
+  {
+    "name": "主路径_周视图高密折叠展开",
+    "passed": true,
+    "detail": "compact=1, foldMeta=1, day=周五 · 5月8日, before=1, after=6",
+    "screenshot": "D:\\todo-app-main\\test-results\\smoke-main.png",
+    "consoleErrors": [],
+    "pageErrors": []
+  },
+  {
+    "name": "边界路径_空周数据",
+    "passed": true,
+    "detail": "expand=0, empty=7",
+    "screenshot": "D:\\todo-app-main\\test-results\\smoke-edge.png",
+    "consoleErrors": [],
+    "pageErrors": []
+  },
+  {
+    "name": "回归路径_日视图与快速导航",
+    "passed": true,
+    "detail": "weekExists=0, taskRows=3, tomorrowRows=1, batchDisplay=flex",
+    "screenshot": "D:\\todo-app-main\\test-results\\smoke-regression.png",
+    "consoleErrors": [],
+    "pageErrors": []
+  }
+]
