@@ -3,6 +3,7 @@
   var gsnActiveQuick = "";
   var gsnActiveProject = "";
   var missingProjectPrefix = "__gsn_missing_project__";
+  var gsnStateKey = "tuole_gsn_state_v1";
 
   var projects = [
     { name: "工作", icon: "ph-briefcase", color: "#3b82f6", tags: ["工作", "work"] },
@@ -14,6 +15,64 @@
     window.__gsnQuickMode = gsnActiveQuick || "";
   }
 
+  function isValidDateKey(ds) {
+    return typeof ds === "string" && /^\d{4}-\d{2}-\d{2}$/.test(ds);
+  }
+
+  function readSavedState() {
+    try {
+      var raw = localStorage.getItem(gsnStateKey);
+      if (!raw) return null;
+      var obj = JSON.parse(raw);
+      return obj && typeof obj === "object" ? obj : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function persistState() {
+    try {
+      var ds = typeof sel !== "undefined" && isValidDateKey(sel) ? sel : todayKey();
+      localStorage.setItem(
+        gsnStateKey,
+        JSON.stringify({
+          quick: gsnActiveQuick || "",
+          ds: ds,
+        })
+      );
+    } catch (e) {}
+  }
+
+  function applySavedState(saved) {
+    if (!saved) return false;
+    var prevQuick = gsnActiveQuick || "";
+    var prevSel = typeof sel !== "undefined" ? String(sel || "") : "";
+    var nextQuick = typeof saved.quick === "string" ? saved.quick : "";
+    var nextSel = isValidDateKey(saved.ds) ? saved.ds : "";
+    var changed = false;
+    if (nextQuick !== prevQuick) {
+      gsnActiveQuick = nextQuick;
+      syncQuickModeState();
+      changed = true;
+    }
+    if (nextSel && nextSel !== prevSel) {
+      var d = parseDS(nextSel);
+      if (d && !isNaN(d.getTime())) {
+        sel = nextSel;
+        cY = d.getFullYear();
+        cM = d.getMonth();
+        changed = true;
+      }
+    }
+    return changed;
+  }
+
+  function restoreState() {
+    return applySavedState(readSavedState());
+  }
+
+  window.restoreGlobalSideNavViewState = restoreState;
+
   window.getGlobalSideNavQuickMode = function () {
     return gsnActiveQuick || "";
   };
@@ -21,6 +80,7 @@
   window.setGlobalSideNavQuickMode = function (mode, keepRefresh) {
     gsnActiveQuick = mode || "";
     syncQuickModeState();
+    persistState();
     if (!keepRefresh) scheduleRefresh();
   };
 
@@ -356,6 +416,7 @@
     resetTaskOverlays();
     gsnActiveQuick = quickName || "";
     syncQuickModeState();
+    persistState();
     if (typeof navigate === "function") navigate("/");
     if (typeof rCal === "function") rCal();
     if (typeof rAll === "function") rAll();
@@ -366,6 +427,7 @@
   function applyFilter(key) {
     gsnActiveQuick = "";
     syncQuickModeState();
+    persistState();
     gsnActiveProject = "";
     if (typeof FTag !== "undefined") FTag = "";
     if (typeof navigate === "function") navigate("/");
@@ -382,6 +444,7 @@
     if (!project) return;
     gsnActiveQuick = "";
     syncQuickModeState();
+    persistState();
     gsnActiveProject = project.name;
     if (typeof navigate === "function") navigate("/");
     if (project.isDefault) {
@@ -509,7 +572,28 @@
       var originalRT = rT;
       rT = function () {
         var result = originalRT.apply(this, arguments);
+        persistState();
         renderTaskListSupport();
+        scheduleRefresh();
+        return result;
+      };
+    }
+  }
+
+  function patchLoginRestore() {
+    if (typeof loginAs === "function" && !window._globalSideNavLoginRestore) {
+      window._globalSideNavLoginRestore = true;
+      var originalLoginAs = loginAs;
+      loginAs = function () {
+        var savedBefore = readSavedState();
+        var result = originalLoginAs.apply(this, arguments);
+        if (applySavedState(savedBefore)) {
+          if (typeof rCal === "function") rCal();
+          if (typeof rAll === "function") rAll();
+          else if (typeof rT === "function") rT();
+        } else {
+          persistState();
+        }
         scheduleRefresh();
         return result;
       };
@@ -535,11 +619,13 @@
   window.refreshGlobalSideNav = scheduleRefresh;
   syncQuickModeState();
   ensureSideNav();
+  patchLoginRestore();
   patchRender();
   patchModeSync();
   scheduleRefresh();
   document.addEventListener("DOMContentLoaded", function () {
     ensureSideNav();
+    patchLoginRestore();
     patchRender();
     patchModeSync();
     scheduleRefresh();
