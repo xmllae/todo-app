@@ -334,10 +334,9 @@ function syncMainTaskScrollbar() {
     const railHeight = Math.max(0, viewportHeight - railInset * 2);
     const canShowScrollbar = isScrollable && railHeight > 0;
 
-    const railLeft = refs.content.offsetLeft + refs.content.clientWidth - 13;
     refs.rail.style.top = (refs.content.offsetTop + railInset) + 'px';
-    refs.rail.style.left = railLeft + 'px';
-    refs.rail.style.right = 'auto';
+    refs.rail.style.left = 'auto';
+    refs.rail.style.right = '7px';
     refs.rail.style.height = railHeight + 'px';
     refs.rail.classList.toggle('is-visible', canShowScrollbar);
 

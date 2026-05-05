@@ -1308,11 +1308,15 @@
   position: relative;
 }
 
+#taskMode .list-panel .tasks,
+.app.app--with-global-nav #taskMode .list-panel .tasks,
 #taskMode .list-panel.task-main-scroll-host .tasks {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
 
+#taskMode .list-panel .tasks::-webkit-scrollbar,
+.app.app--with-global-nav #taskMode .list-panel .tasks::-webkit-scrollbar,
 #taskMode .list-panel.task-main-scroll-host .tasks::-webkit-scrollbar {
   width: 0;
   height: 0;
@@ -1974,6 +1978,7 @@
   display: grid;
   gap: 6px;
   padding: 2px 8px 10px;
+  scrollbar-gutter: stable;
   transition: max-height .24s ease, opacity .2s ease;
 }
 
