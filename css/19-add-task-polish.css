@@ -1945,6 +1945,11 @@
   color: var(--text2);
 }
 
+#taskMode .list-panel .tasks,
+.app.app--with-global-nav #taskMode .list-panel .tasks {
+  scrollbar-gutter: stable;
+}
+
 #taskMode .list-panel #tList .week-day-count,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count {
   grid-column: 2;
@@ -1981,6 +1986,7 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-list.is-scroll {
   max-height: 404px;
   overflow-y: auto;
+  scrollbar-gutter: stable;
   overscroll-behavior: contain;
   padding-right: 4px;
 }
