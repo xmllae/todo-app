@@ -433,107 +433,13 @@ btn.setAttribute("aria-hidden",show?"false":"true");
 btn.tabIndex=show?0:-1;
 btn.setAttribute("aria-label","\u56de\u5230\u4eca\u5929")
 }
-function setTaskDateTitle(ds){
-const el=document.getElementById("dTitle");
-if(!el)return;
-let mainEl=el.querySelector(".date-nav-date-main"),subEl=el.querySelector(".date-nav-date-sub");
-if(!mainEl||!subEl){
-el.innerHTML='<span class="date-nav-date-main"></span><span class="date-nav-date-sub"></span>';
-mainEl=el.querySelector(".date-nav-date-main");
-subEl=el.querySelector(".date-nav-date-sub")
-}
-mainEl.style.display="block";
-mainEl.style.fontFamily='-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif';
-mainEl.style.fontSize="24px";
-mainEl.style.fontWeight="700";
-mainEl.style.lineHeight="1";
-mainEl.style.letterSpacing="-0.025em";
-mainEl.style.color="#0f172a";
-mainEl.style.margin="0 0 4px 0";
-subEl.style.display="block";
-subEl.style.fontFamily='-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif';
-subEl.style.fontSize="13px";
-subEl.style.fontWeight="500";
-subEl.style.lineHeight="1.5";
-subEl.style.letterSpacing="0.025em";
-subEl.style.color="#64748b";
-subEl.style.margin="0";
-if(!el.dataset.animBound){
-el.dataset.animBound="1";
-el.addEventListener("animationend",function(){
-el.classList.remove("is-animating");
-el.classList.remove("is-animating-prev");
-el.classList.remove("is-animating-next")
-})
-}
-const text=String(disp(ds)||"");
-const splitIdx=text.lastIndexOf(" ");
-const dateText=splitIdx>0?text.slice(0,splitIdx):text;
-const weekText=splitIdx>0?text.slice(splitIdx+1):"";
-let dayOffset=99;
-try{
-const base=parseDS(fd(now)),target=parseDS(ds);
-if(base&&target){
-const baseDate=new Date(base.getFullYear(),base.getMonth(),base.getDate());
-const targetDate=new Date(target.getFullYear(),target.getMonth(),target.getDate());
-dayOffset=Math.round((targetDate-baseDate)/86400000)
-}
-}catch(e){}
-const abs=Math.abs(dayOffset);
-let relativeText="";
-if(dayOffset===0)relativeText="\u4eca\u5929";
-else if(dayOffset===1)relativeText="\u660e\u5929";
-else if(dayOffset===2)relativeText="\u540e\u5929";
-else if(dayOffset===-1)relativeText="\u6628\u5929";
-else if(dayOffset===-2)relativeText="\u524d\u5929";
-const useRangeOffset=abs>=3;
-const useRelative=!useRangeOffset&&!!relativeText;
-const rangeText=dayOffset>0?"\u672a\u6765"+abs+"\u5929":"\u8fc7\u53bb"+abs+"\u5929";
-const mainText=useRangeOffset?rangeText:(useRelative?relativeText:dateText);
-const subText=useRangeOffset?`${dateText}${weekText?" "+weekText:""}`:(useRelative?`${dateText}${weekText?" "+weekText:""}`:weekText);
-const modeKey=useRangeOffset?"range":(useRelative?"r":"d");
-const renderKey=`${ds}|${modeKey}|${mainText}|${subText}`;
-const prevKey=el.dataset.renderKey||"";
-const prevDs=el.dataset.lastDs||"";
-const shouldUpdate=prevKey!==renderKey;
-if(shouldUpdate){
-mainEl.textContent=mainText;
-subEl.textContent=subText;
-el.classList.toggle("is-range-offset",useRangeOffset);
-el.classList.toggle("is-relative",useRelative);
-el.classList.toggle("is-plain-date",!useRangeOffset&&!useRelative);
-subEl.classList.toggle("is-empty",!subText);
-const shouldAnimate=!!prevDs&&prevDs!==ds;
-el.classList.remove("is-animating");
-el.classList.remove("is-animating-prev");
-el.classList.remove("is-animating-next");
-if(shouldAnimate){
-let dirCls="";
-try{
-const prevDate=parseDS(prevDs),nextDate=parseDS(ds);
-if(prevDate&&nextDate){
-const prevTime=new Date(prevDate.getFullYear(),prevDate.getMonth(),prevDate.getDate()).getTime();
-const nextTime=new Date(nextDate.getFullYear(),nextDate.getMonth(),nextDate.getDate()).getTime();
-if(nextTime>prevTime)dirCls="is-animating-next";
-else if(nextTime<prevTime)dirCls="is-animating-prev"
-}
-}catch(e){}
-if(dirCls)el.classList.add(dirCls);
-void el.offsetWidth;
-el.classList.add("is-animating")
-}
-el.dataset.renderKey=renderKey;
-el.dataset.lastDs=ds
-}else{
-// Keep stable when route changes but date content does not.
-el.classList.remove("is-animating");
-el.classList.remove("is-animating-prev");
-el.classList.remove("is-animating-next");
-el.classList.toggle("is-range-offset",useRangeOffset);
-el.classList.toggle("is-relative",useRelative);
-el.classList.toggle("is-plain-date",!useRangeOffset&&!useRelative);
-if(subEl.classList.contains("is-empty")===!!subText)subEl.classList.toggle("is-empty",!subText)
-}
-setTaskBackTodayBtn(ds)
-}
-function rT(){if(_togPendingDoneId!=null){flushPendingTogIfAny();return}hydrateCompletedSubtaskCollapseState();hydrateTodoSubtaskCollapseState();hydrateSortModes();generateRecurring(sel);checkUnfreeze();const list=document.getElementById("tList");setTaskDateTitle(sel);updateHeaderContext();const dt=T[sel]||[];const nonArchived=dt.filter(t=>!t.archived);const archivedTasks=dt.filter(t=>t.archived);const pn=nonArchived.filter(t=>!t.done&&!t.frozen).length;const dn=nonArchived.filter(t=>t.done).length;const archDn=archivedTasks.length;const tot=nonArchived.length;document.getElementById("batchBar").style.display="flex";updateSortUI();renderOverdue();let fl=nonArchived.filter(t=>passesFMulti(t));if(FTag)fl=fl.filter(t=>(t.tags||[]).includes(FTag));let archVisible=[];if(showArchivedInList&&archivedTasks.length>0){let af=archivedTasks;if(FTag)af=af.filter(t=>(t.tags||[]).includes(FTag));archVisible=af}const totalForProg=tot+archDn;const doneForProg=dn+archDn;const pct=totalForProg>0?Math.round(doneForProg/totalForProg*100):0;let displayList=fl;let activeSortMode="";if(sortStates&&sortStates[sel])activeSortMode=normalizeSortMode(sortStates[sel]);else if(autoSortEnabled)activeSortMode=normalizeSortMode(defaultSortMode||lastSort||"created");if(activeSortMode&&displayList.length>1){displayList=sortDisplayList([...displayList],activeSortMode)}if(!displayList.length&&!archVisible.length){const isZero=tot===0&&archDn===0;list.innerHTML=`<div class="empty"><div class="em">🎉</div><p class="empty-main">${isZero?"今天任务已全部完成":"没有匹配的任务"}</p><p class="empty-sub">${isZero?"休息一下，或添加新任务":"试试其他筛选条件"}</p></div>`;renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,sel);focusTimerAfterRender();return}let h=displayList.map(t=>taskHTML(t,false)).join("");if(archVisible.length>0)h+=archVisible.map(t=>taskHTML(t,true)).join("");list.innerHTML=h;ensureSubtaskGeometryResizeSync();syncSubtaskGeometry();requestAnimationFrame(syncSubtaskGeometry);renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,sel);focusTimerAfterRender()}
+function getTaskQuickMode(){return typeof getGlobalSideNavQuickMode==="function"?getGlobalSideNavQuickMode():(window.__gsnQuickMode||"")}
+function getTaskWeekMeta(ds){const base=parseDS(ds),start=new Date(base),diff=start.getDay()===0?-6:1-start.getDay();start.setDate(start.getDate()+diff);start.setHours(0,0,0,0);const end=new Date(start);end.setDate(end.getDate()+6);const days=[];for(let i=0;i<7;i++){const d=new Date(start);d.setDate(start.getDate()+i);days.push(fd(d))}return{start:start,end:end,days:days}}
+function getTaskWeekRangeText(meta){const sm=meta.start.getMonth()+1,sd=meta.start.getDate(),em=meta.end.getMonth()+1,ed=meta.end.getDate();return sm===em?sm+"月"+sd+"日 - "+ed+"日":sm+"月"+sd+"日 - "+em+"月"+ed+"日"}
+function setTaskDashScope(scope,metaText){const titleEl=document.querySelector(".dash-overview .dash-hd-tit"),subEl=document.querySelector(".dash-overview .dash-ov-count-sub"),shortEl=document.getElementById("dashShortDate"),root=document.getElementById("taskDashCol");if(scope==="week"){if(titleEl)titleEl.textContent="本周总览";if(subEl)subEl.textContent="周任务已完成";if(shortEl&&metaText)shortEl.textContent=metaText;if(root)root.setAttribute("aria-label","本周概览");return}if(titleEl)titleEl.textContent="今日总览";if(subEl)subEl.textContent="任务已完成";if(root)root.setAttribute("aria-label","今日概览")}
+const weekDayExpandState=new Set();
+function isWeekDayExpanded(ds){return weekDayExpandState.has(ds)}
+function toggleWeekDayExpand(ds){if(weekDayExpandState.has(ds))weekDayExpandState.delete(ds);else weekDayExpandState.add(ds);if(typeof rT==="function")rT()}
+function renderWeekTaskScene(list,baseDs){const meta=getTaskWeekMeta(baseDs),rangeText=getTaskWeekRangeText(meta),todayDs=fd(now),weekAllTasks=[],weekFilteredTasks=[];let doneAll=0,pendingAll=0;const weekNames=["一","二","三","四","五","六","日"];const cards=meta.days.map(function(ds,idx){const raw=(T[ds]||[]).filter(function(t){return!t.archived});raw.forEach(function(t){weekAllTasks.push(t)});const dayDone=raw.filter(function(t){return t.done}).length,dayPending=raw.filter(function(t){return!t.done&&!t.frozen}).length;doneAll+=dayDone;pendingAll+=dayPending;let dayRows=raw.filter(function(t){return passesFMulti(t)});if(FTag)dayRows=dayRows.filter(function(t){return(t.tags||[]).includes(FTag)});dayRows.forEach(function(t){weekFilteredTasks.push(t)});dayRows.sort(function(a,b){if(a.done!==b.done)return a.done?1:-1;if(!!a.frozen!==!!b.frozen)return a.frozen?1:-1;const ta=String(a.planTime||""),tb=String(b.planTime||"");if(ta&&tb&&ta!==tb)return ta.localeCompare(tb);if(ta&&!tb)return-1;if(!ta&&tb)return 1;return(b.created||0)-(a.created||0)});const d=parseDS(ds),md=d.getMonth()+1+"月"+d.getDate()+"日",statusTxt=dayPending?"待办 "+dayPending:raw.length?"已全部完成":"无任务",cls="week-day-card"+(ds===todayDs?" is-today":"")+(ds===baseDs?" is-focus":"")+(dayRows.length?"":" is-empty"),previewMax=4,isExpandable=dayRows.length>previewMax,isExpanded=isExpandable&&isWeekDayExpanded(ds),rowsForRender=isExpanded?dayRows:dayRows.slice(0,previewMax),hiddenCount=Math.max(0,dayRows.length-previewMax),listCls="week-task-list"+(isExpanded?" is-expanded":"")+(isExpanded&&dayRows.length>10?" is-scroll":"");const rowsHtml=rowsForRender.map(function(t){const doneCls=t.done?" is-done":"",highCls=t.priority==="high"?" is-high":"",frozenCls=t.frozen?" is-frozen":"",plan=t.planTime?(typeof formatPlanTimeDisp==="function"?formatPlanTimeDisp(t.planTime):t.planTime):"",dn=parseInt(t.duration,10),dur=Number.isFinite(dn)&&dn>0?dn+"分":"",metaBits=[];if(plan)metaBits.push(esc(plan));if(dur)metaBits.push(esc(dur));let badge="";if(t.frozen)badge='<span class="week-task-badge week-task-badge--frozen">冻结</span>';else if(t.priority==="high")badge='<span class="week-task-badge">高优先</span>';else if(t.done)badge='<span class="week-task-badge week-task-badge--done">完成</span>';return'<button type="button" class="week-task-item'+doneCls+highCls+frozenCls+'" onclick="pick(\''+ds+'\')" title="打开当日详情"><span class="week-task-marker" aria-hidden="true"></span><span class="week-task-main"><span class="week-task-title">'+esc(t.text)+'</span><span class="week-task-meta'+(metaBits.length?"":" is-empty")+'">'+(metaBits.length?metaBits.join(" · "):"点击进入当日编辑")+"</span></span>"+badge+"</button>"}).join("");const expandBtn=isExpandable?'<button type="button" class="week-task-expand'+(isExpanded?" is-open":"")+'" onclick="event.stopPropagation();toggleWeekDayExpand(\''+ds+'\')"><span>'+(!isExpanded?"展开 "+hiddenCount+" 项":"收起列表")+'</span><span class="week-task-expand-chevron" aria-hidden="true"></span></button>':"";const taskBody=rowsHtml||'<div class="week-day-empty">暂无任务</div>';return'<section class="'+cls+'" style="--week-delay:'+(idx*24)+'ms"><button type="button" class="week-day-head" onclick="pick(\''+ds+'\')"><span class="week-day-name">周'+weekNames[idx]+" · "+md+'</span><span class="week-day-meta">'+statusTxt+'</span><span class="week-day-count">'+dayRows.length+'</span></button><div class="'+listCls+'">'+taskBody+'</div>'+expandBtn+'</section>'}).join("");const totalAll=weekAllTasks.length,pct=totalAll?Math.round(doneAll/totalAll*100):0;list.innerHTML='<div class="week-view"><div class="week-view-head"><div class="week-view-eyebrow">轻量周视图</div><div class="week-view-title-row"><h4 class="week-view-title">本周任务</h4><span class="week-view-range">'+rangeText+'</span></div><div class="week-view-stats"><span class="week-view-stat"><b>'+totalAll+'</b>项</span><span class="week-view-stat"><b>'+pendingAll+'</b>待办</span><span class="week-view-stat"><b>'+doneAll+'</b>完成</span><span class="week-view-stat"><b>'+pct+'%</b>达成率</span></div></div><div class="week-day-grid">'+cards+'</div></div>';return{allTasks:weekAllTasks,filteredTasks:weekFilteredTasks,totalAll:totalAll,doneAll:doneAll,rangeText:rangeText}}
+function setTaskDateTitle(ds){const el=document.getElementById("dTitle");if(!el)return;let mainEl=el.querySelector(".date-nav-date-main"),subEl=el.querySelector(".date-nav-date-sub");if(!mainEl||!subEl){el.innerHTML='<span class="date-nav-date-main"></span><span class="date-nav-date-sub"></span>';mainEl=el.querySelector(".date-nav-date-main");subEl=el.querySelector(".date-nav-date-sub")}mainEl.style.display="block";mainEl.style.fontFamily='-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif';mainEl.style.fontSize="24px";mainEl.style.fontWeight="700";mainEl.style.lineHeight="1";mainEl.style.letterSpacing="-0.025em";mainEl.style.color="#0f172a";mainEl.style.margin="0 0 4px 0";subEl.style.display="block";subEl.style.fontFamily='-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif';subEl.style.fontSize="13px";subEl.style.fontWeight="500";subEl.style.lineHeight="1.5";subEl.style.letterSpacing="0.025em";subEl.style.color="#64748b";subEl.style.margin="0";if(!el.dataset.animBound){el.dataset.animBound="1";el.addEventListener("animationend",function(){el.classList.remove("is-animating");el.classList.remove("is-animating-prev");el.classList.remove("is-animating-next")})}const isWeekScope=getTaskQuickMode()==="week";let useRangeOffset=false,useRelative=false,mainText="",subText="",modeKey="d";if(isWeekScope){mainText="本周";subText=getTaskWeekRangeText(getTaskWeekMeta(ds));modeKey="week"}else{const text=String(disp(ds)||""),splitIdx=text.lastIndexOf(" "),dateText=splitIdx>0?text.slice(0,splitIdx):text,weekText=splitIdx>0?text.slice(splitIdx+1):"";let dayOffset=99;try{const base=parseDS(fd(now)),target=parseDS(ds);if(base&&target){const baseDate=new Date(base.getFullYear(),base.getMonth(),base.getDate()),targetDate=new Date(target.getFullYear(),target.getMonth(),target.getDate());dayOffset=Math.round((targetDate-baseDate)/86400000)}}catch(e){}const abs=Math.abs(dayOffset);let relativeText="";if(dayOffset===0)relativeText="今天";else if(dayOffset===1)relativeText="明天";else if(dayOffset===2)relativeText="后天";else if(dayOffset===-1)relativeText="昨天";else if(dayOffset===-2)relativeText="前天";useRangeOffset=abs>=3;useRelative=!useRangeOffset&&!!relativeText;const rangeText=dayOffset>0?"未来"+abs+"天":"过去"+abs+"天";mainText=useRangeOffset?rangeText:(useRelative?relativeText:dateText);subText=useRangeOffset?dateText+(weekText?" "+weekText:""):(useRelative?dateText+(weekText?" "+weekText:""):weekText);modeKey=useRangeOffset?"range":(useRelative?"r":"d")}const renderKey=ds+"|"+modeKey+"|"+mainText+"|"+subText,prevKey=el.dataset.renderKey||"",prevDs=el.dataset.lastDs||"",shouldUpdate=prevKey!==renderKey;if(shouldUpdate){mainEl.textContent=mainText;subEl.textContent=subText;el.classList.toggle("is-week-scope",isWeekScope);el.classList.toggle("is-range-offset",!isWeekScope&&useRangeOffset);el.classList.toggle("is-relative",!isWeekScope&&useRelative);el.classList.toggle("is-plain-date",!isWeekScope&&!useRangeOffset&&!useRelative);subEl.classList.toggle("is-empty",!subText);const shouldAnimate=!!prevDs&&prevDs!==ds;el.classList.remove("is-animating");el.classList.remove("is-animating-prev");el.classList.remove("is-animating-next");if(shouldAnimate){let dirCls="";try{const prevDate=parseDS(prevDs),nextDate=parseDS(ds);if(prevDate&&nextDate){const prevTime=new Date(prevDate.getFullYear(),prevDate.getMonth(),prevDate.getDate()).getTime(),nextTime=new Date(nextDate.getFullYear(),nextDate.getMonth(),nextDate.getDate()).getTime();if(nextTime>prevTime)dirCls="is-animating-next";else if(nextTime<prevTime)dirCls="is-animating-prev"}}catch(e){}if(dirCls)el.classList.add(dirCls);void el.offsetWidth;el.classList.add("is-animating")}el.dataset.renderKey=renderKey;el.dataset.lastDs=ds}else{el.classList.remove("is-animating");el.classList.remove("is-animating-prev");el.classList.remove("is-animating-next");el.classList.toggle("is-week-scope",isWeekScope);el.classList.toggle("is-range-offset",!isWeekScope&&useRangeOffset);el.classList.toggle("is-relative",!isWeekScope&&useRelative);el.classList.toggle("is-plain-date",!isWeekScope&&!useRangeOffset&&!useRelative);if(subEl.classList.contains("is-empty")===!!subText)subEl.classList.toggle("is-empty",!subText)}setTaskBackTodayBtn(ds)}
+function rT(){if(_togPendingDoneId!=null){flushPendingTogIfAny();return}hydrateCompletedSubtaskCollapseState();hydrateTodoSubtaskCollapseState();hydrateSortModes();const list=document.getElementById("tList");if(!list)return;const weekMode=getTaskQuickMode()==="week";if(weekMode){const wm=getTaskWeekMeta(sel);wm.days.forEach(function(ds){generateRecurring(ds)})}else generateRecurring(sel);checkUnfreeze();setTaskDateTitle(sel);updateHeaderContext();const batchBar=document.getElementById("batchBar");if(batchBar)batchBar.style.display=weekMode?"none":"flex";updateSortUI();if(weekMode){const overdueArea=document.getElementById("overdueArea");if(overdueArea)overdueArea.innerHTML="";const wk=renderWeekTaskScene(list,sel),pct=wk.totalAll>0?Math.round(wk.doneAll/wk.totalAll*100):0;renderTaskDash(pct,wk.totalAll,wk.doneAll,wk.allTasks,wk.filteredTasks,sel);setTaskDashScope("week",wk.rangeText);focusTimerAfterRender();return}renderOverdue();const dt=T[sel]||[],nonArchived=dt.filter(t=>!t.archived),archivedTasks=dt.filter(t=>t.archived),dn=nonArchived.filter(t=>t.done).length,archDn=archivedTasks.length,tot=nonArchived.length;let fl=nonArchived.filter(t=>passesFMulti(t));if(FTag)fl=fl.filter(t=>(t.tags||[]).includes(FTag));let archVisible=[];if(showArchivedInList&&archivedTasks.length>0){let af=archivedTasks;if(FTag)af=af.filter(t=>(t.tags||[]).includes(FTag));archVisible=af}const totalForProg=tot+archDn,doneForProg=dn+archDn,pct=totalForProg>0?Math.round(doneForProg/totalForProg*100):0;let displayList=fl,activeSortMode="";if(sortStates&&sortStates[sel])activeSortMode=normalizeSortMode(sortStates[sel]);else if(autoSortEnabled)activeSortMode=normalizeSortMode(defaultSortMode||lastSort||"created");if(activeSortMode&&displayList.length>1)displayList=sortDisplayList([...displayList],activeSortMode);if(!displayList.length&&!archVisible.length){const isZero=tot===0&&archDn===0;list.innerHTML=`<div class="empty"><div class="em">\u2705</div><p class="empty-main">${isZero?"今天任务已全部完成":"没有匹配的任务"}</p><p class="empty-sub">${isZero?"休息一下，或添加新任务":"试试其他筛选条件"}</p></div>`;renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,sel);setTaskDashScope("day","");focusTimerAfterRender();return}let h=displayList.map(t=>taskHTML(t,false)).join("");if(archVisible.length>0)h+=archVisible.map(t=>taskHTML(t,true)).join("");list.innerHTML=h;ensureSubtaskGeometryResizeSync();syncSubtaskGeometry();requestAnimationFrame(syncSubtaskGeometry);renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,sel);setTaskDashScope("day","");focusTimerAfterRender()}

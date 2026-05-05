@@ -10,6 +10,20 @@
     { name: "生活", icon: "ph-house-line", color: "#22c55e", tags: ["生活", "个人", "personal"] },
   ];
 
+  function syncQuickModeState() {
+    window.__gsnQuickMode = gsnActiveQuick || "";
+  }
+
+  window.getGlobalSideNavQuickMode = function () {
+    return gsnActiveQuick || "";
+  };
+
+  window.setGlobalSideNavQuickMode = function (mode, keepRefresh) {
+    gsnActiveQuick = mode || "";
+    syncQuickModeState();
+    if (!keepRefresh) scheduleRefresh();
+  };
+
   function escapeHtml(value) {
     var div = document.createElement("div");
     div.textContent = value == null ? "" : String(value);
@@ -341,6 +355,7 @@
     FMulti = new Set(["pending"]);
     resetTaskOverlays();
     gsnActiveQuick = quickName || "";
+    syncQuickModeState();
     if (typeof navigate === "function") navigate("/");
     if (typeof rCal === "function") rCal();
     if (typeof rAll === "function") rAll();
@@ -350,6 +365,7 @@
 
   function applyFilter(key) {
     gsnActiveQuick = "";
+    syncQuickModeState();
     gsnActiveProject = "";
     if (typeof FTag !== "undefined") FTag = "";
     if (typeof navigate === "function") navigate("/");
@@ -365,6 +381,7 @@
     var project = projects[Number(index)];
     if (!project) return;
     gsnActiveQuick = "";
+    syncQuickModeState();
     gsnActiveProject = project.name;
     if (typeof navigate === "function") navigate("/");
     if (project.isDefault) {
@@ -516,6 +533,7 @@
   }
 
   window.refreshGlobalSideNav = scheduleRefresh;
+  syncQuickModeState();
   ensureSideNav();
   patchRender();
   patchModeSync();
