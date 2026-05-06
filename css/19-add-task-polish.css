@@ -2815,12 +2815,6 @@
   cursor: pointer;
 }
 
-#taskMode .list-panel #tList .week-day-card.is-focus .week-day-count,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-focus .week-day-count {
-  color: color-mix(in srgb, var(--week-accent) 78%, var(--week-ink));
-  background: var(--week-accent-soft);
-}
-
 #taskMode .list-panel #tList .week-task-list,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-list {
   display: grid;
