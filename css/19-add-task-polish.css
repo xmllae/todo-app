@@ -2869,19 +2869,19 @@
   width: 7px;
   height: 7px;
   background: color-mix(in srgb, var(--week-muted) 62%, transparent);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--week-muted) 10%, transparent);
+  box-shadow: none;
 }
 
 #taskMode .list-panel #tList .week-task-item.is-high .week-task-marker,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-item.is-high .week-task-marker {
   background: #fb7185;
-  box-shadow: 0 0 0 4px rgba(251, 113, 133, .12);
+  box-shadow: none;
 }
 
 #taskMode .list-panel #tList .week-task-item.is-done .week-task-marker,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-item.is-done .week-task-marker {
   background: #22c55e;
-  box-shadow: 0 0 0 4px rgba(34, 197, 94, .12);
+  box-shadow: none;
 }
 
 #taskMode .list-panel #tList .week-task-main,
