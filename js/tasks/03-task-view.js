@@ -517,15 +517,31 @@ function setWeekDayExpanded(ds,isOpen){
     taskList.classList.toggle("is-scroll",isOpen&&total>10)
   }
   if(btn){
-    const hiddenCount=btn.getAttribute("data-hidden-count")||"0",label=btn.querySelector(".week-task-expand-label")||btn.querySelector("span");
+    const hiddenCount=btn.getAttribute("data-hidden-count")||"0",totalCount=btn.getAttribute("data-total-count")||card.getAttribute("data-week-task-count")||"0",label=btn.querySelector(".week-task-expand-label")||btn.querySelector("span"),tip=isOpen?"\u6536\u8d77\u5217\u8868":"\u5c55\u5f00 "+hiddenCount+" \u9879";
     btn.classList.toggle("is-open",isOpen);
     btn.setAttribute("aria-expanded",isOpen?"true":"false");
-    if(label)label.textContent=isOpen?"\u6536\u8d77\u5217\u8868":"\u5c55\u5f00 "+hiddenCount+" \u9879"
+    btn.setAttribute("aria-label",tip);
+    btn.setAttribute("title",tip);
+    if(label)label.textContent=totalCount+" \u9879"
   }
 }
 function toggleWeekDayExpand(ds){
   setWeekDayExpanded(ds,!isWeekDayExpanded(ds));
   syncWeekHeaderAction(true)
+}
+function toggleWeekTaskDone(ds,id){
+  const task=(T[ds]||[]).find(function(x){return x.id===id});
+  if(!task)return;
+  if(typeof pushUndo==="function")pushUndo("\u5207\u6362\u5b8c\u6210");
+  task.done=!task.done;
+  task.status=task.done?"done":"todo";
+  if(!task.done)task.archived=false;
+  try{if(typeof playCheckSound==="function")playCheckSound(task.done)}catch(e){}
+  rCal();
+  rT();
+  if(typeof syncTaskDetailPanelIfNeeded==="function")syncTaskDetailPanelIfNeeded();
+  if(typeof rKanban==="function")rKanban();
+  save()
 }
 function getWeekExpandableDays(baseDs){
   return getTaskWeekMeta(baseDs).days.filter(function(ds){
@@ -632,13 +648,13 @@ function renderWeekTaskScene(list,baseDs){
       let badge="";
       if(t.frozen)badge='<span class="week-task-badge week-task-badge--frozen">\u51bb\u7ed3</span>';
       else if(t.done)badge='<span class="week-task-badge week-task-badge--done">\u5b8c\u6210</span>';
-      return'<button type="button" class="week-task-item'+doneCls+highCls+frozenCls+'" onclick="pick(\''+ds+'\')" title="\u6253\u5f00\u5f53\u65e5\u8be6\u60c5"><span class="week-task-marker" aria-hidden="true"></span><span class="week-task-main"><span class="week-task-title">'+esc(t.text)+'</span><span class="week-task-meta">'+metaHtml+"</span></span>"+badge+"</button>"
+      return'<div class="week-task-item'+doneCls+highCls+frozenCls+'" title="\u6253\u5f00\u5f53\u65e5\u8be6\u60c5"><button type="button" class="week-task-marker" aria-label="'+(t.done?"\u6807\u8bb0\u4e3a\u672a\u5b8c\u6210":"\u6807\u8bb0\u4e3a\u5b8c\u6210")+'" aria-pressed="'+(t.done?"true":"false")+'" onclick="event.stopPropagation();toggleWeekTaskDone(\''+ds+'\','+t.id+')"></button><button type="button" class="week-task-open" onclick="pick(\''+ds+'\')"><span class="week-task-main"><span class="week-task-title">'+esc(t.text)+'</span><span class="week-task-meta">'+metaHtml+"</span></span>"+badge+"</button></div>"
     };
     const extraHtml=isExpandable?'<div class="week-task-extra'+(isExpanded?" is-open":"")+'" data-week-extra-ds="'+ds+'" aria-hidden="'+(isExpanded?"false":"true")+'"'+(isExpanded?"":" inert")+'><div class="week-task-extra-inner">'+extraRows.map(renderWeekRow).join("")+'</div></div>':"";
     const rowsHtml=previewRows.map(renderWeekRow).join("")+extraHtml;
-    const expandBtn=isExpandable?'<button type="button" class="week-task-expand'+(isExpanded?" is-open":"")+'" data-hidden-count="'+hiddenCount+'" aria-expanded="'+(isExpanded?"true":"false")+'" onclick="event.stopPropagation();toggleWeekDayExpand(\''+ds+'\')"><span class="week-task-expand-label">'+(!isExpanded?"\u5c55\u5f00 "+hiddenCount+" \u9879":"\u6536\u8d77\u5217\u8868")+'</span><span class="week-task-expand-chevron" aria-hidden="true"></span></button>':"";
+    const countHtml=isExpandable?'<button type="button" class="week-day-count week-task-expand'+(isExpanded?" is-open":"")+'" data-hidden-count="'+hiddenCount+'" data-total-count="'+dayRows.length+'" aria-expanded="'+(isExpanded?"true":"false")+'" aria-label="'+(isExpanded?"\u6536\u8d77\u5217\u8868":"\u5c55\u5f00 "+hiddenCount+" \u9879")+'" title="'+(isExpanded?"\u6536\u8d77\u5217\u8868":"\u5c55\u5f00 "+hiddenCount+" \u9879")+'" onclick="event.stopPropagation();toggleWeekDayExpand(\''+ds+'\')"><span class="week-task-expand-label">'+dayRows.length+' \u9879</span><span class="week-task-expand-chevron" aria-hidden="true"></span></button>':'<span class="week-day-count">'+dayRows.length+' \u9879</span>';
     const taskBody=rowsHtml||'<button type="button" class="week-day-empty" onclick="pick(\''+ds+'\')" title="\u6253\u5f00\u5f53\u65e5\u8be6\u60c5"><span class="week-day-empty-dot" aria-hidden="true"></span><span>\u6682\u65e0\u4efb\u52a1</span></button>';
-    return{html:'<section class="'+cls+'" data-week-ds="'+ds+'" data-week-task-count="'+dayRows.length+'" style="--week-delay:'+(idx*24)+'ms"><button type="button" class="week-day-head" onclick="pick(\''+ds+'\')" aria-label="\u6253\u5f00\u5468'+weekNames[idx]+' '+md+'"><span class="week-day-name"><span class="week-day-week">\u5468'+weekNames[idx]+'</span><span class="week-day-sep" aria-hidden="true">\u00b7</span><span class="week-day-date">'+md+'</span></span><span class="week-day-meta">'+statusTxt+'</span><span class="week-day-count">'+dayRows.length+' \u9879</span></button><div class="'+listCls+'">'+taskBody+'</div>'+expandBtn+'</section>'}
+    return{html:'<section class="'+cls+'" data-week-ds="'+ds+'" data-week-task-count="'+dayRows.length+'" style="--week-delay:'+(idx*24)+'ms"><div class="week-day-head"><button type="button" class="week-day-title-btn" onclick="pick(\''+ds+'\')" aria-label="\u6253\u5f00\u5468'+weekNames[idx]+' '+md+'"><span class="week-day-name"><span class="week-day-week">\u5468'+weekNames[idx]+'</span><span class="week-day-sep" aria-hidden="true">\u00b7</span><span class="week-day-date">'+md+'</span></span><span class="week-day-meta">'+statusTxt+'</span></button>'+countHtml+'</div><div class="'+listCls+'">'+taskBody+'</div></section>'}
   });
   const totalAll=weekAllTasks.length,pct=totalAll?Math.round(doneAll/totalAll*100):0;
   const gridInner=cardList.map(function(item){return item.html}).join("");
