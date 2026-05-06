@@ -472,7 +472,7 @@ function renderWeekTaskScene(list,baseDs){
       if(!ta&&tb)return 1;
       return(b.created||0)-(a.created||0)
     });
-    const d=parseDS(ds),md=d.getMonth()+1+"\u6708"+d.getDate()+"\u65e5",statusTxt=dayPending?"":raw.length?"\u5df2\u5168\u90e8\u5b8c\u6210":"\u65e0\u4efb\u52a1",cls="week-day-card"+(ds===todayDs?" is-today":"")+(ds===baseDs?" is-focus":"")+(dayRows.length?"":" is-empty"),previewMax=4,isExpandable=dayRows.length>previewMax,isExpanded=isExpandable&&isWeekDayExpanded(ds),rowsForRender=isExpanded?dayRows:dayRows.slice(0,previewMax),hiddenCount=Math.max(0,dayRows.length-previewMax),listCls="week-task-list"+(isExpanded?" is-expanded":"")+(isExpanded&&dayRows.length>10?" is-scroll":"");
+    const d=parseDS(ds),md=d.getMonth()+1+"\u6708"+d.getDate()+"\u65e5",statusTxt=dayPending?"":raw.length?"\u5df2\u5168\u90e8\u5b8c\u6210":"",cls="week-day-card"+(ds===todayDs?" is-today":"")+(ds===baseDs?" is-focus":"")+(dayRows.length?"":" is-empty"),previewMax=4,isExpandable=dayRows.length>previewMax,isExpanded=isExpandable&&isWeekDayExpanded(ds),rowsForRender=isExpanded?dayRows:dayRows.slice(0,previewMax),hiddenCount=Math.max(0,dayRows.length-previewMax),listCls="week-task-list"+(isExpanded?" is-expanded":"")+(isExpanded&&dayRows.length>10?" is-scroll":"");
     const rowsHtml=rowsForRender.map(function(t){
       const doneCls=t.done?" is-done":"",highCls=t.priority==="high"?" is-high":"",frozenCls=t.frozen?" is-frozen":"",plan=t.planTime?(typeof formatPlanTimeDisp==="function"?formatPlanTimeDisp(t.planTime):t.planTime):"",dn=parseInt(t.duration,10),dur=Number.isFinite(dn)&&dn>0?dn+"\u5206":"",metaBits=[];
       if(plan)metaBits.push(esc(plan));
