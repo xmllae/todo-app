@@ -536,18 +536,27 @@ function toggleWeekTaskDone(ds,id){
   task.done=!task.done;
   task.status=task.done?"done":"todo";
   if(!task.done)task.archived=false;
+  if(task.done)window._chkRippleTaskId=id;
+  else if(window._chkRippleTaskId===id)window._chkRippleTaskId=null;
   try{if(typeof playCheckSound==="function")playCheckSound(task.done)}catch(e){}
   rCal();
   rT();
+  if(task.done)window.setTimeout(function(){
+    if(window._chkRippleTaskId===id)window._chkRippleTaskId=null;
+    document.querySelectorAll(".week-task-marker .chk-ring--ripple").forEach(function(el){el.classList.remove("chk-ring--ripple")})
+  },560);
   if(typeof syncTaskDetailPanelIfNeeded==="function")syncTaskDetailPanelIfNeeded();
   if(typeof rKanban==="function")rKanban();
   save()
 }
+function getWeekVisibleRows(ds){
+  let rows=(T[ds]||[]).filter(function(t){return!t.archived});
+  if(FTag)rows=rows.filter(function(t){return(t.tags||[]).includes(FTag)});
+  return rows
+}
 function getWeekExpandableDays(baseDs){
   return getTaskWeekMeta(baseDs).days.filter(function(ds){
-    let rows=(T[ds]||[]).filter(function(t){return!t.archived&&passesFMulti(t)});
-    if(FTag)rows=rows.filter(function(t){return(t.tags||[]).includes(FTag)});
-    return rows.length>WEEK_DAY_PREVIEW_MAX
+    return getWeekVisibleRows(ds).length>WEEK_DAY_PREVIEW_MAX
   })
 }
 function toggleWeekAllDays(baseDs){
@@ -619,6 +628,12 @@ function weekTaskTimeMetaHtml(t){
   }
   return taskRowTimePlainHtml(t,pt||"全天",false)
 }
+function weekTaskCheckRingHtml(t,ds){
+  const done=!!(t&&t.done),high=t&&t.priority==="high",hex=high?(prioColor(t.priority)||"#ef4444"):"#94a3b8";
+  const rip=done&&window._chkRippleTaskId==t.id?" chk-ring--ripple":"";
+  const chk='<svg class="chk-ring-ico" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.15 12.35 10.95 16.05 17.1 8.2" stroke="currentColor" stroke-width="2.55" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  return'<button type="button" class="week-task-marker task-ck-ring'+(done?" task-ck-ring--done":"")+(high?" task-ck-ring--prio-high":"")+'" style="--ck-prio:'+hex+'" aria-label="'+(done?"\u6807\u8bb0\u4e3a\u672a\u5b8c\u6210":"\u6807\u8bb0\u4e3a\u5b8c\u6210")+'" aria-pressed="'+(done?"true":"false")+'" onclick="event.stopPropagation();toggleWeekTaskDone(\''+ds+'\','+t.id+')"><span class="tc-check"><span class="chk-ring'+(done?" checked":"")+rip+'">'+chk+'</span></span></button>'
+}
 function renderWeekTaskScene(list,baseDs){
   const meta=getTaskWeekMeta(baseDs),rangeText=getTaskWeekRangeText(meta),todayDs=fd(now),weekAllTasks=[],weekFilteredTasks=[],expandableDays=[];
   let doneAll=0,pendingAll=0;
@@ -629,8 +644,7 @@ function renderWeekTaskScene(list,baseDs){
     const dayDone=raw.filter(function(t){return t.done}).length,dayPending=raw.filter(function(t){return!t.done&&!t.frozen}).length;
     doneAll+=dayDone;
     pendingAll+=dayPending;
-    let dayRows=raw.filter(function(t){return passesFMulti(t)});
-    if(FTag)dayRows=dayRows.filter(function(t){return(t.tags||[]).includes(FTag)});
+    let dayRows=getWeekVisibleRows(ds);
     dayRows.forEach(function(t){weekFilteredTasks.push(t)});
     dayRows.sort(function(a,b){
       if(a.done!==b.done)return a.done?1:-1;
@@ -648,7 +662,7 @@ function renderWeekTaskScene(list,baseDs){
       let badge="";
       if(t.frozen)badge='<span class="week-task-badge week-task-badge--frozen">\u51bb\u7ed3</span>';
       else if(t.done)badge='<span class="week-task-badge week-task-badge--done">\u5b8c\u6210</span>';
-      return'<div class="week-task-item'+doneCls+highCls+frozenCls+'" title="\u6253\u5f00\u5f53\u65e5\u8be6\u60c5"><button type="button" class="week-task-marker" aria-label="'+(t.done?"\u6807\u8bb0\u4e3a\u672a\u5b8c\u6210":"\u6807\u8bb0\u4e3a\u5b8c\u6210")+'" aria-pressed="'+(t.done?"true":"false")+'" onclick="event.stopPropagation();toggleWeekTaskDone(\''+ds+'\','+t.id+')"></button><button type="button" class="week-task-open" onclick="pick(\''+ds+'\')"><span class="week-task-main"><span class="week-task-title">'+esc(t.text)+'</span><span class="week-task-meta">'+metaHtml+"</span></span>"+badge+"</button></div>"
+      return'<div class="week-task-item'+doneCls+highCls+frozenCls+'" title="\u6253\u5f00\u5f53\u65e5\u8be6\u60c5">'+weekTaskCheckRingHtml(t,ds)+'<button type="button" class="week-task-open" onclick="pick(\''+ds+'\')"><span class="week-task-main"><span class="week-task-title">'+esc(t.text)+'</span><span class="week-task-meta">'+metaHtml+"</span></span>"+badge+"</button></div>"
     };
     const extraHtml=isExpandable?'<div class="week-task-extra'+(isExpanded?" is-open":"")+'" data-week-extra-ds="'+ds+'" aria-hidden="'+(isExpanded?"false":"true")+'"'+(isExpanded?"":" inert")+'><div class="week-task-extra-inner">'+extraRows.map(renderWeekRow).join("")+'</div></div>':"";
     const rowsHtml=previewRows.map(renderWeekRow).join("")+extraHtml;
