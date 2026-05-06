@@ -450,6 +450,20 @@ function setTaskDashScope(scope,metaText){const titleEl=document.querySelector("
 const weekDayExpandState=new Set();
 function isWeekDayExpanded(ds){return weekDayExpandState.has(ds)}
 function toggleWeekDayExpand(ds){if(weekDayExpandState.has(ds))weekDayExpandState.delete(ds);else weekDayExpandState.add(ds);if(typeof rT==="function")rT()}
+function splitWeekCardsBalanced(items){
+  const left=[],right=[];
+  let leftWeight=0,rightWeight=0;
+  items.forEach(function(item){
+    if(leftWeight<=rightWeight){
+      left.push(item.html);
+      leftWeight+=item.weight
+    }else{
+      right.push(item.html);
+      rightWeight+=item.weight
+    }
+  });
+  return{left:left.join(""),right:right.join("")}
+}
 function renderWeekTaskScene(list,baseDs){
   const meta=getTaskWeekMeta(baseDs),rangeText=getTaskWeekRangeText(meta),todayDs=fd(now),weekAllTasks=[],weekFilteredTasks=[];
   let doneAll=0,pendingAll=0;
@@ -485,11 +499,13 @@ function renderWeekTaskScene(list,baseDs){
     }).join("");
     const expandBtn=isExpandable?'<button type="button" class="week-task-expand'+(isExpanded?" is-open":"")+'" onclick="event.stopPropagation();toggleWeekDayExpand(\''+ds+'\')"><span>'+(!isExpanded?"\u5c55\u5f00 "+hiddenCount+" \u9879":"\u6536\u8d77\u5217\u8868")+'</span><span class="week-task-expand-chevron" aria-hidden="true"></span></button>':"";
     const taskBody=rowsHtml||'<button type="button" class="week-day-empty" onclick="pick(\''+ds+'\')" title="\u6253\u5f00\u5f53\u65e5\u8be6\u60c5"><span class="week-day-empty-dot" aria-hidden="true"></span><span>\u6682\u65e0\u4efb\u52a1</span></button>';
-    return'<section class="'+cls+'" style="--week-delay:'+(idx*24)+'ms"><button type="button" class="week-day-head" onclick="pick(\''+ds+'\')"><span class="week-day-name">\u5468'+weekNames[idx]+" \u00b7 "+md+'</span><span class="week-day-meta">'+statusTxt+'</span><span class="week-day-count">'+dayRows.length+'</span></button><div class="'+listCls+'">'+taskBody+'</div>'+expandBtn+'</section>'
+    const visibleRows=rowsForRender.length,expandWeight=isExpanded?Math.min(2.4,Math.max(0,dayRows.length-previewMax)*0.38):0,cardWeight=1.6+visibleRows*1.02+(isExpandable?0.62:0)+(dayRows.length?0:0.4)+expandWeight;
+    return{html:'<section class="'+cls+'" style="--week-delay:'+(idx*24)+'ms"><button type="button" class="week-day-head" onclick="pick(\''+ds+'\')"><span class="week-day-name">\u5468'+weekNames[idx]+" \u00b7 "+md+'</span><span class="week-day-meta">'+statusTxt+'</span><span class="week-day-count">'+dayRows.length+'</span></button><div class="'+listCls+'">'+taskBody+'</div>'+expandBtn+'</section>',weight:cardWeight}
   });
   const totalAll=weekAllTasks.length,pct=totalAll?Math.round(doneAll/totalAll*100):0;
   const canSplit=typeof window!=="undefined"&&window.matchMedia&&!window.matchMedia("(max-width: 980px)").matches;
-  const gridInner=canSplit?'<div class="week-day-col week-day-col--left">'+cardList.filter(function(_,i){return i%2===0}).join("")+'</div><div class="week-day-col week-day-col--right">'+cardList.filter(function(_,i){return i%2===1}).join("")+'</div>':cardList.join("");
+  const balancedCols=canSplit?splitWeekCardsBalanced(cardList):null;
+  const gridInner=canSplit?'<div class="week-day-col week-day-col--left">'+balancedCols.left+'</div><div class="week-day-col week-day-col--right">'+balancedCols.right+'</div>':cardList.map(function(item){return item.html}).join("");
   list.innerHTML='<div class="week-view"><div class="week-view-head"><div class="week-view-top"><div class="week-view-title-group"><h4 class="week-view-title">\u4efb\u52a1\u6982\u89c8</h4></div><div class="week-view-progress"><span class="week-view-progress-label">\u8fbe\u6210\u7387 <b>'+pct+'%</b></span><span class="week-view-progress-track"><span class="week-view-progress-fill" style="width:'+pct+'%"></span></span></div></div><div class="week-view-stats"><span class="week-view-stat"><b>'+totalAll+'</b>\u9879</span><span class="week-view-stat"><b>'+pendingAll+'</b>\u5f85\u529e</span><span class="week-view-stat"><b>'+doneAll+'</b>\u5b8c\u6210</span></div></div><div class="week-day-grid'+(canSplit?" is-split":"")+'">'+gridInner+'</div></div>';
   return{allTasks:weekAllTasks,filteredTasks:weekFilteredTasks,totalAll:totalAll,doneAll:doneAll,rangeText:rangeText}
 }
