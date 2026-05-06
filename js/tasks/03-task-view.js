@@ -448,8 +448,68 @@ function getCnWeekNum(n){const d=["\u96f6","\u4e00","\u4e8c","\u4e09","\u56db","
 function getTaskWeekScopeTitle(ds){const off=getTaskWeekOffset(ds);if(off===0)return"\u672c\u5468";if(off===1)return"\u4e0b\u5468";if(off===-1)return"\u4e0a\u5468";if(off>1)return"\u7b2c"+getCnWeekNum(off+1)+"\u5468";return"\u524d"+getCnWeekNum(-off+1)+"\u5468"}
 function setTaskDashScope(scope,metaText){const titleEl=document.querySelector(".dash-overview .dash-hd-tit"),subEl=document.querySelector(".dash-overview .dash-ov-count-sub"),shortEl=document.getElementById("dashShortDate"),root=document.getElementById("taskDashCol");if(scope==="week"){if(titleEl)titleEl.textContent="\u672c\u5468\u603b\u89c8";if(subEl)subEl.textContent="\u5468\u4efb\u52a1\u5df2\u5b8c\u6210";if(shortEl&&metaText)shortEl.textContent=metaText;if(root)root.setAttribute("aria-label","\u672c\u5468\u6982\u89c8");return}if(titleEl)titleEl.textContent="\u4eca\u65e5\u603b\u89c8";if(subEl)subEl.textContent="\u4efb\u52a1\u5df2\u5b8c\u6210";if(root)root.setAttribute("aria-label","\u4eca\u65e5\u6982\u89c8")}
 const weekDayExpandState=new Set();
+const WEEK_DAY_PREVIEW_MAX=4;
+const WEEK_HEADER_ADD_ICON='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>';
+const WEEK_HEADER_EXPAND_ICON='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 8 12 13 17 8"></polyline><polyline points="7 12 12 17 17 12"></polyline></svg>';
+const WEEK_HEADER_COLLAPSE_ICON='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 16 12 11 17 16"></polyline><polyline points="7 12 12 7 17 12"></polyline></svg>';
 function isWeekDayExpanded(ds){return weekDayExpandState.has(ds)}
 function toggleWeekDayExpand(ds){if(weekDayExpandState.has(ds))weekDayExpandState.delete(ds);else weekDayExpandState.add(ds);if(typeof rT==="function")rT()}
+function getWeekExpandableDays(baseDs){
+  return getTaskWeekMeta(baseDs).days.filter(function(ds){
+    let rows=(T[ds]||[]).filter(function(t){return!t.archived&&passesFMulti(t)});
+    if(FTag)rows=rows.filter(function(t){return(t.tags||[]).includes(FTag)});
+    return rows.length>WEEK_DAY_PREVIEW_MAX
+  })
+}
+function toggleWeekAllDays(baseDs){
+  const expandableDays=getWeekExpandableDays(baseDs);
+  if(!expandableDays.length)return;
+  const shouldExpand=expandableDays.some(function(ds){return!isWeekDayExpanded(ds)});
+  expandableDays.forEach(function(ds){
+    if(shouldExpand)weekDayExpandState.add(ds);
+    else weekDayExpandState.delete(ds)
+  });
+  if(typeof rT==="function")rT()
+}
+function syncWeekHeaderAction(weekMode,weekMeta){
+  const addBtn=document.getElementById("btnAddTaskBar");
+  if(!addBtn)return;
+  const addSplit=addBtn.closest(".add-split");
+  const quickBtn=addSplit?addSplit.querySelector(".add-split-quick"):null;
+  if(quickBtn){
+    if(weekMode){
+      quickBtn.style.display="none";
+      quickBtn.setAttribute("aria-hidden","true");
+      quickBtn.tabIndex=-1
+    }else{
+      quickBtn.style.display="";
+      quickBtn.removeAttribute("aria-hidden");
+      quickBtn.tabIndex=0
+    }
+  }
+  if(weekMode){
+    const expandableDays=weekMeta&&Array.isArray(weekMeta.expandableDays)?weekMeta.expandableDays:getWeekExpandableDays(sel);
+    const allExpanded=expandableDays.length>0&&expandableDays.every(function(ds){return isWeekDayExpanded(ds)});
+    const label=allExpanded?"\u4e00\u952e\u6536\u7f29":"\u4e00\u952e\u5c55\u5f00";
+    addBtn.dataset.weekBulkToggle="1";
+    addBtn.setAttribute("title",label);
+    addBtn.setAttribute("aria-label",label);
+    addBtn.innerHTML=(allExpanded?WEEK_HEADER_COLLAPSE_ICON:WEEK_HEADER_EXPAND_ICON)+label;
+    addBtn.onclick=function(e){
+      if(e){e.preventDefault();e.stopPropagation()}
+      toggleWeekAllDays(sel)
+    };
+    return
+  }
+  if(addBtn.dataset.weekBulkToggle==="1"){
+    addBtn.innerHTML=WEEK_HEADER_ADD_ICON+"\u6dfb\u52a0\u4efb\u52a1";
+    addBtn.onclick=showAddTaskRow;
+    addBtn.dataset.weekBulkToggle="0"
+  }
+  const hold=document.getElementById("addTaskInlineHold");
+  const isOpen=!!(hold&&!hold.classList.contains("hidden")&&hold.classList.contains("task-add-inline-open"));
+  if(typeof syncAddTaskMainLabel==="function")syncAddTaskMainLabel(isOpen)
+}
 function splitWeekCardsBalanced(items){
   const left=[],right=[];
   let leftWeight=0,rightWeight=0;
@@ -473,7 +533,7 @@ function weekTaskTimeMetaHtml(t){
   return taskRowTimePlainHtml(t,pt||"全天",false)
 }
 function renderWeekTaskScene(list,baseDs){
-  const meta=getTaskWeekMeta(baseDs),rangeText=getTaskWeekRangeText(meta),todayDs=fd(now),weekAllTasks=[],weekFilteredTasks=[];
+  const meta=getTaskWeekMeta(baseDs),rangeText=getTaskWeekRangeText(meta),todayDs=fd(now),weekAllTasks=[],weekFilteredTasks=[],expandableDays=[];
   let doneAll=0,pendingAll=0;
   const weekNames=["\u4e00","\u4e8c","\u4e09","\u56db","\u4e94","\u516d","\u65e5"];
   const cardList=meta.days.map(function(ds,idx){
@@ -494,12 +554,12 @@ function renderWeekTaskScene(list,baseDs){
       if(!ta&&tb)return 1;
       return(b.created||0)-(a.created||0)
     });
-    const d=parseDS(ds),md=d.getMonth()+1+"\u6708"+d.getDate()+"\u65e5",statusTxt=dayPending?"":raw.length?"\u5df2\u5168\u90e8\u5b8c\u6210":"",cls="week-day-card"+(ds===todayDs?" is-today":"")+(ds===baseDs?" is-focus":"")+(dayRows.length?"":" is-empty"),previewMax=4,isExpandable=dayRows.length>previewMax,isExpanded=isExpandable&&isWeekDayExpanded(ds),rowsForRender=isExpanded?dayRows:dayRows.slice(0,previewMax),hiddenCount=Math.max(0,dayRows.length-previewMax),listCls="week-task-list"+(isExpanded?" is-expanded":"")+(isExpanded&&dayRows.length>10?" is-scroll":"");
+    const d=parseDS(ds),md=d.getMonth()+1+"\u6708"+d.getDate()+"\u65e5",statusTxt=dayPending?"":raw.length?"\u5df2\u5168\u90e8\u5b8c\u6210":"",cls="week-day-card"+(ds===todayDs?" is-today":"")+(ds===baseDs?" is-focus":"")+(dayRows.length?"":" is-empty"),previewMax=WEEK_DAY_PREVIEW_MAX,isExpandable=dayRows.length>previewMax,isExpanded=isExpandable&&isWeekDayExpanded(ds),rowsForRender=isExpanded?dayRows:dayRows.slice(0,previewMax),hiddenCount=Math.max(0,dayRows.length-previewMax),listCls="week-task-list"+(isExpanded?" is-expanded":"")+(isExpanded&&dayRows.length>10?" is-scroll":"");
+    if(isExpandable)expandableDays.push(ds);
     const rowsHtml=rowsForRender.map(function(t){
       const doneCls=t.done?" is-done":"",highCls=t.priority==="high"?" is-high":"",frozenCls=t.frozen?" is-frozen":"",subs=Array.isArray(t.subtasks)?t.subtasks:[],subT=subs.length,subD=subT?subs.reduce(function(n,s){return n+(s&&s.done?1:0)},0):0,timeMeta=weekTaskTimeMetaHtml(t),subMeta=subT?'<span class="week-task-sub-meta'+(subD===subT?" is-done":"")+'" title="子任务 '+subD+'/'+subT+'"><span class="week-task-sub-meta-dot" aria-hidden="true"></span><span>子任务 '+subD+" / "+subT+'</span></span>':"",metaHtml='<span class="week-task-meta-row">'+timeMeta+subMeta+'</span>';
       let badge="";
       if(t.frozen)badge='<span class="week-task-badge week-task-badge--frozen">\u51bb\u7ed3</span>';
-      else if(t.priority==="high")badge='<span class="week-task-badge">\u9ad8\u4f18\u5148</span>';
       else if(t.done)badge='<span class="week-task-badge week-task-badge--done">\u5b8c\u6210</span>';
       return'<button type="button" class="week-task-item'+doneCls+highCls+frozenCls+'" onclick="pick(\''+ds+'\')" title="\u6253\u5f00\u5f53\u65e5\u8be6\u60c5"><span class="week-task-marker" aria-hidden="true"></span><span class="week-task-main"><span class="week-task-title">'+esc(t.text)+'</span><span class="week-task-meta">'+metaHtml+"</span></span>"+badge+"</button>"
     }).join("");
@@ -513,8 +573,8 @@ function renderWeekTaskScene(list,baseDs){
   const balancedCols=canSplit?splitWeekCardsBalanced(cardList):null;
   const gridInner=canSplit?'<div class="week-day-col week-day-col--left">'+balancedCols.left+'</div><div class="week-day-col week-day-col--right">'+balancedCols.right+'</div>':cardList.map(function(item){return item.html}).join("");
   list.innerHTML='<div class="week-view"><div class="week-view-head"><div class="week-view-top"><div class="week-view-title-group"><h4 class="week-view-title">\u4efb\u52a1\u6982\u89c8</h4></div><div class="week-view-progress"><span class="week-view-progress-label">\u8fbe\u6210\u7387 <b>'+pct+'%</b></span><span class="week-view-progress-track"><span class="week-view-progress-fill" style="width:'+pct+'%"></span></span></div></div><div class="week-view-stats"><span class="week-view-stat"><b>'+totalAll+'</b>\u9879</span><span class="week-view-stat"><b>'+pendingAll+'</b>\u5f85\u529e</span><span class="week-view-stat"><b>'+doneAll+'</b>\u5b8c\u6210</span></div></div><div class="week-day-grid'+(canSplit?" is-split":"")+'">'+gridInner+'</div></div>';
-  return{allTasks:weekAllTasks,filteredTasks:weekFilteredTasks,totalAll:totalAll,doneAll:doneAll,rangeText:rangeText}
+  return{allTasks:weekAllTasks,filteredTasks:weekFilteredTasks,totalAll:totalAll,doneAll:doneAll,rangeText:rangeText,expandableDays:expandableDays,allExpanded:expandableDays.length>0&&expandableDays.every(function(ds){return isWeekDayExpanded(ds)})}
 }
 function setTaskDateTitle(ds){const el=document.getElementById("dTitle");if(!el)return;let mainEl=el.querySelector(".date-nav-date-main"),subEl=el.querySelector(".date-nav-date-sub");if(!mainEl||!subEl){el.innerHTML='<span class="date-nav-date-main"></span><span class="date-nav-date-sub"></span>';mainEl=el.querySelector(".date-nav-date-main");subEl=el.querySelector(".date-nav-date-sub")}mainEl.style.display="block";mainEl.style.fontFamily='-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif';mainEl.style.fontSize="24px";mainEl.style.fontWeight="700";mainEl.style.lineHeight="1";mainEl.style.letterSpacing="-0.025em";mainEl.style.color="#0f172a";mainEl.style.margin="0 0 4px 0";subEl.style.display="block";subEl.style.fontFamily='-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif';subEl.style.fontSize="13px";subEl.style.fontWeight="500";subEl.style.lineHeight="1.5";subEl.style.letterSpacing="0.025em";subEl.style.color="#64748b";subEl.style.margin="0";if(!el.dataset.animBound){el.dataset.animBound="1";el.addEventListener("animationend",function(){el.classList.remove("is-animating");el.classList.remove("is-animating-prev");el.classList.remove("is-animating-next")})}const isWeekScope=getTaskQuickMode()==="week";let useRangeOffset=false,useRelative=false,mainText="",subText="",modeKey="d";if(isWeekScope){mainText=getTaskWeekScopeTitle(ds);subText=getTaskWeekRangeText(getTaskWeekMeta(ds));modeKey="week"}else{const text=String(disp(ds)||""),splitIdx=text.lastIndexOf(" "),dateText=splitIdx>0?text.slice(0,splitIdx):text,weekText=splitIdx>0?text.slice(splitIdx+1):"";let dayOffset=99;try{const base=parseDS(fd(now)),target=parseDS(ds);if(base&&target){const baseDate=new Date(base.getFullYear(),base.getMonth(),base.getDate()),targetDate=new Date(target.getFullYear(),target.getMonth(),target.getDate());dayOffset=Math.round((targetDate-baseDate)/86400000)}}catch(e){}const abs=Math.abs(dayOffset);let relativeText="";if(dayOffset===0)relativeText="今天";else if(dayOffset===1)relativeText="明天";else if(dayOffset===2)relativeText="后天";else if(dayOffset===-1)relativeText="昨天";else if(dayOffset===-2)relativeText="前天";useRangeOffset=abs>=3;useRelative=!useRangeOffset&&!!relativeText;const rangeText=dayOffset>0?"未来"+abs+"天":"过去"+abs+"天";mainText=useRangeOffset?rangeText:(useRelative?relativeText:dateText);subText=useRangeOffset?dateText+(weekText?" "+weekText:""):(useRelative?dateText+(weekText?" "+weekText:""):weekText);modeKey=useRangeOffset?"range":(useRelative?"r":"d")}const renderKey=ds+"|"+modeKey+"|"+mainText+"|"+subText,prevKey=el.dataset.renderKey||"",prevDs=el.dataset.lastDs||"",shouldUpdate=prevKey!==renderKey;if(shouldUpdate){mainEl.textContent=mainText;subEl.textContent=subText;el.classList.toggle("is-week-scope",isWeekScope);el.classList.toggle("is-range-offset",!isWeekScope&&useRangeOffset);el.classList.toggle("is-relative",!isWeekScope&&useRelative);el.classList.toggle("is-plain-date",!isWeekScope&&!useRangeOffset&&!useRelative);subEl.classList.toggle("is-empty",!subText);const shouldAnimate=!!prevDs&&prevDs!==ds;el.classList.remove("is-animating");el.classList.remove("is-animating-prev");el.classList.remove("is-animating-next");if(shouldAnimate){let dirCls="";try{const prevDate=parseDS(prevDs),nextDate=parseDS(ds);if(prevDate&&nextDate){const prevTime=new Date(prevDate.getFullYear(),prevDate.getMonth(),prevDate.getDate()).getTime(),nextTime=new Date(nextDate.getFullYear(),nextDate.getMonth(),nextDate.getDate()).getTime();if(nextTime>prevTime)dirCls="is-animating-next";else if(nextTime<prevTime)dirCls="is-animating-prev"}}catch(e){}if(dirCls)el.classList.add(dirCls);void el.offsetWidth;el.classList.add("is-animating")}el.dataset.renderKey=renderKey;el.dataset.lastDs=ds}else{el.classList.remove("is-animating");el.classList.remove("is-animating-prev");el.classList.remove("is-animating-next");el.classList.toggle("is-week-scope",isWeekScope);el.classList.toggle("is-range-offset",!isWeekScope&&useRangeOffset);el.classList.toggle("is-relative",!isWeekScope&&useRelative);el.classList.toggle("is-plain-date",!isWeekScope&&!useRangeOffset&&!useRelative);if(subEl.classList.contains("is-empty")===!!subText)subEl.classList.toggle("is-empty",!subText)}setTaskBackTodayBtn(ds)}
-function rT(){if(_togPendingDoneId!=null){flushPendingTogIfAny();return}hydrateCompletedSubtaskCollapseState();hydrateTodoSubtaskCollapseState();hydrateSortModes();const list=document.getElementById("tList");if(!list)return;const weekMode=getTaskQuickMode()==="week";if(weekMode){const wm=getTaskWeekMeta(sel);wm.days.forEach(function(ds){generateRecurring(ds)})}else generateRecurring(sel);checkUnfreeze();setTaskDateTitle(sel);updateHeaderContext();const batchBar=document.getElementById("batchBar");if(batchBar)batchBar.style.display=weekMode?"none":"flex";updateSortUI();if(weekMode){const overdueArea=document.getElementById("overdueArea");if(overdueArea)overdueArea.innerHTML="";const wk=renderWeekTaskScene(list,sel),pct=wk.totalAll>0?Math.round(wk.doneAll/wk.totalAll*100):0;renderTaskDash(pct,wk.totalAll,wk.doneAll,wk.allTasks,wk.filteredTasks,sel);setTaskDashScope("week",wk.rangeText);focusTimerAfterRender();return}renderOverdue();const dt=T[sel]||[],nonArchived=dt.filter(t=>!t.archived),archivedTasks=dt.filter(t=>t.archived),dn=nonArchived.filter(t=>t.done).length,archDn=archivedTasks.length,tot=nonArchived.length;let fl=nonArchived.filter(t=>passesFMulti(t));if(FTag)fl=fl.filter(t=>(t.tags||[]).includes(FTag));let archVisible=[];if(showArchivedInList&&archivedTasks.length>0){let af=archivedTasks;if(FTag)af=af.filter(t=>(t.tags||[]).includes(FTag));archVisible=af}const totalForProg=tot+archDn,doneForProg=dn+archDn,pct=totalForProg>0?Math.round(doneForProg/totalForProg*100):0;let displayList=fl,activeSortMode="";if(sortStates&&sortStates[sel])activeSortMode=normalizeSortMode(sortStates[sel]);else if(autoSortEnabled)activeSortMode=normalizeSortMode(defaultSortMode||lastSort||"created");if(activeSortMode&&displayList.length>1)displayList=sortDisplayList([...displayList],activeSortMode);if(!displayList.length&&!archVisible.length){const isZero=tot===0&&archDn===0;list.innerHTML=`<div class="empty"><div class="em">\u2705</div><p class="empty-main">${isZero?"\u4eca\u5929\u4efb\u52a1\u5df2\u5168\u90e8\u5b8c\u6210":"\u6ca1\u6709\u5339\u914d\u7684\u4efb\u52a1"}</p><p class="empty-sub">${isZero?"\u4f11\u606f\u4e00\u4e0b\uff0c\u6216\u6dfb\u52a0\u65b0\u4efb\u52a1":"\u8bd5\u8bd5\u5176\u4ed6\u7b5b\u9009\u6761\u4ef6"}</p></div>`;renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,sel);setTaskDashScope("day","");focusTimerAfterRender();return}let h=displayList.map(t=>taskHTML(t,false)).join("");if(archVisible.length>0)h+=archVisible.map(t=>taskHTML(t,true)).join("");list.innerHTML=h;ensureSubtaskGeometryResizeSync();syncSubtaskGeometry();requestAnimationFrame(syncSubtaskGeometry);renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,sel);setTaskDashScope("day","");focusTimerAfterRender()}
+function rT(){if(_togPendingDoneId!=null){flushPendingTogIfAny();return}hydrateCompletedSubtaskCollapseState();hydrateTodoSubtaskCollapseState();hydrateSortModes();const list=document.getElementById("tList");if(!list)return;const weekMode=getTaskQuickMode()==="week";if(weekMode){const wm=getTaskWeekMeta(sel);wm.days.forEach(function(ds){generateRecurring(ds)})}else generateRecurring(sel);checkUnfreeze();setTaskDateTitle(sel);updateHeaderContext();const batchBar=document.getElementById("batchBar");if(batchBar)batchBar.style.display=weekMode?"none":"flex";updateSortUI();if(weekMode){const overdueArea=document.getElementById("overdueArea");if(overdueArea)overdueArea.innerHTML="";const wk=renderWeekTaskScene(list,sel),pct=wk.totalAll>0?Math.round(wk.doneAll/wk.totalAll*100):0;renderTaskDash(pct,wk.totalAll,wk.doneAll,wk.allTasks,wk.filteredTasks,sel);setTaskDashScope("week",wk.rangeText);syncWeekHeaderAction(true,wk);requestAnimationFrame(function(){syncWeekHeaderAction(true,wk)});focusTimerAfterRender();return}syncWeekHeaderAction(false);requestAnimationFrame(function(){syncWeekHeaderAction(false)});renderOverdue();const dt=T[sel]||[],nonArchived=dt.filter(t=>!t.archived),archivedTasks=dt.filter(t=>t.archived),dn=nonArchived.filter(t=>t.done).length,archDn=archivedTasks.length,tot=nonArchived.length;let fl=nonArchived.filter(t=>passesFMulti(t));if(FTag)fl=fl.filter(t=>(t.tags||[]).includes(FTag));let archVisible=[];if(showArchivedInList&&archivedTasks.length>0){let af=archivedTasks;if(FTag)af=af.filter(t=>(t.tags||[]).includes(FTag));archVisible=af}const totalForProg=tot+archDn,doneForProg=dn+archDn,pct=totalForProg>0?Math.round(doneForProg/totalForProg*100):0;let displayList=fl,activeSortMode="";if(sortStates&&sortStates[sel])activeSortMode=normalizeSortMode(sortStates[sel]);else if(autoSortEnabled)activeSortMode=normalizeSortMode(defaultSortMode||lastSort||"created");if(activeSortMode&&displayList.length>1)displayList=sortDisplayList([...displayList],activeSortMode);if(!displayList.length&&!archVisible.length){const isZero=tot===0&&archDn===0;list.innerHTML=`<div class="empty"><div class="em">\u2705</div><p class="empty-main">${isZero?"\u4eca\u5929\u4efb\u52a1\u5df2\u5168\u90e8\u5b8c\u6210":"\u6ca1\u6709\u5339\u914d\u7684\u4efb\u52a1"}</p><p class="empty-sub">${isZero?"\u4f11\u606f\u4e00\u4e0b\uff0c\u6216\u6dfb\u52a0\u65b0\u4efb\u52a1":"\u8bd5\u8bd5\u5176\u4ed6\u7b5b\u9009\u6761\u4ef6"}</p></div>`;renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,sel);setTaskDashScope("day","");focusTimerAfterRender();return}let h=displayList.map(t=>taskHTML(t,false)).join("");if(archVisible.length>0)h+=archVisible.map(t=>taskHTML(t,true)).join("");list.innerHTML=h;ensureSubtaskGeometryResizeSync();syncSubtaskGeometry();requestAnimationFrame(syncSubtaskGeometry);renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,sel);setTaskDashScope("day","");focusTimerAfterRender()}
 
