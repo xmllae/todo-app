@@ -344,7 +344,7 @@ const subTitleSuffix=subT>0?`<button type="button" class="sub-task-pill-btn sub-
 const subTimeSep=subT>0?'<span class="task-time-sep" aria-hidden="true"></span>':"";
 if(isArchived){
 const accA=pt?taskTimeAccent(pt,sel):taskTimeAccent("",sel);
-const archTimeInner=hasRecur?taskRowRecurTimeInnerHtml(t,pt):pt?`<span class="time-plain time-disp" style="opacity:.88">${pt}</span>`:`<span class="time-plain time-disp" style="opacity:.88">\u4eca\u5929</span>`;
+const archTimeInner=hasRecur?taskRowRecurTimeInnerHtml(t,pt):pt?`<span class="time-plain time-disp" style="opacity:.88">${pt}</span>`:`<span class="time-plain time-disp" style="opacity:.88">\u5168\u5929</span>`;
 const archTc=hasRecur?"var(--task-time-recur-fg)":accA.text;
 const timeColArch=`<div class="task-time-col${subT>0?"":" task-time-col--no-sub"}" style="color:${archTc};--task-time-rail:${accA.rail}">${archTimeInner}${subTimeSep}${subTitleSuffix}</div>`;
 return`<div class="task-item archived-item relative group" data-id="${t.id}" onclick="onTaskItemMultiBackdrop(event,${t.id})" style="--task-prio:${borderColor}"><div class="task-row">${taskRowCornersHTML()}${prioListRail(t,true)}<div class="task-rail" onclick="event.stopPropagation()"></div><div class="task-ck-slot" onclick="event.stopPropagation()">${taskListCkRing(t.id,true,t.priority,true,borderColor)}</div><div class="task-row-center" onclick="onTaskRowCenterClick(event,${t.id})"><div class="txt-line"><span class="txt">${esc(t.text)}</span></div>${timeColArch}</div><div class="task-actions" onclick="event.stopPropagation()"><button class="act-btn" onclick="event.stopPropagation();restoreArchived('${sel}',${t.id})" title="\u6062\u590d">鈫?/button></div></div></div>`
@@ -364,7 +364,7 @@ acc=pt?taskTimeAccent(pt,sel):taskTimeAccent("",sel)
 timeH=taskRowTimePlainHtml(t,pt);
 acc=taskTimeAccent(pt,sel)
 }else{
-timeH=taskRowTimePlainHtml(t,"\u4eca\u5929",true);
+timeH=taskRowTimePlainHtml(t,"\u5168\u5929",true);
 acc=taskTimeAccent("",sel)
 }
 const tcColor=editingTimeId===t.id?acc.text:t.frozen?acc.text:hasRecur?"var(--task-time-recur-fg)":"var(--text3)";
