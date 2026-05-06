@@ -2594,63 +2594,56 @@
   letter-spacing: -.035em;
 }
 
-#taskMode .list-panel #tList button.week-view-stat,
-.app.app--with-global-nav #taskMode .list-panel #tList button.week-view-stat {
-  border: 0;
-  background: transparent;
-  font: inherit;
-  cursor: pointer;
-  font-family: inherit;
-  appearance: none;
-}
-
-#taskMode .list-panel #tList .week-view-stat--done-action,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-stat--done-action {
+#taskMode .list-panel #tList .week-view-stat--done,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-stat--done {
   margin-right: 0;
-  border-radius: 999px;
-  transition: background .18s ease, color .18s ease, transform .16s ease;
+  padding-right: 0;
 }
 
-#taskMode .list-panel #tList .week-view-stat--done-action:hover,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-stat--done-action:hover {
-  color: color-mix(in srgb, var(--week-accent) 72%, var(--week-ink));
-  background: color-mix(in srgb, var(--week-accent-soft) 42%, transparent);
-  transform: translateY(-.5px);
-}
-
-#taskMode .list-panel #tList .week-view-stat--done-action:focus-visible,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-stat--done-action:focus-visible {
-  outline: none;
-  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--week-accent) 22%, transparent);
-}
-
-#taskMode .list-panel #tList .week-view-stat--done-action:hover b,
-#taskMode .list-panel #tList .week-view-stat--done-action.is-on b,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-stat--done-action:hover b,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-stat--done-action.is-on b {
-  color: color-mix(in srgb, var(--week-accent) 76%, var(--week-ink));
-}
-
-#taskMode .list-panel #tList .week-done-stat-hint,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-done-stat-hint {
+#taskMode .list-panel #tList .week-done-inline-action,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-done-inline-action {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  min-height: 18px;
-  padding: 0 6px;
+  min-width: 42px;
+  min-height: 20px;
+  margin: 0 0 0 1px;
+  border: 0;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--week-accent-soft) 34%, transparent);
-  opacity: .78;
-  white-space: nowrap;
+  padding: 0 6px;
+  background: transparent;
   color: color-mix(in srgb, var(--week-accent) 66%, var(--week-muted));
+  cursor: pointer;
+  appearance: none;
+  font: inherit;
+  font-family: inherit;
   font-size: 10.5px;
   font-weight: 680;
   line-height: 1;
-  transition: background .18s ease, color .18s ease, opacity .18s ease, transform .18s ease;
+  white-space: nowrap;
+  transition: background .18s ease, color .18s ease, box-shadow .18s ease;
 }
 
-#taskMode .list-panel #tList .week-done-stat-hint::after,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-done-stat-hint::after {
+#taskMode .list-panel #tList .week-done-inline-action:hover,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-done-inline-action:hover {
+  background: color-mix(in srgb, var(--week-accent-soft) 52%, transparent);
+  color: color-mix(in srgb, var(--week-accent) 82%, var(--week-ink));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--week-accent) 14%, transparent);
+}
+
+#taskMode .list-panel #tList .week-done-inline-action:active,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-done-inline-action:active {
+  background: color-mix(in srgb, var(--week-accent-soft) 74%, transparent);
+}
+
+#taskMode .list-panel #tList .week-done-inline-action:focus-visible,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-done-inline-action:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--week-accent) 24%, transparent);
+}
+
+#taskMode .list-panel #tList .week-done-inline-chevron,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-done-inline-chevron {
   content: "";
   width: 5px;
   height: 5px;
@@ -2660,17 +2653,9 @@
   transition: transform .18s ease;
 }
 
-#taskMode .list-panel #tList .week-view-stat--done-action.is-on .week-done-stat-hint::after,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-stat--done-action.is-on .week-done-stat-hint::after {
+#taskMode .list-panel #tList .week-done-inline-action.is-on .week-done-inline-chevron,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-done-inline-action.is-on .week-done-inline-chevron {
   transform: rotate(-135deg) translateY(-1px);
-}
-
-#taskMode .list-panel #tList .week-view-stat--done-action:hover .week-done-stat-hint,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-stat--done-action:hover .week-done-stat-hint {
-  background: color-mix(in srgb, var(--week-accent-soft) 72%, transparent);
-  color: color-mix(in srgb, var(--week-accent) 82%, var(--week-ink));
-  opacity: 1;
-  transform: translateX(1px);
 }
 
 #taskMode .list-panel #tList .week-view-progress-track,
@@ -3125,16 +3110,15 @@
 #taskMode .list-panel #tList .week-done-fold-hint,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-done-fold-hint {
   position: relative;
-  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  min-height: 34px;
-  margin: 2px 22px 8px 54px;
+  gap: 7px;
+  min-height: 30px;
+  margin: 2px 22px 7px 54px;
   border: 0;
-  border-radius: 10px;
-  padding: 0 12px;
+  border-radius: 0;
+  padding: 8px 0 0;
   background: transparent;
   color: color-mix(in srgb, var(--week-muted) 76%, var(--week-ink));
   font: inherit;
@@ -3142,18 +3126,19 @@
   font-weight: 560;
   letter-spacing: .01em;
   cursor: pointer;
-  transition: background .18s ease, color .18s ease, transform .16s ease;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--week-line) 76%, transparent);
+  transition: color .18s ease, box-shadow .18s ease;
 }
 
 #taskMode .list-panel #tList .week-done-fold-hint:hover,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-done-fold-hint:hover {
-  background: var(--week-row-hover);
   color: color-mix(in srgb, var(--week-accent) 70%, var(--week-ink));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--week-accent) 20%, transparent);
 }
 
 #taskMode .list-panel #tList .week-done-fold-hint:active,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-done-fold-hint:active {
-  transform: scale(.997);
+  color: color-mix(in srgb, var(--week-accent) 84%, var(--week-ink));
 }
 
 #taskMode .list-panel #tList .week-done-fold-hint-action,
@@ -3239,12 +3224,10 @@
 #taskMode .list-panel #tList .week-day-head::after,
 #taskMode .list-panel #tList .week-task-expand::after,
 #taskMode .list-panel #tList .week-day-empty::after,
-#taskMode .list-panel #tList .week-done-fold-hint::after,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-item::after,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-head::after,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-expand::after,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-day-empty::after,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-done-fold-hint::after {
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-empty::after {
   content: "";
   position: absolute;
   left: var(--press-x, 50%);
@@ -3262,12 +3245,10 @@
 #taskMode .list-panel #tList .week-day-head.is-pressing::after,
 #taskMode .list-panel #tList .week-task-expand.is-pressing::after,
 #taskMode .list-panel #tList .week-day-empty.is-pressing::after,
-#taskMode .list-panel #tList .week-done-fold-hint.is-pressing::after,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-item.is-pressing::after,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-head.is-pressing::after,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-expand.is-pressing::after,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-day-empty.is-pressing::after,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-done-fold-hint.is-pressing::after {
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-empty.is-pressing::after {
   animation: week-soft-press .42s cubic-bezier(.22, 1, .36, 1);
 }
 
@@ -3326,7 +3307,7 @@
 
   #taskMode .list-panel #tList .week-done-fold-hint,
   .app.app--with-global-nav #taskMode .list-panel #tList .week-done-fold-hint {
-    margin: 2px 14px 8px 46px;
+    margin: 2px 14px 7px 46px;
   }
 }
 
@@ -3335,12 +3316,10 @@
   #taskMode .list-panel #tList .week-day-head.is-pressing::after,
   #taskMode .list-panel #tList .week-task-expand.is-pressing::after,
   #taskMode .list-panel #tList .week-day-empty.is-pressing::after,
-  #taskMode .list-panel #tList .week-done-fold-hint.is-pressing::after,
   .app.app--with-global-nav #taskMode .list-panel #tList .week-task-item.is-pressing::after,
   .app.app--with-global-nav #taskMode .list-panel #tList .week-day-head.is-pressing::after,
   .app.app--with-global-nav #taskMode .list-panel #tList .week-task-expand.is-pressing::after,
-  .app.app--with-global-nav #taskMode .list-panel #tList .week-day-empty.is-pressing::after,
-  .app.app--with-global-nav #taskMode .list-panel #tList .week-done-fold-hint.is-pressing::after {
+  .app.app--with-global-nav #taskMode .list-panel #tList .week-day-empty.is-pressing::after {
     animation: none !important;
   }
 }

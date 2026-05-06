@@ -622,7 +622,7 @@ function initWeekViewPressFeedback(list){
   if(!list||list.__weekViewPressBound)return;
   list.__weekViewPressBound=true;
   list.addEventListener("pointerdown",function(e){
-    const target=e.target.closest(".week-task-item,.week-day-head,.week-task-expand,.week-day-empty,.week-done-fold-hint");
+    const target=e.target.closest(".week-task-item,.week-day-head,.week-task-expand,.week-day-empty");
     if(!target||!list.contains(target))return;
     const rect=target.getBoundingClientRect();
     target.style.setProperty("--press-x",(e.clientX-rect.left)+"px");
@@ -686,7 +686,7 @@ function renderWeekTaskScene(list,baseDs){
     return{html:'<section class="'+cls+'" data-week-ds="'+ds+'" data-week-task-count="'+dayRows.length+'" style="--week-delay:'+(idx*24)+'ms"><div class="week-day-head"><button type="button" class="week-day-title-btn" onclick="pick(\''+ds+'\')" aria-label="\u6253\u5f00\u5468'+weekNames[idx]+' '+md+'"><span class="week-day-name"><span class="week-day-week">\u5468'+weekNames[idx]+'</span><span class="week-day-sep" aria-hidden="true">\u00b7</span><span class="week-day-date">'+md+'</span></span><span class="week-day-meta">'+statusTxt+'</span></button>'+countHtml+'</div><div class="'+listCls+'">'+taskBody+'</div></section>'}
   });
   const totalAll=weekAllTasks.length,pct=totalAll?Math.round(doneAll/totalAll*100):0;
-  const doneToggleText=doneCollapsed?"\u663e\u793a\u5df2\u5b8c\u6210":"\u6298\u53e0\u5df2\u5b8c\u6210",doneStatHtml=doneAll?'<button type="button" class="week-view-stat week-view-stat--done-action'+(doneCollapsed?" is-on":"")+'" aria-pressed="'+(doneCollapsed?"true":"false")+'" aria-label="'+doneToggleText+'" title="'+doneToggleText+'" onclick="event.stopPropagation();toggleWeekDoneCollapse()"><b>'+doneAll+'</b><span>\u5b8c\u6210</span><span class="week-done-stat-hint">'+(doneCollapsed?"\u663e\u793a":"\u6298\u53e0")+'</span></button>':'<span class="week-view-stat"><b>'+doneAll+'</b>\u5b8c\u6210</span>';
+  const doneToggleText=doneCollapsed?"\u663e\u793a\u5df2\u5b8c\u6210":"\u6298\u53e0\u5df2\u5b8c\u6210",doneStatHtml=doneAll?'<span class="week-view-stat week-view-stat--done"><b>'+doneAll+'</b><span>\u5b8c\u6210</span><button type="button" class="week-done-inline-action'+(doneCollapsed?" is-on":"")+'" aria-pressed="'+(doneCollapsed?"true":"false")+'" aria-label="'+doneToggleText+'" title="'+doneToggleText+'" onclick="event.stopPropagation();toggleWeekDoneCollapse()"><span class="week-done-inline-text">'+(doneCollapsed?"\u663e\u793a":"\u6298\u53e0")+'</span><span class="week-done-inline-chevron" aria-hidden="true"></span></button></span>':'<span class="week-view-stat"><b>'+doneAll+'</b>\u5b8c\u6210</span>';
   const gridInner=cardList.map(function(item){return item.html}).join("");
   list.innerHTML='<div class="week-view'+(doneCollapsed?" is-done-collapsed":"")+'"><div class="week-view-head"><div class="week-view-top"><div class="week-view-title-group"><h4 class="week-view-title">\u4efb\u52a1\u6982\u89c8</h4></div><div class="week-view-progress"><span class="week-view-progress-label">\u8fbe\u6210\u7387 <b>'+pct+'%</b></span><span class="week-view-progress-track"><span class="week-view-progress-fill" style="width:'+pct+'%"></span></span></div></div><div class="week-view-stats"><span class="week-view-stat"><b>'+totalAll+'</b>\u9879</span><span class="week-view-stat"><b>'+pendingAll+'</b>\u5f85\u529e</span>'+doneStatHtml+'</div></div><div class="week-day-grid">'+gridInner+'</div></div>';
   syncWeekExtraHeights(list);
