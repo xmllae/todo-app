@@ -452,6 +452,21 @@ const WEEK_DAY_PREVIEW_MAX=4;
 const WEEK_HEADER_ADD_ICON='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>';
 const WEEK_HEADER_EXPAND_ICON='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 8 12 13 17 8"></polyline><polyline points="7 12 12 17 17 12"></polyline></svg>';
 const WEEK_HEADER_COLLAPSE_ICON='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 16 12 11 17 16"></polyline><polyline points="7 12 12 7 17 12"></polyline></svg>';
+let _weekAddMainLabelGuardPatched=false;
+function ensureWeekAddMainLabelGuard(){
+  if(_weekAddMainLabelGuardPatched||typeof syncAddTaskMainLabel!=="function")return;
+  const rawSyncAddTaskMainLabel=syncAddTaskMainLabel;
+  syncAddTaskMainLabel=function(isOpen){
+    const addBtn=document.getElementById("btnAddTaskBar");
+    if((addBtn&&addBtn.dataset.weekBulkToggle==="1")||getTaskQuickMode()==="week"){
+      if(typeof syncWeekHeaderAction==="function")syncWeekHeaderAction(true);
+      return
+    }
+    return rawSyncAddTaskMainLabel(isOpen)
+  };
+  _weekAddMainLabelGuardPatched=true
+}
+ensureWeekAddMainLabelGuard();
 function isWeekDayExpanded(ds){return weekDayExpandState.has(ds)}
 function toggleWeekDayExpand(ds){if(weekDayExpandState.has(ds))weekDayExpandState.delete(ds);else weekDayExpandState.add(ds);if(typeof rT==="function")rT()}
 function getWeekExpandableDays(baseDs){
@@ -490,7 +505,7 @@ function syncWeekHeaderAction(weekMode,weekMeta){
   if(weekMode){
     const expandableDays=weekMeta&&Array.isArray(weekMeta.expandableDays)?weekMeta.expandableDays:getWeekExpandableDays(sel);
     const allExpanded=expandableDays.length>0&&expandableDays.every(function(ds){return isWeekDayExpanded(ds)});
-    const label=allExpanded?"\u4e00\u952e\u6536\u7f29":"\u4e00\u952e\u5c55\u5f00";
+    const label=allExpanded?"\u4e00\u952e\u6536\u8d77":"\u4e00\u952e\u5c55\u5f00";
     addBtn.dataset.weekBulkToggle="1";
     addBtn.setAttribute("title",label);
     addBtn.setAttribute("aria-label",label);
