@@ -2561,7 +2561,7 @@
 
 #taskMode .list-panel #tList .week-view-progress,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-progress {
-  gap: 18px;
+  gap: 14px;
 }
 
 #taskMode .list-panel #tList .week-view-progress-label,
@@ -2578,11 +2578,28 @@
   color: var(--week-ink);
 }
 
+#taskMode .list-panel #tList .week-view-stat,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-stat {
+  gap: 4px;
+  padding-right: 13px;
+  margin-right: 13px;
+  font-size: 11px;
+  letter-spacing: .01em;
+}
+
+#taskMode .list-panel #tList .week-view-stat b,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-stat b {
+  font-size: 16px;
+  font-weight: 780;
+  letter-spacing: -.035em;
+}
+
 #taskMode .list-panel #tList .week-view-progress-track,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-progress-track {
-  height: 8px;
-  width: 142px;
+  height: 10px;
+  width: 148px;
   background: color-mix(in srgb, var(--week-line) 82%, transparent);
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, .05);
 }
 
 #taskMode .list-panel #tList .week-view-progress-fill,
@@ -2634,6 +2651,10 @@
   height: auto;
   border-radius: 999px;
   background: color-mix(in srgb, var(--week-muted) 36%, transparent);
+  opacity: 0;
+  transform: scaleY(.72);
+  transform-origin: center;
+  transition: opacity .22s ease, transform .22s ease, background .22s ease, box-shadow .22s ease;
 }
 
 #taskMode .list-panel #tList .week-day-card.is-today::before,
@@ -2642,6 +2663,8 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-focus::before {
   background: var(--week-accent);
   box-shadow: 0 0 18px color-mix(in srgb, var(--week-accent) 28%, transparent);
+  opacity: 1;
+  transform: scaleY(1);
 }
 
 #taskMode .list-panel #tList .week-day-card.is-today,
@@ -2885,7 +2908,8 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-meta-row .time-plain.time-disp,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-meta-row .task-recur-badge,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-sub-meta {
-  color: var(--week-muted);
+  color: color-mix(in srgb, var(--week-muted) 72%, var(--week-ink));
+  font-weight: 590;
 }
 
 #taskMode .list-panel #tList .week-task-badge,
@@ -2910,28 +2934,30 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-empty {
   position: relative;
   overflow: hidden;
-  min-height: 48px;
-  justify-content: flex-start;
-  border: 0;
+  min-height: 56px;
+  justify-content: center;
+  border: 1px dashed color-mix(in srgb, var(--week-line) 78%, transparent);
   border-radius: 14px;
-  padding: 0 12px;
-  background: transparent;
+  padding: 0 16px;
+  background: color-mix(in srgb, var(--week-surface) 54%, transparent);
   box-shadow: none;
-  color: var(--week-muted);
+  color: color-mix(in srgb, var(--week-muted) 78%, #a7b3c2);
+  font-size: 12px;
+  font-weight: 560;
+  letter-spacing: .02em;
 }
 
 #taskMode .list-panel #tList .week-day-empty:hover,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-empty:hover {
-  border-color: transparent;
-  background: var(--week-row-hover);
+  border-color: color-mix(in srgb, var(--week-accent) 18%, var(--week-line));
+  background: color-mix(in srgb, var(--week-accent-soft) 42%, var(--week-surface));
   box-shadow: none;
-  transform: translateX(2px);
+  transform: translateY(-1px);
 }
 
 #taskMode .list-panel #tList .week-day-empty-dot,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-empty-dot {
-  background: color-mix(in srgb, var(--week-accent) 48%, var(--week-muted));
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--week-accent) 10%, transparent);
+  display: none;
 }
 
 #taskMode .list-panel #tList .week-task-expand,
