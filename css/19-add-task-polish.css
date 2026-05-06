@@ -2493,8 +2493,9 @@
   --week-line: color-mix(in srgb, var(--inp-bd) 58%, transparent);
   --week-surface: color-mix(in srgb, var(--card) 93%, #f8fafc);
   --week-row-hover: color-mix(in srgb, var(--acc) 6%, transparent);
-  gap: 16px;
-  padding: 0 0 10px;
+  --week-ring: #c4d1e2;
+  gap: 14px;
+  padding: 0 4px 12px;
   font-family: "HarmonyOS Sans SC", "MiSans", "Source Han Sans SC", "Noto Sans SC", system-ui, sans-serif;
 }
 
@@ -2507,6 +2508,7 @@
   --week-line: color-mix(in srgb, var(--task-bd) 82%, transparent);
   --week-surface: color-mix(in srgb, var(--card) 90%, #0f172a);
   --week-row-hover: color-mix(in srgb, var(--acc2) 12%, transparent);
+  --week-ring: #607089;
 }
 
 #taskMode .list-panel #tList .week-view-head,
@@ -2514,15 +2516,13 @@
   position: relative;
   overflow: hidden;
   border: 0;
-  border-radius: 24px;
-  padding: 18px 22px;
-  background:
-    radial-gradient(circle at 88% 14%, color-mix(in srgb, var(--week-accent) 13%, transparent), transparent 30%),
-    linear-gradient(135deg, color-mix(in srgb, var(--card) 96%, #fff) 0%, color-mix(in srgb, var(--week-surface) 96%, #eef3f8) 100%);
+  border-radius: 18px;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--card) 96%, #fff), color-mix(in srgb, var(--week-surface) 92%, #eef3f8));
   box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--week-line) 72%, transparent),
-    0 24px 48px -42px rgba(15, 23, 42, .42);
-  row-gap: 12px;
+    inset 0 0 0 1px color-mix(in srgb, var(--week-line) 70%, transparent),
+    0 12px 26px -28px rgba(15, 23, 42, .32);
+  row-gap: 10px;
   transition: box-shadow .24s ease, transform .2s ease, background .24s ease;
 }
 
@@ -2531,8 +2531,8 @@
   border-color: transparent;
   box-shadow:
     inset 0 0 0 1px color-mix(in srgb, var(--week-accent) 18%, transparent),
-    0 28px 56px -44px rgba(15, 23, 42, .48);
-  transform: translateY(-1px);
+    0 16px 30px -30px rgba(15, 23, 42, .38);
+  transform: translateY(-.5px);
 }
 
 #taskMode .list-panel #tList .week-view-head > *,
@@ -2615,7 +2615,8 @@
 
 #taskMode .list-panel #tList .week-day-grid,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-grid {
-  gap: 16px 18px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
 }
 
 #taskMode .list-panel #tList .week-day-grid.is-split > .week-day-col,
@@ -2627,32 +2628,28 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card {
   position: relative;
   border: 0;
-  border-radius: 22px;
-  background: transparent;
-  box-shadow: none;
+  border-radius: 16px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--card) 98%, #fff), color-mix(in srgb, var(--week-surface) 82%, #f8fafc));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--week-line) 76%, transparent),
+    0 12px 24px -22px rgba(15, 23, 42, .34);
   overflow: hidden;
   isolation: isolate;
   transition: background .22s ease, box-shadow .22s ease, transform .2s ease;
-}
-
-#taskMode .list-panel #tList .week-day-card:not(.is-empty),
-.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card:not(.is-empty) {
-  background: linear-gradient(180deg, color-mix(in srgb, var(--week-surface) 88%, transparent), color-mix(in srgb, var(--card) 68%, transparent));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--week-line) 70%, transparent);
 }
 
 #taskMode .list-panel #tList .week-day-card::before,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card::before {
   left: 0;
   right: auto;
-  top: 16px;
-  bottom: 16px;
-  width: 3px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
   height: auto;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--week-muted) 36%, transparent);
+  border-radius: 999px 0 0 999px;
+  background: var(--week-accent);
   opacity: 0;
-  transform: scaleY(.72);
+  transform: scaleY(.86);
   transform-origin: center;
   transition: opacity .22s ease, transform .22s ease, background .22s ease, box-shadow .22s ease;
 }
@@ -2662,7 +2659,7 @@
 #taskMode .list-panel #tList .week-day-card.is-focus::before,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-focus::before {
   background: var(--week-accent);
-  box-shadow: 0 0 18px color-mix(in srgb, var(--week-accent) 28%, transparent);
+  box-shadow: none;
   opacity: 1;
   transform: scaleY(1);
 }
@@ -2673,21 +2670,22 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-focus {
   border-color: transparent;
   box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--week-accent) 24%, transparent),
-    0 20px 46px -44px color-mix(in srgb, var(--week-accent) 58%, transparent);
+    inset 0 0 0 1px color-mix(in srgb, var(--week-accent) 25%, transparent),
+    0 16px 34px -28px color-mix(in srgb, var(--week-accent) 42%, transparent);
 }
 
 #taskMode .list-panel #tList .week-day-card:hover,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card:hover {
-  transform: translateY(-1px);
+  transform: translateY(-.5px);
 }
 
 #taskMode .list-panel #tList .week-day-head,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-head {
   position: relative;
   overflow: hidden;
-  padding: 15px 18px 10px 22px;
-  border-radius: 20px 20px 12px 12px;
+  padding: 13px 22px 10px 26px;
+  border-bottom: 1px solid var(--week-line);
+  border-radius: 16px 16px 0 0;
   background: transparent;
   transition: background .18s ease, transform .16s ease;
 }
@@ -2713,7 +2711,7 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-name {
   display: inline-flex;
   align-items: baseline;
-  gap: 8px;
+  gap: 10px;
   font-size: 15px;
   font-weight: 760;
   letter-spacing: -.035em;
@@ -2722,29 +2720,34 @@
 
 #taskMode .list-panel #tList .week-day-week,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-week {
-  color: color-mix(in srgb, var(--week-accent) 84%, var(--week-ink));
+  color: var(--week-ink);
   font-size: 16px;
   font-weight: 820;
   letter-spacing: -.045em;
 }
 
+#taskMode .list-panel #tList .week-day-card.is-focus .week-day-week,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-focus .week-day-week,
+#taskMode .list-panel #tList .week-day-card.is-today .week-day-week,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-today .week-day-week {
+  color: color-mix(in srgb, var(--week-accent) 92%, var(--week-ink));
+}
+
 #taskMode .list-panel #tList .week-day-sep,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-sep {
-  color: color-mix(in srgb, var(--week-muted) 42%, transparent);
-  font-size: 12px;
-  font-weight: 640;
+  display: none;
 }
 
 #taskMode .list-panel #tList .week-day-date,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-date {
   position: relative;
-  top: -1px;
-  padding: 2px 8px;
+  top: 0;
+  padding: 0;
   border-radius: 999px;
-  color: color-mix(in srgb, var(--week-muted) 88%, var(--week-ink));
-  background: color-mix(in srgb, var(--week-line) 48%, transparent);
-  font-size: 12px;
-  font-weight: 680;
+  color: color-mix(in srgb, var(--week-muted) 86%, #94a3b8);
+  background: transparent;
+  font-size: 14px;
+  font-weight: 560;
   letter-spacing: -.01em;
 }
 
@@ -2753,7 +2756,7 @@
 #taskMode .list-panel #tList .week-day-card.is-today .week-day-date,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-today .week-day-date {
   color: color-mix(in srgb, var(--week-accent) 76%, var(--week-ink));
-  background: var(--week-accent-soft);
+  background: transparent;
 }
 
 #taskMode .list-panel #tList .week-day-meta,
@@ -2764,10 +2767,13 @@
 #taskMode .list-panel #tList .week-day-count,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count {
   min-width: 26px;
-  height: 26px;
-  color: color-mix(in srgb, var(--week-ink) 76%, var(--week-muted));
-  background: color-mix(in srgb, var(--week-line) 52%, transparent);
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--card) 70%, transparent);
+  height: 24px;
+  padding: 0 10px;
+  color: color-mix(in srgb, var(--week-muted) 88%, var(--week-ink));
+  background: color-mix(in srgb, var(--week-surface) 78%, #fff);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--card) 76%, transparent);
+  font-size: 12px;
+  font-weight: 760;
 }
 
 #taskMode .list-panel #tList .week-day-card.is-focus .week-day-count,
@@ -2780,12 +2786,12 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-list {
   display: grid;
   gap: 0;
-  padding: 0 12px 10px 22px;
+  padding: 0;
 }
 
 #taskMode .list-panel #tList .week-task-list.is-empty,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-list.is-empty {
-  padding-bottom: 12px;
+  padding: 0 22px 12px 26px;
 }
 
 #taskMode .list-panel #tList .week-task-list.is-scroll,
@@ -2819,8 +2825,8 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-extra-inner .week-task-item:first-child::before {
   content: "";
   position: absolute;
-  left: 29px;
-  right: 10px;
+  left: 52px;
+  right: 22px;
   top: 0;
   height: 1px;
   background: var(--week-line);
@@ -2831,12 +2837,14 @@
   position: relative;
   overflow: hidden;
   border: 0;
-  border-radius: 14px;
-  min-height: 58px;
-  padding: 10px 12px;
+  border-radius: 10px;
+  min-height: 50px;
+  padding: 8px 22px 7px 26px;
   background: transparent;
   box-shadow: none;
-  grid-template-columns: 8px minmax(0, 1fr) auto;
+  grid-template-columns: 16px minmax(0, 1fr) auto;
+  align-items: start;
+  column-gap: 10px;
   transition: background .18s ease, transform .16s ease, color .18s ease;
 }
 
@@ -2844,8 +2852,8 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-item + .week-task-item::before {
   content: "";
   position: absolute;
-  left: 29px;
-  right: 10px;
+  left: 52px;
+  right: 22px;
   top: 0;
   height: 1px;
   background: var(--week-line);
@@ -2856,19 +2864,21 @@
   border-color: transparent;
   background: var(--week-row-hover);
   box-shadow: none;
-  transform: translateX(2px);
+  transform: translateY(-.5px);
 }
 
 #taskMode .list-panel #tList .week-task-item:active,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-item:active {
-  transform: translateX(1px) scale(.995);
+  transform: translateY(0) scale(.997);
 }
 
 #taskMode .list-panel #tList .week-task-marker,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-marker {
-  width: 7px;
-  height: 7px;
-  background: color-mix(in srgb, var(--week-muted) 62%, transparent);
+  width: 9px;
+  height: 9px;
+  margin-top: 5px;
+  border: 0;
+  background: var(--week-ring);
   box-shadow: none;
 }
 
@@ -2886,20 +2896,25 @@
 
 #taskMode .list-panel #tList .week-task-main,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-main {
-  gap: 4px;
+  gap: 2px;
 }
 
 #taskMode .list-panel #tList .week-task-title,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-title {
   font-size: 14px;
-  font-weight: 660;
+  font-weight: 620;
   letter-spacing: -.025em;
   color: color-mix(in srgb, var(--week-ink) 88%, var(--week-muted));
 }
 
+#taskMode .list-panel #tList .week-task-item.is-high .week-task-title,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-item.is-high .week-task-title {
+  color: #e11d48;
+}
+
 #taskMode .list-panel #tList .week-task-meta-row,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-meta-row {
-  gap: 12px;
+  gap: 8px;
 }
 
 #taskMode .list-panel #tList .week-task-meta-row .time-plain.time-disp,
@@ -2909,7 +2924,8 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-meta-row .task-recur-badge,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-sub-meta {
   color: color-mix(in srgb, var(--week-muted) 72%, var(--week-ink));
-  font-weight: 590;
+  font-size: 11px;
+  font-weight: 460;
 }
 
 #taskMode .list-panel #tList .week-task-badge,
@@ -2934,11 +2950,12 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-empty {
   position: relative;
   overflow: hidden;
-  min-height: 56px;
+  min-height: 42px;
   justify-content: center;
   border: 1px dashed color-mix(in srgb, var(--week-line) 78%, transparent);
-  border-radius: 14px;
+  border-radius: 12px;
   padding: 0 16px;
+  margin-top: 8px;
   background: color-mix(in srgb, var(--week-surface) 54%, transparent);
   box-shadow: none;
   color: color-mix(in srgb, var(--week-muted) 78%, #a7b3c2);
@@ -2965,8 +2982,8 @@
   position: relative;
   overflow: hidden;
   width: auto;
-  height: 32px;
-  margin: 0 12px 12px 22px;
+  height: 28px;
+  margin: -1px 22px 12px 26px;
   justify-content: flex-start;
   border: 0;
   border-radius: 999px;
@@ -3067,6 +3084,12 @@
 
   #taskMode .list-panel #tList .week-task-list,
   .app.app--with-global-nav #taskMode .list-panel #tList .week-task-list {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  #taskMode .list-panel #tList .week-task-list.is-empty,
+  .app.app--with-global-nav #taskMode .list-panel #tList .week-task-list.is-empty {
     padding-left: 18px;
     padding-right: 8px;
   }
