@@ -2923,6 +2923,40 @@
   min-height: 0;
 }
 
+#taskMode .list-panel #tList .week-done-slide,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-done-slide {
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+  will-change: height, opacity, transform;
+  transition: height .38s cubic-bezier(.22, 1, .36, 1), opacity .22s ease;
+}
+
+#taskMode .list-panel #tList .week-done-slide.is-open,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-done-slide.is-open {
+  height: var(--week-done-slide-h, 320px);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#taskMode .list-panel #tList .week-done-slide-inner,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-done-slide-inner {
+  display: grid;
+  min-height: 0;
+}
+
+#taskMode .list-panel #tList .week-done-slide-inner .week-task-item:first-child::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-done-slide-inner .week-task-item:first-child::before {
+  content: "";
+  position: absolute;
+  left: 52px;
+  right: 22px;
+  top: 0;
+  height: 1px;
+  background: var(--week-line);
+}
+
 #taskMode .list-panel #tList .week-task-extra-inner .week-task-item:first-child::before,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-extra-inner .week-task-item:first-child::before {
   content: "";
@@ -3334,6 +3368,7 @@
   #taskMode .list-panel #tList .week-done-fold-hint,
   #taskMode .list-panel #tList .week-task-list,
   #taskMode .list-panel #tList .week-task-extra,
+  #taskMode .list-panel #tList .week-done-slide,
   #taskMode .list-panel #tList .week-view-head,
   #taskMode .list-panel #tList .week-view-progress-fill,
   .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card,
@@ -3345,6 +3380,7 @@
   .app.app--with-global-nav #taskMode .list-panel #tList .week-done-fold-hint,
   .app.app--with-global-nav #taskMode .list-panel #tList .week-task-list,
   .app.app--with-global-nav #taskMode .list-panel #tList .week-task-extra,
+  .app.app--with-global-nav #taskMode .list-panel #tList .week-done-slide,
   .app.app--with-global-nav #taskMode .list-panel #tList .week-view-head,
   .app.app--with-global-nav #taskMode .list-panel #tList .week-view-progress-fill {
     transition: none !important;
