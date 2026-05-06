@@ -464,6 +464,14 @@ function splitWeekCardsBalanced(items){
   });
   return{left:left.join(""),right:right.join("")}
 }
+function weekTaskTimeMetaHtml(t){
+  const pt=String(t&&t.planTime||"").trim();
+  if(t&&t.recurRuleId){
+    const desc=typeof getRecurDesc==="function"?getRecurDesc(t.recurRuleId)||"重复":"重复",formatted=pt?(typeof formatPlanTimeDisp==="function"?formatPlanTimeDisp(pt):pt):"",timeText=pt?taskRowPlainTimeText(t,formatted):"",label=timeText?desc+" "+timeText:desc,tip=timeText?desc+" · "+timeText:desc,recurIco=typeof taskRecurRowBadgeSvg==="function"?taskRecurRowBadgeSvg():"";
+    return'<span class="task-recur-badge time-disp week-task-recur-meta" title="'+esc(tip)+'">'+recurIco+'<span class="task-recur-badge-txt">'+esc(label)+'</span></span>'
+  }
+  return taskRowTimePlainHtml(t,pt||"全天",false)
+}
 function renderWeekTaskScene(list,baseDs){
   const meta=getTaskWeekMeta(baseDs),rangeText=getTaskWeekRangeText(meta),todayDs=fd(now),weekAllTasks=[],weekFilteredTasks=[];
   let doneAll=0,pendingAll=0;
@@ -488,14 +496,12 @@ function renderWeekTaskScene(list,baseDs){
     });
     const d=parseDS(ds),md=d.getMonth()+1+"\u6708"+d.getDate()+"\u65e5",statusTxt=dayPending?"":raw.length?"\u5df2\u5168\u90e8\u5b8c\u6210":"",cls="week-day-card"+(ds===todayDs?" is-today":"")+(ds===baseDs?" is-focus":"")+(dayRows.length?"":" is-empty"),previewMax=4,isExpandable=dayRows.length>previewMax,isExpanded=isExpandable&&isWeekDayExpanded(ds),rowsForRender=isExpanded?dayRows:dayRows.slice(0,previewMax),hiddenCount=Math.max(0,dayRows.length-previewMax),listCls="week-task-list"+(isExpanded?" is-expanded":"")+(isExpanded&&dayRows.length>10?" is-scroll":"");
     const rowsHtml=rowsForRender.map(function(t){
-      const doneCls=t.done?" is-done":"",highCls=t.priority==="high"?" is-high":"",frozenCls=t.frozen?" is-frozen":"",plan=t.planTime?(typeof formatPlanTimeDisp==="function"?formatPlanTimeDisp(t.planTime):t.planTime):"",dn=parseInt(t.duration,10),dur=Number.isFinite(dn)&&dn>0?dn+"\u5206":"",metaBits=[];
-      if(plan)metaBits.push(esc(plan));
-      if(dur)metaBits.push(esc(dur));
+      const doneCls=t.done?" is-done":"",highCls=t.priority==="high"?" is-high":"",frozenCls=t.frozen?" is-frozen":"",subs=Array.isArray(t.subtasks)?t.subtasks:[],subT=subs.length,subD=subT?subs.reduce(function(n,s){return n+(s&&s.done?1:0)},0):0,timeMeta=weekTaskTimeMetaHtml(t),subMeta=subT?'<span class="week-task-sub-meta'+(subD===subT?" is-done":"")+'" title="子任务 '+subD+'/'+subT+'"><span class="week-task-sub-meta-dot" aria-hidden="true"></span><span>子任务 '+subD+" / "+subT+'</span></span>':"",metaHtml='<span class="week-task-meta-row">'+timeMeta+subMeta+'</span>';
       let badge="";
       if(t.frozen)badge='<span class="week-task-badge week-task-badge--frozen">\u51bb\u7ed3</span>';
       else if(t.priority==="high")badge='<span class="week-task-badge">\u9ad8\u4f18\u5148</span>';
       else if(t.done)badge='<span class="week-task-badge week-task-badge--done">\u5b8c\u6210</span>';
-      return'<button type="button" class="week-task-item'+doneCls+highCls+frozenCls+'" onclick="pick(\''+ds+'\')" title="\u6253\u5f00\u5f53\u65e5\u8be6\u60c5"><span class="week-task-marker" aria-hidden="true"></span><span class="week-task-main"><span class="week-task-title">'+esc(t.text)+'</span><span class="week-task-meta'+(metaBits.length?"":" is-empty")+'">'+(metaBits.length?metaBits.join(" \u00b7 "):"\u70b9\u51fb\u8fdb\u5165\u5f53\u65e5\u7f16\u8f91")+"</span></span>"+badge+"</button>"
+      return'<button type="button" class="week-task-item'+doneCls+highCls+frozenCls+'" onclick="pick(\''+ds+'\')" title="\u6253\u5f00\u5f53\u65e5\u8be6\u60c5"><span class="week-task-marker" aria-hidden="true"></span><span class="week-task-main"><span class="week-task-title">'+esc(t.text)+'</span><span class="week-task-meta">'+metaHtml+"</span></span>"+badge+"</button>"
     }).join("");
     const expandBtn=isExpandable?'<button type="button" class="week-task-expand'+(isExpanded?" is-open":"")+'" onclick="event.stopPropagation();toggleWeekDayExpand(\''+ds+'\')"><span>'+(!isExpanded?"\u5c55\u5f00 "+hiddenCount+" \u9879":"\u6536\u8d77\u5217\u8868")+'</span><span class="week-task-expand-chevron" aria-hidden="true"></span></button>':"";
     const taskBody=rowsHtml||'<button type="button" class="week-day-empty" onclick="pick(\''+ds+'\')" title="\u6253\u5f00\u5f53\u65e5\u8be6\u60c5"><span class="week-day-empty-dot" aria-hidden="true"></span><span>\u6682\u65e0\u4efb\u52a1</span></button>';

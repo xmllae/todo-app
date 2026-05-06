@@ -2180,8 +2180,109 @@
 
 #taskMode .list-panel #tList .week-task-meta,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-meta {
+  display: flex;
+  align-items: center;
+  min-height: 18px;
   font-size: 11px;
   color: var(--text3);
+}
+
+#taskMode .list-panel #tList .week-task-meta-row,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-meta-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+#taskMode .list-panel #tList .week-task-meta-row .time-plain.time-disp,
+#taskMode .list-panel #tList .week-task-meta-row .task-recur-badge,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-meta-row .time-plain.time-disp,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-meta-row .task-recur-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 16px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #738397;
+  font-size: 12px;
+  font-weight: 540;
+  line-height: 1.2;
+  white-space: nowrap;
+  transition: color .18s ease, transform .14s ease;
+}
+
+#taskMode .list-panel #tList .week-task-meta-row .time-plain.time-disp::before,
+#taskMode .list-panel #tList .week-task-meta-row .task-recur-badge-ico,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-meta-row .time-plain.time-disp::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-meta-row .task-recur-badge-ico {
+  width: 11px;
+  height: 11px;
+  flex: 0 0 11px;
+  margin: 0;
+  opacity: .72;
+  transform: translateY(0);
+}
+
+#taskMode .list-panel #tList .week-task-meta-row .time-plain.time-disp::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-meta-row .time-plain.time-disp::before {
+  content: "";
+  display: block;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolyline points='12 6 12 12 16 14'/%3E%3C/svg%3E") center / 11px 11px no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolyline points='12 6 12 12 16 14'/%3E%3C/svg%3E") center / 11px 11px no-repeat;
+}
+
+#taskMode .list-panel #tList .week-task-sub-meta,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-sub-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: color-mix(in srgb, var(--text3) 88%, #64748b);
+  font-size: 11px;
+  font-weight: 560;
+  line-height: 1.25;
+  white-space: nowrap;
+  transition: color .18s ease, transform .14s ease;
+}
+
+#taskMode .list-panel #tList .week-task-sub-meta-dot,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-sub-meta-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .78;
+}
+
+#taskMode .list-panel #tList .week-task-sub-meta.is-done,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-sub-meta.is-done {
+  color: #1f7a43;
+}
+
+#taskMode .list-panel #tList .week-task-item:hover .week-task-meta-row .time-plain.time-disp,
+#taskMode .list-panel #tList .week-task-item:hover .week-task-meta-row .task-recur-badge,
+#taskMode .list-panel #tList .week-task-item:hover .week-task-sub-meta,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-item:hover .week-task-meta-row .time-plain.time-disp,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-item:hover .week-task-meta-row .task-recur-badge,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-item:hover .week-task-sub-meta {
+  color: #3f4f66;
+  transform: translateY(-.5px);
+}
+
+#taskMode .list-panel #tList .week-task-item:active .week-task-meta-row .time-plain.time-disp,
+#taskMode .list-panel #tList .week-task-item:active .week-task-meta-row .task-recur-badge,
+#taskMode .list-panel #tList .week-task-item:active .week-task-sub-meta,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-item:active .week-task-meta-row .time-plain.time-disp,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-item:active .week-task-meta-row .task-recur-badge,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-item:active .week-task-sub-meta {
+  transform: translateY(0);
 }
 
 #taskMode .list-panel #tList .week-task-meta.is-empty,
