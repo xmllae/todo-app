@@ -615,12 +615,12 @@ function setWeekDayExpanded(ds,isOpen){
     taskList.classList.toggle("is-scroll",isOpen&&total>10)
   }
   if(btn){
-    const hiddenCount=btn.getAttribute("data-hidden-count")||"0",totalCount=btn.getAttribute("data-total-count")||card.getAttribute("data-week-task-count")||"0",label=btn.querySelector(".week-task-expand-label")||btn.querySelector("span"),tip=isOpen?"\u6536\u8d77\u5217\u8868":"\u5c55\u5f00 "+hiddenCount+" \u9879";
+    const hiddenCount=btn.getAttribute("data-hidden-count")||"0",countLabel=btn.getAttribute("data-count-label")||"",label=btn.querySelector(".week-task-expand-label")||btn.querySelector("span"),tip=isOpen?"\u6536\u8d77\u5217\u8868":"\u5c55\u5f00 "+hiddenCount+" \u9879",fullTip=countLabel?countLabel+"\uff0c"+tip:tip;
     btn.classList.toggle("is-open",isOpen);
     btn.setAttribute("aria-expanded",isOpen?"true":"false");
-    btn.setAttribute("aria-label",tip);
-    btn.setAttribute("title",tip);
-    if(label)label.textContent=totalCount+" \u9879"
+    btn.setAttribute("aria-label",fullTip);
+    btn.setAttribute("title",fullTip);
+    if(label&&!label.querySelector(".week-day-count-line"))label.textContent=tip
   }
 }
 function toggleWeekDayExpand(ds){
@@ -772,8 +772,10 @@ function renderWeekTaskScene(list,baseDs){
     const extraHtml=isExpandable?'<div class="week-task-extra'+(isExpanded?" is-open":"")+'" data-week-extra-ds="'+ds+'" aria-hidden="'+(isExpanded?"false":"true")+'"'+(isExpanded?"":" inert")+'><div class="week-task-extra-inner">'+extraRows.map(renderWeekRow).join("")+'</div></div>':"";
     const doneSlideHtml=dayDoneRows.length?'<div class="week-done-slide'+(showDayDone?" is-open":"")+'" data-week-done-ds="'+ds+'" aria-hidden="'+(showDayDone?"false":"true")+'"'+(showDayDone?"":" inert")+'><div class="week-done-slide-inner">'+dayDoneRows.map(renderWeekRow).join("")+'</div></div>':"";
     const doneFoldHint=dayDoneRows.length?'<button type="button" class="week-done-fold-hint'+(showDayDone?" is-open":"")+'" data-done-count="'+dayDoneRows.length+'" data-day-label="'+esc(dayLabel)+'" onclick="event.stopPropagation();toggleWeekDoneForDay(\''+ds+'\')" title="'+(showDayDone?"\u6536\u8d77\u5f53\u5929\u5df2\u5b8c\u6210\u4efb\u52a1":"\u4ec5\u663e\u793a\u5f53\u5929\u5df2\u5b8c\u6210\u4efb\u52a1")+'" aria-label="'+(showDayDone?"\u6536\u8d77":"\u663e\u793a")+dayLabel+' \u7684\u5df2\u5b8c\u6210\u4efb\u52a1"><span class="week-done-fold-hint-state">'+(showDayDone?"\u6298\u53e0 ":"\u663e\u793a ")+dayDoneRows.length+' \u9879\u5df2\u5b8c\u6210</span><span class="week-done-fold-hint-action">'+(showDayDone?"\u6536\u8d77":"\u663e\u793a")+'</span></button>':"";
-    const rowsHtml=previewRows.map(renderWeekRow).join("")+extraHtml+doneSlideHtml+doneFoldHint,totalDayRows=allRows.length;
-    const countHtml=isExpandable?'<button type="button" class="week-day-count week-task-expand'+(isExpanded?" is-open":"")+'" data-hidden-count="'+hiddenCount+'" data-total-count="'+totalDayRows+'" aria-expanded="'+(isExpanded?"true":"false")+'" aria-label="'+(isExpanded?"\u6536\u8d77\u5217\u8868":"\u5c55\u5f00 "+hiddenCount+" \u9879")+'" title="'+(isExpanded?"\u6536\u8d77\u5217\u8868":"\u5c55\u5f00 "+hiddenCount+" \u9879")+'" onclick="event.stopPropagation();toggleWeekDayExpand(\''+ds+'\')"><span class="week-task-expand-label">'+totalDayRows+' \u9879</span><span class="week-task-expand-chevron" aria-hidden="true"></span></button>':'<span class="week-day-count">'+totalDayRows+' \u9879</span>';
+    const rowsHtml=previewRows.map(renderWeekRow).join("")+extraHtml+doneSlideHtml+doneFoldHint,totalDayRows=allRows.length,dayTodoCount=dayRows.length,dayDoneCount=dayDoneRows.length;
+    const countInner='<span class="week-task-expand-label"><span class="week-day-count-line week-day-count-line--todo"><span>\u5f85\u529e</span><b>'+dayTodoCount+'</b><span>\u9879</span></span><span class="week-day-count-line week-day-count-line--done"><span>\u5df2\u5b8c\u6210</span><b>'+dayDoneCount+'</b><span>\u9879</span></span></span>';
+    const countTip="\u5f85\u529e "+dayTodoCount+" \u9879\uff0c\u5df2\u5b8c\u6210 "+dayDoneCount+" \u9879";
+    const countHtml=isExpandable?'<button type="button" class="week-day-count week-task-expand'+(isExpanded?" is-open":"")+'" data-hidden-count="'+hiddenCount+'" data-total-count="'+totalDayRows+'" data-count-label="'+countTip+'" aria-expanded="'+(isExpanded?"true":"false")+'" aria-label="'+countTip+'\uff0c'+(isExpanded?"\u6536\u8d77\u5217\u8868":"\u5c55\u5f00 "+hiddenCount+" \u9879")+'" title="'+countTip+'\uff0c'+(isExpanded?"\u6536\u8d77\u5217\u8868":"\u5c55\u5f00 "+hiddenCount+" \u9879")+'" onclick="event.stopPropagation();toggleWeekDayExpand(\''+ds+'\')">'+countInner+'<span class="week-task-expand-chevron" aria-hidden="true"></span></button>':'<span class="week-day-count" title="'+countTip+'" aria-label="'+countTip+'">'+countInner+'</span>';
     const taskBody=rowsHtml||'<button type="button" class="week-day-empty" onclick="pick(\''+ds+'\')" title="\u6253\u5f00\u5f53\u65e5\u8be6\u60c5"><span class="week-day-empty-dot" aria-hidden="true"></span><span>\u6682\u65e0\u4efb\u52a1</span></button>';
     return{html:'<section class="'+cls+'" data-week-ds="'+ds+'" data-week-task-count="'+dayRows.length+'" style="--week-delay:'+(idx*24)+'ms"><div class="week-day-head"><button type="button" class="week-day-title-btn" onclick="pick(\''+ds+'\')" aria-label="\u6253\u5f00\u5468'+weekNames[idx]+' '+md+'"><span class="week-day-name"><span class="week-day-week">\u5468'+weekNames[idx]+'</span><span class="week-day-sep" aria-hidden="true">\u00b7</span><span class="week-day-date">'+md+'</span></span><span class="week-day-meta">'+statusTxt+'</span></button>'+countHtml+'</div><div class="'+listCls+'">'+taskBody+'</div></section>'}
   });
