@@ -4328,6 +4328,19 @@
   animation: none !important;
 }
 
+/* 周视图顶部批量按钮：无可展开内容时降低操作暗示，避免误解为下拉入口。 */
+#taskMode .add-split-main.is-week-bulk-idle,
+.app.app--with-global-nav #taskMode .add-split-main.is-week-bulk-idle {
+  cursor: default;
+  opacity: .82;
+  filter: saturate(.88);
+}
+
+#taskMode .add-split-main.is-week-bulk-idle:hover,
+.app.app--with-global-nav #taskMode .add-split-main.is-week-bulk-idle:hover {
+  filter: saturate(.88);
+}
+
 @media (max-width: 640px) {
   #taskMode .list-panel #tList .week-day-count.week-day-count-group,
   .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count.week-day-count-group {

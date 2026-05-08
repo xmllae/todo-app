@@ -456,6 +456,7 @@ const WEEK_TASK_DONE_ANIM_MS=520;
 const WEEK_HEADER_ADD_ICON='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>';
 const WEEK_HEADER_EXPAND_ICON='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 8 12 13 17 8"></polyline><polyline points="7 12 12 17 17 12"></polyline></svg>';
 const WEEK_HEADER_COLLAPSE_ICON='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 16 12 11 17 16"></polyline><polyline points="7 12 12 7 17 12"></polyline></svg>';
+const WEEK_HEADER_READY_ICON='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>';
 let weekDoneCollapsed=false;
 try{weekDoneCollapsed=localStorage.getItem(WEEK_DONE_COLLAPSE_LS_KEY)==="1"}catch(e){}
 let _weekAddMainLabelGuardPatched=false;
@@ -748,14 +749,19 @@ function syncWeekHeaderAction(weekMode,weekMeta){
   }
   if(weekMode){
     const expandableDays=weekMeta&&Array.isArray(weekMeta.expandableDays)?weekMeta.expandableDays:getWeekExpandableDays(sel);
+    const hasExpandable=expandableDays.length>0;
     const allExpanded=expandableDays.length>0&&expandableDays.every(function(ds){return isWeekDayExpanded(ds)});
-    const label=allExpanded?"\u4e00\u952e\u6536\u8d77":"\u4e00\u952e\u5c55\u5f00";
+    const label=hasExpandable?(allExpanded?"\u6536\u8d77\u5269\u4f59\u4efb\u52a1":"\u5c55\u5f00\u5269\u4f59\u4efb\u52a1"):"\u5269\u4f59\u4efb\u52a1\u5df2\u663e\u793a";
+    const tip=hasExpandable?label:"\u672c\u5468\u6ca1\u6709\u88ab\u6298\u53e0\u7684\u5269\u4f59\u4efb\u52a1";
     addBtn.dataset.weekBulkToggle="1";
-    addBtn.setAttribute("title",label);
-    addBtn.setAttribute("aria-label",label);
-    addBtn.innerHTML=(allExpanded?WEEK_HEADER_COLLAPSE_ICON:WEEK_HEADER_EXPAND_ICON)+label;
+    addBtn.classList.toggle("is-week-bulk-idle",!hasExpandable);
+    addBtn.setAttribute("title",tip);
+    addBtn.setAttribute("aria-label",tip);
+    addBtn.setAttribute("aria-disabled",hasExpandable?"false":"true");
+    addBtn.innerHTML=(hasExpandable?(allExpanded?WEEK_HEADER_COLLAPSE_ICON:WEEK_HEADER_EXPAND_ICON):WEEK_HEADER_READY_ICON)+label;
     addBtn.onclick=function(e){
       if(e){e.preventDefault();e.stopPropagation()}
+      if(!hasExpandable)return;
       toggleWeekAllDays(sel)
     };
     return
@@ -764,6 +770,8 @@ function syncWeekHeaderAction(weekMode,weekMeta){
     addBtn.innerHTML=WEEK_HEADER_ADD_ICON+"\u6dfb\u52a0\u4efb\u52a1";
     addBtn.onclick=showAddTaskRow;
     addBtn.dataset.weekBulkToggle="0"
+    addBtn.classList.remove("is-week-bulk-idle");
+    addBtn.removeAttribute("aria-disabled")
   }
   const hold=document.getElementById("addTaskInlineHold");
   const isOpen=!!(hold&&!hold.classList.contains("hidden")&&hold.classList.contains("task-add-inline-open"));
