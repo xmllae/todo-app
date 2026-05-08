@@ -4330,15 +4330,43 @@
 
 /* 周视图顶部批量按钮：无可展开内容时降低操作暗示，避免误解为下拉入口。 */
 #taskMode .add-split-main.is-week-bulk-idle,
-.app.app--with-global-nav #taskMode .add-split-main.is-week-bulk-idle {
-  cursor: default;
-  opacity: .82;
-  filter: saturate(.88);
+.app.app--with-global-nav #taskMode .add-split-main.is-week-bulk-idle,
+#taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut .add-split-main.is-week-bulk-idle,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut .add-split-main.is-week-bulk-idle {
+  cursor: default !important;
+  color: #5f6f8a !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .96), rgba(248, 250, 252, .92)) !important;
+  border: 1px solid rgba(203, 213, 225, .88) !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, .06), inset 0 1px 0 rgba(255, 255, 255, .9) !important;
+  filter: none !important;
+  transform: none !important;
 }
 
 #taskMode .add-split-main.is-week-bulk-idle:hover,
-.app.app--with-global-nav #taskMode .add-split-main.is-week-bulk-idle:hover {
-  filter: saturate(.88);
+.app.app--with-global-nav #taskMode .add-split-main.is-week-bulk-idle:hover,
+#taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut .add-split-main.is-week-bulk-idle:hover,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut .add-split-main.is-week-bulk-idle:hover {
+  color: #5f6f8a !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .96), rgba(248, 250, 252, .92)) !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, .06), inset 0 1px 0 rgba(255, 255, 255, .9) !important;
+  filter: none !important;
+  transform: none !important;
+}
+
+#taskMode .add-split-main.is-week-bulk-idle:active,
+.app.app--with-global-nav #taskMode .add-split-main.is-week-bulk-idle:active,
+#taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut .add-split-main.is-week-bulk-idle:active,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut .add-split-main.is-week-bulk-idle:active {
+  transform: none !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, .06), inset 0 1px 0 rgba(255, 255, 255, .9) !important;
+}
+
+#taskMode .add-split-main.is-week-bulk-idle svg,
+.app.app--with-global-nav #taskMode .add-split-main.is-week-bulk-idle svg,
+#taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut .add-split-main.is-week-bulk-idle svg,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut .add-split-main.is-week-bulk-idle svg {
+  color: #64748b !important;
+  stroke-width: 2.35 !important;
 }
 
 @media (max-width: 640px) {
