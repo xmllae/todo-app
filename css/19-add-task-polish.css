@@ -4265,6 +4265,69 @@
   }
 }
 
+#taskMode .list-panel #tList .week-task-title,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-title {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  overflow: visible;
+  isolation: isolate;
+}
+
+#taskMode .list-panel #tList .week-task-title::after,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-title::after {
+  content: none !important;
+}
+
+#taskMode .list-panel #tList .week-task-title-text,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-title-text {
+  position: relative;
+  z-index: 1;
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-decoration: none !important;
+}
+
+#taskMode .list-panel #tList .week-task-item.is-done .week-task-title,
+#taskMode .list-panel #tList .week-task-item.is-done .week-task-title-text,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-item.is-done .week-task-title,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-item.is-done .week-task-title-text {
+  text-decoration: none !important;
+}
+
+#taskMode .list-panel #tList .week-task-title-strike,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-title-strike {
+  position: absolute;
+  left: 0;
+  right: auto;
+  top: 54%;
+  z-index: 2;
+  width: 0;
+  height: 1.5px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0;
+  transform: none;
+  pointer-events: none;
+  will-change: width, opacity;
+}
+
+#taskMode .list-panel #tList .week-task-item.is-done .week-task-title-strike,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-item.is-done .week-task-title-strike {
+  opacity: .7;
+  width: 100%;
+  transform: none;
+}
+
+#taskMode .list-panel #tList .week-task-item.task-toggle-anim .week-task-title-strike,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-item.task-toggle-anim .week-task-title-strike {
+  animation: none !important;
+}
+
 @media (max-width: 640px) {
   #taskMode .list-panel #tList .week-day-count.week-day-count-group,
   .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count.week-day-count-group {

@@ -628,10 +628,25 @@ function toggleWeekDayExpand(ds){
   setWeekDayExpanded(ds,!isWeekDayExpanded(ds));
   syncWeekHeaderAction(true)
 }
+function playWeekTaskTitleDoneAnim(row,isDone){
+  const title=row&&row.querySelector(".week-task-title"),text=title&&title.querySelector(".week-task-title-text"),strike=title&&title.querySelector(".week-task-title-strike");
+  if(!title||!strike)return;
+  if(strike.getAnimations)strike.getAnimations().forEach(function(anim){anim.cancel()});
+  const width=Math.max(0,Math.ceil((text||title).getBoundingClientRect().width||title.scrollWidth||0));
+  strike.style.right="auto";
+  strike.style.transition="none";
+  strike.style.transform="none";
+  strike.style.width=(isDone?0:width)+"px";
+  strike.style.opacity=".72";
+  void strike.offsetWidth;
+  strike.style.transition="width "+(isDone?520:180)+"ms cubic-bezier(.16, 1, .3, 1), opacity "+(isDone?160:140)+"ms ease";
+  strike.style.opacity=isDone?".72":"0";
+  strike.style.width=(isDone?width:0)+"px"
+}
 function toggleWeekTaskDone(ds,id){
   const task=(T[ds]||[]).find(function(x){return x.id===id});
   if(!task)return;
-  const row=document.querySelector('#tList .week-task-item[data-week-task-id="'+id+'"]');
+  const card=getWeekDayCard(ds),row=card?card.querySelector('.week-task-item[data-week-task-id="'+id+'"]'):null;
   if(!task.done&&weekTaskTogglePendingIds.has(id)){
     weekTaskTogglePendingIds.delete(id);
     if(window._chkRippleTaskId===id)window._chkRippleTaskId=null;
@@ -639,7 +654,8 @@ function toggleWeekTaskDone(ds,id){
       const ring=row.querySelector(".chk-ring"),wrap=ring&&ring.closest(".task-ck-ring");
       row.classList.remove("is-done","task-toggle-anim");
       if(ring)ring.classList.remove("checked","chk-ring--ripple");
-      if(wrap)wrap.classList.remove("task-ck-ring--done")
+      if(wrap)wrap.classList.remove("task-ck-ring--done");
+      playWeekTaskTitleDoneAnim(row,false)
     }
     try{if(typeof playCheckSound==="function")playCheckSound(false)}catch(e){}
     return
@@ -664,6 +680,8 @@ function toggleWeekTaskDone(ds,id){
   try{if(typeof playCheckSound==="function")playCheckSound(true)}catch(e){}
   if(row){
     const ring=row.querySelector(".chk-ring"),wrap=ring&&ring.closest(".task-ck-ring");
+    row.classList.remove("task-toggle-anim");
+    void row.offsetWidth;
     row.classList.add("is-done","task-toggle-anim");
     if(ring){
       ring.classList.remove("chk-ring--ripple");
@@ -675,6 +693,7 @@ function toggleWeekTaskDone(ds,id){
       wrap.setAttribute("aria-pressed","true");
       wrap.setAttribute("aria-label","\u6807\u8bb0\u4e3a\u672a\u5b8c\u6210")
     }
+    playWeekTaskTitleDoneAnim(row,true)
   }
   window.setTimeout(function(){
     if(!weekTaskTogglePendingIds.has(id))return;
@@ -810,7 +829,7 @@ function renderWeekTaskScene(list,baseDs){
       let badge="";
       if(t.frozen)badge='<span class="week-task-badge week-task-badge--frozen">\u51bb\u7ed3</span>';
       else if(t.done)badge='<span class="week-task-badge week-task-badge--done">\u5b8c\u6210</span>';
-      return'<div class="week-task-item'+doneCls+animCls+highCls+frozenCls+'" data-week-task-id="'+t.id+'" title="\u6253\u5f00\u5f53\u65e5\u8be6\u60c5">'+weekTaskCheckRingHtml(t,ds)+'<button type="button" class="week-task-open" onclick="pick(\''+ds+'\')"><span class="week-task-main"><span class="week-task-title">'+esc(t.text)+'</span><span class="week-task-meta">'+metaHtml+"</span></span>"+badge+"</button></div>"
+      return'<div class="week-task-item'+doneCls+animCls+highCls+frozenCls+'" data-week-task-id="'+t.id+'" title="\u6253\u5f00\u5f53\u65e5\u8be6\u60c5">'+weekTaskCheckRingHtml(t,ds)+'<button type="button" class="week-task-open" onclick="pick(\''+ds+'\')"><span class="week-task-main"><span class="week-task-title"><span class="week-task-title-text">'+esc(t.text)+'</span><span class="week-task-title-strike" aria-hidden="true"></span></span><span class="week-task-meta">'+metaHtml+"</span></span>"+badge+"</button></div>"
     };
     const totalDayRows=allRows.length,dayTodoCount=dayRows.length,dayDoneCount=dayDoneRows.length,countTip="\u5f85\u529e "+dayTodoCount+" \u9879\uff0c\u5df2\u5b8c\u6210 "+dayDoneCount+" \u9879";
     const extraHtml=isExpandable?'<div class="week-task-extra'+(isExpanded?" is-open":"")+'" data-week-extra-ds="'+ds+'" aria-hidden="'+(isExpanded?"false":"true")+'"'+(isExpanded?"":" inert")+'><div class="week-task-extra-inner">'+extraRows.map(renderWeekRow).join("")+'</div></div>':"";
