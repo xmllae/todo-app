@@ -2960,6 +2960,52 @@
   min-height: 0;
 }
 
+#taskMode .list-panel #tList .week-done-section-head,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-done-section-head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 9px 28px 5px 86px;
+  color: #7f8fa8;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  line-height: 1;
+}
+
+#taskMode .list-panel #tList .week-done-section-head::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-done-section-head::before {
+  content: "";
+  position: absolute;
+  left: 52px;
+  right: 28px;
+  top: 50%;
+  height: 1px;
+  background: linear-gradient(90deg, var(--week-line), rgba(226, 232, 240, .35));
+}
+
+#taskMode .list-panel #tList .week-done-section-label,
+#taskMode .list-panel #tList .week-done-section-count,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-done-section-label,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-done-section-count {
+  position: relative;
+  z-index: 1;
+  background: var(--card);
+}
+
+#taskMode .list-panel #tList .week-done-section-label,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-done-section-label {
+  padding-left: 8px;
+}
+
+#taskMode .list-panel #tList .week-done-section-count,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-done-section-count {
+  padding-right: 8px;
+  color: #64748b;
+}
+
 #taskMode .list-panel #tList .week-done-slide-inner .week-task-item:first-child::before,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-done-slide-inner .week-task-item:first-child::before {
   content: "";
