@@ -4110,20 +4110,49 @@
 
 #taskMode .list-panel #tList .week-day-count-chip .week-task-expand-chevron,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip .week-task-expand-chevron {
-  flex: 0 0 8px;
-  width: 8px;
-  height: 8px;
-  margin-left: 1px;
-  border-right-width: 2.4px;
-  border-bottom-width: 2.4px;
-  color: color-mix(in srgb, var(--week-accent) 70%, var(--week-muted));
+  position: relative;
+  flex: 0 0 13px;
+  width: 13px;
+  height: 13px;
+  margin-left: 0;
+  border: 0;
+  color: color-mix(in srgb, var(--week-accent) 64%, var(--week-muted));
   opacity: 1;
-  transition: transform .2s ease, color .18s ease, opacity .18s ease;
+  transform: none;
+  transition: color .18s ease, opacity .18s ease;
+}
+
+#taskMode .list-panel #tList .week-day-count-chip .week-task-expand-chevron::before,
+#taskMode .list-panel #tList .week-day-count-chip .week-task-expand-chevron::after,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip .week-task-expand-chevron::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip .week-task-expand-chevron::after {
+  content: "";
+  position: absolute;
+  top: 6px;
+  width: 6px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  transition: transform .22s cubic-bezier(.2, .8, .2, 1);
+}
+
+#taskMode .list-panel #tList .week-day-count-chip .week-task-expand-chevron::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip .week-task-expand-chevron::before {
+  left: 1px;
+  transform: rotate(42deg);
+  transform-origin: right center;
+}
+
+#taskMode .list-panel #tList .week-day-count-chip .week-task-expand-chevron::after,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip .week-task-expand-chevron::after {
+  right: 1px;
+  transform: rotate(-42deg);
+  transform-origin: left center;
 }
 
 #taskMode .list-panel #tList .week-day-count-chip--done .week-task-expand-chevron,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip--done .week-task-expand-chevron {
-  color: color-mix(in srgb, var(--week-accent) 82%, var(--week-ink));
+  color: color-mix(in srgb, var(--week-accent) 76%, var(--week-ink));
 }
 
 #taskMode .list-panel #tList button.week-day-count-chip:hover .week-task-expand-chevron,
@@ -4138,7 +4167,17 @@
 
 #taskMode .list-panel #tList .week-day-count-chip.is-open .week-task-expand-chevron,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip.is-open .week-task-expand-chevron {
-  transform: rotate(-135deg) translateY(-1px);
+  transform: none;
+}
+
+#taskMode .list-panel #tList .week-day-count-chip.is-open .week-task-expand-chevron::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip.is-open .week-task-expand-chevron::before {
+  transform: rotate(-42deg);
+}
+
+#taskMode .list-panel #tList .week-day-count-chip.is-open .week-task-expand-chevron::after,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip.is-open .week-task-expand-chevron::after {
+  transform: rotate(42deg);
 }
 
 @media (max-width: 640px) {
