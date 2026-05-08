@@ -2955,14 +2955,15 @@
 #taskMode .list-panel #tList .week-task-more-hint,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-more-hint {
   appearance: none;
-  justify-self: end;
+  position: relative;
+  justify-self: start;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 7px;
   min-height: 28px;
-  margin: 2px 28px 10px 0;
-  padding: 0 4px;
+  margin: 2px 22px 10px 26px;
+  padding: 0 2px 4px;
   border: 0;
   border-radius: 9px;
   color: color-mix(in srgb, var(--week-accent) 70%, var(--week-muted));
@@ -2976,6 +2977,20 @@
   transition: color .18s ease, opacity .18s ease, transform .18s ease;
 }
 
+#taskMode .list-panel #tList .week-task-more-hint::after,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-more-hint::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 4px;
+  height: 1px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity .18s ease, transform .18s ease;
+}
+
 #taskMode .list-panel #tList .week-task-more-hint b,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-more-hint b {
   color: color-mix(in srgb, var(--week-accent) 84%, var(--week-ink));
@@ -2985,8 +3000,13 @@
 #taskMode .list-panel #tList .week-task-more-hint:hover,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-more-hint:hover {
   color: color-mix(in srgb, var(--week-accent) 88%, var(--week-ink));
-  text-decoration: underline;
-  text-underline-offset: 5px;
+}
+
+#taskMode .list-panel #tList .week-task-more-hint:hover::after,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-more-hint:hover::after,
+#taskMode .list-panel #tList .week-task-more-hint:focus-visible::after,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-more-hint:focus-visible::after {
+  opacity: .5;
 }
 
 #taskMode .list-panel #tList .week-task-more-hint:active,
