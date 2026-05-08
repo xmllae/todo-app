@@ -4581,6 +4581,42 @@
     0 4px 12px -12px color-mix(in srgb, var(--week-accent) 36%, transparent);
 }
 
+/* 过期待办轻提示：用克制的琥珀色提醒风险，不打断周视图的整体轻量感。 */
+#taskMode .list-panel #tList .week-day-overdue-text,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-overdue-text {
+  color: color-mix(in srgb, #b45309 78%, var(--week-muted));
+  font-weight: 760;
+}
+
+#taskMode .list-panel #tList .week-day-card.is-overdue .week-day-head,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-overdue .week-day-head {
+  background: color-mix(in srgb, #f59e0b 4%, transparent);
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.is-overdue,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-overdue {
+  color: color-mix(in srgb, #b45309 76%, var(--week-ink));
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.is-overdue::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-overdue::before {
+  opacity: 1;
+  transform: scale(1);
+  background: color-mix(in srgb, #f59e0b 6%, #fff);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, #f59e0b 16%, transparent),
+    0 4px 14px -14px rgba(180, 83, 9, .34);
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.is-overdue .week-view-day-pill-count,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-overdue .week-view-day-pill-count {
+  color: color-mix(in srgb, #b45309 86%, var(--week-ink));
+  background: color-mix(in srgb, #f59e0b 12%, #fff);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, #f59e0b 20%, transparent),
+    0 4px 12px -12px rgba(180, 83, 9, .36);
+}
+
 #taskMode .list-panel #tList .week-view-day-pill.is-empty .week-view-day-pill-count,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty .week-view-day-pill-count {
   color: color-mix(in srgb, var(--week-muted) 58%, transparent);
@@ -4591,6 +4627,33 @@
 #taskMode .list-panel #tList .week-day-card.is-jump-highlight,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-jump-highlight {
   animation: week-day-jump-pulse .9s cubic-bezier(.22, 1, .36, 1);
+}
+
+/* 无待办日期瘦身：减少已完成/空状态卡片的视觉占用，突出真正需要处理的日期。 */
+#taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open) .week-day-head,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open) .week-day-head {
+  min-height: 68px;
+  padding-top: 14px;
+  padding-bottom: 14px;
+  border-bottom: 0;
+  border-radius: 18px;
+}
+
+#taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open) .week-task-list,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open) .week-task-list {
+  display: none;
+}
+
+#taskMode .list-panel #tList .week-day-card.is-empty .week-day-head,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-empty .week-day-head {
+  padding-top: 14px;
+  padding-bottom: 9px;
+}
+
+#taskMode .list-panel #tList .week-day-card.is-empty .week-day-empty,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-empty .week-day-empty {
+  min-height: 36px;
+  color: color-mix(in srgb, var(--week-muted) 72%, transparent);
 }
 
 @keyframes week-day-jump-pulse {
