@@ -3822,10 +3822,10 @@
 /* Final completed disclosure: a list section row, not a secondary card. */
 #taskMode .list-panel #tList .week-done-fold-hint,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-done-fold-hint {
-  --week-done-accent: #16a34a;
-  display: grid;
-  grid-template-columns: 18px minmax(0, 1fr) auto;
+  --week-done-accent: color-mix(in srgb, var(--week-accent) 58%, var(--week-muted));
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   width: 100%;
   min-height: 42px;
@@ -3867,28 +3867,30 @@
 
 #taskMode .list-panel #tList .week-done-fold-hint-icon,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-done-fold-hint-icon {
-  width: 18px;
-  height: 18px;
-  border-radius: 999px;
-  color: color-mix(in srgb, var(--week-done-accent) 82%, #64748b);
-  background: color-mix(in srgb, var(--week-done-accent) 10%, transparent);
-  transition: background .18s ease, color .18s ease;
+  width: 16px;
+  height: 16px;
+  border-radius: 0;
+  color: color-mix(in srgb, var(--week-done-accent) 78%, var(--week-muted));
+  background: transparent;
+  opacity: .86;
+  transition: color .18s ease, opacity .18s ease;
 }
 
 #taskMode .list-panel #tList .week-done-fold-hint:hover .week-done-fold-hint-icon,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-done-fold-hint:hover .week-done-fold-hint-icon {
   color: var(--week-done-accent);
-  background: color-mix(in srgb, var(--week-done-accent) 14%, transparent);
+  opacity: 1;
 }
 
 #taskMode .list-panel #tList .week-done-fold-hint-icon svg,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-done-fold-hint-icon svg {
-  width: 13px;
-  height: 13px;
+  width: 15px;
+  height: 15px;
 }
 
 #taskMode .list-panel #tList .week-done-fold-hint-copy,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-done-fold-hint-copy {
+  flex: 0 0 auto;
   gap: 6px;
   min-width: 0;
 }
@@ -3900,17 +3902,29 @@
   font-weight: 560;
 }
 
+#taskMode .list-panel #tList .week-done-fold-hint-state::after,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-done-fold-hint-state::after {
+  content: "";
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  margin-left: 6px;
+  border-radius: 50%;
+  vertical-align: middle;
+  background: color-mix(in srgb, var(--week-muted) 44%, transparent);
+}
+
 #taskMode .list-panel #tList .week-done-fold-hint-count,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-done-fold-hint-count {
   color: color-mix(in srgb, var(--week-ink) 82%, var(--week-muted));
   font-size: 12px;
-  font-weight: 760;
+  font-weight: 700;
   letter-spacing: -.02em;
 }
 
 #taskMode .list-panel #tList .week-done-fold-hint-action,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-done-fold-hint-action {
-  justify-self: end;
+  flex: 0 0 auto;
   gap: 7px;
   color: color-mix(in srgb, var(--week-accent) 86%, var(--week-ink));
   font-size: 12px;
@@ -3932,6 +3946,7 @@
     margin: 0;
     padding-left: 18px;
     padding-right: 14px;
+    justify-content: center;
   }
 
   #taskMode .list-panel #tList .week-done-fold-hint::before,
@@ -3941,3 +3956,102 @@
   }
 }
 
+/* Swap weekly controls: the header count reveals completed items, the footer reveals remaining todo items. */
+#taskMode .list-panel #tList .week-day-count.week-done-count-toggle,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count.week-done-count-toggle {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  min-width: 0;
+  min-height: 28px;
+  margin: 0;
+  padding: 2px 4px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--week-muted);
+  font: inherit;
+  line-height: 1;
+  cursor: pointer;
+  transform: none;
+  transition: background .18s ease, color .18s ease;
+}
+
+#taskMode .list-panel #tList .week-day-count.week-done-count-toggle:hover,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count.week-done-count-toggle:hover {
+  background: color-mix(in srgb, var(--week-accent) 6%, transparent);
+  color: color-mix(in srgb, var(--week-accent) 82%, var(--week-ink));
+  transform: none;
+}
+
+#taskMode .list-panel #tList .week-day-count.week-done-count-toggle:active,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count.week-done-count-toggle:active {
+  transform: none;
+}
+
+#taskMode .list-panel #tList .week-day-count.week-done-count-toggle.is-open .week-task-expand-chevron,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count.week-done-count-toggle.is-open .week-task-expand-chevron {
+  transform: rotate(-135deg) translateY(-1px);
+}
+
+#taskMode .list-panel #tList .week-task-expand.week-task-extra-toggle,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-expand.week-task-extra-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 40px;
+  margin: 0;
+  padding: 9px 24px 10px;
+  border: 0;
+  border-radius: 0 0 17px 17px;
+  background: transparent;
+  box-shadow: none;
+  color: color-mix(in srgb, var(--week-accent) 80%, var(--week-ink));
+  font-size: 12px;
+  font-weight: 720;
+  letter-spacing: -.01em;
+  line-height: 1.2;
+  overflow: hidden;
+  transform: none;
+  transition: background .2s ease, color .18s ease;
+}
+
+#taskMode .list-panel #tList .week-task-expand.week-task-extra-toggle:hover,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-expand.week-task-extra-toggle:hover {
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--week-accent) 5%, transparent), transparent);
+  border-color: transparent;
+  box-shadow: none;
+  color: color-mix(in srgb, var(--week-accent) 92%, var(--week-ink));
+  filter: none;
+  transform: none;
+}
+
+#taskMode .list-panel #tList .week-task-expand.week-task-extra-toggle:active,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-expand.week-task-extra-toggle:active {
+  transform: none;
+}
+
+#taskMode .list-panel #tList .week-task-expand.week-task-extra-toggle::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-expand.week-task-extra-toggle::before {
+  content: "";
+  position: absolute;
+  left: 54px;
+  right: 24px;
+  top: 0;
+  height: 1px;
+  background: color-mix(in srgb, var(--week-line) 70%, transparent);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #taskMode .list-panel #tList .week-day-count.week-done-count-toggle,
+  .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count.week-done-count-toggle {
+    transition: none !important;
+  }
+}
