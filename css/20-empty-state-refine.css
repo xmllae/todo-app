@@ -1,0 +1,126 @@
+/* 空状态视觉优化：弱化装饰，让文字成为主角，图标只做低对比辅助提示。 */
+#taskMode .list-panel #tList .empty {
+  --empty-glyph-color: color-mix(in srgb, var(--text3) 78%, var(--text2));
+  --empty-glyph-soft: color-mix(in srgb, var(--text3) 28%, transparent);
+  min-height: clamp(210px, 32vh, 320px);
+  padding: clamp(42px, 8vw, 68px) 20px;
+  gap: 0;
+  color: var(--text3);
+  animation: empty-state-enter .34s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+#taskMode .list-panel #tList .empty .em {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  margin: 0 0 14px;
+  border: 0;
+  border-radius: 0;
+  color: var(--empty-glyph-color);
+  font-size: 0;
+  line-height: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+#taskMode .list-panel #tList .empty .em::before,
+#taskMode .list-panel #tList .empty .em::after {
+  content: none !important;
+}
+
+#taskMode .list-panel #tList .empty-state-icon {
+  display: block;
+  width: 40px;
+  height: 40px;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.45;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: .78;
+}
+
+#taskMode .list-panel #tList .empty-state-icon__soft {
+  stroke: var(--empty-glyph-soft);
+}
+
+#taskMode .list-panel #tList .empty-state-icon__dot {
+  fill: currentColor;
+  stroke: none;
+  opacity: .48;
+}
+
+#taskMode .list-panel #tList .empty--filter .empty-state-icon,
+#taskMode .list-panel #tList .empty--complete .empty-state-icon {
+  transform: translate(1px, -1px) rotate(-2deg);
+}
+
+#taskMode .list-panel #tList .empty .empty-main {
+  margin: 0 0 6px;
+  color: var(--text);
+  font-size: clamp(.98rem, 1.8vw, 1.06rem);
+  font-weight: 650;
+  line-height: 1.45;
+  letter-spacing: 0;
+}
+
+#taskMode .list-panel #tList .empty .empty-sub {
+  max-width: 18rem;
+  margin: 0 auto;
+  color: color-mix(in srgb, var(--text3) 92%, var(--text2));
+  font-size: .88rem;
+  font-weight: 450;
+  line-height: 1.65;
+  letter-spacing: 0;
+}
+
+.dark #taskMode .list-panel #tList .empty {
+  --empty-glyph-color: color-mix(in srgb, var(--text3) 82%, var(--text2));
+  --empty-glyph-soft: color-mix(in srgb, var(--text3) 30%, transparent);
+}
+
+.dark #taskMode .list-panel #tList .empty .empty-main {
+  color: var(--text);
+}
+
+.dark #taskMode .list-panel #tList .empty .empty-sub {
+  color: color-mix(in srgb, var(--text3) 86%, var(--text2));
+}
+
+@keyframes empty-state-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  #taskMode .list-panel #tList .empty {
+    min-height: 210px;
+    padding: 40px 18px 46px;
+  }
+
+  #taskMode .list-panel #tList .empty .em {
+    width: 42px;
+    height: 42px;
+    margin-bottom: 13px;
+  }
+
+  #taskMode .list-panel #tList .empty-state-icon {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #taskMode .list-panel #tList .empty {
+    animation: none !important;
+  }
+}

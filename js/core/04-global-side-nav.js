@@ -116,6 +116,21 @@
     return rowsFor(ds).filter(isPending);
   }
 
+  function weekKeysFor(ds) {
+    var base = isValidDateKey(ds) && typeof parseDS === "function" ? parseDS(ds) : new Date();
+    base.setHours(0, 0, 0, 0);
+    var start = new Date(base);
+    var diff = start.getDay() === 0 ? -6 : 1 - start.getDay();
+    start.setDate(start.getDate() + diff);
+    var days = [];
+    for (var i = 0; i < 7; i++) {
+      var d = new Date(start);
+      d.setDate(start.getDate() + i);
+      days.push(fd(d));
+    }
+    return days;
+  }
+
   function allEntries() {
     var out = [];
     if (typeof T === "undefined" || !T) return out;
@@ -128,9 +143,9 @@
   }
 
   function countWeek() {
-    var total = 0;
-    for (var i = 0; i < 7; i++) total += pendingFor(offsetKey(i)).length;
-    return total;
+    return weekKeysFor(todayKey()).reduce(function (total, ds) {
+      return total + pendingFor(ds).length;
+    }, 0);
   }
 
   function countOverdue() {
