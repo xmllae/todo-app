@@ -2883,6 +2883,13 @@
   align-items: center;
 }
 
+#taskMode .list-panel #tList .week-day-date-text,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-date-text {
+  flex: 0 0 46px;
+  width: 46px;
+  font-variant-numeric: tabular-nums;
+}
+
 #taskMode .list-panel #tList .week-day-count,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count {
   border: 0;
