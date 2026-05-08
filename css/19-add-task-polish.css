@@ -4157,6 +4157,26 @@
   font-weight: 700;
 }
 
+#taskMode .list-panel #tList .week-day-card.is-today .week-day-date-text,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-today .week-day-date-text {
+  color: color-mix(in srgb, var(--week-accent) 78%, var(--week-muted));
+}
+
+#taskMode .list-panel #tList .week-day-status-text,
+#taskMode .list-panel #tList .week-day-card.is-today .week-day-status-text,
+#taskMode .list-panel #tList .week-day-card.is-focus .week-day-status-text,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-status-text,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-today .week-day-status-text,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-focus .week-day-status-text {
+  color: color-mix(in srgb, var(--week-muted) 82%, var(--week-ink));
+  font-weight: 650;
+}
+
+#taskMode .list-panel #tList .week-day-card.is-empty .week-day-status-text,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-empty .week-day-status-text {
+  color: color-mix(in srgb, var(--week-muted) 70%, transparent);
+}
+
 #taskMode .list-panel #tList .week-day-card.is-today:hover,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-today:hover,
 #taskMode .list-panel #tList .week-day-card.is-focus:hover,
@@ -4758,6 +4778,20 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-empty .week-day-empty {
   min-height: 36px;
   color: color-mix(in srgb, var(--week-muted) 72%, transparent);
+}
+
+#taskMode .list-panel #tList .week-day-card.is-empty .week-day-head,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-empty .week-day-head {
+  min-height: 68px;
+  padding-top: 14px;
+  padding-bottom: 14px;
+  border-bottom: 0;
+  border-radius: 18px;
+}
+
+#taskMode .list-panel #tList .week-day-card.is-empty .week-task-list,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-empty .week-task-list {
+  display: none;
 }
 
 @keyframes week-day-jump-pulse {
