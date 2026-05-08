@@ -4050,7 +4050,7 @@
   min-width: 0;
   min-height: 26px;
   margin: 0;
-  padding: 2px 2px;
+  padding: 2px 3px;
   border: 0;
   border-radius: 9px;
   background: transparent;
@@ -4061,7 +4061,7 @@
   white-space: nowrap;
   cursor: default;
   transform: none;
-  transition: background .18s ease, color .18s ease;
+  transition: color .18s ease;
 }
 
 #taskMode .list-panel #tList button.week-day-count-chip,
@@ -4070,11 +4070,36 @@
   padding-right: 4px;
 }
 
+#taskMode .list-panel #tList button.week-day-count-chip::after,
+.app.app--with-global-nav #taskMode .list-panel #tList button.week-day-count-chip::after {
+  content: "";
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  bottom: 0;
+  height: 2px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--week-accent) 58%, var(--week-muted));
+  opacity: 0;
+  transform: scaleX(.72);
+  transform-origin: center;
+  transition: opacity .18s ease, transform .22s cubic-bezier(.2, .8, .2, 1);
+  pointer-events: none;
+}
+
 #taskMode .list-panel #tList button.week-day-count-chip:hover,
 .app.app--with-global-nav #taskMode .list-panel #tList button.week-day-count-chip:hover {
-  background: color-mix(in srgb, var(--week-accent) 5.5%, transparent);
+  background: transparent;
   color: color-mix(in srgb, var(--week-accent) 76%, var(--week-ink));
   transform: none;
+}
+
+#taskMode .list-panel #tList button.week-day-count-chip:hover::after,
+.app.app--with-global-nav #taskMode .list-panel #tList button.week-day-count-chip:hover::after,
+#taskMode .list-panel #tList button.week-day-count-chip.is-open::after,
+.app.app--with-global-nav #taskMode .list-panel #tList button.week-day-count-chip.is-open::after {
+  opacity: .34;
+  transform: scaleX(1);
 }
 
 #taskMode .list-panel #tList button.week-day-count-chip:active,
@@ -4091,93 +4116,85 @@
 
 #taskMode .list-panel #tList .week-day-count-chip .week-day-count-line,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip .week-day-count-line {
-  align-items: baseline;
+  align-items: center;
   gap: 3px;
+  color: color-mix(in srgb, var(--week-muted) 86%, var(--week-ink));
   font-size: 12px;
   font-weight: 600;
+  line-height: 1;
 }
 
 #taskMode .list-panel #tList .week-day-count-chip .week-day-count-line b,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip .week-day-count-line b {
+  color: color-mix(in srgb, var(--week-ink) 88%, var(--week-accent));
   font-size: 13px;
   font-weight: 760;
+  line-height: 1;
 }
 
 #taskMode .list-panel #tList .week-day-count-chip--done .week-day-count-line,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip--done .week-day-count-line {
-  color: color-mix(in srgb, var(--week-muted) 78%, #94a3b8);
+  color: color-mix(in srgb, var(--week-muted) 86%, var(--week-ink));
 }
 
-#taskMode .list-panel #tList .week-day-count-chip .week-task-expand-chevron,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip .week-task-expand-chevron {
+#taskMode .list-panel #tList .week-day-count-chip .week-day-count-line--done b,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip .week-day-count-line--done b {
+  color: color-mix(in srgb, var(--week-ink) 88%, var(--week-accent));
+  font-weight: 760;
+}
+
+#taskMode .list-panel #tList button.week-day-count-chip:hover .week-day-count-line,
+.app.app--with-global-nav #taskMode .list-panel #tList button.week-day-count-chip:hover .week-day-count-line {
+  color: color-mix(in srgb, var(--week-accent) 78%, var(--week-ink));
+}
+
+#taskMode .list-panel #tList button.week-day-count-chip:hover .week-day-count-line b,
+.app.app--with-global-nav #taskMode .list-panel #tList button.week-day-count-chip:hover .week-day-count-line b {
+  color: inherit;
+}
+
+#taskMode .list-panel #tList .week-day-count-caret,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-caret {
   position: relative;
-  flex: 0 0 13px;
-  width: 13px;
-  height: 13px;
-  margin-left: 0;
-  border: 0;
-  color: color-mix(in srgb, var(--week-accent) 64%, var(--week-muted));
-  opacity: 1;
-  transform: none;
-  transition: color .18s ease, opacity .18s ease;
+  flex: 0 0 12px;
+  width: 12px;
+  height: 12px;
+  margin-left: 1px;
+  color: color-mix(in srgb, var(--week-accent) 66%, var(--week-muted));
+  opacity: .92;
+  transform: translateY(.5px);
+  transform-origin: 50% 50%;
+  transition: transform .22s cubic-bezier(.2, .8, .2, 1), color .18s ease, opacity .18s ease;
 }
 
-#taskMode .list-panel #tList .week-day-count-chip .week-task-expand-chevron::before,
-#taskMode .list-panel #tList .week-day-count-chip .week-task-expand-chevron::after,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip .week-task-expand-chevron::before,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip .week-task-expand-chevron::after {
+#taskMode .list-panel #tList .week-day-count-caret::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-caret::before {
   content: "";
   position: absolute;
-  top: 6px;
-  width: 6px;
-  height: 2px;
-  border-radius: 999px;
-  background: currentColor;
-  transition: transform .22s cubic-bezier(.2, .8, .2, 1);
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid currentColor;
+  transform: translate(-50%, -34%);
 }
 
-#taskMode .list-panel #tList .week-day-count-chip .week-task-expand-chevron::before,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip .week-task-expand-chevron::before {
-  left: 1px;
-  transform: rotate(42deg);
-  transform-origin: right center;
+#taskMode .list-panel #tList .week-day-count-chip--done .week-day-count-caret,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip--done .week-day-count-caret {
+  color: color-mix(in srgb, var(--week-accent) 66%, var(--week-muted));
 }
 
-#taskMode .list-panel #tList .week-day-count-chip .week-task-expand-chevron::after,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip .week-task-expand-chevron::after {
-  right: 1px;
-  transform: rotate(-42deg);
-  transform-origin: left center;
-}
-
-#taskMode .list-panel #tList .week-day-count-chip--done .week-task-expand-chevron,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip--done .week-task-expand-chevron {
-  color: color-mix(in srgb, var(--week-accent) 76%, var(--week-ink));
-}
-
-#taskMode .list-panel #tList button.week-day-count-chip:hover .week-task-expand-chevron,
-.app.app--with-global-nav #taskMode .list-panel #tList button.week-day-count-chip:hover .week-task-expand-chevron {
+#taskMode .list-panel #tList button.week-day-count-chip:hover .week-day-count-caret,
+.app.app--with-global-nav #taskMode .list-panel #tList button.week-day-count-chip:hover .week-day-count-caret {
   color: color-mix(in srgb, var(--week-accent) 92%, var(--week-ink));
+  opacity: 1;
 }
 
-#taskMode .list-panel #tList .week-day-count-chip.is-open,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip.is-open {
-  color: color-mix(in srgb, var(--week-accent) 84%, var(--week-ink));
-}
-
-#taskMode .list-panel #tList .week-day-count-chip.is-open .week-task-expand-chevron,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip.is-open .week-task-expand-chevron {
-  transform: none;
-}
-
-#taskMode .list-panel #tList .week-day-count-chip.is-open .week-task-expand-chevron::before,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip.is-open .week-task-expand-chevron::before {
-  transform: rotate(-42deg);
-}
-
-#taskMode .list-panel #tList .week-day-count-chip.is-open .week-task-expand-chevron::after,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip.is-open .week-task-expand-chevron::after {
-  transform: rotate(42deg);
+#taskMode .list-panel #tList .week-day-count-chip.is-open .week-day-count-caret,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip.is-open .week-day-count-caret {
+  transform: translateY(.5px) rotate(180deg);
 }
 
 @media (max-width: 640px) {
