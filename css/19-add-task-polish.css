@@ -2869,22 +2869,6 @@
   line-height: 1.2;
 }
 
-#taskMode .list-panel #tList .week-day-today-pill,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-day-today-pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 20px;
-  padding: 0 8px;
-  border-radius: 999px;
-  color: color-mix(in srgb, var(--week-accent) 88%, var(--week-ink));
-  background: color-mix(in srgb, var(--week-accent) 10%, #fff);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--week-accent) 16%, transparent);
-  font-size: 12px;
-  font-weight: 760;
-  line-height: 1;
-}
-
 #taskMode .list-panel #tList .week-day-meta-dot,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-meta-dot {
   color: color-mix(in srgb, var(--week-muted) 55%, transparent);
