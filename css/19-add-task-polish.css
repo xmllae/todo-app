@@ -1,4 +1,4 @@
-/* Add-task inline visual polish:
+﻿/* Add-task inline visual polish:
    hard override to ensure visible change over 18-global-sidebar.css */
 
 .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-card {
@@ -2952,6 +2952,60 @@
   min-height: 0;
 }
 
+#taskMode .list-panel #tList .week-task-more-hint,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-more-hint {
+  appearance: none;
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 28px;
+  margin: 2px 28px 10px 0;
+  padding: 0 4px;
+  border: 0;
+  border-radius: 9px;
+  color: color-mix(in srgb, var(--week-accent) 70%, var(--week-muted));
+  background: transparent;
+  box-shadow: none;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: color .18s ease, opacity .18s ease, transform .18s ease;
+}
+
+#taskMode .list-panel #tList .week-task-more-hint b,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-more-hint b {
+  color: color-mix(in srgb, var(--week-accent) 84%, var(--week-ink));
+  font-weight: 820;
+}
+
+#taskMode .list-panel #tList .week-task-more-hint:hover,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-more-hint:hover {
+  color: color-mix(in srgb, var(--week-accent) 88%, var(--week-ink));
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+
+#taskMode .list-panel #tList .week-task-more-hint:active,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-more-hint:active {
+  transform: translateY(1px);
+}
+
+#taskMode .list-panel #tList .week-task-more-hint.is-hidden,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-more-hint.is-hidden {
+  height: 0;
+  min-height: 0;
+  margin: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
 #taskMode .list-panel #tList .week-done-slide,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-done-slide {
   height: 0;
@@ -4572,6 +4626,18 @@
   line-height: 1;
 }
 
+#taskMode .list-panel #tList .week-view-day-pill-alert,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill-alert {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+
 #taskMode .list-panel #tList .week-view-day-pill.has-pending .week-view-day-pill-count,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.has-pending .week-view-day-pill-count {
   color: color-mix(in srgb, var(--week-accent) 82%, var(--week-ink));
@@ -4581,40 +4647,58 @@
     0 4px 12px -12px color-mix(in srgb, var(--week-accent) 36%, transparent);
 }
 
-/* 过期待办轻提示：用克制的琥珀色提醒风险，不打断周视图的整体轻量感。 */
+/* 逾期只保留局部风险标识，避免整块变色破坏页面的轻量统一感。 */
 #taskMode .list-panel #tList .week-day-overdue-text,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-overdue-text {
-  color: color-mix(in srgb, #b45309 78%, var(--week-muted));
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: color-mix(in srgb, var(--week-muted) 88%, var(--week-ink));
   font-weight: 760;
 }
 
 #taskMode .list-panel #tList .week-day-card.is-overdue .week-day-head,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-overdue .week-day-head {
-  background: color-mix(in srgb, #f59e0b 4%, transparent);
+  background: transparent;
 }
 
 #taskMode .list-panel #tList .week-view-day-pill.is-overdue,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-overdue {
-  color: color-mix(in srgb, #b45309 76%, var(--week-ink));
+  color: color-mix(in srgb, var(--week-muted) 92%, var(--week-ink));
 }
 
 #taskMode .list-panel #tList .week-view-day-pill.is-overdue::before,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-overdue::before {
+  opacity: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.is-overdue:hover::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-overdue:hover::before {
   opacity: 1;
   transform: scale(1);
-  background: color-mix(in srgb, #f59e0b 6%, #fff);
+  background: rgba(255, 255, 255, .86);
   box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, #f59e0b 16%, transparent),
-    0 4px 14px -14px rgba(180, 83, 9, .34);
+    0 4px 12px -10px rgba(15, 23, 42, .28),
+    inset 0 0 0 1px color-mix(in srgb, var(--week-line) 58%, transparent);
 }
 
 #taskMode .list-panel #tList .week-view-day-pill.is-overdue .week-view-day-pill-count,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-overdue .week-view-day-pill-count {
-  color: color-mix(in srgb, #b45309 86%, var(--week-ink));
-  background: color-mix(in srgb, #f59e0b 12%, #fff);
+  color: color-mix(in srgb, var(--week-ink) 94%, var(--week-accent));
+  background: rgba(255, 255, 255, .84);
   box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, #f59e0b 20%, transparent),
-    0 4px 12px -12px rgba(180, 83, 9, .36);
+    inset 0 0 0 1px color-mix(in srgb, var(--week-line) 78%, transparent),
+    0 4px 10px -12px rgba(15, 23, 42, .3);
+}
+
+#taskMode .list-panel #tList .week-overdue-mark,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-overdue-mark {
+  color: #ef4444;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
 }
 
 #taskMode .list-panel #tList .week-view-day-pill.is-empty .week-view-day-pill-count,
