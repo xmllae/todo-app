@@ -517,6 +517,15 @@ function toggleWeekDoneCollapse(){
   })
 }
 function getWeekDayCard(ds){const list=document.getElementById("tList");return list?list.querySelector('.week-day-card[data-week-ds="'+ds+'"]'):null}
+function jumpWeekDay(ds){
+  const card=getWeekDayCard(ds);
+  if(!card)return;
+  card.scrollIntoView({behavior:"smooth",block:"center"});
+  card.classList.remove("is-jump-highlight");
+  void card.offsetWidth;
+  card.classList.add("is-jump-highlight");
+  setTimeout(function(){card.classList.remove("is-jump-highlight")},900)
+}
 function syncWeekDoneSlideHeights(root){
   const scope=root||document;
   if(!scope.querySelectorAll)return;
@@ -818,6 +827,7 @@ function weekTaskCheckRingHtml(t,ds){
 function renderWeekTaskScene(list,baseDs){
   const meta=getTaskWeekMeta(baseDs),rangeText=getTaskWeekRangeText(meta),todayDs=fd(now),weekAllTasks=[],weekFilteredTasks=[],expandableDays=[],doneCollapsed=isWeekDoneCollapsed();
   let doneAll=0,pendingAll=0;
+  const dailyOverview=[];
   const weekNames=["\u4e00","\u4e8c","\u4e09","\u56db","\u4e94","\u516d","\u65e5"];
   const cardList=meta.days.map(function(ds,idx){
     const raw=(T[ds]||[]).filter(function(t){return!t.archived});
@@ -825,6 +835,7 @@ function renderWeekTaskScene(list,baseDs){
     const dayDone=raw.filter(function(t){return t.done}).length,dayPending=raw.filter(function(t){return!t.done&&!t.frozen}).length;
     doneAll+=dayDone;
     pendingAll+=dayPending;
+    dailyOverview.push({ds:ds,idx:idx,pending:dayPending,done:dayDone,total:raw.length,isToday:ds===todayDs});
     const allRows=getWeekVisibleRows(ds),showDayDone=isWeekDoneDayShown(ds),dayDoneRows=allRows.filter(function(t){return t.done});
     let dayRows=allRows.filter(function(t){return!t.done});
     allRows.forEach(function(t){weekFilteredTasks.push(t)});
@@ -861,8 +872,9 @@ function renderWeekTaskScene(list,baseDs){
   });
   const totalAll=weekAllTasks.length,pct=totalAll?Math.round(doneAll/totalAll*100):0;
   const doneStatHtml='<span class="week-view-stat week-view-stat--done"><b>'+doneAll+'</b><span>\u5b8c\u6210</span></span>';
+  const dayStripHtml='<div class="week-view-day-strip" aria-label="\u672c\u5468\u6bcf\u65e5\u5f85\u529e\u6982\u89c8"><div class="week-view-day-pills">'+dailyOverview.map(function(day){const name=weekNames[day.idx],state=day.pending?day.pending+" \u9879\u5f85\u529e":day.total?"\u5df2\u5168\u90e8\u5b8c\u6210":"\u6682\u65e0\u4efb\u52a1",cls="week-view-day-pill"+(day.isToday?" is-today":"")+(day.pending?" has-pending":day.total?" is-clear":" is-empty");return'<button type="button" class="'+cls+'" aria-label="\u5b9a\u4f4d\u5230\u5468'+name+'\uff0c'+state+'" title="\u5468'+name+'\uff1a'+state+'" onclick="jumpWeekDay(\''+day.ds+'\')"><span class="week-view-day-pill-name">\u5468'+name+'</span><span class="week-view-day-pill-count">'+day.pending+'</span></button>'}).join("")+'</div></div>';
   const gridInner=cardList.map(function(item){return item.html}).join("");
-  list.innerHTML='<div class="week-view'+(doneCollapsed?" is-done-collapsed":"")+'"><div class="week-view-head"><div class="week-view-top"><div class="week-view-title-group"><h4 class="week-view-title">\u4efb\u52a1\u6982\u89c8</h4></div><div class="week-view-progress"><span class="week-view-progress-label">\u8fbe\u6210\u7387 <b>'+pct+'%</b></span><span class="week-view-progress-track"><span class="week-view-progress-fill" style="width:'+pct+'%"></span></span></div></div><div class="week-view-stats"><span class="week-view-stat"><b>'+totalAll+'</b>\u9879</span><span class="week-view-stat"><b>'+pendingAll+'</b>\u5f85\u529e</span>'+doneStatHtml+'</div></div><div class="week-day-grid">'+gridInner+'</div></div>';
+  list.innerHTML='<div class="week-view'+(doneCollapsed?" is-done-collapsed":"")+'"><div class="week-view-head"><div class="week-view-top"><div class="week-view-title-group"><h4 class="week-view-title">\u4efb\u52a1\u6982\u89c8</h4></div><div class="week-view-progress"><span class="week-view-progress-label">\u8fbe\u6210\u7387 <b>'+pct+'%</b></span><span class="week-view-progress-track"><span class="week-view-progress-fill" style="width:'+pct+'%"></span></span></div></div><div class="week-view-stats"><span class="week-view-stat"><b>'+totalAll+'</b>\u9879</span><span class="week-view-stat"><b>'+pendingAll+'</b>\u5f85\u529e</span>'+doneStatHtml+'</div>'+dayStripHtml+'</div><div class="week-day-grid">'+gridInner+'</div></div>';
   syncWeekExtraHeights(list);
   requestAnimationFrame(function(){syncWeekExtraHeights(list)});
   initWeekViewPressFeedback(list);
