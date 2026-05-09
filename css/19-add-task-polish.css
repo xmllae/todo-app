@@ -2917,9 +2917,22 @@
 
 #taskMode .list-panel #tList .week-task-list,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-list {
+  position: relative;
   display: grid;
   gap: 0;
   padding: 0;
+}
+
+#taskMode .list-panel #tList .week-task-list.has-more-collapsed::after,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-list.has-more-collapsed::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 42px;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--card) 94%, transparent));
 }
 
 #taskMode .list-panel #tList .week-task-list.is-empty,
@@ -4214,7 +4227,7 @@
 #taskMode .list-panel #tList .week-day-count-chip .week-day-count-line,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip .week-day-count-line {
   display: grid;
-  grid-template-columns: max-content 2ch;
+  grid-template-columns: max-content max-content;
   align-items: center;
   justify-content: end;
   gap: 4px;
