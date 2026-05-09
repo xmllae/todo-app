@@ -5081,3 +5081,22 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-days .week-day-card.is-empty {
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--week-line) 58%, transparent);
 }
+
+/* 周概览日期条底部收紧：减少日期导航下方的空白。 */
+#taskMode .list-panel #tList .week-view-head,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-head {
+  padding-bottom: 8px;
+}
+
+#taskMode .list-panel #tList .week-view-day-strip,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-strip {
+  margin-top: 4px;
+  padding-top: 8px;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill {
+  min-height: 30px;
+  height: 30px;
+  padding-bottom: 5px;
+}
