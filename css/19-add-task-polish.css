@@ -2967,18 +2967,18 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
-  min-height: 28px;
-  margin: 2px 22px 10px 26px;
-  padding: 0 2px 4px;
+  gap: 5px;
+  min-height: 32px;
+  margin: 3px 22px 12px 26px;
+  padding: 7px 0 8px;
   border: 0;
   border-radius: 9px;
-  color: color-mix(in srgb, var(--week-accent) 70%, var(--week-muted));
+  color: color-mix(in srgb, var(--week-muted) 90%, var(--week-ink));
   background: transparent;
   box-shadow: none;
   font: inherit;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 650;
   line-height: 1;
   cursor: pointer;
   transition: color .18s ease, opacity .18s ease, transform .18s ease;
@@ -2990,7 +2990,7 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 4px;
+  bottom: 1px;
   height: 1px;
   border-radius: 999px;
   background: currentColor;
@@ -2998,22 +2998,22 @@
   transition: opacity .18s ease, transform .18s ease;
 }
 
-#taskMode .list-panel #tList .week-task-more-hint b,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-task-more-hint b {
-  color: color-mix(in srgb, var(--week-accent) 84%, var(--week-ink));
-  font-weight: 820;
+#taskMode .list-panel #tList .week-task-more-hint .week-day-count-caret,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-more-hint .week-day-count-caret {
+  color: currentColor;
+  opacity: .68;
 }
 
 #taskMode .list-panel #tList .week-task-more-hint:hover,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-more-hint:hover {
-  color: color-mix(in srgb, var(--week-accent) 88%, var(--week-ink));
+  color: color-mix(in srgb, var(--week-ink) 78%, var(--week-muted));
 }
 
 #taskMode .list-panel #tList .week-task-more-hint:hover::after,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-more-hint:hover::after,
 #taskMode .list-panel #tList .week-task-more-hint:focus-visible::after,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-more-hint:focus-visible::after {
-  opacity: .5;
+  opacity: .22;
 }
 
 #taskMode .list-panel #tList .week-task-more-hint:active,
