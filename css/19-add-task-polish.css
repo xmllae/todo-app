@@ -4993,3 +4993,41 @@
     animation: none !important;
   }
 }
+
+/* 周视图轻量扫视：无待办日期只做状态行，减少和待处理日期抢注意力。 */
+#taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open),
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open),
+#taskMode .list-panel #tList .week-day-card.is-empty,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-empty {
+  background: color-mix(in srgb, var(--card) 98%, transparent);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--week-line) 64%, transparent),
+    0 8px 18px -24px rgba(15, 23, 42, .24);
+}
+
+#taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open) .week-day-head,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open) .week-day-head,
+#taskMode .list-panel #tList .week-day-card.is-empty .week-day-head,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-empty .week-day-head {
+  min-height: 56px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+#taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open):not(.is-focus):not(.is-today) .week-day-week,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open):not(.is-focus):not(.is-today) .week-day-week,
+#taskMode .list-panel #tList .week-day-card.is-empty:not(.is-focus):not(.is-today) .week-day-week,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-empty:not(.is-focus):not(.is-today) .week-day-week {
+  color: color-mix(in srgb, var(--week-muted) 86%, var(--week-ink));
+}
+
+#taskMode .list-panel #tList .week-day-count.week-day-count-group.is-single-action,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count.week-day-count-group.is-single-action {
+  grid-template-columns: minmax(0, 92px);
+  width: 92px;
+}
+
+#taskMode .list-panel #tList .week-day-count.week-day-count-group.is-single-action .week-day-count-chip,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count.week-day-count-group.is-single-action .week-day-count-chip {
+  justify-items: end;
+}
