@@ -4774,18 +4774,41 @@
 }
 
 /* 无待办日期瘦身：减少已完成/空状态卡片的视觉占用，突出真正需要处理的日期。 */
-#taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open) .week-day-head,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open) .week-day-head {
+#taskMode .list-panel #tList .week-day-card.is-clear .week-day-head,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-clear .week-day-head {
   min-height: 68px;
   padding-top: 14px;
   padding-bottom: 14px;
-  border-bottom: 0;
+  transition:
+    background .18s ease,
+    transform .16s ease,
+    border-color .18s ease,
+    border-radius .22s ease,
+    min-height .22s ease,
+    padding .22s ease;
+}
+
+#taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open) .week-day-head,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open) .week-day-head {
+  border-bottom-color: transparent;
   border-radius: 18px;
 }
 
+/* 已完成列表折叠时保留 0 高度展开轨道，避免点击后白底先整体替换再下拉。 */
 #taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open) .week-task-list,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open) .week-task-list {
-  display: none;
+  display: grid;
+  height: 0;
+  min-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+#taskMode .list-panel #tList .week-day-card.is-clear.is-done-open .week-task-list,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-clear.is-done-open .week-task-list {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 #taskMode .list-panel #tList .week-day-card.is-empty .week-day-head,
