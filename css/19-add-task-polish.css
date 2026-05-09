@@ -5026,6 +5026,14 @@
   opacity: 0;
 }
 
+#taskMode .list-panel #tList .week-view-day-pill.is-overdue:hover::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-overdue:hover::before {
+  opacity: .18;
+  transform: translateX(-50%) scaleX(1);
+  background: currentColor;
+  box-shadow: none;
+}
+
 #taskMode .list-panel #tList .week-view-day-pill.is-overdue.is-focus::before,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-overdue.is-focus::before {
   opacity: .48;
