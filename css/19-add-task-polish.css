@@ -4196,10 +4196,12 @@
 /* Header disclosure chips: keep todo overflow and completed reveal in one visual language. */
 #taskMode .list-panel #tList .week-day-count.week-day-count-group,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count.week-day-count-group {
-  display: inline-flex;
+  display: grid;
+  grid-template-columns: 68px 92px;
   align-items: center;
   justify-content: flex-end;
   gap: 10px;
+  width: 170px;
   min-width: 0;
   min-height: 0;
   padding: 0;
@@ -4212,10 +4214,12 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip {
   appearance: none;
   position: relative;
-  display: inline-flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 12px;
   align-items: center;
-  justify-content: center;
-  gap: 5px;
+  justify-items: end;
+  gap: 4px;
+  width: 100%;
   min-width: 0;
   min-height: 26px;
   margin: 0;
@@ -4236,7 +4240,7 @@
 #taskMode .list-panel #tList button.week-day-count-chip,
 .app.app--with-global-nav #taskMode .list-panel #tList button.week-day-count-chip {
   cursor: pointer;
-  padding-right: 4px;
+  padding-right: 3px;
 }
 
 #taskMode .list-panel #tList button.week-day-count-chip::after,
@@ -4278,15 +4282,17 @@
 
 #taskMode .list-panel #tList .week-day-count-chip .week-task-expand-label,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip .week-task-expand-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 0;
+  display: contents;
 }
 
 #taskMode .list-panel #tList .week-day-count-chip .week-day-count-line,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip .week-day-count-line {
+  display: grid;
+  grid-template-columns: max-content 2ch;
   align-items: center;
-  gap: 3px;
+  justify-content: end;
+  gap: 4px;
+  width: 100%;
   color: color-mix(in srgb, var(--week-muted) 86%, var(--week-ink));
   font-size: 12px;
   font-weight: 600;
@@ -4299,6 +4305,8 @@
   font-size: 13px;
   font-weight: 760;
   line-height: 1;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 #taskMode .list-panel #tList .week-day-count-chip--done .week-day-count-line,
@@ -4334,6 +4342,11 @@
   transform: translateY(.5px);
   transform-origin: 50% 50%;
   transition: transform .22s cubic-bezier(.2, .8, .2, 1), color .18s ease, opacity .18s ease;
+}
+
+#taskMode .list-panel #tList .week-day-count-caret.is-placeholder,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-caret.is-placeholder {
+  opacity: 0;
 }
 
 #taskMode .list-panel #tList .week-day-count-caret::before,
