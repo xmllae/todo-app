@@ -5046,40 +5046,183 @@
   padding-top: 2px;
 }
 
+#taskMode .list-panel #tList .week-quiet-days-toggle,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-days-toggle {
+  width: 100%;
+  min-height: 46px;
+  display: grid;
+  grid-template-columns: minmax(170px, auto) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 9px 16px;
+  border: 1px solid color-mix(in srgb, var(--week-line) 64%, transparent);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--card) 96%, transparent);
+  color: color-mix(in srgb, var(--week-muted) 86%, var(--week-ink));
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease,
+    transform .18s ease;
+}
+
+#taskMode .list-panel #tList .week-quiet-days-toggle:hover,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-days-toggle:hover {
+  border-color: color-mix(in srgb, var(--accent) 24%, var(--week-line));
+  background: color-mix(in srgb, var(--card) 99%, var(--accent) 1%);
+  box-shadow: 0 12px 26px -26px color-mix(in srgb, var(--accent) 44%, transparent);
+  transform: translateY(-1px);
+}
+
+#taskMode .list-panel #tList .week-quiet-days-toggle:focus-visible,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-days-toggle:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 38%, transparent);
+  outline-offset: 3px;
+}
+
+#taskMode .list-panel #tList .week-quiet-days-main,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-days-main {
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
 #taskMode .list-panel #tList .week-quiet-days-label,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-days-label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 18px;
-  color: color-mix(in srgb, var(--week-muted) 76%, transparent);
-  font-size: 11px;
+  color: color-mix(in srgb, var(--week-muted) 82%, var(--week-ink));
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0;
+  white-space: nowrap;
 }
 
-#taskMode .list-panel #tList .week-quiet-days-label::after,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-days-label::after {
-  content: "";
-  flex: 1 1 auto;
-  height: 1px;
-  background: color-mix(in srgb, var(--week-line) 72%, transparent);
+#taskMode .list-panel #tList .week-quiet-days-summary,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-days-summary {
+  min-width: 0;
+  color: color-mix(in srgb, var(--week-muted) 72%, transparent);
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-#taskMode .list-panel #tList .week-quiet-days .week-day-card.is-clear:not(.is-done-open) .week-day-head,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-days .week-day-card.is-clear:not(.is-done-open) .week-day-head,
-#taskMode .list-panel #tList .week-quiet-days .week-day-card.is-empty .week-day-head,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-days .week-day-card.is-empty .week-day-head {
+#taskMode .list-panel #tList .week-quiet-days-pills,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-days-pills {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+#taskMode .list-panel #tList .week-quiet-day-pill,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-day-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 22px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--week-line) 42%, transparent);
+  color: color-mix(in srgb, var(--week-muted) 88%, var(--week-ink));
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+#taskMode .list-panel #tList .week-quiet-day-pill b,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-day-pill b {
+  color: color-mix(in srgb, var(--week-ink) 72%, var(--week-muted));
+  font-size: 12px;
+  font-weight: 800;
+}
+
+#taskMode .list-panel #tList .week-quiet-day-pill.is-empty,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-day-pill.is-empty {
+  opacity: .64;
+}
+
+#taskMode .list-panel #tList .week-quiet-days-caret,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-days-caret {
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  opacity: .66;
+  transform: rotate(45deg) translateY(-1px);
+  transition: transform .18s ease, opacity .18s ease;
+}
+
+#taskMode .list-panel #tList .week-quiet-days.is-open .week-quiet-days-caret,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-days.is-open .week-quiet-days-caret {
+  opacity: .86;
+  transform: rotate(225deg) translate(-2px, -1px);
+}
+
+#taskMode .list-panel #tList .week-quiet-days-list,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-days-list {
+  display: grid;
+  gap: 8px;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition:
+    max-height .28s cubic-bezier(.22, 1, .36, 1),
+    opacity .2s ease,
+    transform .2s ease;
+}
+
+#taskMode .list-panel #tList .week-quiet-days.is-open .week-quiet-days-list,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-days.is-open .week-quiet-days-list {
+  max-height: 1400px;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+#taskMode .list-panel #tList .week-quiet-days-list .week-day-card.is-clear:not(.is-done-open) .week-day-head,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-days-list .week-day-card.is-clear:not(.is-done-open) .week-day-head,
+#taskMode .list-panel #tList .week-quiet-days-list .week-day-card.is-empty .week-day-head,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-days-list .week-day-card.is-empty .week-day-head {
   min-height: 48px;
   padding-top: 8px;
   padding-bottom: 8px;
 }
 
-#taskMode .list-panel #tList .week-quiet-days .week-day-card.is-clear:not(.is-done-open),
-.app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-days .week-day-card.is-clear:not(.is-done-open),
-#taskMode .list-panel #tList .week-quiet-days .week-day-card.is-empty,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-days .week-day-card.is-empty {
+#taskMode .list-panel #tList .week-quiet-days-list .week-day-card.is-clear:not(.is-done-open),
+.app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-days-list .week-day-card.is-clear:not(.is-done-open),
+#taskMode .list-panel #tList .week-quiet-days-list .week-day-card.is-empty,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-days-list .week-day-card.is-empty {
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--week-line) 58%, transparent);
+}
+
+@media (max-width: 720px) {
+  #taskMode .list-panel #tList .week-quiet-days-toggle,
+  .app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-days-toggle {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 8px 12px;
+  }
+
+  #taskMode .list-panel #tList .week-quiet-days-main,
+  .app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-days-main {
+    flex-wrap: wrap;
+    gap: 4px 8px;
+  }
+
+  #taskMode .list-panel #tList .week-quiet-days-pills,
+  .app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-days-pills {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
 }
 
 /* 周概览日期条底部收紧：减少日期导航下方的空白。 */
