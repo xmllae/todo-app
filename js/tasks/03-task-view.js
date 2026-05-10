@@ -790,8 +790,8 @@ function syncWeekHeaderAction(weekMode,weekMeta){
     const expandableDays=weekMeta&&Array.isArray(weekMeta.expandableDays)?weekMeta.expandableDays:getWeekExpandableDays(sel);
     const hasExpandable=expandableDays.length>0;
     const allExpanded=expandableDays.length>0&&expandableDays.every(function(ds){return isWeekDayExpanded(ds)});
-    const label=hasExpandable?(allExpanded?"\u6536\u8d77\u5269\u4f59\u5f85\u529e":"\u5c55\u5f00\u5269\u4f59\u5f85\u529e"):"\u5f85\u529e\u5df2\u5168\u90e8\u663e\u793a";
-    const tip=hasExpandable?label:"\u672c\u5468\u672a\u5b8c\u6210\u5f85\u529e\u5df2\u5168\u90e8\u663e\u793a";
+    const label=hasExpandable?(allExpanded?"\u6536\u8d77\u5168\u90e8":"\u5c55\u5f00\u5168\u90e8"):"\u5168\u90e8\u663e\u793a";
+    const tip=hasExpandable?(allExpanded?"\u6536\u8d77\u672c\u5468\u5df2\u5c55\u5f00\u7684\u5f85\u529e":"\u5c55\u5f00\u672c\u5468\u6240\u6709\u5269\u4f59\u5f85\u529e"):"\u672c\u5468\u672a\u5b8c\u6210\u5f85\u529e\u5df2\u5168\u90e8\u663e\u793a";
     addBtn.dataset.weekBulkToggle="1";
     addBtn.classList.toggle("is-week-bulk-idle",!hasExpandable);
     addBtn.setAttribute("title",tip);
