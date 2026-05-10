@@ -3000,9 +3000,9 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   min-height: 32px;
-  padding: 9px 28px 5px 86px;
+  padding: 9px 28px 5px 54px;
   color: #7f8fa8;
   font-size: 12px;
   font-weight: 700;
@@ -3013,10 +3013,18 @@
 #taskMode .list-panel #tList .week-done-section-head::before,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-done-section-head::before {
   content: "";
-  position: absolute;
-  left: 52px;
-  right: 28px;
-  top: 50%;
+  position: static;
+  flex: 0 0 22px;
+  width: 22px;
+  height: 1px;
+  background: color-mix(in srgb, currentColor 28%, transparent);
+}
+
+#taskMode .list-panel #tList .week-done-section-head::after,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-done-section-head::after {
+  content: "";
+  flex: 1 1 auto;
+  min-width: 34px;
   height: 1px;
   background: linear-gradient(90deg, var(--week-line), rgba(226, 232, 240, .35));
 }
@@ -3032,12 +3040,12 @@
 
 #taskMode .list-panel #tList .week-done-section-label,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-done-section-label {
-  padding-left: 8px;
+  padding-left: 0;
 }
 
 #taskMode .list-panel #tList .week-done-section-count,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-done-section-count {
-  padding-right: 8px;
+  padding-right: 0;
   color: #64748b;
 }
 
