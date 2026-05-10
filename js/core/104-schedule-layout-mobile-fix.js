@@ -124,6 +124,40 @@
     quickBtn.setAttribute("aria-pressed", isOpen ? "true" : "false");
   }
 
+  function isWeekQuickModePending() {
+    if (typeof getGlobalSideNavQuickMode === "function") {
+      return getGlobalSideNavQuickMode() === "week";
+    }
+    try {
+      var state = JSON.parse(localStorage.getItem("tuole_gsn_state_v1") || "null");
+      return !!(state && state.quick === "week");
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function primeWeekBulkActionState(addSplit) {
+    if (!addSplit) return;
+    var mainBtn = addSplit.querySelector(".add-split-main");
+    if (!mainBtn) return;
+    if (isWeekQuickModePending()) {
+      if (mainBtn.dataset.weekBulkToggle === "1") return;
+      addSplit.classList.add("is-week-bulk-booting");
+      mainBtn.dataset.weekBulkToggle = "1";
+      mainBtn.classList.add("is-week-bulk-idle");
+      mainBtn.innerHTML =
+        '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 10 12 15 17 10"></polyline><polyline points="7 5 12 10 17 5"></polyline></svg>\u5c55\u5f00\u4efb\u52a1';
+      mainBtn.setAttribute("title", "\u5c55\u5f00\u4efb\u52a1");
+      mainBtn.setAttribute("aria-label", "\u5c55\u5f00\u4efb\u52a1");
+      mainBtn.setAttribute("aria-disabled", "true");
+      mainBtn.tabIndex = 0;
+      return;
+    }
+    addSplit.classList.remove("is-week-bulk-booting", "is-week-bulk-hidden");
+    addSplit.removeAttribute("aria-hidden");
+    mainBtn.tabIndex = 0;
+  }
+
   function ensureQuickImportShortcut(addSplit) {
     if (!addSplit) return;
     var mainBtn = addSplit.querySelector(".add-split-main");
@@ -209,9 +243,15 @@
     }
 
     var addSplit = batchBar.querySelector(".batch-bar-left .add-split");
-    if (addSplit) actionWrap.appendChild(addSplit);
+    if (addSplit) {
+      primeWeekBulkActionState(addSplit);
+      actionWrap.appendChild(addSplit);
+    }
     var actionAddSplit = actionWrap.querySelector(".add-split");
-    if (actionAddSplit) ensureQuickImportShortcut(actionAddSplit);
+    if (actionAddSplit) {
+      primeWeekBulkActionState(actionAddSplit);
+      ensureQuickImportShortcut(actionAddSplit);
+    }
 
     ensureSortButtonLabel(batchBar);
   }

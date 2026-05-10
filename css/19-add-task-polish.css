@@ -5115,6 +5115,16 @@
 }
 
 /* 周视图批量展开是辅助操作，降低按钮重量，避免和卡片内展开入口争抢注意力。 */
+#taskMode .add-split.add-split--quick-shortcut.is-week-bulk-hidden,
+.app.app--with-global-nav #taskMode .add-split.add-split--quick-shortcut.is-week-bulk-hidden {
+  display: none !important;
+}
+
+#taskMode .add-split.add-split--quick-shortcut.is-week-bulk-booting .add-split-main,
+.app.app--with-global-nav #taskMode .add-split.add-split--quick-shortcut.is-week-bulk-booting .add-split-main {
+  transition: none !important;
+}
+
 #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut .add-split-main[data-week-bulk-toggle="1"],
 .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut .add-split-main[data-week-bulk-toggle="1"] {
   min-height: 38px !important;
