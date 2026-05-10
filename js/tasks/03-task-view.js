@@ -559,33 +559,45 @@ function syncWeekDoneToggle(btn,isOpen){
   btn.setAttribute("title",tip);
   btn.setAttribute("aria-label",(isOpen?"\u6536\u8d77":"\u67e5\u770b")+dayLabel+" \u7684 "+count+" \u9879\u5df2\u5b8c\u6210\u4efb\u52a1")
 }
+function getWeekDoneSlideCurrentFrame(slide,isOpen){
+  const cs=getComputedStyle(slide),rect=slide.getBoundingClientRect(),opacity=parseFloat(cs.opacity);
+  return{
+    height:Math.max(0,rect.height||0),
+    opacity:Number.isFinite(opacity)?opacity:(isOpen?0:1),
+    transform:cs.transform&&cs.transform!=="none"?cs.transform:(isOpen?"translateY(-6px)":"translateY(0)")
+  }
+}
 function animateWeekDoneSlide(slide,isOpen,height,onDone){
   if(!slide)return;
-  if(slide.__weekDoneAnim){try{slide.__weekDoneAnim.cancel()}catch(e){}}
-  const target=Math.max(0,height),from=Math.max(0,slide.getBoundingClientRect().height),to=isOpen?target:0,token={};
+  const current=getWeekDoneSlideCurrentFrame(slide,isOpen);
+  if(slide.__weekDoneAnim){try{slide.__weekDoneAnim.cancel()}catch(e){}slide.__weekDoneAnim=null}
+  const target=Math.max(0,height),from=current.height,to=isOpen?target:0,token={},toOpacity=isOpen?1:0,toTransform=isOpen?"translateY(0)":"translateY(-4px)";
   slide.__weekDoneToken=token;
   slide.style.setProperty("--week-done-slide-h",target+"px");
   slide.style.height=from+"px";
-  slide.style.opacity=getComputedStyle(slide).opacity||String(isOpen?0:1);
+  slide.style.opacity=String(current.opacity);
+  slide.style.transform=current.transform;
   slide.style.overflow="hidden";
   if(isOpen)slide.inert=false;
   void slide.offsetHeight;
   slide.classList.toggle("is-open",isOpen);
-  if(!slide.animate||Math.abs(from-to)<1){
+  if(!slide.animate||(Math.abs(from-to)<1&&Math.abs(current.opacity-toOpacity)<.02)){
     slide.style.height="";
     slide.style.opacity="";
+    slide.style.transform="";
     slide.style.overflow="";
     if(!isOpen)slide.inert=true;
     if(onDone)onDone();
     return
   }
-  const anim=slide.animate([{height:from+"px",opacity:isOpen?0:1,transform:isOpen?"translateY(-6px)":"translateY(0)"},{height:to+"px",opacity:isOpen?1:0,transform:isOpen?"translateY(0)":"translateY(-4px)"}],{duration:380,easing:"cubic-bezier(.22, 1, .36, 1)",fill:"forwards"});
+  const anim=slide.animate([{height:from+"px",opacity:current.opacity,transform:current.transform},{height:to+"px",opacity:toOpacity,transform:toTransform}],{duration:380,easing:"cubic-bezier(.22, 1, .36, 1)",fill:"forwards"});
   slide.__weekDoneAnim=anim;
   anim.onfinish=function(){
     if(slide.__weekDoneToken!==token)return;
     slide.__weekDoneAnim=null;
     slide.style.height="";
     slide.style.opacity="";
+    slide.style.transform="";
     slide.style.overflow="";
     if(!isOpen)slide.inert=true;
     if(onDone)onDone()
