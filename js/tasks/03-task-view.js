@@ -790,8 +790,13 @@ function syncWeekHeaderAction(weekMode,weekMeta){
     const expandableDays=weekMeta&&Array.isArray(weekMeta.expandableDays)?weekMeta.expandableDays:getWeekExpandableDays(sel);
     const hasExpandable=expandableDays.length>0;
     const allExpanded=expandableDays.length>0&&expandableDays.every(function(ds){return isWeekDayExpanded(ds)});
-    const label=hasExpandable?(allExpanded?"\u6536\u8d77\u4efb\u52a1":"\u5c55\u5f00\u4efb\u52a1"):"\u5168\u90e8\u663e\u793a";
-    const tip=hasExpandable?(allExpanded?"\u6536\u8d77\u672c\u5468\u5df2\u5c55\u5f00\u7684\u5f85\u529e\u4efb\u52a1":"\u5c55\u5f00\u672c\u5468\u9690\u85cf\u7684\u5f85\u529e\u4efb\u52a1"):"\u672c\u5468\u672a\u5b8c\u6210\u5f85\u529e\u5df2\u5168\u90e8\u663e\u793a";
+    const hiddenPendingCount=expandableDays.reduce(function(sum,ds){
+      if(isWeekDayExpanded(ds))return sum;
+      return sum+Math.max(0,getWeekRenderedRows(ds).length-WEEK_DAY_PREVIEW_MAX)
+    },0);
+    const hiddenPendingLabel=hiddenPendingCount>99?"99+":String(hiddenPendingCount);
+    const label=hasExpandable?(allExpanded?"\u6536\u8d77\u4efb\u52a1":"\u5c55\u5f00\u5269\u4f59 "+hiddenPendingLabel+" \u9879"):"\u5168\u90e8\u663e\u793a";
+    const tip=hasExpandable?(allExpanded?"\u6536\u8d77\u672c\u5468\u5df2\u5c55\u5f00\u7684\u5f85\u529e\u4efb\u52a1":"\u5c55\u5f00\u672c\u5468\u5269\u4f59 "+hiddenPendingLabel+" \u9879\u672a\u5c55\u793a\u5f85\u529e"):"\u672c\u5468\u672a\u5b8c\u6210\u5f85\u529e\u5df2\u5168\u90e8\u663e\u793a";
     if(addSplit){
       addSplit.classList.remove("is-week-bulk-hidden","is-week-bulk-booting");
       addSplit.removeAttribute("aria-hidden")
