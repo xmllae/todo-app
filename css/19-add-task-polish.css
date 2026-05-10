@@ -5150,6 +5150,41 @@
   stroke-width: 2.4 !important;
 }
 
+#taskMode #btnAddTaskBar.add-split-main[data-week-bulk-toggle="1"],
+.app.app--with-global-nav #taskMode #btnAddTaskBar.add-split-main[data-week-bulk-toggle="1"] {
+  min-height: 38px !important;
+  height: 38px !important;
+  padding: 8px 15px !important;
+  border: 1px solid color-mix(in srgb, var(--week-accent) 18%, var(--week-line)) !important;
+  background: color-mix(in srgb, var(--card) 96%, #eef2ff) !important;
+  color: color-mix(in srgb, var(--week-accent) 72%, var(--week-ink)) !important;
+  box-shadow: 0 10px 24px -28px color-mix(in srgb, var(--week-accent) 42%, transparent) !important;
+  font-size: 14px !important;
+  font-weight: 760 !important;
+}
+
+#taskMode #btnAddTaskBar.add-split-main[data-week-bulk-toggle="1"]:hover,
+.app.app--with-global-nav #taskMode #btnAddTaskBar.add-split-main[data-week-bulk-toggle="1"]:hover {
+  background: color-mix(in srgb, var(--week-accent) 8%, var(--card)) !important;
+  color: color-mix(in srgb, var(--week-accent) 84%, var(--week-ink)) !important;
+  box-shadow: 0 12px 26px -26px color-mix(in srgb, var(--week-accent) 34%, transparent) !important;
+}
+
+#taskMode #btnAddTaskBar.add-split-main[data-week-bulk-toggle="1"].is-week-bulk-idle,
+.app.app--with-global-nav #taskMode #btnAddTaskBar.add-split-main[data-week-bulk-toggle="1"].is-week-bulk-idle {
+  opacity: .62;
+  cursor: default;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+#taskMode #btnAddTaskBar.add-split-main[data-week-bulk-toggle="1"] svg,
+.app.app--with-global-nav #taskMode #btnAddTaskBar.add-split-main[data-week-bulk-toggle="1"] svg {
+  width: 15px !important;
+  height: 15px !important;
+  stroke-width: 2.4 !important;
+}
+
 #taskMode .list-panel #tList .week-quiet-days,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-days {
   display: grid;
