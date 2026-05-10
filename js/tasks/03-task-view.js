@@ -655,12 +655,12 @@ function setWeekDayExpanded(ds,isOpen){
     if(label&&!label.querySelector(".week-day-count-line"))label.textContent=tip
   }
   if(moreBtn){
-    const moreHiddenCount=moreBtn.getAttribute("data-hidden-count")||"0",moreTip=isOpen?"\u6536\u8d77\u5df2\u5c55\u5f00\u7684\u5f85\u529e":"\u5c55\u5f00\u5269\u4f59 "+moreHiddenCount+" \u9879\u5f85\u529e",moreText=moreBtn.querySelector(".week-task-more-text"),moreAction=moreBtn.querySelector(".week-task-more-action");
+    const moreHiddenCount=moreBtn.getAttribute("data-hidden-count")||"0",moreTip=isOpen?"\u6536\u8d77\u5f53\u5929\u5df2\u5c55\u5f00\u7684\u5f85\u529e":"\u5c55\u5f00\u5f53\u5929\u5269\u4f59 "+moreHiddenCount+" \u9879\u5f85\u529e",moreText=moreBtn.querySelector(".week-task-more-text"),moreAction=moreBtn.querySelector(".week-task-more-action");
     moreBtn.classList.toggle("is-open",isOpen);
     moreBtn.setAttribute("aria-expanded",isOpen?"true":"false");
     moreBtn.setAttribute("aria-label",moreTip);
     moreBtn.setAttribute("title",moreTip);
-    if(moreText)moreText.textContent=isOpen?"\u5df2\u5c55\u5f00\u5168\u90e8\u5f85\u529e":"\u8fd8\u6709 "+moreHiddenCount+" \u9879\u5f85\u529e";
+    if(moreText)moreText.textContent=isOpen?"\u5f53\u5929\u5df2\u5168\u90e8\u5c55\u5f00":"\u5f53\u5929\u5269\u4f59 "+moreHiddenCount+" \u9879";
     if(moreAction)moreAction.textContent=isOpen?"\u6536\u8d77":"\u5c55\u5f00"
   }
 }
@@ -795,7 +795,7 @@ function syncWeekHeaderAction(weekMode,weekMeta){
       return sum+Math.max(0,getWeekRenderedRows(ds).length-WEEK_DAY_PREVIEW_MAX)
     },0);
     const hiddenPendingLabel=hiddenPendingCount>99?"99+":String(hiddenPendingCount);
-    const label=hasExpandable?(allExpanded?"\u6536\u8d77\u4efb\u52a1":"\u5c55\u5f00\u5269\u4f59 "+hiddenPendingLabel+" \u9879"):"\u5168\u90e8\u663e\u793a";
+    const label=hasExpandable?(allExpanded?"\u6536\u8d77\u672c\u5468":"\u5c55\u5f00\u672c\u5468\u5269\u4f59 "+hiddenPendingLabel+" \u9879"):"\u5168\u90e8\u663e\u793a";
     const tip=hasExpandable?(allExpanded?"\u6536\u8d77\u672c\u5468\u5df2\u5c55\u5f00\u7684\u5f85\u529e\u4efb\u52a1":"\u5c55\u5f00\u672c\u5468\u5269\u4f59 "+hiddenPendingLabel+" \u9879\u672a\u5c55\u793a\u5f85\u529e"):"\u672c\u5468\u672a\u5b8c\u6210\u5f85\u529e\u5df2\u5168\u90e8\u663e\u793a";
     if(addSplit){
       addSplit.classList.remove("is-week-bulk-hidden","is-week-bulk-booting");
@@ -898,7 +898,7 @@ function renderWeekTaskScene(list,baseDs){
     };
     const totalDayRows=allRows.length,dayTodoCount=dayRows.length,dayDoneCount=dayDoneRows.length,countTip="\u5f85\u529e "+dayTodoCount+" \u9879\uff0c\u5df2\u5b8c\u6210 "+dayDoneCount+" \u9879",todoCountText=isExpandable?(isExpanded?dayTodoCount:previewRows.length)+"/"+dayTodoCount:dayTodoCount;
     const extraHtml=isExpandable?'<div class="week-task-extra'+(isExpanded?" is-open":"")+'" data-week-extra-ds="'+ds+'" aria-hidden="'+(isExpanded?"false":"true")+'"'+(isExpanded?"":" inert")+'><div class="week-task-extra-inner">'+extraRows.map(renderWeekRow).join("")+'</div></div>':"";
-    const overflowControlHtml=isExpandable?'<button type="button" class="week-task-more-inline'+(isExpanded?" is-open":"")+'" data-hidden-count="'+hiddenCount+'" aria-expanded="'+(isExpanded?"true":"false")+'" aria-label="'+(isExpanded?"\u6536\u8d77\u5df2\u5c55\u5f00\u7684\u5f85\u529e":"\u5c55\u5f00\u5269\u4f59 "+hiddenCount+" \u9879\u5f85\u529e")+'" title="'+(isExpanded?"\u6536\u8d77\u5df2\u5c55\u5f00\u7684\u5f85\u529e":"\u5c55\u5f00\u5269\u4f59 "+hiddenCount+" \u9879\u5f85\u529e")+'" onclick="event.stopPropagation();toggleWeekDayExpand(\''+ds+'\')"><span class="week-task-more-line" aria-hidden="true"></span><span class="week-task-more-text">'+(isExpanded?"\u5df2\u5c55\u5f00\u5168\u90e8\u5f85\u529e":"\u8fd8\u6709 "+hiddenCount+" \u9879\u5f85\u529e")+'</span><span class="week-task-more-action">'+(isExpanded?"\u6536\u8d77":"\u5c55\u5f00")+'</span><span class="week-task-more-caret" aria-hidden="true"></span></button>':"";
+    const overflowControlHtml=isExpandable?'<button type="button" class="week-task-more-inline'+(isExpanded?" is-open":"")+'" data-hidden-count="'+hiddenCount+'" aria-expanded="'+(isExpanded?"true":"false")+'" aria-label="'+(isExpanded?"\u6536\u8d77\u5f53\u5929\u5df2\u5c55\u5f00\u7684\u5f85\u529e":"\u5c55\u5f00\u5f53\u5929\u5269\u4f59 "+hiddenCount+" \u9879\u5f85\u529e")+'" title="'+(isExpanded?"\u6536\u8d77\u5f53\u5929\u5df2\u5c55\u5f00\u7684\u5f85\u529e":"\u5c55\u5f00\u5f53\u5929\u5269\u4f59 "+hiddenCount+" \u9879\u5f85\u529e")+'" onclick="event.stopPropagation();toggleWeekDayExpand(\''+ds+'\')"><span class="week-task-more-line" aria-hidden="true"></span><span class="week-task-more-text">'+(isExpanded?"\u5f53\u5929\u5df2\u5168\u90e8\u5c55\u5f00":"\u5f53\u5929\u5269\u4f59 "+hiddenCount+" \u9879")+'</span><span class="week-task-more-action">'+(isExpanded?"\u6536\u8d77":"\u5c55\u5f00")+'</span><span class="week-task-more-caret" aria-hidden="true"></span></button>':"";
     const doneSectionHead='<div class="week-done-section-head"><span class="week-done-section-label">\u5df2\u5b8c\u6210</span><span class="week-done-section-count">'+dayDoneRows.length+' \u9879</span></div>';
     const doneSlideHtml=dayDoneRows.length?'<div class="week-done-slide'+(showDayDone?" is-open":"")+'" data-week-done-ds="'+ds+'" aria-hidden="'+(showDayDone?"false":"true")+'"'+(showDayDone?"":" inert")+'><div class="week-done-slide-inner">'+doneSectionHead+dayDoneRows.map(renderWeekRow).join("")+'</div></div>':"";
     const rowsHtml=previewRows.map(renderWeekRow).join("")+extraHtml+overflowControlHtml+doneSlideHtml;
