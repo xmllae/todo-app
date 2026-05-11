@@ -4151,6 +4151,17 @@
 }
 /* #endregion */
 
+/* Avoid replaying the segmented-control slider when the day toolbar returns from the hidden week view. */
+#taskMode .batch-bar-left .filter-seg.filter-seg--instant,
+#taskMode .batch-bar-left .filter-seg.filter-seg--instant .filter-seg-slider,
+#taskMode .batch-bar-left .filter-seg.filter-seg--instant .filter-seg-btn,
+#taskMode .batch-bar-left .filter-seg.filter-seg--instant .filter-seg-icon,
+#taskMode .batch-bar-left .filter-seg.filter-seg--instant .filter-seg-label,
+#taskMode .batch-bar-left .filter-seg.filter-seg--instant .filter-seg-badge {
+  transition: none !important;
+  animation: none !important;
+}
+
 /* #region 待办行与上方间隔-对齐 shili.html */
 .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav,
 #taskMode .task-main-col > .task-card > .date-nav {
