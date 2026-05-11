@@ -5856,3 +5856,43 @@
   opacity: .72;
   background: color-mix(in srgb, var(--week-ink) 56%, var(--week-muted));
 }
+
+/* 周概览日期指示条固定在今天，避免 hover 或当前定位时跟随其他日期移动。 */
+#taskMode .list-panel #tList .week-view-day-pill::before,
+#taskMode .list-panel #tList .week-view-day-pill:hover::before,
+#taskMode .list-panel #tList .week-view-day-pill.is-focus::before,
+#taskMode .list-panel #tList .week-view-day-pill.is-empty.is-focus::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill:hover::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-focus::before {
+  left: 50%;
+  right: auto;
+  width: clamp(32px, calc(100% - 32px), 56px);
+  opacity: 0;
+  transform: translateX(-50%);
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.is-today::before,
+#taskMode .list-panel #tList .week-view-day-pill.is-today:hover::before,
+#taskMode .list-panel #tList .week-view-day-pill.is-today.is-focus::before,
+#taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today::before,
+#taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today.is-focus::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today:hover::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today.is-focus::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today.is-focus::before {
+  left: 50%;
+  right: auto;
+  top: 5px;
+  bottom: auto;
+  width: clamp(32px, calc(100% - 32px), 56px);
+  height: 2px;
+  opacity: .72;
+  background: color-mix(in srgb, var(--week-ink) 56%, var(--week-muted));
+  border-radius: 999px;
+  box-shadow: none;
+  transform: translateX(-50%);
+  transform-origin: center;
+}
