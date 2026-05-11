@@ -5203,6 +5203,30 @@
   stroke-width: 2.4 !important;
 }
 
+#taskMode .add-split.add-split--instant-restore,
+.app.app--with-global-nav #taskMode .add-split.add-split--instant-restore,
+#taskMode .add-split.add-split--instant-restore .add-split-main,
+.app.app--with-global-nav #taskMode .add-split.add-split--instant-restore .add-split-main,
+#taskMode .add-split.add-split--instant-restore .add-split-quick,
+.app.app--with-global-nav #taskMode .add-split.add-split--instant-restore .add-split-quick,
+#taskMode .add-split.add-split--instant-restore svg,
+.app.app--with-global-nav #taskMode .add-split.add-split--instant-restore svg {
+  transition: none !important;
+  animation: none !important;
+}
+
+#taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut.add-split--instant-restore,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut.add-split--instant-restore,
+#taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut.add-split--instant-restore .add-split-main,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut.add-split--instant-restore .add-split-main,
+#taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut.add-split--instant-restore .add-split-quick,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut.add-split--instant-restore .add-split-quick,
+#taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut.add-split--instant-restore svg,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split.add-split--quick-shortcut.add-split--instant-restore svg {
+  transition: none !important;
+  animation: none !important;
+}
+
 #taskMode .list-panel #tList .week-quiet-days,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-quiet-days {
   display: grid;

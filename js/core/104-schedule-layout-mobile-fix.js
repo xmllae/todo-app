@@ -153,6 +153,22 @@
       mainBtn.tabIndex = 0;
       return;
     }
+    if (
+      mainBtn.dataset.weekBulkToggle === "1" ||
+      addSplit.classList.contains("is-week-bulk-hidden") ||
+      addSplit.classList.contains("is-week-bulk-booting")
+    ) {
+      if (typeof markWeekHeaderActionInstant === "function") {
+        markWeekHeaderActionInstant(addSplit);
+      } else {
+        addSplit.classList.add("add-split--instant-restore");
+        window.setTimeout(function () {
+          if (addSplit && addSplit.classList) {
+            addSplit.classList.remove("add-split--instant-restore");
+          }
+        }, 220);
+      }
+    }
     addSplit.classList.remove("is-week-bulk-booting", "is-week-bulk-hidden");
     addSplit.removeAttribute("aria-hidden");
     mainBtn.tabIndex = 0;

@@ -808,11 +808,22 @@ function toggleWeekAllDays(baseDs){
   expandableDays.forEach(function(ds){setWeekDayExpanded(ds,shouldExpand)});
   syncWeekHeaderAction(true,{expandableDays:expandableDays})
 }
+function markWeekHeaderActionInstant(addSplit){
+  if(!addSplit||!addSplit.classList)return;
+  addSplit.classList.add("add-split--instant-restore");
+  if(addSplit._weekHeaderActionInstantTimer)clearTimeout(addSplit._weekHeaderActionInstantTimer);
+  addSplit._weekHeaderActionInstantTimer=setTimeout(function(){
+    addSplit._weekHeaderActionInstantTimer=null;
+    if(addSplit&&addSplit.classList)addSplit.classList.remove("add-split--instant-restore")
+  },220)
+}
 function syncWeekHeaderAction(weekMode,weekMeta){
   const addBtn=document.getElementById("btnAddTaskBar");
   if(!addBtn)return;
   const addSplit=addBtn.closest(".add-split");
   const quickBtn=addSplit?addSplit.querySelector(".add-split-quick"):null;
+  const restoreFromWeek=!weekMode&&!!(addSplit&&(addBtn.dataset.weekBulkToggle==="1"||addSplit.classList.contains("is-week-bulk-hidden")||addSplit.classList.contains("is-week-bulk-booting")));
+  if(restoreFromWeek)markWeekHeaderActionInstant(addSplit);
   if(quickBtn){
     if(weekMode){
       quickBtn.style.display="none";
