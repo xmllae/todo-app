@@ -386,27 +386,16 @@ function ensureWeekTaskOverviewShell(root){
     shell.setAttribute("aria-label","本周任务概览");
     root.appendChild(shell)
   }
-  if(!shell._weekNextActionBound){
-    shell._weekNextActionBound=1;
-    shell.addEventListener("click",function(e){
-      const btn=e.target.closest("[data-week-next-action]");
-      if(!btn||!shell.contains(btn))return;
-      e.preventDefault();
-      e.stopPropagation();
-      toggleWeekNextOverview(btn.getAttribute("data-week-base-ds"))
-    })
-  }
   return shell
 }
 function weekOverviewMonthDay(ds){
   const d=parseDS(ds);
   return d?(d.getMonth()+1)+"/"+d.getDate():""
 }
-function weekOverviewPlanText(t){
-  const pt=String(t&&t.planTime||"").trim();
-  if(!pt)return"全天";
-  const shown=typeof formatPlanTimeDisp==="function"?formatPlanTimeDisp(pt):pt;
-  return taskRowPlainTimeText(t,shown)
+function weekOverviewRhythmStatus(day){
+  if(day.pending)return day.pending+" 待办";
+  if(day.total)return"已清空";
+  return"空闲"
 }
 function getWeekOverviewData(selStr){
   const meta=getTaskWeekMeta(selStr),weekNames=["一","二","三","四","五","六","日"],allRows=[];
@@ -423,23 +412,16 @@ function renderWeekTaskOverviewSidebar(pct,totalForProg,doneForProg,selStr){
   if(!root||!shell)return;
   const data=getWeekOverviewData(selStr),rangeText=getTaskWeekRangeText(data.meta),total=data.allRows.length,done=data.allRows.filter(function(row){return row.task.done}).length,pending=data.allRows.filter(function(row){return!row.task.done&&!row.task.frozen}).length;
   const highPending=data.allRows.filter(function(row){return row.task.priority==="high"&&!row.task.done&&!row.task.frozen}).length;
-  const nextRows=data.allRows.filter(function(row){return!row.task.done&&!row.task.frozen}).sort(function(a,b){
-    const ah=a.task.priority==="high",bh=b.task.priority==="high";
-    if(ah!==bh)return ah?-1:1;
-    if(a.ds!==b.ds)return a.ds.localeCompare(b.ds);
-    const at=String(a.task.planTime||""),bt=String(b.task.planTime||"");
-    if(at&&bt&&at!==bt)return at.localeCompare(bt);
-    if(at&&!bt)return-1;
-    if(!at&&bt)return 1;
-    return(b.task.created||0)-(a.task.created||0)
-  });
-  const weekKey=data.meta.days[0],isNextExpanded=weekNextOverviewExpandedWeeks.has(weekKey),previewNextRows=nextRows.slice(0,2),hiddenNextCount=Math.max(0,nextRows.length-previewNextRows.length),shownNextRows=isNextExpanded?nextRows:previewNextRows;
-  const shownNextHtml=shownNextRows.length?shownNextRows.map(function(row){
-    const day=data.dayStats[row.idx],high=row.task.priority==="high";
-    return'<button type="button" class="week-next-item'+(high?" is-high":"")+'" onclick="pick(\''+row.ds+'\')"><span class="week-next-mark" aria-hidden="true"></span><span class="week-next-copy"><span class="week-next-title">'+esc(row.task.text)+'</span><span class="week-next-meta">'+day.label+" "+day.dateText+" · "+esc(weekOverviewPlanText(row.task))+'</span></span></button>'
-  }).join(""):'<div class="week-next-empty"><strong>本周待办已清空</strong><span>可以回看已完成，或安心收尾。</span></div>';
-  const sectionAction=hiddenNextCount?'<button type="button" class="week-section-action'+(isNextExpanded?" is-open":"")+'" data-week-next-action="1" data-week-base-ds="'+selStr+'" aria-expanded="'+(isNextExpanded?"true":"false")+'" aria-label="'+(isNextExpanded?"收起本周待处理任务":"展开剩余 "+hiddenNextCount+" 项待处理任务")+'"><span>'+(isNextExpanded?"收起":"展开剩余 "+hiddenNextCount)+'</span><span class="week-section-action-arrow" aria-hidden="true">&rsaquo;</span></button>':'<small>建议先看</small>';
-  shell.innerHTML='<div class="week-overview-head"><div><span class="week-overview-kicker">任务概览</span><h3>'+getTaskWeekScopeTitle(selStr)+'</h3></div><span class="week-overview-range">'+rangeText+'</span></div><div class="week-overview-score"><div class="week-overview-ring" style="--week-pct:'+pct+'"><span>'+pct+'%</span><em>完成度</em></div><div class="week-overview-score-main"><div class="week-overview-count"><strong>'+done+'</strong><span>/</span><strong>'+total+'</strong></div><p>周任务已完成</p><div class="week-overview-progress" style="--week-progress:'+pct+'%"><span></span></div></div></div><div class="week-overview-metrics"><div><b>'+total+'</b><span>全部</span></div><div><b>'+pending+'</b><span>待办</span></div><div><b>'+done+'</b><span>完成</span></div><div><b>'+highPending+'</b><span>高优先</span></div></div><div class="week-overview-section week-overview-section--next'+(isNextExpanded?" is-expanded":"")+'"><div class="week-overview-section-title"><span>下一步</span>'+sectionAction+'</div><div class="week-next-list'+(isNextExpanded?" is-expanded":"")+'">'+shownNextHtml+'</div></div>'
+  const maxPending=Math.max(1,data.dayStats.reduce(function(n,day){return Math.max(n,day.pending)},0));
+  const busyDay=data.dayStats.reduce(function(best,day){return day.pending>best.pending?day:best},data.dayStats[0]);
+  const clearDays=data.dayStats.filter(function(day){return day.total&&!day.pending}).length,emptyDays=data.dayStats.filter(function(day){return!day.total}).length;
+  const rhythmLead=pending?busyDay.label+"最满 · "+busyDay.pending+" 项待办":done?"本周已清空 · "+done+" 项完成":"本周暂无任务";
+  const rhythmMeta=(clearDays?clearDays+" 天已清空":"")+(clearDays&&emptyDays?" · ":"")+(emptyDays?emptyDays+" 天空闲":"");
+  const rhythmRows=data.dayStats.map(function(day){
+    const status=weekOverviewRhythmStatus(day),load=day.pending?Math.max(10,Math.round(day.pending/maxPending*100)):(day.total?16:0),cls="week-rhythm-day"+(day.isToday?" is-today":"")+(day.isFocus?" is-focus":"")+(day.pending?" has-pending":day.total?" is-clear":" is-empty");
+    return'<button type="button" class="'+cls+'" style="--rhythm-load:'+load+'%" onclick="jumpWeekDay(\''+day.ds+'\')" aria-label="定位到'+day.label+' '+day.dateText+'，'+status+'"><span class="week-rhythm-label"><span>'+day.label+'</span><small>'+day.dateText+'</small></span><span class="week-rhythm-track" aria-hidden="true"><span class="week-rhythm-load"></span></span><span class="week-rhythm-state">'+status+'</span></button>'
+  }).join("");
+  shell.innerHTML='<div class="week-overview-head"><div><span class="week-overview-kicker">任务概览</span><h3>'+getTaskWeekScopeTitle(selStr)+'</h3></div><span class="week-overview-range">'+rangeText+'</span></div><div class="week-overview-score"><div class="week-overview-ring" style="--week-pct:'+pct+'"><span>'+pct+'%</span><em>完成度</em></div><div class="week-overview-score-main"><div class="week-overview-count"><strong>'+done+'</strong><span>/</span><strong>'+total+'</strong></div><p>周任务已完成</p><div class="week-overview-progress" style="--week-progress:'+pct+'%"><span></span></div></div></div><div class="week-overview-metrics"><div><b>'+total+'</b><span>全部</span></div><div><b>'+pending+'</b><span>待办</span></div><div><b>'+done+'</b><span>完成</span></div><div><b>'+highPending+'</b><span>高优先</span></div></div><div class="week-overview-section week-overview-section--rhythm"><div class="week-overview-section-title"><span>本周节奏</span><small>负载分布</small></div><div class="week-rhythm-summary"><span>'+rhythmLead+'</span><small>'+(rhythmMeta||"节奏平稳")+'</small></div><div class="week-rhythm-list">'+rhythmRows+'</div></div>'
 }
 const renderTaskDashLegacy=renderTaskDash;
 renderTaskDash=function(pct,totalForProg,doneForProg,nonArchived,fl,selStr){
@@ -527,7 +509,6 @@ function getTaskWeekScopeTitle(ds){const off=getTaskWeekOffset(ds);if(off===0)re
 function setTaskDashScope(scope,metaText){const titleEl=document.querySelector(".dash-overview .dash-hd-tit"),subEl=document.querySelector(".dash-overview .dash-ov-count-sub"),shortEl=document.getElementById("dashShortDate"),root=document.getElementById("taskDashCol");if(scope==="week"){if(titleEl)titleEl.textContent="\u672c\u5468\u603b\u89c8";if(subEl)subEl.textContent="\u5468\u4efb\u52a1\u5df2\u5b8c\u6210";if(shortEl&&metaText)shortEl.textContent=metaText;if(root)root.setAttribute("aria-label","\u672c\u5468\u6982\u89c8");return}if(titleEl)titleEl.textContent="\u4eca\u65e5\u603b\u89c8";if(subEl)subEl.textContent="\u4efb\u52a1\u5df2\u5b8c\u6210";if(root)root.setAttribute("aria-label","\u4eca\u65e5\u6982\u89c8")}
 const weekDayExpandState=new Set();
 const weekDoneDayRevealState=new Set();
-const weekNextOverviewExpandedWeeks=new Set();
 const weekTaskTogglePendingIds=new Set();
 const WEEK_DONE_COLLAPSE_LS_KEY="tuole_week_done_collapsed";
 const WEEK_DONE_FOCUS_MIGRATION_KEY="tuole_week_done_focus_migrated";
@@ -889,12 +870,6 @@ function toggleWeekAllDays(baseDs){
   const shouldExpand=expandableDays.some(function(ds){return!isWeekDayExpanded(ds)});
   expandableDays.forEach(function(ds){setWeekDayExpanded(ds,shouldExpand)});
   syncWeekHeaderAction(true,{expandableDays:expandableDays})
-}
-function toggleWeekNextOverview(baseDs){
-  const meta=getTaskWeekMeta(baseDs),weekKey=meta.days[0];
-  if(weekNextOverviewExpandedWeeks.has(weekKey))weekNextOverviewExpandedWeeks.delete(weekKey);
-  else weekNextOverviewExpandedWeeks.add(weekKey);
-  if(typeof rAll==="function")rAll()
 }
 function markWeekHeaderActionInstant(addSplit){
   if(!addSplit||!addSplit.classList)return;
