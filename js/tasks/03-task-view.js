@@ -412,19 +412,7 @@ function renderWeekTaskOverviewSidebar(pct,totalForProg,doneForProg,selStr){
   const root=document.getElementById("taskDashCol"),shell=ensureWeekTaskOverviewShell(root);
   if(!root||!shell)return;
   const data=getWeekOverviewData(selStr),rangeText=getTaskWeekRangeText(data.meta),total=data.allRows.length,done=data.allRows.filter(function(row){return row.task.done}).length,pending=data.allRows.filter(function(row){return!row.task.done&&!row.task.frozen}).length;
-  const highRows=data.allRows.filter(function(row){return row.task.priority==="high"}),highPending=highRows.filter(function(row){return!row.task.done&&!row.task.frozen}).length,normalRows=data.allRows.filter(function(row){return row.task.priority!=="high"}),normalPending=normalRows.filter(function(row){return!row.task.done&&!row.task.frozen}).length;
-  const maxLoad=Math.max(1,data.dayStats.reduce(function(max,day){return Math.max(max,day.total)},0));
-  const dayRowsHtml=data.dayStats.map(function(day){
-    const load=day.total?Math.max(8,Math.round(day.total/maxLoad*100)):0,doneRatio=day.total?Math.round(day.done/day.total*100):0,state=day.pending?day.pending+" 待办":day.total?"已清空":"空闲";
-    return'<button type="button" class="week-overview-day'+(day.isToday?" is-today":"")+(day.isFocus?" is-focus":"")+(day.pending?" has-pending":day.total?" is-clear":" is-empty")+'" style="--day-load:'+load+'%;--day-done:'+doneRatio+'%" onclick="pick(\''+day.ds+'\')" aria-label="'+day.label+" "+day.dateText+"，"+state+'"><span class="week-overview-day-copy"><span class="week-overview-day-name">'+day.label+'</span><span class="week-overview-day-date">'+day.dateText+'</span></span><span class="week-overview-day-meter" aria-hidden="true"><span class="week-overview-day-load"><span class="week-overview-day-done"></span></span></span><span class="week-overview-day-state">'+state+'</span></button>'
-  }).join("");
-  const priorityRows=[
-    {cls:"high",label:"高优先",count:highPending,total:highRows.length,ratio:highRows.length?Math.round(highPending/highRows.length*100):0},
-    {cls:"normal",label:"普通任务",count:normalPending,total:normalRows.length,ratio:normalRows.length?Math.round(normalPending/normalRows.length*100):0},
-    {cls:"done",label:"已完成",count:done,total:total,ratio:total?Math.round(done/total*100):0}
-  ].map(function(item){
-    return'<div class="week-overview-priority-row week-overview-priority-row--'+item.cls+'" style="--priority-load:'+item.ratio+'%"><span class="week-overview-priority-dot" aria-hidden="true"></span><span class="week-overview-priority-label">'+item.label+'</span><span class="week-overview-priority-meter" aria-hidden="true"><span></span></span><strong>'+item.count+'</strong><small>/ '+item.total+'</small></div>'
-  }).join("");
+  const highPending=data.allRows.filter(function(row){return row.task.priority==="high"&&!row.task.done&&!row.task.frozen}).length;
   const nextRows=data.allRows.filter(function(row){return!row.task.done&&!row.task.frozen}).sort(function(a,b){
     const ah=a.task.priority==="high",bh=b.task.priority==="high";
     if(ah!==bh)return ah?-1:1;
@@ -434,14 +422,17 @@ function renderWeekTaskOverviewSidebar(pct,totalForProg,doneForProg,selStr){
     if(at&&!bt)return-1;
     if(!at&&bt)return 1;
     return(b.task.created||0)-(a.task.created||0)
-  }).slice(0,3);
-  const nextHtml=nextRows.length?nextRows.map(function(row){
+  });
+  const shownNextRows=nextRows.slice(0,2),hiddenNextCount=Math.max(0,nextRows.length-shownNextRows.length);
+  const shownNextHtml=shownNextRows.length?shownNextRows.map(function(row){
     const day=data.dayStats[row.idx],high=row.task.priority==="high";
     return'<button type="button" class="week-next-item'+(high?" is-high":"")+'" onclick="pick(\''+row.ds+'\')"><span class="week-next-mark" aria-hidden="true"></span><span class="week-next-copy"><span class="week-next-title">'+esc(row.task.text)+'</span><span class="week-next-meta">'+day.label+" "+day.dateText+" · "+esc(weekOverviewPlanText(row.task))+'</span></span></button>'
   }).join(""):'<div class="week-next-empty"><strong>本周待办已清空</strong><span>可以回看已完成，或安心收尾。</span></div>';
+  const moreHtml=hiddenNextCount?'<div class="week-next-more">还有 '+hiddenNextCount+' 项待处理</div>':"";
+  const briefText=pending?("本周还有 "+pending+" 项待办"+(highPending?"，其中 "+highPending+" 项高优先":"")):"本周待办已清空";
   const bulkState=getWeekBulkActionState(selStr,getWeekExpandableDays(selStr));
   const actionHtml='<button type="button" class="week-overview-action'+(bulkState.allExpanded?" is-open":"")+(bulkState.hasExpandable?"":" is-idle")+'" '+(bulkState.hasExpandable?'onclick="event.stopPropagation();toggleWeekAllDays(\''+selStr+'\')"':'disabled aria-disabled="true"')+' aria-expanded="'+(bulkState.allExpanded?"true":"false")+'" aria-label="'+(bulkState.hasExpandable?bulkState.tip:"本周待办已全部显示")+'" title="'+(bulkState.hasExpandable?bulkState.tip:"本周待办已全部显示")+'">'+(bulkState.hasExpandable?(bulkState.allExpanded?WEEK_HEADER_COLLAPSE_ICON:WEEK_HEADER_EXPAND_ICON):WEEK_HEADER_READY_ICON)+'<span>'+(bulkState.hasExpandable?bulkState.label:"全部显示")+'</span></button>';
-  shell.innerHTML='<div class="week-overview-head"><div><span class="week-overview-kicker">任务概览</span><h3>'+getTaskWeekScopeTitle(selStr)+'</h3></div><span class="week-overview-range">'+rangeText+'</span></div><div class="week-overview-score"><div class="week-overview-ring" style="--week-pct:'+pct+'"><span>'+pct+'%</span><em>完成度</em></div><div class="week-overview-score-main"><div class="week-overview-count"><strong>'+done+'</strong><span>/</span><strong>'+total+'</strong></div><p>周任务已完成</p><div class="week-overview-progress" style="--week-progress:'+pct+'%"><span></span></div></div></div><div class="week-overview-metrics"><div><b>'+total+'</b><span>全部</span></div><div><b>'+pending+'</b><span>待办</span></div><div><b>'+done+'</b><span>完成</span></div><div><b>'+highPending+'</b><span>高优先</span></div></div><div class="week-overview-section week-overview-section--days"><div class="week-overview-section-title"><span>每日分布</span><small>任务负载</small></div><div class="week-overview-day-list">'+dayRowsHtml+'</div></div><div class="week-overview-section week-overview-section--priority"><div class="week-overview-section-title"><span>优先级</span><small>待处理</small></div><div class="week-overview-priority-list">'+priorityRows+'</div></div><div class="week-overview-section week-overview-section--next"><div class="week-overview-section-title"><span>下一步</span><small>建议先看</small></div><div class="week-next-list">'+nextHtml+'</div></div><div class="week-overview-footer">'+actionHtml+'</div>'
+  shell.innerHTML='<div class="week-overview-head"><div><span class="week-overview-kicker">任务概览</span><h3>'+getTaskWeekScopeTitle(selStr)+'</h3></div><span class="week-overview-range">'+rangeText+'</span></div><div class="week-overview-score"><div class="week-overview-ring" style="--week-pct:'+pct+'"><span>'+pct+'%</span><em>完成度</em></div><div class="week-overview-score-main"><div class="week-overview-count"><strong>'+done+'</strong><span>/</span><strong>'+total+'</strong></div><p>周任务已完成</p><div class="week-overview-progress" style="--week-progress:'+pct+'%"><span></span></div></div></div><div class="week-overview-metrics"><div><b>'+total+'</b><span>全部</span></div><div><b>'+pending+'</b><span>待办</span></div><div><b>'+done+'</b><span>完成</span></div><div><b>'+highPending+'</b><span>高优先</span></div></div><p class="week-overview-brief">'+briefText+'</p><div class="week-overview-section week-overview-section--next"><div class="week-overview-section-title"><span>下一步</span><small>建议先看</small></div><div class="week-next-list">'+shownNextHtml+'</div>'+moreHtml+'</div><div class="week-overview-spacer" aria-hidden="true"></div><div class="week-overview-footer">'+actionHtml+'</div>'
 }
 const renderTaskDashLegacy=renderTaskDash;
 renderTaskDash=function(pct,totalForProg,doneForProg,nonArchived,fl,selStr){
