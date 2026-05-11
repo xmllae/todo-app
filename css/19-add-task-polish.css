@@ -5815,3 +5815,44 @@
     max-width: none;
   }
 }
+
+/* 周概览空状态：无任务日期始终保持浅色，不受今天或当前定位高亮影响。 */
+#taskMode .list-panel #tList .week-view-day-pill.is-empty,
+#taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today,
+#taskMode .list-panel #tList .week-view-day-pill.is-empty.is-focus,
+#taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today.is-focus,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-focus,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today.is-focus {
+  color: color-mix(in srgb, var(--week-muted) 58%, transparent);
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.is-empty::before,
+#taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today::before,
+#taskMode .list-panel #tList .week-view-day-pill.is-empty.is-focus::before,
+#taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today.is-focus::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-focus::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today.is-focus::before {
+  opacity: 0;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.is-empty .week-view-day-pill-state-text,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty .week-view-day-pill-state-text {
+  color: color-mix(in srgb, var(--week-muted) 62%, transparent);
+}
+
+/* 今天保留上方指示条，但文字仍然沿用无任务浅色。 */
+#taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today::before,
+#taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today.is-focus::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today.is-focus::before {
+  width: min(36px, calc(100% - 18px));
+  opacity: .72;
+  background: color-mix(in srgb, var(--week-ink) 56%, var(--week-muted));
+}
