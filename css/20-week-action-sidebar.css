@@ -33,28 +33,19 @@
 
 .week-overview-head {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding-bottom: 18px;
+  padding-bottom: 16px;
 }
 
 .week-overview-kicker {
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: 0;
   color: color-mix(in srgb, var(--acc) 88%, #334155);
   font-size: 12px;
   line-height: 1.2;
   font-weight: 760;
-  letter-spacing: 0;
-}
-
-.week-overview-head h3 {
-  margin: 0;
-  color: var(--text);
-  font-size: 20px;
-  line-height: 1.15;
-  font-weight: 850;
   letter-spacing: 0;
 }
 
