@@ -688,7 +688,7 @@ function getWeekBulkActionState(baseDs,days){
     return sum+Math.max(0,getWeekRenderedRows(ds).length-WEEK_DAY_PREVIEW_MAX)
   },0);
   const hiddenPendingLabel=hiddenPendingCount>99?"99+":String(hiddenPendingCount);
-  const label=allExpanded?"\u6536\u8d77\u672c\u5468":"\u5c55\u5f00\u5269\u4f59 "+hiddenPendingLabel+" \u9879";
+  const label=allExpanded?"\u6536\u8d77":"\u5c55\u5f00 "+hiddenPendingLabel+" \u9879";
   const tip=allExpanded?"\u6536\u8d77\u672c\u5468\u5df2\u5c55\u5f00\u7684\u5f85\u529e\u4efb\u52a1":"\u5c55\u5f00\u672c\u5468\u5269\u4f59 "+hiddenPendingLabel+" \u9879\u672a\u5c55\u793a\u5f85\u529e";
   return{expandableDays:expandableDays,hasExpandable:expandableDays.length>0,allExpanded:allExpanded,hiddenPendingCount:hiddenPendingCount,label:label,tip:tip}
 }

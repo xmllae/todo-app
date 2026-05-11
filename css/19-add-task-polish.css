@@ -6316,3 +6316,194 @@
   color: color-mix(in srgb, var(--week-muted) 82%, var(--week-ink));
   font-weight: 600;
 }
+
+/* 概览行二次校准：把操作和进度降为辅助信息。 */
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-top.week-view-summary-line,
+#taskMode .list-panel #tList .week-view-top.week-view-summary-line {
+  gap: 11px;
+  min-height: 30px;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-summary-line .week-view-title-group,
+#taskMode .list-panel #tList .week-view-summary-line .week-view-title-group {
+  margin-right: 2px;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-summary-line .week-view-stats,
+#taskMode .list-panel #tList .week-view-summary-line .week-view-stats {
+  gap: 0;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-stat,
+#taskMode .list-panel #tList .week-view-stat {
+  min-height: 18px;
+  margin-right: 9px;
+  padding-right: 9px;
+  color: color-mix(in srgb, var(--week-muted) 80%, var(--week-ink));
+  font-size: 11px;
+  font-weight: 620;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-stat b,
+#taskMode .list-panel #tList .week-view-stat b {
+  margin-right: 3px;
+  color: color-mix(in srgb, var(--week-ink) 94%, #111827);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-stat:not(:last-child)::after,
+#taskMode .list-panel #tList .week-view-stat:not(:last-child)::after {
+  height: 13px;
+  background: color-mix(in srgb, var(--week-line) 46%, transparent);
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-inline-action,
+#taskMode .list-panel #tList .week-view-inline-action {
+  min-height: 20px;
+  padding: 0 2px;
+  border-color: transparent;
+  background: transparent;
+  color: color-mix(in srgb, var(--week-muted) 86%, var(--week-ink));
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-inline-action svg,
+#taskMode .list-panel #tList .week-view-inline-action svg {
+  width: 12px;
+  height: 12px;
+  opacity: 0.58;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-inline-action:hover,
+#taskMode .list-panel #tList .week-view-inline-action:hover {
+  border-color: transparent;
+  background: color-mix(in srgb, var(--week-line) 24%, transparent);
+  color: color-mix(in srgb, var(--week-ink) 76%, var(--week-muted));
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-inline-action + .week-view-progress,
+#taskMode .list-panel #tList .week-view-inline-action + .week-view-progress {
+  margin-left: 6px;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-summary-line .week-view-progress,
+#taskMode .list-panel #tList .week-view-summary-line .week-view-progress {
+  flex: 0 0 auto;
+  min-width: 0;
+  gap: 7px;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-progress-label,
+#taskMode .list-panel #tList .week-view-progress-label {
+  color: color-mix(in srgb, var(--week-muted) 82%, var(--week-ink));
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-progress-label b,
+#taskMode .list-panel #tList .week-view-progress-label b {
+  margin-left: 4px;
+  color: color-mix(in srgb, var(--week-ink) 92%, #111827);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-summary-line .week-view-progress-track,
+#taskMode .list-panel #tList .week-view-summary-line .week-view-progress-track {
+  flex: 0 0 112px;
+  width: 112px;
+  max-width: 112px;
+  height: 6px;
+  background: color-mix(in srgb, var(--week-line) 46%, transparent);
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-progress-fill,
+#taskMode .list-panel #tList .week-view-progress-fill {
+  background: color-mix(in srgb, var(--week-accent) 76%, var(--week-ink));
+  box-shadow: none;
+}
+
+/* 概览行垂直对齐修正：所有子块共享同一条视觉中线。 */
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-top.week-view-summary-line,
+#taskMode .list-panel #tList .week-view-top.week-view-summary-line {
+  align-items: center;
+  min-height: 32px;
+  line-height: 1;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-summary-line > *,
+#taskMode .list-panel #tList .week-view-summary-line > * {
+  align-self: center;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-summary-line .week-view-title-group,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-summary-line .week-view-stats,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-summary-line .week-view-progress,
+#taskMode .list-panel #tList .week-view-summary-line .week-view-title-group,
+#taskMode .list-panel #tList .week-view-summary-line .week-view-stats,
+#taskMode .list-panel #tList .week-view-summary-line .week-view-progress {
+  display: flex;
+  align-items: center;
+  height: 24px;
+  line-height: 1;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-title,
+#taskMode .list-panel #tList .week-view-title {
+  display: flex;
+  align-items: center;
+  min-height: 24px;
+  margin: 0;
+  line-height: 1;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-stat,
+#taskMode .list-panel #tList .week-view-stat {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  line-height: 1;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-stat b,
+#taskMode .list-panel #tList .week-view-stat b {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-inline-action,
+#taskMode .list-panel #tList .week-view-inline-action {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  line-height: 1;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-inline-action svg,
+#taskMode .list-panel #tList .week-view-inline-action svg {
+  display: block;
+  flex: 0 0 auto;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-progress-label,
+#taskMode .list-panel #tList .week-view-progress-label {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  line-height: 1;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-progress-label b,
+#taskMode .list-panel #tList .week-view-progress-label b {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-summary-line .week-view-progress-track,
+#taskMode .list-panel #tList .week-view-summary-line .week-view-progress-track {
+  align-self: center;
+}
