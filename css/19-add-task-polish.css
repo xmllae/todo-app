@@ -6562,3 +6562,20 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   min-height: 0;
   overflow: hidden;
 }
+
+/* 本周已完成任务：后置覆盖最终标题色，保持和普通任务完成态一致的灰蓝弱化。 */
+#taskMode .list-panel #tList .week-task-item.is-done .week-task-title,
+#taskMode .list-panel #tList .week-task-item.is-done .week-task-title-text,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-item.is-done .week-task-title,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-item.is-done .week-task-title-text {
+  color: color-mix(in srgb, var(--week-muted) 88%, var(--week-ink));
+}
+
+#taskMode .list-panel #tList .week-task-item.is-done .week-task-meta-row .time-plain.time-disp,
+#taskMode .list-panel #tList .week-task-item.is-done .week-task-meta-row .task-recur-badge,
+#taskMode .list-panel #tList .week-task-item.is-done .week-task-sub-meta,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-item.is-done .week-task-meta-row .time-plain.time-disp,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-item.is-done .week-task-meta-row .task-recur-badge,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-item.is-done .week-task-sub-meta {
+  color: color-mix(in srgb, var(--week-muted) 72%, transparent);
+}
