@@ -224,7 +224,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .week-overview-section-title span {
@@ -242,16 +242,12 @@
 }
 
 .week-rhythm-summary {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
   min-width: 0;
-  padding-bottom: 10px;
+  padding-bottom: 8px;
 }
 
 .week-rhythm-summary span {
-  min-width: 0;
+  display: block;
   overflow: hidden;
   color: var(--text);
   font-size: 12px;
@@ -261,32 +257,23 @@
   white-space: nowrap;
 }
 
-.week-rhythm-summary small {
-  flex: 0 0 auto;
-  color: var(--text3);
-  font-size: 10px;
-  line-height: 1.2;
-  font-weight: 680;
-  white-space: nowrap;
-}
-
 .week-rhythm-list {
   display: flex;
   flex-direction: column;
   min-height: 0;
-  border-top: 1px solid color-mix(in srgb, var(--task-bd) 52%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--task-bd) 42%, transparent);
 }
 
 .week-rhythm-day {
   display: grid;
-  grid-template-columns: 52px minmax(0, 1fr) 54px;
+  grid-template-columns: 52px minmax(0, 1fr) 48px;
   align-items: center;
   gap: 8px;
   width: 100%;
-  min-height: 31px;
-  padding: 5px 0;
+  min-height: 28px;
+  padding: 4px 0;
   border: 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--task-bd) 40%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--task-bd) 34%, transparent);
   background: transparent;
   color: inherit;
   cursor: pointer;
@@ -322,10 +309,10 @@
 }
 
 .week-rhythm-track {
-  height: 5px;
+  height: 4px;
   overflow: hidden;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--task-bd) 48%, transparent);
+  background: color-mix(in srgb, var(--task-bd) 38%, transparent);
 }
 
 .week-rhythm-load {
@@ -357,7 +344,7 @@
 }
 
 .week-rhythm-day.is-clear .week-rhythm-load {
-  background: color-mix(in srgb, #22c55e 84%, var(--task-bd));
+  background: color-mix(in srgb, #22c55e 88%, var(--task-bd));
 }
 
 .week-rhythm-day.is-clear .week-rhythm-state {
@@ -366,6 +353,22 @@
 
 .week-rhythm-day.is-empty {
   opacity: .62;
+}
+
+.week-rhythm-empty,
+.week-rhythm-note {
+  color: var(--text3);
+  font-size: 10px;
+  line-height: 1.35;
+  font-weight: 680;
+}
+
+.week-rhythm-empty {
+  padding-top: 8px;
+}
+
+.week-rhythm-note {
+  padding-top: 8px;
 }
 
 .week-overview-day-list,
