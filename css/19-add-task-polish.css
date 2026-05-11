@@ -5741,6 +5741,43 @@
   min-width: 0;
 }
 
+#taskMode .list-panel #tList .week-view-inline-action,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-inline-action {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 24px;
+  padding: 2px 8px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: color-mix(in srgb, var(--week-muted) 78%, var(--week-ink));
+  font: inherit;
+  font-size: 12px;
+  font-weight: 720;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color .16s ease, background .16s ease, border-color .16s ease;
+}
+
+#taskMode .list-panel #tList .week-view-inline-action svg,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-inline-action svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  stroke-width: 2.35;
+}
+
+#taskMode .list-panel #tList .week-view-inline-action:hover,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-inline-action:hover {
+  color: color-mix(in srgb, var(--week-ink) 84%, var(--week-accent));
+  background: color-mix(in srgb, var(--week-accent) 6%, transparent);
+  border-color: color-mix(in srgb, var(--week-accent) 14%, transparent);
+}
+
 #taskMode .list-panel #tList .week-view-stat,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-stat {
   min-height: 22px;

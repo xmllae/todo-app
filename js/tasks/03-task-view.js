@@ -680,6 +680,32 @@ function toggleWeekDayExpand(ds){
   setWeekDayExpanded(ds,!isWeekDayExpanded(ds));
   syncWeekHeaderAction(true)
 }
+function getWeekBulkActionState(baseDs,days){
+  const expandableDays=Array.isArray(days)?days:getWeekExpandableDays(baseDs);
+  const allExpanded=expandableDays.length>0&&expandableDays.every(function(ds){return isWeekDayExpanded(ds)});
+  const hiddenPendingCount=expandableDays.reduce(function(sum,ds){
+    if(isWeekDayExpanded(ds))return sum;
+    return sum+Math.max(0,getWeekRenderedRows(ds).length-WEEK_DAY_PREVIEW_MAX)
+  },0);
+  const hiddenPendingLabel=hiddenPendingCount>99?"99+":String(hiddenPendingCount);
+  const label=allExpanded?"\u6536\u8d77\u672c\u5468":"\u5c55\u5f00\u5269\u4f59 "+hiddenPendingLabel+" \u9879";
+  const tip=allExpanded?"\u6536\u8d77\u672c\u5468\u5df2\u5c55\u5f00\u7684\u5f85\u529e\u4efb\u52a1":"\u5c55\u5f00\u672c\u5468\u5269\u4f59 "+hiddenPendingLabel+" \u9879\u672a\u5c55\u793a\u5f85\u529e";
+  return{expandableDays:expandableDays,hasExpandable:expandableDays.length>0,allExpanded:allExpanded,hiddenPendingCount:hiddenPendingCount,label:label,tip:tip}
+}
+function syncWeekInlineAction(weekMeta){
+  const btn=document.querySelector("#tList .week-view-inline-action");
+  if(!btn)return;
+  const state=getWeekBulkActionState(sel,weekMeta&&weekMeta.expandableDays);
+  if(!state.hasExpandable){
+    btn.remove();
+    return
+  }
+  btn.classList.toggle("is-open",state.allExpanded);
+  btn.setAttribute("aria-expanded",state.allExpanded?"true":"false");
+  btn.setAttribute("aria-label",state.tip);
+  btn.setAttribute("title",state.tip);
+  btn.innerHTML=(state.allExpanded?WEEK_HEADER_COLLAPSE_ICON:WEEK_HEADER_EXPAND_ICON)+"<span>"+state.label+"</span>"
+}
 function playWeekTaskTitleDoneAnim(row,isDone){
   const title=row&&row.querySelector(".week-task-title"),text=title&&title.querySelector(".week-task-title-text"),strike=title&&title.querySelector(".week-task-title-strike");
   if(!title||!strike)return;
@@ -799,31 +825,22 @@ function syncWeekHeaderAction(weekMode,weekMeta){
     }
   }
   if(weekMode){
-    const expandableDays=weekMeta&&Array.isArray(weekMeta.expandableDays)?weekMeta.expandableDays:getWeekExpandableDays(sel);
-    const hasExpandable=expandableDays.length>0;
-    const allExpanded=expandableDays.length>0&&expandableDays.every(function(ds){return isWeekDayExpanded(ds)});
-    const hiddenPendingCount=expandableDays.reduce(function(sum,ds){
-      if(isWeekDayExpanded(ds))return sum;
-      return sum+Math.max(0,getWeekRenderedRows(ds).length-WEEK_DAY_PREVIEW_MAX)
-    },0);
-    const hiddenPendingLabel=hiddenPendingCount>99?"99+":String(hiddenPendingCount);
-    const label=hasExpandable?(allExpanded?"\u6536\u8d77\u672c\u5468":"\u5c55\u5f00\u672c\u5468\u5269\u4f59 "+hiddenPendingLabel+" \u9879"):"\u5168\u90e8\u663e\u793a";
-    const tip=hasExpandable?(allExpanded?"\u6536\u8d77\u672c\u5468\u5df2\u5c55\u5f00\u7684\u5f85\u529e\u4efb\u52a1":"\u5c55\u5f00\u672c\u5468\u5269\u4f59 "+hiddenPendingLabel+" \u9879\u672a\u5c55\u793a\u5f85\u529e"):"\u672c\u5468\u672a\u5b8c\u6210\u5f85\u529e\u5df2\u5168\u90e8\u663e\u793a";
+    const state=getWeekBulkActionState(sel,weekMeta&&weekMeta.expandableDays);
+    syncWeekInlineAction({expandableDays:state.expandableDays});
     if(addSplit){
-      addSplit.classList.remove("is-week-bulk-hidden","is-week-bulk-booting");
-      addSplit.removeAttribute("aria-hidden")
+      addSplit.classList.add("is-week-bulk-hidden");
+      addSplit.classList.remove("is-week-bulk-booting");
+      addSplit.setAttribute("aria-hidden","true")
     }
     addBtn.dataset.weekBulkToggle="1";
-    addBtn.classList.toggle("is-week-bulk-idle",!hasExpandable);
-    addBtn.setAttribute("title",tip);
-    addBtn.setAttribute("aria-label",tip);
-    addBtn.setAttribute("aria-disabled",hasExpandable?"false":"true");
-    addBtn.tabIndex=0;
-    addBtn.innerHTML=(hasExpandable?(allExpanded?WEEK_HEADER_COLLAPSE_ICON:WEEK_HEADER_EXPAND_ICON):WEEK_HEADER_READY_ICON)+label;
+    addBtn.classList.toggle("is-week-bulk-idle",!state.hasExpandable);
+    addBtn.setAttribute("title",state.hasExpandable?state.tip:"\u672c\u5468\u5f85\u529e\u5df2\u5168\u90e8\u663e\u793a");
+    addBtn.setAttribute("aria-label",state.hasExpandable?state.tip:"\u672c\u5468\u5f85\u529e\u5df2\u5168\u90e8\u663e\u793a");
+    addBtn.setAttribute("aria-disabled","true");
+    addBtn.tabIndex=-1;
+    addBtn.innerHTML=(state.hasExpandable?(state.allExpanded?WEEK_HEADER_COLLAPSE_ICON:WEEK_HEADER_EXPAND_ICON):WEEK_HEADER_READY_ICON)+(state.hasExpandable?state.label:"\u5168\u90e8\u663e\u793a");
     addBtn.onclick=function(e){
       if(e){e.preventDefault();e.stopPropagation()}
-      if(!hasExpandable)return;
-      toggleWeekAllDays(sel)
     };
     return
   }
@@ -923,6 +940,8 @@ function renderWeekTaskScene(list,baseDs){
   });
   const totalAll=weekAllTasks.length,pct=totalAll?Math.round(doneAll/totalAll*100):0;
   const doneStatHtml='<span class="week-view-stat week-view-stat--done"><b>'+doneAll+'</b><span>\u5b8c\u6210</span></span>';
+  const bulkState=getWeekBulkActionState(baseDs,expandableDays);
+  const weekInlineActionHtml=bulkState.hasExpandable?'<button type="button" class="week-view-inline-action'+(bulkState.allExpanded?" is-open":"")+'" aria-expanded="'+(bulkState.allExpanded?"true":"false")+'" aria-label="'+bulkState.tip+'" title="'+bulkState.tip+'" onclick="event.stopPropagation();toggleWeekAllDays(\''+baseDs+'\')">'+(bulkState.allExpanded?WEEK_HEADER_COLLAPSE_ICON:WEEK_HEADER_EXPAND_ICON)+'<span>'+bulkState.label+'</span></button>':"";
   const dayStripHtml='<div class="week-view-day-strip" aria-label="\u672c\u5468\u6bcf\u65e5\u5f85\u529e\u6982\u89c8"><div class="week-view-day-pills">'+dailyOverview.map(function(day){
     const name=weekNames[day.idx],d=parseDS(day.ds),dateText=d?d.getMonth()+1+"/"+d.getDate():"",state=day.isOverdue?"\u903e\u671f "+day.pending+" \u9879":day.pending?day.pending+" \u9879\u5f85\u529e":day.total?"\u5df2\u5168\u90e8\u5b8c\u6210":"\u6682\u65e0\u4efb\u52a1",cls="week-view-day-pill"+(day.isToday?" is-today":"")+(day.isFocus?" is-focus":"")+(day.isOverdue?" is-overdue":"")+(day.pending?" has-pending":day.total?" is-clear":" is-empty"),dateLabel=dateText,valueHtml=day.isOverdue?'<span class="week-view-day-pill-state week-view-day-pill-state--overdue"><span class="week-overdue-mark" aria-hidden="true">\u26a0</span><span class="week-view-day-pill-count">'+day.pending+'</span><span class="week-view-day-pill-state-text">\u903e\u671f</span></span>':day.pending?'<span class="week-view-day-pill-state"><span class="week-view-day-pill-count">'+day.pending+'</span><span class="week-view-day-pill-state-text">\u5f85\u529e</span></span>':'<span class="week-view-day-pill-state week-view-day-pill-state--quiet"><span class="week-view-day-pill-state-text">'+(day.total?"\u5df2\u5b8c\u6210":"\u65e0\u4efb\u52a1")+'</span></span>';
     return'<button type="button" class="'+cls+'" aria-label="\u5b9a\u4f4d\u5230\u5468'+name+' '+dateText+'\uff0c'+state+'" title="\u5468'+name+' '+dateText+'\uff1a'+state+'" onclick="jumpWeekDay(\''+day.ds+'\')"><span class="week-view-day-pill-main"><span class="week-view-day-pill-name">\u5468'+name+'</span><span class="week-view-day-pill-date">'+dateLabel+'</span></span>'+valueHtml+'</button>'
@@ -931,7 +950,7 @@ function renderWeekTaskScene(list,baseDs){
   const quietClearCount=quietCards.filter(function(item){return item.total>0}).length,quietEmptyCount=quietCards.filter(function(item){return item.total<=0}).length,quietSummary=quietClearCount&&quietEmptyCount?"\u5df2\u6e05\u7a7a "+quietClearCount+" \u5929 \u00b7 \u7a7a\u95f2 "+quietEmptyCount+" \u5929":quietClearCount?"\u5df2\u6e05\u7a7a "+quietClearCount+" \u5929":"\u7a7a\u95f2 "+quietEmptyCount+" \u5929",quietOpen=weekQuietDaysExpanded,quietChipHtml=quietCards.map(function(item){const state=item.total?"\u5df2\u5b8c\u6210 "+item.done+" \u9879":"\u6682\u65e0\u4efb\u52a1";return'<span class="week-quiet-day-pill'+(item.total?" is-clear":" is-empty")+'" title="'+esc("\u5468"+item.weekName+" "+item.md+"\uff1a"+state)+'"><span>\u5468'+item.weekName+'</span><b>'+(item.total?item.done:0)+'</b></span>'}).join("");
   const quietHtml=quietCards.length?'<div class="week-quiet-days'+(quietOpen?" is-open":"")+'" aria-label="\u672c\u5468\u5df2\u6e05\u7a7a\u6216\u7a7a\u95f2\u65e5\u671f"><button type="button" class="week-quiet-days-toggle" aria-expanded="'+(quietOpen?"true":"false")+'" aria-label="'+(quietOpen?"\u6536\u8d77":"\u5c55\u5f00")+'\u672c\u5468\u5df2\u6e05\u7a7a\u6216\u7a7a\u95f2\u65e5\u671f" title="'+(quietOpen?"\u6536\u8d77":"\u5c55\u5f00")+'\u5df2\u6e05\u7a7a / \u7a7a\u95f2\u65e5\u671f" onclick="event.stopPropagation();toggleWeekQuietDays()"><span class="week-quiet-days-main"><span class="week-quiet-days-label">\u5df2\u6e05\u7a7a / \u7a7a\u95f2\u65e5\u671f</span><span class="week-quiet-days-summary">'+quietSummary+'</span></span><span class="week-quiet-days-pills" aria-hidden="true">'+quietChipHtml+'</span><span class="week-quiet-days-caret" aria-hidden="true"></span></button><div class="week-quiet-days-list" aria-hidden="'+(quietOpen?"false":"true")+'"'+(quietOpen?"":" inert")+'>'+quietCards.map(function(item){return item.html}).join("")+'</div></div>':"";
   const gridInner=activeCards.map(function(item){return item.html}).join("")+quietHtml;
-  list.innerHTML='<div class="week-view'+(doneCollapsed?" is-done-collapsed":"")+'"><div class="week-view-head"><div class="week-view-top week-view-summary-line"><div class="week-view-title-group"><h4 class="week-view-title">\u4efb\u52a1\u6982\u89c8</h4></div><div class="week-view-stats"><span class="week-view-stat"><b>'+totalAll+'</b>\u9879</span><span class="week-view-stat"><b>'+pendingAll+'</b>\u5f85\u529e</span>'+doneStatHtml+'</div><div class="week-view-progress"><span class="week-view-progress-label">\u8fbe\u6210\u7387 <b>'+pct+'%</b></span><span class="week-view-progress-track"><span class="week-view-progress-fill" style="width:'+pct+'%"></span></span></div></div>'+dayStripHtml+'</div><div class="week-day-grid is-focus-first">'+gridInner+'</div></div>';
+  list.innerHTML='<div class="week-view'+(doneCollapsed?" is-done-collapsed":"")+'"><div class="week-view-head"><div class="week-view-top week-view-summary-line"><div class="week-view-title-group"><h4 class="week-view-title">\u4efb\u52a1\u6982\u89c8</h4></div><div class="week-view-stats"><span class="week-view-stat"><b>'+totalAll+'</b>\u9879</span><span class="week-view-stat"><b>'+pendingAll+'</b>\u5f85\u529e</span>'+doneStatHtml+'</div>'+weekInlineActionHtml+'<div class="week-view-progress"><span class="week-view-progress-label">\u8fbe\u6210\u7387 <b>'+pct+'%</b></span><span class="week-view-progress-track"><span class="week-view-progress-fill" style="width:'+pct+'%"></span></span></div></div>'+dayStripHtml+'</div><div class="week-day-grid is-focus-first">'+gridInner+'</div></div>';
   syncWeekExtraHeights(list);
   requestAnimationFrame(function(){syncWeekExtraHeights(list)});
   initWeekViewPressFeedback(list);
