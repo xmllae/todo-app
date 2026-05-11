@@ -241,18 +241,11 @@
   font-weight: 680;
 }
 
-.week-rhythm-summary {
+.week-rhythm-title-note {
   min-width: 0;
-  padding-bottom: 8px;
-}
-
-.week-rhythm-summary span {
-  display: block;
+  flex: 1 1 auto;
   overflow: hidden;
-  color: var(--text);
-  font-size: 12px;
-  line-height: 1.25;
-  font-weight: 760;
+  text-align: right;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
