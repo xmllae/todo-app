@@ -377,6 +377,86 @@ return`<div class="task-item${t.done&&subAllDone?" done":""}${t.done?" task-main
 
 function initTaskDashReorder(){var root=document.getElementById("taskDashCol");if(!root||root._dashReorderInit)return;root._dashReorderInit=1;function saveOrd(){var ids=[];root.querySelectorAll(".dash-card[data-dash-id]").forEach(function(c){ids.push(c.getAttribute("data-dash-id"))});try{localStorage.setItem("tuole_dash_order",JSON.stringify(ids))}catch(e){}}function applyOrd(){var cards=[].slice.call(root.querySelectorAll(".dash-card[data-dash-id]"));if(!cards.length)return;var map={};cards.forEach(function(c){map[c.getAttribute("data-dash-id")]=c});var def=cards.map(function(c){return c.getAttribute("data-dash-id")});var order;try{order=JSON.parse(localStorage.getItem("tuole_dash_order")||"null")}catch(e){order=null}if(!Array.isArray(order)||!order.length)return;var seen=new Set,merged=[];order.forEach(function(id){if(map[id]&&!seen.has(id)){seen.add(id);merged.push(id)}});def.forEach(function(id){if(!seen.has(id)){seen.add(id);merged.push(id)}});merged.forEach(function(id){var el=map[id];if(el)root.appendChild(el)})}applyOrd();var allowD=0,dragId=null;root.addEventListener("mousedown",function(e){allowD=e.target.closest(".dash-drag-handle")?1:0});root.addEventListener("mouseup",function(){allowD=0});[].forEach.call(root.querySelectorAll(".dash-card[data-dash-id]"),function(card){card.setAttribute("draggable","true");card.addEventListener("dragstart",function(e){if(!allowD){e.preventDefault();return}allowD=0;dragId=card.getAttribute("data-dash-id");e.dataTransfer.effectAllowed="move";e.dataTransfer.setData("text/plain",dragId);card.classList.add("dash-dragging")});card.addEventListener("dragend",function(){card.classList.remove("dash-dragging");[].forEach.call(root.querySelectorAll(".dash-card.drag-dash-over"),function(c){c.classList.remove("drag-dash-over")});dragId=null});card.addEventListener("dragover",function(e){e.preventDefault();if(!dragId||dragId===card.getAttribute("data-dash-id"))return;e.dataTransfer.dropEffect="move";[].forEach.call(root.querySelectorAll(".dash-card.drag-dash-over"),function(c){c.classList.remove("drag-dash-over")});card.classList.add("drag-dash-over")});card.addEventListener("dragleave",function(e){if(!card.contains(e.relatedTarget))card.classList.remove("drag-dash-over")});card.addEventListener("drop",function(e){e.preventDefault();card.classList.remove("drag-dash-over");var fromId=e.dataTransfer.getData("text/plain"),toId=card.getAttribute("data-dash-id");if(!fromId||fromId===toId)return;var fromEl=root.querySelector('.dash-card[data-dash-id="'+fromId+'"]');if(!fromEl)return;var rect=card.getBoundingClientRect(),before=e.clientY<rect.top+rect.height/2;if(before)root.insertBefore(fromEl,card);else root.insertBefore(fromEl,card.nextSibling);saveOrd()})})}
 function renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,selStr){const root=document.getElementById("taskDashCol");if(!root)return;const p=selStr.split("-");const shortDate=`${+p[1]}月${+p[2]}日`;const sdEl=document.getElementById("dashShortDate");if(sdEl)sdEl.textContent=shortDate;const pctEl=document.getElementById("dashProgPct");if(pctEl)pctEl.textContent=pct+"%";const C=2*Math.PI*52;const ring=document.getElementById("dashRingProg");if(ring){ring.style.strokeDasharray=String(C);ring.style.strokeDashoffset=String(C*(1-pct/100))}const dEl=document.getElementById("dashDone"),tEl=document.getElementById("dashTotal");if(dEl)dEl.textContent=String(doneForProg);if(tEl)tEl.textContent=String(totalForProg);const hiP=nonArchived.filter(t=>t.priority==="high"),hiCol=typeof priorityColors!=="undefined"&&priorityColors.high||"#ef4444",hiN=hiP.length,hiDone=hiP.filter(t=>t.done).length;const elHi=document.getElementById("dashOvHiCnt");if(elHi)elHi.textContent=String(hiN);const bMain=document.getElementById("dashMainBar"),bHi=document.getElementById("dashOvHiBar");const mainW=totalForProg?Math.round(doneForProg/totalForProg*100):0;if(bMain)bMain.style.width=mainW+"%";const hiW=hiN?Math.round(hiDone/hiN*100):0;if(bHi)bHi.style.width=hiW+"%";const cardH=document.querySelector(".dash-ov-prio-card--high");if(cardH){cardH.style.setProperty("--ov-prio",hiCol);if(bHi)bHi.style.background=hiCol}const wdBase=parseDS(selStr);const mondayOff=wdBase.getDay()===0?-6:1-wdBase.getDay();const start=new Date(wdBase);start.setDate(wdBase.getDate()+mondayOff);const labels=["一","二","三","四","五","六","日"];const strip=document.getElementById("dashWeekStrip");const wtitle=document.getElementById("dashWeekTitle");if(wtitle)wtitle.textContent=wdBase.getFullYear()+"年"+(wdBase.getMonth()+1)+"月";if(strip){const todayStr=fd(now);let h="",wkTot=0,wkDone=0;for(let i=0;i<7;i++){const dd=new Date(start);dd.setDate(start.getDate()+i);const ds=fd(dd);const isWkSel=ds===selStr,isToday=ds===todayStr;let wcls="dash-wd"+(isWkSel?" dash-wd-sel":"")+(isToday?" dash-wd-today":"");const arr=T[ds]?T[ds].filter(function(x){return!x.archived}):[];const n=arr.length;if(n){wkTot+=n;wkDone+=arr.filter(function(x){return x.done}).length}let taskDot="";if(n){const allD=arr.every(function(x){return x.done});taskDot='<span class="dash-wd-dot dash-wd-dot--task'+(allD?" dash-wd-dot--done":"")+'" aria-hidden="true"></span>'}h+='<button type="button" class="'+wcls+'" onclick="pick(\''+ds+'\')"><span class="dash-wd-lab">'+labels[i]+'</span><span class="dash-wd-num">'+dd.getDate()+'</span><div class="dash-wd-dots" aria-hidden="true"><span class="dash-wd-dot dash-wd-dot--today"></span>'+taskDot+"</div></button>"}strip.innerHTML=h;const foot=document.getElementById("dashWeekFoot");if(foot){if(!wkTot)foot.innerHTML='<div class="dash-week-foot-inner dash-week-foot--empty">本周暂无任务</div>';else foot.innerHTML='<div class="dash-week-foot-inner"><div class="dwf-line"><span class="dwf-k">本周</span> <strong class="dwf-num">'+wkTot+'</strong><span class="dwf-u">项</span><span class="dwf-dotsep">·</span><span class="dwf-k">已完成</span> <strong class="dwf-num dwf-done">'+wkDone+'</strong><span class="dwf-dotsep">·</span><span class="dwf-k">待办</span> <strong class="dwf-num dwf-pend">'+(wkTot-wkDone)+"</strong></div></div>"}}}
+function ensureWeekTaskOverviewShell(root){
+  if(!root)return null;
+  let shell=root.querySelector(".week-action-shell");
+  if(!shell){
+    shell=document.createElement("section");
+    shell.className="week-action-shell week-task-overview";
+    shell.setAttribute("aria-label","本周任务概览");
+    root.appendChild(shell)
+  }
+  return shell
+}
+function weekOverviewMonthDay(ds){
+  const d=parseDS(ds);
+  return d?(d.getMonth()+1)+"/"+d.getDate():""
+}
+function weekOverviewPlanText(t){
+  const pt=String(t&&t.planTime||"").trim();
+  if(!pt)return"全天";
+  const shown=typeof formatPlanTimeDisp==="function"?formatPlanTimeDisp(pt):pt;
+  return taskRowPlainTimeText(t,shown)
+}
+function getWeekOverviewData(selStr){
+  const meta=getTaskWeekMeta(selStr),weekNames=["一","二","三","四","五","六","日"],allRows=[];
+  const dayStats=meta.days.map(function(ds,idx){
+    const raw=(T[ds]||[]).filter(function(t){return!t.archived});
+    raw.forEach(function(t){allRows.push({task:t,ds:ds,idx:idx})});
+    const done=raw.filter(function(t){return t.done}).length,pending=raw.filter(function(t){return!t.done&&!t.frozen}).length,high=raw.filter(function(t){return t.priority==="high"}).length;
+    return{ds:ds,idx:idx,label:"周"+weekNames[idx],dateText:weekOverviewMonthDay(ds),total:raw.length,done:done,pending:pending,high:high,isFocus:ds===selStr,isToday:ds===fd(now)}
+  });
+  return{meta:meta,weekNames:weekNames,allRows:allRows,dayStats:dayStats}
+}
+function renderWeekTaskOverviewSidebar(pct,totalForProg,doneForProg,selStr){
+  const root=document.getElementById("taskDashCol"),shell=ensureWeekTaskOverviewShell(root);
+  if(!root||!shell)return;
+  const data=getWeekOverviewData(selStr),rangeText=getTaskWeekRangeText(data.meta),total=data.allRows.length,done=data.allRows.filter(function(row){return row.task.done}).length,pending=data.allRows.filter(function(row){return!row.task.done&&!row.task.frozen}).length;
+  const highRows=data.allRows.filter(function(row){return row.task.priority==="high"}),highPending=highRows.filter(function(row){return!row.task.done&&!row.task.frozen}).length,normalRows=data.allRows.filter(function(row){return row.task.priority!=="high"}),normalPending=normalRows.filter(function(row){return!row.task.done&&!row.task.frozen}).length;
+  const maxLoad=Math.max(1,data.dayStats.reduce(function(max,day){return Math.max(max,day.total)},0));
+  const dayRowsHtml=data.dayStats.map(function(day){
+    const load=day.total?Math.max(8,Math.round(day.total/maxLoad*100)):0,doneRatio=day.total?Math.round(day.done/day.total*100):0,state=day.pending?day.pending+" 待办":day.total?"已清空":"空闲";
+    return'<button type="button" class="week-overview-day'+(day.isToday?" is-today":"")+(day.isFocus?" is-focus":"")+(day.pending?" has-pending":day.total?" is-clear":" is-empty")+'" style="--day-load:'+load+'%;--day-done:'+doneRatio+'%" onclick="pick(\''+day.ds+'\')" aria-label="'+day.label+" "+day.dateText+"，"+state+'"><span class="week-overview-day-copy"><span class="week-overview-day-name">'+day.label+'</span><span class="week-overview-day-date">'+day.dateText+'</span></span><span class="week-overview-day-meter" aria-hidden="true"><span class="week-overview-day-load"><span class="week-overview-day-done"></span></span></span><span class="week-overview-day-state">'+state+'</span></button>'
+  }).join("");
+  const priorityRows=[
+    {cls:"high",label:"高优先",count:highPending,total:highRows.length,ratio:highRows.length?Math.round(highPending/highRows.length*100):0},
+    {cls:"normal",label:"普通任务",count:normalPending,total:normalRows.length,ratio:normalRows.length?Math.round(normalPending/normalRows.length*100):0},
+    {cls:"done",label:"已完成",count:done,total:total,ratio:total?Math.round(done/total*100):0}
+  ].map(function(item){
+    return'<div class="week-overview-priority-row week-overview-priority-row--'+item.cls+'" style="--priority-load:'+item.ratio+'%"><span class="week-overview-priority-dot" aria-hidden="true"></span><span class="week-overview-priority-label">'+item.label+'</span><span class="week-overview-priority-meter" aria-hidden="true"><span></span></span><strong>'+item.count+'</strong><small>/ '+item.total+'</small></div>'
+  }).join("");
+  const nextRows=data.allRows.filter(function(row){return!row.task.done&&!row.task.frozen}).sort(function(a,b){
+    const ah=a.task.priority==="high",bh=b.task.priority==="high";
+    if(ah!==bh)return ah?-1:1;
+    if(a.ds!==b.ds)return a.ds.localeCompare(b.ds);
+    const at=String(a.task.planTime||""),bt=String(b.task.planTime||"");
+    if(at&&bt&&at!==bt)return at.localeCompare(bt);
+    if(at&&!bt)return-1;
+    if(!at&&bt)return 1;
+    return(b.task.created||0)-(a.task.created||0)
+  }).slice(0,3);
+  const nextHtml=nextRows.length?nextRows.map(function(row){
+    const day=data.dayStats[row.idx],high=row.task.priority==="high";
+    return'<button type="button" class="week-next-item'+(high?" is-high":"")+'" onclick="pick(\''+row.ds+'\')"><span class="week-next-mark" aria-hidden="true"></span><span class="week-next-copy"><span class="week-next-title">'+esc(row.task.text)+'</span><span class="week-next-meta">'+day.label+" "+day.dateText+" · "+esc(weekOverviewPlanText(row.task))+'</span></span></button>'
+  }).join(""):'<div class="week-next-empty"><strong>本周待办已清空</strong><span>可以回看已完成，或安心收尾。</span></div>';
+  const bulkState=getWeekBulkActionState(selStr,getWeekExpandableDays(selStr));
+  const actionHtml='<button type="button" class="week-overview-action'+(bulkState.allExpanded?" is-open":"")+(bulkState.hasExpandable?"":" is-idle")+'" '+(bulkState.hasExpandable?'onclick="event.stopPropagation();toggleWeekAllDays(\''+selStr+'\')"':'disabled aria-disabled="true"')+' aria-expanded="'+(bulkState.allExpanded?"true":"false")+'" aria-label="'+(bulkState.hasExpandable?bulkState.tip:"本周待办已全部显示")+'" title="'+(bulkState.hasExpandable?bulkState.tip:"本周待办已全部显示")+'">'+(bulkState.hasExpandable?(bulkState.allExpanded?WEEK_HEADER_COLLAPSE_ICON:WEEK_HEADER_EXPAND_ICON):WEEK_HEADER_READY_ICON)+'<span>'+(bulkState.hasExpandable?bulkState.label:"全部显示")+'</span></button>';
+  shell.innerHTML='<div class="week-overview-head"><div><span class="week-overview-kicker">任务概览</span><h3>'+getTaskWeekScopeTitle(selStr)+'</h3></div><span class="week-overview-range">'+rangeText+'</span></div><div class="week-overview-score"><div class="week-overview-ring" style="--week-pct:'+pct+'"><span>'+pct+'%</span><em>完成度</em></div><div class="week-overview-score-main"><div class="week-overview-count"><strong>'+done+'</strong><span>/</span><strong>'+total+'</strong></div><p>周任务已完成</p><div class="week-overview-progress" style="--week-progress:'+pct+'%"><span></span></div></div></div><div class="week-overview-metrics"><div><b>'+total+'</b><span>全部</span></div><div><b>'+pending+'</b><span>待办</span></div><div><b>'+done+'</b><span>完成</span></div><div><b>'+highPending+'</b><span>高优先</span></div></div><div class="week-overview-section week-overview-section--days"><div class="week-overview-section-title"><span>每日分布</span><small>任务负载</small></div><div class="week-overview-day-list">'+dayRowsHtml+'</div></div><div class="week-overview-section week-overview-section--priority"><div class="week-overview-section-title"><span>优先级</span><small>待处理</small></div><div class="week-overview-priority-list">'+priorityRows+'</div></div><div class="week-overview-section week-overview-section--next"><div class="week-overview-section-title"><span>下一步</span><small>建议先看</small></div><div class="week-next-list">'+nextHtml+'</div></div><div class="week-overview-footer">'+actionHtml+'</div>'
+}
+const renderTaskDashLegacy=renderTaskDash;
+renderTaskDash=function(pct,totalForProg,doneForProg,nonArchived,fl,selStr){
+  const root=document.getElementById("taskDashCol");
+  if(!root)return;
+  if(getTaskQuickMode()==="week"){
+    root.classList.add("is-week-action");
+    root.setAttribute("aria-label","本周任务概览");
+    renderWeekTaskOverviewSidebar(pct,totalForProg,doneForProg,selStr);
+    return
+  }
+  root.classList.remove("is-week-action");
+  root.setAttribute("aria-label","今日概览");
+  return renderTaskDashLegacy(pct,totalForProg,doneForProg,nonArchived,fl,selStr)
+};
 var _ftInited=false,_ftIv=null,_ftO=null;
 function focusTimerYesterday(){var d=new Date(now.getFullYear(),now.getMonth(),now.getDate()-1);return fd(d)}
 function focusTimerDefaults(){return{F:25,S:5,L:15,mode:"focus",run:0,p:0,rem:1500,end:0,round:1,streak:0,lastDay:"",byDay:{},task:null}}
@@ -693,9 +773,20 @@ function getWeekBulkActionState(baseDs,days){
   return{expandableDays:expandableDays,hasExpandable:expandableDays.length>0,allExpanded:allExpanded,hiddenPendingCount:hiddenPendingCount,label:label,tip:tip}
 }
 function syncWeekInlineAction(weekMeta){
+  const state=getWeekBulkActionState(sel,weekMeta&&weekMeta.expandableDays);
+  const sideBtn=document.querySelector("#taskDashCol .week-overview-action");
+  if(sideBtn){
+    sideBtn.classList.toggle("is-open",state.allExpanded);
+    sideBtn.classList.toggle("is-idle",!state.hasExpandable);
+    sideBtn.disabled=!state.hasExpandable;
+    sideBtn.setAttribute("aria-disabled",state.hasExpandable?"false":"true");
+    sideBtn.setAttribute("aria-expanded",state.allExpanded?"true":"false");
+    sideBtn.setAttribute("aria-label",state.hasExpandable?state.tip:"本周待办已全部显示");
+    sideBtn.setAttribute("title",state.hasExpandable?state.tip:"本周待办已全部显示");
+    sideBtn.innerHTML=(state.hasExpandable?(state.allExpanded?WEEK_HEADER_COLLAPSE_ICON:WEEK_HEADER_EXPAND_ICON):WEEK_HEADER_READY_ICON)+"<span>"+(state.hasExpandable?state.label:"全部显示")+"</span>"
+  }
   const btn=document.querySelector("#tList .week-view-inline-action");
   if(!btn)return;
-  const state=getWeekBulkActionState(sel,weekMeta&&weekMeta.expandableDays);
   if(!state.hasExpandable){
     btn.remove();
     return
@@ -961,7 +1052,7 @@ function renderWeekTaskScene(list,baseDs){
   const quietClearCount=quietCards.filter(function(item){return item.total>0}).length,quietEmptyCount=quietCards.filter(function(item){return item.total<=0}).length,quietSummary=quietClearCount&&quietEmptyCount?"\u5df2\u6e05\u7a7a "+quietClearCount+" \u5929 \u00b7 \u7a7a\u95f2 "+quietEmptyCount+" \u5929":quietClearCount?"\u5df2\u6e05\u7a7a "+quietClearCount+" \u5929":"\u7a7a\u95f2 "+quietEmptyCount+" \u5929",quietOpen=weekQuietDaysExpanded,quietChipHtml=quietCards.map(function(item){const state=item.total?"\u5df2\u5b8c\u6210 "+item.done+" \u9879":"\u6682\u65e0\u4efb\u52a1";return'<span class="week-quiet-day-pill'+(item.total?" is-clear":" is-empty")+'" title="'+esc("\u5468"+item.weekName+" "+item.md+"\uff1a"+state)+'"><span>\u5468'+item.weekName+'</span><b>'+(item.total?item.done:0)+'</b></span>'}).join("");
   const quietHtml=quietCards.length?'<div class="week-quiet-days'+(quietOpen?" is-open":"")+'" aria-label="\u672c\u5468\u5df2\u6e05\u7a7a\u6216\u7a7a\u95f2\u65e5\u671f"><button type="button" class="week-quiet-days-toggle" aria-expanded="'+(quietOpen?"true":"false")+'" aria-label="'+(quietOpen?"\u6536\u8d77":"\u5c55\u5f00")+'\u672c\u5468\u5df2\u6e05\u7a7a\u6216\u7a7a\u95f2\u65e5\u671f" title="'+(quietOpen?"\u6536\u8d77":"\u5c55\u5f00")+'\u5df2\u6e05\u7a7a / \u7a7a\u95f2\u65e5\u671f" onclick="event.stopPropagation();toggleWeekQuietDays()"><span class="week-quiet-days-main"><span class="week-quiet-days-label">\u5df2\u6e05\u7a7a / \u7a7a\u95f2\u65e5\u671f</span><span class="week-quiet-days-summary">'+quietSummary+'</span></span><span class="week-quiet-days-pills" aria-hidden="true">'+quietChipHtml+'</span><span class="week-quiet-days-caret" aria-hidden="true"></span></button><div class="week-quiet-days-list" aria-hidden="'+(quietOpen?"false":"true")+'"'+(quietOpen?"":" inert")+'>'+quietCards.map(function(item){return item.html}).join("")+'</div></div>':"";
   const gridInner=activeCards.map(function(item){return item.html}).join("")+quietHtml;
-  list.innerHTML='<div class="week-view'+(doneCollapsed?" is-done-collapsed":"")+'"><div class="week-view-head"><div class="week-view-top week-view-summary-line"><div class="week-view-title-group"><h4 class="week-view-title">\u4efb\u52a1\u6982\u89c8</h4></div><div class="week-view-stats"><span class="week-view-stat"><b>'+totalAll+'</b>\u9879</span><span class="week-view-stat"><b>'+pendingAll+'</b>\u5f85\u529e</span>'+doneStatHtml+'</div>'+weekInlineActionHtml+'<div class="week-view-progress"><span class="week-view-progress-label">\u8fbe\u6210\u7387 <b>'+pct+'%</b></span><span class="week-view-progress-track"><span class="week-view-progress-fill" style="width:'+pct+'%"></span></span></div></div>'+dayStripHtml+'</div><div class="week-day-grid is-focus-first">'+gridInner+'</div></div>';
+  list.innerHTML='<div class="week-view'+(doneCollapsed?" is-done-collapsed":"")+'"><div class="week-view-head">'+dayStripHtml+'</div><div class="week-day-grid is-focus-first">'+gridInner+'</div></div>';
   syncWeekExtraHeights(list);
   requestAnimationFrame(function(){syncWeekExtraHeights(list)});
   initWeekViewPressFeedback(list);
