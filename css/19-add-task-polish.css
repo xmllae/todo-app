@@ -5692,3 +5692,126 @@
     display: none;
   }
 }
+
+/* 周概览汇总行：使用明确容器承载标题、数据和进度，避免旧网格规则干扰。 */
+#taskMode .list-panel #tList .week-view-head,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-head {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 8px;
+  padding: 12px 18px 8px;
+}
+
+#taskMode .list-panel #tList .week-view-top.week-view-summary-line,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-top.week-view-summary-line {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-width: 0;
+}
+
+#taskMode .list-panel #tList .week-view-summary-line .week-view-title-group,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-summary-line .week-view-title-group,
+#taskMode .list-panel #tList .week-view-summary-line .week-view-stats,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-summary-line .week-view-stats,
+#taskMode .list-panel #tList .week-view-summary-line .week-view-progress,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-summary-line .week-view-progress {
+  order: initial;
+  grid-column: auto;
+  grid-row: auto;
+}
+
+#taskMode .list-panel #tList .week-view-summary-line .week-view-title-group,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-summary-line .week-view-title-group {
+  flex: 0 0 auto;
+}
+
+#taskMode .list-panel #tList .week-view-title,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-title {
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+#taskMode .list-panel #tList .week-view-summary-line .week-view-stats,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-summary-line .week-view-stats {
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+#taskMode .list-panel #tList .week-view-stat,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-stat {
+  min-height: 22px;
+  padding-right: 12px;
+  margin-right: 12px;
+}
+
+#taskMode .list-panel #tList .week-view-stat:not(:last-child)::after,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-stat:not(:last-child)::after {
+  height: 18px;
+}
+
+#taskMode .list-panel #tList .week-view-summary-line .week-view-progress,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-summary-line .week-view-progress {
+  flex: 0 1 210px;
+  min-width: 160px;
+  margin-left: auto;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+#taskMode .list-panel #tList .week-view-progress-label,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-progress-label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  line-height: 1;
+}
+
+#taskMode .list-panel #tList .week-view-progress-label b,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-progress-label b {
+  font-size: 17px;
+}
+
+#taskMode .list-panel #tList .week-view-summary-line .week-view-progress-track,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-summary-line .week-view-progress-track {
+  flex: 1 1 100px;
+  width: auto;
+  max-width: 128px;
+  height: 8px;
+}
+
+#taskMode .list-panel #tList .week-view-day-strip,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-strip {
+  order: initial;
+  flex: none;
+  width: 100%;
+}
+
+@media (max-width: 760px) {
+  #taskMode .list-panel #tList .week-view-top.week-view-summary-line,
+  .app.app--with-global-nav #taskMode .list-panel #tList .week-view-top.week-view-summary-line {
+    flex-wrap: wrap;
+    gap: 8px 12px;
+  }
+
+  #taskMode .list-panel #tList .week-view-summary-line .week-view-stats,
+  .app.app--with-global-nav #taskMode .list-panel #tList .week-view-summary-line .week-view-stats {
+    flex: 1 1 180px;
+  }
+
+  #taskMode .list-panel #tList .week-view-summary-line .week-view-progress,
+  .app.app--with-global-nav #taskMode .list-panel #tList .week-view-summary-line .week-view-progress {
+    flex: 1 0 100%;
+    min-width: 0;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  #taskMode .list-panel #tList .week-view-summary-line .week-view-progress-track,
+  .app.app--with-global-nav #taskMode .list-panel #tList .week-view-summary-line .week-view-progress-track {
+    max-width: none;
+  }
+}

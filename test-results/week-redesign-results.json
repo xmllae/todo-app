@@ -1,0 +1,41 @@
+{
+  "desktop": {
+    "title": "本周5月11日 - 17日",
+    "head": {
+      "width": 720,
+      "height": 116,
+      "top": 190,
+      "left": 336
+    },
+    "dayStrip": {
+      "width": 670,
+      "height": 52,
+      "top": 241,
+      "left": 361
+    },
+    "activeCard": {
+      "width": 720,
+      "height": 129,
+      "top": 318,
+      "left": 336
+    },
+    "quiet": "空闲日期空闲 6 天周一0周二0周四0周五0周六0周日0",
+    "dayPills": [
+      "周一5/110",
+      "周二5/120",
+      "周三5/131待办",
+      "周四5/140",
+      "周五5/150",
+      "周六5/160",
+      "周日5/170"
+    ],
+    "quietListHeight": 0,
+    "activeOpacity": "1"
+  },
+  "mobile": {
+    "overflow": 0,
+    "headHeight": 187,
+    "quietText": "空闲日期空闲 6 天周一0周二0周四0周五0周六0周日0"
+  },
+  "messages": []
+}
