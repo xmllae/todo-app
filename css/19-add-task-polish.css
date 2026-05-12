@@ -6579,3 +6579,60 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-item.is-done .week-task-sub-meta {
   color: color-mix(in srgb, var(--week-muted) 72%, transparent);
 }
+
+/* 本周任务圆环：补齐和主任务列表一致的普通/高优先级视觉参数。 */
+#taskMode .list-panel #tList .week-task-marker:not(.task-ck-ring--done) .chk-ring:not(.checked):not(.chk-ring--archived),
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-marker:not(.task-ck-ring--done) .chk-ring:not(.checked):not(.chk-ring--archived) {
+  border-color: var(--task-check-accent) !important;
+  background: var(--task-check-accent-bg) !important;
+  box-shadow: none !important;
+}
+
+#taskMode .list-panel #tList .week-task-marker:not(.task-ck-ring--done) .chk-ring:not(.checked):not(.chk-ring--archived):hover,
+#taskMode .list-panel #tList .week-task-marker:not(.task-ck-ring--done) .chk-ring:not(.checked):not(.chk-ring--archived).hover-check,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-marker:not(.task-ck-ring--done) .chk-ring:not(.checked):not(.chk-ring--archived):hover,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-marker:not(.task-ck-ring--done) .chk-ring:not(.checked):not(.chk-ring--archived).hover-check {
+  border-color: var(--task-check-accent) !important;
+  background: var(--task-check-accent-bg) !important;
+  box-shadow: none !important;
+}
+
+#taskMode .list-panel #tList .week-task-marker:not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring:not(.checked):not(.chk-ring--archived),
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-marker:not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring:not(.checked):not(.chk-ring--archived) {
+  border-width: 1.5px !important;
+  border-color: var(--ck-prio, #94a3b8) !important;
+  background: color-mix(in srgb, var(--ck-prio, #94a3b8) 9%, var(--card)) !important;
+}
+
+#taskMode .list-panel #tList .week-task-marker:not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring:not(.checked):not(.chk-ring--archived):hover,
+#taskMode .list-panel #tList .week-task-marker:not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring:not(.checked):not(.chk-ring--archived).hover-check,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-marker:not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring:not(.checked):not(.chk-ring--archived):hover,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-marker:not(.task-ck-ring--done):not(.task-ck-ring--prio-high) .chk-ring:not(.checked):not(.chk-ring--archived).hover-check {
+  border-color: color-mix(in srgb, var(--ck-prio, #94a3b8) 86%, #475569) !important;
+  background: color-mix(in srgb, var(--ck-prio, #94a3b8) 13%, var(--card)) !important;
+}
+
+#taskMode .list-panel #tList .week-task-marker.task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked),
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-marker.task-ck-ring--prio-high:not(.task-ck-ring--done):not(.task-ck-ring--archived) .chk-ring:not(.checked) {
+  border-width: 1.75px !important;
+}
+
+#taskMode .list-panel #tList .week-task-marker:not(.task-ck-ring--archived) .chk-ring.checked,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-marker:not(.task-ck-ring--archived) .chk-ring.checked {
+  background: var(--task-check-accent) !important;
+  border-color: var(--task-check-accent) !important;
+  box-shadow: 0 2px 6px var(--task-check-accent-shadow) !important;
+}
+
+#taskMode .list-panel #tList .week-task-marker:not(.task-ck-ring--archived) .chk-ring.checked .chk-ring-ico,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-marker:not(.task-ck-ring--archived) .chk-ring.checked .chk-ring-ico {
+  color: #fff !important;
+  opacity: 1 !important;
+}
+
+#taskMode .list-panel #tList .week-task-marker:not(.task-ck-ring--archived):not(.task-ck-ring--prio-high) .chk-ring.checked,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-marker:not(.task-ck-ring--archived):not(.task-ck-ring--prio-high) .chk-ring.checked {
+  background: var(--ck-prio, #94a3b8) !important;
+  border-color: var(--ck-prio, #94a3b8) !important;
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--ck-prio, #94a3b8) 32%, transparent) !important;
+}
