@@ -6636,3 +6636,96 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   border-color: var(--ck-prio, #94a3b8) !important;
   box-shadow: 0 2px 6px color-mix(in srgb, var(--ck-prio, #94a3b8) 32%, transparent) !important;
 }
+
+/* 本周日期头部：日期状态和星期同排展示，数字预留宽度避免跳动。 */
+#taskMode .list-panel #tList .week-day-title-btn,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-title-btn {
+  display: grid;
+  grid-template-columns: 3.25em minmax(0, 1fr);
+  align-items: center;
+  column-gap: 10px;
+  row-gap: 0;
+}
+
+#taskMode .list-panel #tList .week-day-name,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-name {
+  min-width: 0;
+  gap: 0;
+  white-space: nowrap;
+}
+
+#taskMode .list-panel #tList .week-day-week,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-week {
+  display: inline-block;
+  min-width: 3.25em;
+  white-space: nowrap;
+}
+
+#taskMode .list-panel #tList .week-day-meta,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-meta {
+  display: flex;
+  align-items: center;
+  grid-column: auto;
+  min-width: 0;
+}
+
+#taskMode .list-panel #tList .week-day-date-label,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-date-label {
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+#taskMode .list-panel #tList .week-day-date-text,
+#taskMode .list-panel #tList .week-day-status-text,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-date-text,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-status-text {
+  flex: 0 0 auto;
+}
+
+#taskMode .list-panel #tList .week-day-overdue-text,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-overdue-text {
+  flex: 0 0 auto;
+}
+
+#taskMode .list-panel #tList .week-day-overdue-count,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-overdue-count {
+  display: inline-block;
+  min-width: 2ch;
+  color: inherit;
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  text-align: left;
+}
+
+/* 本周日期指示条：跟随头部自身居中，避免单行标题下出现上下偏移。 */
+#taskMode .list-panel #tList .week-day-card::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card::before {
+  opacity: 0 !important;
+}
+
+#taskMode .list-panel #tList .week-day-head::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-head::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  width: 3px;
+  height: 26px;
+  border-radius: 999px;
+  background: var(--week-accent);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-50%);
+  transform-origin: center;
+  transition: opacity .22s ease, background .22s ease;
+}
+
+#taskMode .list-panel #tList .week-day-card.is-focus .week-day-head::before,
+#taskMode .list-panel #tList .week-day-card.is-today .week-day-head::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-focus .week-day-head::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-today .week-day-head::before {
+  opacity: 0.62;
+}
