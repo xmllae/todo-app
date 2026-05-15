@@ -1,0 +1,229 @@
+/* 今日行动面板：补足少任务场景下的进度反馈和下一步入口。 */
+#taskMode .list-panel #tList .task-flow-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(220px, 0.9fr) auto;
+  align-items: stretch;
+  gap: 14px;
+  width: 100%;
+  margin: 14px auto 0;
+  padding: 14px;
+  box-sizing: border-box;
+  border: 1px solid color-mix(in srgb, var(--task-bd) 70%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, #f8fafc 78%, var(--card));
+  color: var(--text);
+}
+
+#taskMode .list-panel #tList .task-flow-summary__main,
+#taskMode .list-panel #tList .task-flow-summary__next,
+#taskMode .list-panel #tList .task-flow-summary__actions {
+  min-width: 0;
+}
+
+#taskMode .list-panel #tList .task-flow-summary__main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+
+#taskMode .list-panel #tList .task-flow-summary__eyebrow {
+  color: color-mix(in srgb, var(--acc) 78%, #475569);
+  font-size: 0.72rem;
+  font-weight: 780;
+  line-height: 1;
+}
+
+#taskMode .list-panel #tList .task-flow-summary__title {
+  color: var(--text);
+  font-size: 0.98rem;
+  font-weight: 780;
+  line-height: 1.3;
+}
+
+#taskMode .list-panel #tList .task-flow-summary__meta {
+  color: var(--text2);
+  font-size: 0.78rem;
+  font-weight: 560;
+  line-height: 1.45;
+}
+
+#taskMode .list-panel #tList .task-flow-summary__stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 2px;
+}
+
+#taskMode .list-panel #tList .task-flow-summary__stat {
+  min-width: 0;
+  padding: 7px 8px;
+  border: 1px solid color-mix(in srgb, var(--task-bd) 56%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--card) 84%, transparent);
+  color: var(--text3);
+  font-size: 0.66rem;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+}
+
+#taskMode .list-panel #tList .task-flow-summary__stat b {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--text);
+  font-size: 0.88rem;
+  font-weight: 840;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+#taskMode .list-panel #tList .task-flow-summary__next {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 7px;
+  padding: 12px;
+  border: 1px solid color-mix(in srgb, var(--task-bd) 62%, transparent);
+  border-radius: 8px;
+  background: var(--card);
+}
+
+#taskMode .list-panel #tList .task-flow-summary__next-label {
+  color: color-mix(in srgb, #0f766e 78%, var(--text2));
+  font-size: 0.7rem;
+  font-weight: 760;
+  line-height: 1;
+}
+
+#taskMode .list-panel #tList .task-flow-summary__next-title {
+  overflow: hidden;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 760;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#taskMode .list-panel #tList .task-flow-summary__next-meta {
+  overflow: hidden;
+  color: var(--text2);
+  font-size: 0.74rem;
+  font-weight: 560;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#taskMode .list-panel #tList .task-flow-summary__next-actions,
+#taskMode .list-panel #tList .task-flow-summary__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#taskMode .list-panel #tList .task-flow-summary__next-actions {
+  margin-top: 2px;
+  flex-wrap: wrap;
+}
+
+#taskMode .list-panel #tList .task-flow-summary__actions {
+  flex-direction: column;
+  justify-content: center;
+}
+
+#taskMode .list-panel #tList .task-flow-summary__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 92px;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid color-mix(in srgb, var(--task-bd) 70%, transparent);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--text2);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 720;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease, transform 0.12s ease;
+}
+
+#taskMode .list-panel #tList .task-flow-summary__btn:hover {
+  border-color: color-mix(in srgb, var(--acc) 34%, var(--task-bd));
+  background: color-mix(in srgb, var(--acc) 7%, var(--card));
+  color: var(--text);
+}
+
+#taskMode .list-panel #tList .task-flow-summary__btn:active {
+  transform: translateY(1px);
+}
+
+#taskMode .list-panel #tList .task-flow-summary__btn:focus-visible {
+  outline: none;
+  border-color: color-mix(in srgb, var(--acc) 48%, var(--task-bd));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--acc) 14%, transparent);
+}
+
+#taskMode .list-panel #tList .task-flow-summary__btn--primary {
+  border-color: color-mix(in srgb, var(--acc) 70%, #334155);
+  background: var(--acc);
+  color: #fff;
+}
+
+#taskMode .list-panel #tList .task-flow-summary__btn--primary:hover {
+  background: color-mix(in srgb, var(--acc) 92%, #111827);
+  color: #fff;
+}
+
+#taskMode .list-panel #tList .task-flow-summary__btn--compact {
+  width: auto;
+  min-width: 74px;
+  min-height: 30px;
+  padding: 0 10px;
+  font-size: 0.72rem;
+}
+
+.dark #taskMode .list-panel #tList .task-flow-summary {
+  border-color: color-mix(in srgb, var(--task-bd) 70%, transparent);
+  background: color-mix(in srgb, var(--card) 90%, #020617);
+}
+
+.dark #taskMode .list-panel #tList .task-flow-summary__stat,
+.dark #taskMode .list-panel #tList .task-flow-summary__next,
+.dark #taskMode .list-panel #tList .task-flow-summary__btn {
+  background: color-mix(in srgb, var(--card) 86%, #020617);
+}
+
+@media (max-width: 980px) {
+  #taskMode .list-panel #tList .task-flow-summary {
+    grid-template-columns: 1fr;
+  }
+
+  #taskMode .list-panel #tList .task-flow-summary__actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  #taskMode .list-panel #tList .task-flow-summary {
+    margin-top: 10px;
+    padding: 12px;
+  }
+
+  #taskMode .list-panel #tList .task-flow-summary__stats,
+  #taskMode .list-panel #tList .task-flow-summary__actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #taskMode .list-panel #tList .task-flow-summary__next-title,
+  #taskMode .list-panel #tList .task-flow-summary__next-meta {
+    white-space: normal;
+  }
+}
