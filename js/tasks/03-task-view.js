@@ -393,17 +393,18 @@ function weekOverviewMonthDay(ds){
   return d?(d.getMonth()+1)+"/"+d.getDate():""
 }
 function weekOverviewRhythmStatus(day){
-  if(day.pending)return day.pending+" 待办";
+  if(day.pending)return day.pending+" "+(day.isOverdue?"逾期":"待办");
   if(day.total)return"已清空";
   return"空闲"
 }
 function getWeekOverviewData(selStr){
   const meta=getTaskWeekMeta(selStr),weekNames=["一","二","三","四","五","六","日"],allRows=[];
+  const todayDs=fd(now);
   const dayStats=meta.days.map(function(ds,idx){
     const raw=(T[ds]||[]).filter(function(t){return!t.archived});
     raw.forEach(function(t){allRows.push({task:t,ds:ds,idx:idx})});
     const done=raw.filter(function(t){return t.done}).length,pending=raw.filter(function(t){return!t.done&&!t.frozen}).length,high=raw.filter(function(t){return t.priority==="high"}).length;
-    return{ds:ds,idx:idx,label:"周"+weekNames[idx],dateText:weekOverviewMonthDay(ds),total:raw.length,done:done,pending:pending,high:high,isFocus:ds===selStr,isToday:ds===fd(now)}
+    return{ds:ds,idx:idx,label:"周"+weekNames[idx],dateText:weekOverviewMonthDay(ds),total:raw.length,done:done,pending:pending,high:high,isFocus:ds===selStr,isToday:ds===todayDs,isOverdue:ds<todayDs&&pending>0}
   });
   return{meta:meta,weekNames:weekNames,allRows:allRows,dayStats:dayStats}
 }
@@ -415,10 +416,11 @@ function renderWeekTaskOverviewSidebar(pct,totalForProg,doneForProg,selStr){
   const busyDay=data.dayStats.reduce(function(best,day){return day.pending>best.pending?day:best},data.dayStats[0]);
   const pendingDayCount=data.dayStats.filter(function(day){return day.pending>0}).length;
   const emptyDays=data.dayStats.filter(function(day){return!day.total}).length;
-  const rhythmLead=pending?(pendingDayCount===1?"待办集中在"+busyDay.label+" · "+busyDay.pending+" 项":busyDay.label+"待办最多 · "+busyDay.pending+" 项"):done?"本周已清空 · "+done+" 项完成":"本周暂无任务";
+  const rhythmLeadLabel=busyDay&&busyDay.isOverdue?"逾期":"待办";
+  const rhythmLead=pending?(pendingDayCount===1?rhythmLeadLabel+"集中在"+busyDay.label+" · "+busyDay.pending+" 项":busyDay.label+rhythmLeadLabel+"最多 · "+busyDay.pending+" 项"):done?"本周已清空 · "+done+" 项完成":"本周暂无任务";
   const rhythmActiveDays=data.dayStats.filter(function(day){return day.total>0});
   const rhythmRows=rhythmActiveDays.length?rhythmActiveDays.map(function(day){
-    const status=weekOverviewRhythmStatus(day),progress=day.total?Math.round(day.done/day.total*100):0,load=progress?Math.max(8,progress):0,cls="week-rhythm-day"+(day.isToday?" is-today":"")+(day.isFocus?" is-focus":"")+(day.pending?" has-pending":day.total?" is-clear":" is-empty");
+    const status=weekOverviewRhythmStatus(day),progress=day.total?Math.round(day.done/day.total*100):0,load=progress?Math.max(8,progress):0,cls="week-rhythm-day"+(day.isToday?" is-today":"")+(day.isFocus?" is-focus":"")+(day.isOverdue?" is-overdue":"")+(day.pending?" has-pending":day.total?" is-clear":" is-empty");
     return'<button type="button" class="'+cls+'" style="--rhythm-load:'+load+'%" onclick="jumpWeekDay(\''+day.ds+'\')" aria-label="定位到'+day.label+' '+day.dateText+'，'+status+'"><span class="week-rhythm-label"><span>'+day.label+'</span><small>'+day.dateText+'</small></span><span class="week-rhythm-track" aria-hidden="true"><span class="week-rhythm-load"></span></span><span class="week-rhythm-state">'+status+'</span></button>'
   }).join(""):'<div class="week-rhythm-empty">暂无任务安排</div>';
   const rhythmNote=emptyDays?'<div class="week-rhythm-note">其余 '+emptyDays+' 天空闲</div>':"";

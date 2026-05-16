@@ -327,6 +327,10 @@
   color: color-mix(in srgb, #f97316 74%, var(--text));
 }
 
+.week-rhythm-day.is-overdue .week-rhythm-state {
+  color: #ef4444;
+}
+
 .week-rhythm-day.is-clear .week-rhythm-load {
   background: color-mix(in srgb, #22c55e 88%, var(--task-bd));
 }
