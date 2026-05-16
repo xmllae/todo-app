@@ -235,12 +235,12 @@
 
 .week-rhythm-day {
   display: grid;
-  grid-template-columns: 52px minmax(0, 1fr) 48px;
+  grid-template-columns: 52px minmax(0, 1fr) 58px;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   width: 100%;
-  min-height: 28px;
-  padding: 4px 0;
+  min-height: 32px;
+  padding: 5px 0;
   border: 0;
   border-bottom: 1px solid color-mix(in srgb, var(--task-bd) 34%, transparent);
   background: transparent;
@@ -278,7 +278,10 @@
 }
 
 .week-rhythm-track {
-  height: 4px;
+  width: 78%;
+  max-width: 176px;
+  height: 5px;
+  justify-self: start;
   overflow: hidden;
   border-radius: 999px;
   background: color-mix(in srgb, var(--task-bd) 38%, transparent);
@@ -295,9 +298,9 @@
 .week-rhythm-state {
   overflow: hidden;
   color: var(--text3);
-  font-size: 10px;
-  line-height: 1;
-  font-weight: 720;
+  font-size: 12px;
+  line-height: 1.15;
+  font-weight: 600;
   text-align: right;
   text-overflow: ellipsis;
   white-space: nowrap;
