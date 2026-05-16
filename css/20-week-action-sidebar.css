@@ -52,7 +52,7 @@
 .week-overview-score {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
   padding: 0 0 16px;
   border-bottom: 1px solid color-mix(in srgb, var(--task-bd) 62%, transparent);
   background: transparent;
@@ -100,7 +100,7 @@
   font-size: 9px;
   line-height: 1;
   font-style: normal;
-  font-weight: 680;
+  font-weight: 400;
 }
 
 .week-overview-score-main {
@@ -111,9 +111,9 @@
 .week-overview-count {
   display: flex;
   align-items: baseline;
-  gap: 4px;
+  gap: 5px;
   color: var(--text);
-  font-size: 18px;
+  font-size: 22px;
   line-height: 1;
   font-weight: 820;
   font-variant-numeric: tabular-nums;
@@ -121,20 +121,20 @@
 
 .week-overview-count-done {
   color: var(--text);
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 820;
 }
 
 .week-overview-count-rest {
   color: #94a3b8;
-  font-size: 12px;
+  font-size: 15px;
   font-weight: 500;
 }
 
 .week-overview-score-main p {
-  margin: 6px 0 0;
+  margin: 8px 0 0;
   color: var(--text2);
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.25;
   font-weight: 400;
 }
