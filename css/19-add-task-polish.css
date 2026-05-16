@@ -7118,3 +7118,160 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   color: #818cf8;
   opacity: 1;
 }
+
+/* 本周状态栏最终收紧：去掉外层背景框，保留轻量日期刻度。 */
+#taskMode .list-panel #tList .week-view-head,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-head,
+#taskMode .list-panel #tList .week-view-head:hover,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-head:hover {
+  padding: 0 12px 2px;
+  border: 0 !important;
+  border-radius: 0;
+  outline: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none;
+}
+
+#taskMode .list-panel #tList .week-view-day-strip,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-strip {
+  margin: 4px 0 10px;
+}
+
+#taskMode .list-panel #tList .week-view-day-pills,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pills {
+  min-height: 62px;
+  padding: 0 4px;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill {
+  width: 42px;
+  height: 56px;
+  min-height: 56px;
+  padding: 6px 0 5px;
+  border-radius: 12px;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.is-focus,
+#taskMode .list-panel #tList .week-view-day-pill.is-today.is-focus,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today.is-focus {
+  width: 40px;
+  height: 64px;
+  min-height: 64px;
+  padding: 7px 0 6px;
+  border-radius: 13px;
+  box-shadow: 0 8px 18px -15px rgba(15, 23, 42, .36);
+}
+
+#taskMode .list-panel #tList .week-view-day-pill-main,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill-main {
+  gap: 5px;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill-name,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill-name {
+  font-size: 11px;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill-date,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill-date {
+  font-size: 20px;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill-state,
+#taskMode .list-panel #tList .week-view-day-pill-state--overdue,
+#taskMode .list-panel #tList .week-view-day-pill-state--quiet,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill-state--overdue,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill-state--quiet {
+  width: 5px;
+  height: 5px;
+  margin-top: 6px;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill-state::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill-state::before {
+  width: 5px;
+  height: 5px;
+}
+
+/* 本周状态栏圆点只表达是否有任务，避免用颜色承载过多状态。 */
+#taskMode .list-panel #tList .week-view-day-pill .week-view-day-pill-state,
+#taskMode .list-panel #tList .week-view-day-pill .week-view-day-pill-state--overdue,
+#taskMode .list-panel #tList .week-view-day-pill .week-view-day-pill-state--quiet,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill .week-view-day-pill-state--overdue,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill .week-view-day-pill-state--quiet {
+  color: #aeb8c8;
+  opacity: 0;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.has-pending .week-view-day-pill-state,
+#taskMode .list-panel #tList .week-view-day-pill.is-clear .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.has-pending .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-clear .week-view-day-pill-state {
+  opacity: 1;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.is-focus.has-pending .week-view-day-pill-state,
+#taskMode .list-panel #tList .week-view-day-pill.is-focus.is-clear .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus.has-pending .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus.is-clear .week-view-day-pill-state {
+  color: #818cf8;
+  opacity: 1;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.is-empty .week-view-day-pill-state,
+#taskMode .list-panel #tList .week-view-day-pill.is-empty.is-focus .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-focus .week-view-day-pill-state {
+  opacity: 0 !important;
+}
+
+/* 本周状态栏圆点最终覆盖：同等优先级压掉逾期红、完成绿，只保留有无任务。 */
+#taskMode .list-panel #tList .week-view-day-pill.has-pending .week-view-day-pill-state,
+#taskMode .list-panel #tList .week-view-day-pill.is-overdue .week-view-day-pill-state,
+#taskMode .list-panel #tList .week-view-day-pill.is-clear .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.has-pending .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-overdue .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-clear .week-view-day-pill-state {
+  color: #aeb8c8 !important;
+  opacity: 1 !important;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.has-pending .week-view-day-pill-state::before,
+#taskMode .list-panel #tList .week-view-day-pill.is-overdue .week-view-day-pill-state::before,
+#taskMode .list-panel #tList .week-view-day-pill.is-clear .week-view-day-pill-state::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.has-pending .week-view-day-pill-state::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-overdue .week-view-day-pill-state::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-clear .week-view-day-pill-state::before {
+  background: #aeb8c8 !important;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.is-focus.has-pending .week-view-day-pill-state,
+#taskMode .list-panel #tList .week-view-day-pill.is-focus.is-overdue .week-view-day-pill-state,
+#taskMode .list-panel #tList .week-view-day-pill.is-focus.is-clear .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus.has-pending .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus.is-overdue .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus.is-clear .week-view-day-pill-state {
+  color: #818cf8 !important;
+  opacity: 1 !important;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.is-focus.has-pending .week-view-day-pill-state::before,
+#taskMode .list-panel #tList .week-view-day-pill.is-focus.is-overdue .week-view-day-pill-state::before,
+#taskMode .list-panel #tList .week-view-day-pill.is-focus.is-clear .week-view-day-pill-state::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus.has-pending .week-view-day-pill-state::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus.is-overdue .week-view-day-pill-state::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus.is-clear .week-view-day-pill-state::before {
+  background: #818cf8 !important;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.is-empty .week-view-day-pill-state::before,
+#taskMode .list-panel #tList .week-view-day-pill.is-empty.is-focus .week-view-day-pill-state::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty .week-view-day-pill-state::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-focus .week-view-day-pill-state::before {
+  background: transparent !important;
+}
