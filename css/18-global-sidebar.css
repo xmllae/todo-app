@@ -4149,6 +4149,89 @@
   background: #ede9fe !important;
   color: #7c3aed !important;
 }
+
+#taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue .nav-arrow,
+.app.app--with-global-nav #taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue .nav-arrow {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+#taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue,
+.app.app--with-global-nav #taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+#taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue h3,
+.app.app--with-global-nav #taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue h3 {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  cursor: default !important;
+}
+
+#taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue h3:hover,
+.app.app--with-global-nav #taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue h3:hover {
+  color: #0f172a !important;
+}
+
+#taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue h3 #dTitle.is-overdue-scope,
+.app.app--with-global-nav #taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue h3 #dTitle.is-overdue-scope {
+  align-items: center !important;
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+#taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue h3 #dTitle.is-overdue-scope .date-nav-date-main,
+.app.app--with-global-nav #taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue h3 #dTitle.is-overdue-scope .date-nav-date-main {
+  display: block !important;
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  color: #0f172a !important;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  letter-spacing: -0.025em !important;
+  margin: 0 0 4px 0 !important;
+  white-space: nowrap !important;
+}
+
+#taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue h3 #dTitle.is-overdue-scope .date-nav-date-sub,
+.app.app--with-global-nav #taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue h3 #dTitle.is-overdue-scope .date-nav-date-sub {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  display: block !important;
+  color: #64748b !important;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 1.5 !important;
+  letter-spacing: 0.025em !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+}
+
+.dark #taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue h3:hover,
+.dark .app.app--with-global-nav #taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue h3:hover,
+.dark #taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue h3 #dTitle.is-overdue-scope .date-nav-date-main,
+.dark .app.app--with-global-nav #taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue h3 #dTitle.is-overdue-scope .date-nav-date-main {
+  color: #e2e8f0 !important;
+}
+
+#taskMode.task-mode--overdue-view .task-main-col .add-split,
+.app.app--with-global-nav #taskMode.task-mode--overdue-view .task-main-col .add-split {
+  display: none !important;
+}
+
+#taskMode.task-mode--overdue-view .list-panel #addEmbedWrap,
+.app.app--with-global-nav #taskMode.task-mode--overdue-view .list-panel #addEmbedWrap {
+  display: none !important;
+}
 /* #endregion */
 
 /* Avoid replaying the segmented-control slider when the day toolbar returns from the hidden week view. */
