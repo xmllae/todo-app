@@ -6948,3 +6948,173 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-head::before {
   display: none !important;
 }
+
+/* 本周状态栏：改为日历刻度样式，状态压缩为小圆点。 */
+#taskMode .list-panel #tList .week-view-day-strip,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-strip {
+  margin: 18px 0 18px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+#taskMode .list-panel #tList .week-view-day-pills,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pills {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  align-items: center;
+  min-height: 104px;
+  gap: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill {
+  position: relative;
+  justify-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 64px;
+  min-width: 0;
+  height: 86px;
+  min-height: 86px;
+  padding: 11px 0 10px;
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
+  box-shadow: none;
+  color: color-mix(in srgb, var(--week-ink) 84%, var(--week-muted));
+  transition: background .18s ease, color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill::before,
+#taskMode .list-panel #tList .week-view-day-pill:hover::before,
+#taskMode .list-panel #tList .week-view-day-pill.is-focus::before,
+#taskMode .list-panel #tList .week-view-day-pill.is-today::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill:hover::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today::before {
+  display: none !important;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill:hover,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill:hover {
+  background: color-mix(in srgb, var(--week-line) 18%, transparent);
+  box-shadow: none;
+  transform: translateY(-1px);
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.is-focus,
+#taskMode .list-panel #tList .week-view-day-pill.is-today.is-focus,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today.is-focus {
+  width: 56px;
+  height: 96px;
+  min-height: 96px;
+  padding: 13px 0 12px;
+  border-radius: 16px;
+  background: #111827;
+  color: #fff;
+  box-shadow: 0 12px 24px -16px rgba(15, 23, 42, .45);
+  transform: none;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill-main,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill-main {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill-name,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill-name {
+  color: color-mix(in srgb, var(--week-muted) 88%, var(--week-ink));
+  font-size: 13px;
+  font-weight: 560;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill-date,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill-date {
+  color: var(--week-ink);
+  font-size: 28px;
+  font-weight: 760;
+  line-height: .95;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.is-focus .week-view-day-pill-name,
+#taskMode .list-panel #tList .week-view-day-pill.is-focus .week-view-day-pill-date,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus .week-view-day-pill-name,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus .week-view-day-pill-date {
+  color: #fff;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill-state,
+#taskMode .list-panel #tList .week-view-day-pill-state--overdue,
+#taskMode .list-panel #tList .week-view-day-pill-state--quiet,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill-state--overdue,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill-state--quiet {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 8px;
+  height: 8px;
+  min-height: 0;
+  margin-top: 12px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: none;
+  color: #818cf8;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill-state > *,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill-state > * {
+  display: none !important;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill-state::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill-state::before {
+  content: "";
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.is-overdue .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-overdue .week-view-day-pill-state {
+  color: #fb7185;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.is-clear .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-clear .week-view-day-pill-state {
+  color: #34d399;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.is-empty .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty .week-view-day-pill-state {
+  opacity: 0;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.is-focus .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus .week-view-day-pill-state {
+  color: #818cf8;
+  opacity: 1;
+}
