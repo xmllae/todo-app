@@ -7468,3 +7468,10 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-item + .week-task-item::before {
   left: 56px !important;
 }
+
+/* 本周卡片头部星期名称略微放大，增强日期组的第一视觉锚点。 */
+#taskMode .list-panel #tList .week-day-week,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-week {
+  font-size: 17px !important;
+  line-height: 1.2 !important;
+}

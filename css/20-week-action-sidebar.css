@@ -42,10 +42,10 @@
 .week-overview-kicker {
   display: block;
   margin-bottom: 0;
-  color: color-mix(in srgb, var(--acc) 88%, #334155);
-  font-size: 12px;
+  color: #0f172a;
+  font-size: 14px;
   line-height: 1.2;
-  font-weight: 760;
+  font-weight: 400;
   letter-spacing: 0;
 }
 
@@ -204,10 +204,10 @@
 }
 
 .week-overview-section-title span {
-  color: var(--text);
-  font-size: 13px;
+  color: #0f172a;
+  font-size: 14px;
   line-height: 1.2;
-  font-weight: 780;
+  font-weight: 400;
 }
 
 .week-overview-section-title small {
