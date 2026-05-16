@@ -395,7 +395,7 @@ function weekOverviewMonthDay(ds){
 function weekOverviewRhythmStatus(day){
   if(day.pending)return day.pending+" "+(day.isOverdue?"逾期":"待办");
   if(day.total)return"已清空";
-  return"空闲"
+  return"无任务"
 }
 function getWeekOverviewData(selStr){
   const meta=getTaskWeekMeta(selStr),weekNames=["一","二","三","四","五","六","日"],allRows=[];
@@ -413,18 +413,11 @@ function renderWeekTaskOverviewSidebar(pct,totalForProg,doneForProg,selStr){
   if(!root||!shell)return;
   const data=getWeekOverviewData(selStr),total=data.allRows.length,done=data.allRows.filter(function(row){return row.task.done}).length,pending=data.allRows.filter(function(row){return!row.task.done&&!row.task.frozen}).length;
   const highPending=data.allRows.filter(function(row){return row.task.priority==="high"&&!row.task.done&&!row.task.frozen}).length;
-  const busyDay=data.dayStats.reduce(function(best,day){return day.pending>best.pending?day:best},data.dayStats[0]);
-  const pendingDayCount=data.dayStats.filter(function(day){return day.pending>0}).length;
-  const emptyDays=data.dayStats.filter(function(day){return!day.total}).length;
-  const rhythmLeadLabel=busyDay&&busyDay.isOverdue?"逾期":"待办";
-  const rhythmLead=pending?(pendingDayCount===1?rhythmLeadLabel+"集中在"+busyDay.label+" · "+busyDay.pending+" 项":busyDay.label+rhythmLeadLabel+"最多 · "+busyDay.pending+" 项"):done?"本周已清空 · "+done+" 项完成":"本周暂无任务";
-  const rhythmActiveDays=data.dayStats.filter(function(day){return day.total>0});
-  const rhythmRows=rhythmActiveDays.length?rhythmActiveDays.map(function(day){
+  const rhythmRows=data.dayStats.map(function(day){
     const status=weekOverviewRhythmStatus(day),progress=day.total?Math.round(day.done/day.total*100):0,load=progress?Math.max(8,progress):0,cls="week-rhythm-day"+(day.isToday?" is-today":"")+(day.isFocus?" is-focus":"")+(day.isOverdue?" is-overdue":"")+(day.pending?" has-pending":day.total?" is-clear":" is-empty");
     return'<button type="button" class="'+cls+'" style="--rhythm-load:'+load+'%" onclick="jumpWeekDay(\''+day.ds+'\')" aria-label="定位到'+day.label+' '+day.dateText+'，'+status+'"><span class="week-rhythm-label"><span>'+day.label+'</span><small>'+day.dateText+'</small></span><span class="week-rhythm-track" aria-hidden="true"><span class="week-rhythm-load"></span></span><span class="week-rhythm-state">'+status+'</span></button>'
-  }).join(""):'<div class="week-rhythm-empty">暂无任务安排</div>';
-  const rhythmNote=emptyDays?'<div class="week-rhythm-note">其余 '+emptyDays+' 天空闲</div>':"";
-  shell.innerHTML='<div class="week-overview-head"><span class="week-overview-kicker">\u4efb\u52a1\u6982\u89c8</span></div><div class="week-overview-score"><div class="week-overview-ring" style="--week-pct:'+pct+'"><span>'+pct+'%</span><em>\u5b8c\u6210\u5ea6</em></div><div class="week-overview-score-main"><div class="week-overview-count"><strong class="week-overview-count-done">'+done+'</strong><span class="week-overview-count-rest">/'+total+'</span></div><p>\u5468\u4efb\u52a1\u5df2\u5b8c\u6210</p></div></div><div class="week-overview-metrics"><div><b>'+total+'</b><span>\u5168\u90e8</span></div><div><b>'+pending+'</b><span>\u5f85\u529e</span></div><div><b>'+done+'</b><span>\u5b8c\u6210</span></div><div><b>'+highPending+'</b><span>\u9ad8\u4f18\u5148</span></div></div><div class="week-overview-section week-overview-section--rhythm"><div class="week-overview-section-title"><span>\u672c\u5468\u8282\u594f</span></div><div class="week-rhythm-list">'+rhythmRows+'</div>'+rhythmNote+'</div>'
+  }).join("");
+  shell.innerHTML='<div class="week-overview-head"><span class="week-overview-kicker">\u4efb\u52a1\u6982\u89c8</span></div><div class="week-overview-score"><div class="week-overview-ring" style="--week-pct:'+pct+'"><span>'+pct+'%</span><em>\u5b8c\u6210\u5ea6</em></div><div class="week-overview-score-main"><div class="week-overview-count"><strong class="week-overview-count-done">'+done+'</strong><span class="week-overview-count-rest">/'+total+'</span></div><p>\u5468\u4efb\u52a1\u5df2\u5b8c\u6210</p></div></div><div class="week-overview-metrics"><div><b>'+total+'</b><span>\u5168\u90e8</span></div><div><b>'+pending+'</b><span>\u5f85\u529e</span></div><div><b>'+done+'</b><span>\u5b8c\u6210</span></div><div><b>'+highPending+'</b><span>\u9ad8\u4f18\u5148</span></div></div><div class="week-overview-section week-overview-section--rhythm"><div class="week-overview-section-title"><span>\u672c\u5468\u8282\u594f</span></div><div class="week-rhythm-list">'+rhythmRows+'</div></div>'
 }
 const renderTaskDashLegacy=renderTaskDash;
 renderTaskDash=function(pct,totalForProg,doneForProg,nonArchived,fl,selStr){

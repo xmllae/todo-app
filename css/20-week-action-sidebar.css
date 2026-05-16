@@ -265,15 +265,15 @@
   color: var(--text2);
   font-size: 11px;
   line-height: 1;
-  font-weight: 760;
+  font-weight: 400;
   white-space: nowrap;
 }
 
 .week-rhythm-label small {
   color: var(--text3);
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1;
-  font-weight: 640;
+  font-weight: 400;
   white-space: nowrap;
 }
 
@@ -305,7 +305,13 @@
 
 .week-rhythm-day:hover .week-rhythm-label span,
 .week-rhythm-day.is-focus .week-rhythm-label span {
+  color: var(--text2);
+}
+
+.week-rhythm-day.is-today .week-rhythm-label span,
+.week-rhythm-day.is-today .week-rhythm-label small {
   color: var(--acc);
+  font-weight: 700;
 }
 
 .week-rhythm-day.has-pending .week-rhythm-state {
@@ -316,8 +322,12 @@
   color: #ef4444;
 }
 
+.week-rhythm-day.is-overdue .week-rhythm-load {
+  background: #fb7185;
+}
+
 .week-rhythm-day.is-clear .week-rhythm-load {
-  background: color-mix(in srgb, #22c55e 88%, var(--task-bd));
+  background: #34d399;
 }
 
 .week-rhythm-day.is-clear .week-rhythm-state {
@@ -325,7 +335,7 @@
 }
 
 .week-rhythm-day.is-empty {
-  opacity: .62;
+  opacity: 1;
 }
 
 .week-rhythm-empty,
