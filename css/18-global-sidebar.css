@@ -4228,6 +4228,13 @@
   display: none !important;
 }
 
+#taskMode.task-mode--overdue-view .list-panel #batchBar,
+.app.app--with-global-nav #taskMode.task-mode--overdue-view .list-panel #batchBar,
+#taskMode.task-mode--overdue-view .list-panel .batch-bar,
+.app.app--with-global-nav #taskMode.task-mode--overdue-view .list-panel .batch-bar {
+  display: none !important;
+}
+
 #taskMode.task-mode--overdue-view .list-panel #addEmbedWrap,
 .app.app--with-global-nav #taskMode.task-mode--overdue-view .list-panel #addEmbedWrap {
   display: none !important;

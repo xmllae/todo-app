@@ -87,6 +87,33 @@
     if (typeof syncAddTaskMainLabel === "function") syncAddTaskMainLabel(false);
   }
 
+  function closeOverdueTaskToolbar() {
+    var sortDropdown = document.getElementById("sortDropdown");
+    if (sortDropdown) sortDropdown.classList.remove("show");
+
+    var batchBar = document.getElementById("batchBar");
+    if (batchBar && document.activeElement && batchBar.contains(document.activeElement)) {
+      try {
+        document.activeElement.blur();
+      } catch (e) {}
+    }
+
+    if (typeof multiSelect !== "undefined" && multiSelect) {
+      if (typeof toggleMultiSelect === "function") {
+        toggleMultiSelect();
+      } else {
+        multiSelect = false;
+        if (typeof selectedIds !== "undefined" && selectedIds && selectedIds.clear) selectedIds.clear();
+        var multiBtn = document.getElementById("multiSelectBtn");
+        var multiBar = document.getElementById("multiBar");
+        var listPanel = document.querySelector("#taskMode .list-panel");
+        if (multiBtn) multiBtn.classList.remove("on");
+        if (multiBar) multiBar.classList.remove("show");
+        if (listPanel) listPanel.classList.remove("list-panel--multi");
+      }
+    }
+  }
+
   function renderOverdueTitle() {
     var title = getTitleHost();
     if (!title) return;
@@ -157,6 +184,7 @@
 
     if (overdue) {
       closeOverdueCreateEntries();
+      closeOverdueTaskToolbar();
       renderOverdueTitle();
       clearTitleMotion(getTitleHost());
     }
