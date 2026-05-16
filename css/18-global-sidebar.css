@@ -440,6 +440,17 @@
   transform: scale(1.4);
 }
 
+.global-side-nav [data-gsn-action="overdue"],
+.global-side-nav [data-gsn-action="overdue"]:hover,
+.global-side-nav [data-gsn-action="overdue"].is-active,
+.global-side-nav [data-gsn-action="overdue"].is-active:hover {
+  color: #ef4444 !important;
+}
+
+.global-side-nav [data-gsn-action="overdue"] .gsn-nav-overdue-icon {
+  color: #ef4444;
+}
+
 .gsn-project-name {
   flex: 1;
   min-width: 0;
@@ -4190,7 +4201,7 @@
   animation: none !important;
   transition: none !important;
   transform: none !important;
-  color: #0f172a !important;
+  color: #ef4444 !important;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif !important;
   font-size: 24px !important;
   font-weight: 700 !important;
@@ -4220,7 +4231,7 @@
 .dark .app.app--with-global-nav #taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue h3:hover,
 .dark #taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue h3 #dTitle.is-overdue-scope .date-nav-date-main,
 .dark .app.app--with-global-nav #taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue h3 #dTitle.is-overdue-scope .date-nav-date-main {
-  color: #e2e8f0 !important;
+  color: #f87171 !important;
 }
 
 #taskMode.task-mode--overdue-view .task-main-col .add-split,

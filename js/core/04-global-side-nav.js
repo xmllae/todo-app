@@ -216,6 +216,18 @@
     );
   }
 
+  function overdueWarningIcon() {
+    return (
+      '<span class="gsn-nav-date-icon gsn-nav-overdue-icon" aria-hidden="true">' +
+      '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">' +
+      '<path d="M12 3.2 22 20.4H2L12 3.2Z" fill="currentColor"></path>' +
+      '<path d="M12 8.4V14" stroke="#fff" stroke-width="2.1" stroke-linecap="round"></path>' +
+      '<circle cx="12" cy="17.2" r="1.2" fill="#fff"></circle>' +
+      "</svg>" +
+      "</span>"
+    );
+  }
+
   function navButton(kind, icon, label, count, action, arg, active) {
     var cls = "gsn-" + kind + (active ? " is-active" : "");
     var dataArg = arg == null ? "" : ' data-gsn-arg="' + escapeHtml(arg) + '"';
@@ -223,11 +235,13 @@
     var iconHtml =
       icon === "today-calendar"
         ? todayCalendarIcon()
-        : '<i class="ph ' +
-          icon +
-          " gsn-nav-date-icon gsn-nav-date-icon--ph" +
-          iconToneClass +
-          '" aria-hidden="true"></i>';
+        : icon === "overdue-warning"
+          ? overdueWarningIcon()
+          : '<i class="ph ' +
+            icon +
+            " gsn-nav-date-icon gsn-nav-date-icon--ph" +
+            iconToneClass +
+            '" aria-hidden="true"></i>';
     return (
       '<button type="button" class="' +
       cls +
@@ -332,7 +346,7 @@
       navButton("item", "today-calendar", "今天", pendingFor(todayKey()).length, "today", "", activeDate === "today") +
       navButton("item", "ph-arrow-fat-lines-right", "明天", null, "tomorrow", "", activeDate === "tomorrow") +
       navButton("item", "ph-calendar-dots", "本周", countWeek(), "week", "", activeDate === "week") +
-      navButton("item", "ph-warning-circle", "逾期", null, "overdue", "", activeDate === "overdue") +
+      navButton("item", "overdue-warning", "逾期", null, "overdue", "", activeDate === "overdue") +
       "</section>" +
       '<section class="gsn-section" aria-labelledby="gsnFilterTitle">' +
       '<h4 class="gsn-section-title" id="gsnFilterTitle">筛选</h4>' +
