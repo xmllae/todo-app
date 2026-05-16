@@ -956,10 +956,15 @@ function initWeekViewPressFeedback(list){
 function weekTaskTimeMetaHtml(t){
   const pt=String(t&&t.planTime||"").trim();
   if(t&&t.recurRuleId){
-    const desc=typeof getRecurDesc==="function"?getRecurDesc(t.recurRuleId)||"重复":"重复",formatted=pt?(typeof formatPlanTimeDisp==="function"?formatPlanTimeDisp(pt):pt):"",timeText=pt?taskRowPlainTimeText(t,formatted):"",label=timeText?desc+" "+timeText:desc,tip=timeText?desc+" · "+timeText:desc,recurIco=typeof taskRecurRowBadgeSvg==="function"?taskRecurRowBadgeSvg():"";
-    return'<span class="task-recur-badge time-disp week-task-recur-meta" title="'+esc(tip)+'">'+recurIco+'<span class="task-recur-badge-txt">'+esc(label)+'</span></span>'
+    const desc=typeof getRecurDesc==="function"?(getRecurDesc(t.recurRuleId)||"\u91cd\u590d"):"\u91cd\u590d";
+    const formatted=pt?(typeof formatPlanTimeDisp==="function"?formatPlanTimeDisp(pt):pt):"";
+    const timeText=pt?taskRowPlainTimeText(t,formatted):"";
+    const label=timeText?desc+" "+timeText:desc;
+    const tip=timeText?desc+" \u00b7 "+timeText:desc;
+    const recurIco=typeof taskRecurRowBadgeSvg==="function"?taskRecurRowBadgeSvg():"";
+    return '<span class="task-recur-badge time-disp week-task-recur-meta" title="'+esc(tip)+'">'+recurIco+'<span class="task-recur-badge-txt">'+esc(label)+'</span></span>'
   }
-  return taskRowTimePlainHtml(t,pt||"全天",false)
+  return taskRowTimePlainHtml(t,pt||"\u5168\u5929",false)
 }
 function weekTaskCheckRingHtml(t,ds){
   const pending=!!(t&&weekTaskTogglePendingIds.has(t.id)),done=!!(t&&t.done)||pending,high=t&&t.priority==="high",hex=high?(prioColor(t.priority)||"#ef4444"):"#94a3b8";

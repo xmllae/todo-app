@@ -1152,7 +1152,7 @@
   --subtask-row-muted: #94a3b8;
   --subtask-ck-bd: #c1ccdb;
   --subtask-ck-on: #c7d0dc;
-  --task-meta-fg: #738397;
+  --task-meta-fg: #94a3b8;
   --task-meta-fg-hover: #3f4f66;
   --task-meta-subtle: #9aa8bb;
   --task-meta-done: #1f7a43;
@@ -1463,7 +1463,7 @@
   border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
-  color: #738397 !important;
+  color: #94a3b8 !important;
   gap: 5px !important;
   box-shadow: none !important;
   text-decoration: none !important;
