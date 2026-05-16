@@ -357,6 +357,48 @@
   padding-top: 8px;
 }
 
+:root {
+  --overdue-text-color: #f43f5e;
+}
+
+/* 统一页面中“逾期”文案及配套警示图标的颜色。 */
+.global-side-nav [data-gsn-action="overdue"],
+.global-side-nav [data-gsn-action="overdue"]:hover,
+.global-side-nav [data-gsn-action="overdue"].is-active,
+.global-side-nav [data-gsn-action="overdue"].is-active:hover,
+.global-side-nav [data-gsn-action="overdue"] .gsn-nav-overdue-icon,
+.week-rhythm-day.is-overdue .week-rhythm-state,
+#taskMode .list-panel #tList .week-task-overdue-meta,
+#taskMode .list-panel #tList .week-overdue-icon-wrap,
+#taskMode .list-panel #tList .week-day-count-chip--overdue .week-day-count-line,
+#taskMode .list-panel #tList .week-day-count-chip--overdue .week-day-count-line b,
+#taskMode .list-panel #tList button.week-day-count-chip--overdue:hover .week-day-count-line,
+#taskMode .list-panel #tList button.week-day-count-chip--overdue:hover .week-day-count-line b,
+#taskMode .list-panel #tList .week-view-day-pill.is-overdue,
+#taskMode .list-panel #tList .week-view-day-pill.is-overdue .week-view-day-pill-state,
+#taskMode .list-panel #tList .week-view-day-pill-state--overdue,
+#taskMode .list-panel #tList .od-title,
+#taskMode #overdueArea .od-title,
+.od-title,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-overdue-meta,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-overdue-icon-wrap,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip--overdue .week-day-count-line,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip--overdue .week-day-count-line b,
+.app.app--with-global-nav #taskMode .list-panel #tList button.week-day-count-chip--overdue:hover .week-day-count-line,
+.app.app--with-global-nav #taskMode .list-panel #tList button.week-day-count-chip--overdue:hover .week-day-count-line b,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-overdue,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-overdue .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill-state--overdue,
+.app.app--with-global-nav #taskMode .list-panel #tList .od-title,
+.app.app--with-global-nav #taskMode #overdueArea .od-title {
+  color: var(--overdue-text-color) !important;
+}
+
+#taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue h3 #dTitle.is-overdue-scope .date-nav-date-main,
+.app.app--with-global-nav #taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue h3 #dTitle.is-overdue-scope .date-nav-date-main {
+  color: var(--overdue-text-color) !important;
+}
+
 .week-overview-day-list,
 .week-overview-priority-list {
   display: flex;
