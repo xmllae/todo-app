@@ -7441,3 +7441,30 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip .week-day-count-line b {
   font-weight: 400 !important;
 }
+
+/* 去掉本周卡片左侧指示条，并收回对应留白。 */
+#taskMode .list-panel #tList .week-day-card::before,
+#taskMode .list-panel #tList .week-day-head::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-head::before {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+#taskMode .list-panel #tList .week-day-head,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-head {
+  padding-left: 22px !important;
+}
+
+#taskMode .list-panel #tList .week-task-item,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-item {
+  padding-left: 22px !important;
+}
+
+#taskMode .list-panel #tList .week-task-item + .week-task-item::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-item + .week-task-item::before {
+  left: 56px !important;
+}
