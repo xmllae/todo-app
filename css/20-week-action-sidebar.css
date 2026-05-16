@@ -34,9 +34,9 @@
 .week-overview-head {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 10px;
-  padding-bottom: 16px;
+  padding-bottom: 12px;
 }
 
 .week-overview-kicker {
@@ -47,16 +47,6 @@
   line-height: 1.2;
   font-weight: 760;
   letter-spacing: 0;
-}
-
-.week-overview-range {
-  flex-shrink: 0;
-  color: var(--text2);
-  font-size: 12px;
-  line-height: 1.4;
-  font-weight: 720;
-  text-align: right;
-  white-space: nowrap;
 }
 
 .week-overview-score {
@@ -78,7 +68,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: conic-gradient(color-mix(in srgb, var(--acc) 92%, #334155) calc(var(--week-pct) * 1%), color-mix(in srgb, var(--acc) 14%, var(--task-bd)) 0);
+  background: conic-gradient(from 270deg, color-mix(in srgb, var(--acc) 92%, #334155) calc(var(--week-pct) * 1%), color-mix(in srgb, var(--acc) 14%, var(--task-bd)) 0);
 }
 
 .week-overview-ring::after {
@@ -121,7 +111,7 @@
 .week-overview-count {
   display: flex;
   align-items: baseline;
-  gap: 5px;
+  gap: 4px;
   color: var(--text);
   font-size: 18px;
   line-height: 1;
@@ -129,41 +119,32 @@
   font-variant-numeric: tabular-nums;
 }
 
-.week-overview-count span {
-  color: var(--text2);
-  font-size: 14px;
-  font-weight: 680;
+.week-overview-count-done {
+  color: var(--text);
+  font-size: 18px;
+  font-weight: 820;
+}
+
+.week-overview-count-rest {
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .week-overview-score-main p {
-  margin: 5px 0 8px;
+  margin: 6px 0 0;
   color: var(--text2);
   font-size: 12px;
   line-height: 1.25;
-  font-weight: 680;
-}
-
-.week-overview-progress {
-  height: 5px;
-  border-radius: 999px;
-  overflow: hidden;
-  background: color-mix(in srgb, var(--acc) 12%, var(--task-bd));
-}
-
-.week-overview-progress span {
-  display: block;
-  width: var(--week-progress);
-  height: 100%;
-  border-radius: inherit;
-  background: color-mix(in srgb, var(--acc) 88%, #334155);
+  font-weight: 400;
 }
 
 .week-overview-metrics {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  padding: 14px 0 12px;
+  gap: 10px;
+  padding: 16px 0 14px;
   border-bottom: 1px solid color-mix(in srgb, var(--task-bd) 56%, transparent);
 }
 
@@ -173,13 +154,17 @@
   padding: 0;
   border: 0;
   background: transparent;
-  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .week-overview-metrics b {
-  display: inline;
+  display: block;
   color: var(--text);
-  font-size: 15px;
+  font-size: 18px;
   line-height: 1;
   font-weight: 850;
   font-variant-numeric: tabular-nums;
@@ -187,11 +172,11 @@
 
 .week-overview-metrics span {
   display: block;
-  margin-top: 6px;
+  margin-top: 7px;
   color: var(--text3);
-  font-size: 10px;
-  line-height: 1;
-  font-weight: 680;
+  font-size: 11px;
+  line-height: 1.1;
+  font-weight: 600;
 }
 
 .week-overview-section {
