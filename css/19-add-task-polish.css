@@ -4157,6 +4157,12 @@
   color: var(--week-muted);
 }
 
+#taskMode .list-panel #tList .week-day-count.week-day-count-group.has-overdue-count,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count.week-day-count-group.has-overdue-count {
+  grid-template-columns: 82px 92px;
+  width: 184px;
+}
+
 #taskMode .list-panel #tList .week-day-count-chip,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip {
   appearance: none;
@@ -4257,6 +4263,50 @@
   font-variant-numeric: tabular-nums;
 }
 
+#taskMode .list-panel #tList .week-day-count-chip .week-day-count-line--overdue,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip .week-day-count-line--overdue {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  width: max-content;
+  max-width: none;
+  white-space: nowrap;
+}
+
+#taskMode .list-panel #tList .week-day-count-chip--overdue .week-day-count-line,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip--overdue .week-day-count-line,
+#taskMode .list-panel #tList .week-day-count-chip--overdue .week-day-count-line b,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip--overdue .week-day-count-line b {
+  color: #ef4444;
+}
+
+#taskMode .list-panel #tList .week-day-count-chip--overdue,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip--overdue {
+  grid-template-columns: max-content;
+  min-width: max-content;
+}
+
+#taskMode .list-panel #tList .week-day-count-chip--overdue.week-todo-count-toggle,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip--overdue.week-todo-count-toggle {
+  grid-template-columns: max-content 12px;
+}
+
+#taskMode .list-panel #tList .week-day-count-chip--overdue .week-day-count-caret.is-placeholder,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip--overdue .week-day-count-caret.is-placeholder {
+  display: none;
+}
+
+#taskMode .list-panel #tList .week-count-overdue-icon,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-count-overdue-icon {
+  display: block;
+  flex: 0 0 auto;
+  width: 12px;
+  height: 12px;
+  color: #ef4444;
+  stroke: currentColor;
+  transform: translateY(.25px);
+}
+
 #taskMode .list-panel #tList .week-day-count-chip--done .week-day-count-line,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip--done .week-day-count-line {
   color: color-mix(in srgb, var(--week-muted) 86%, var(--week-ink));
@@ -4276,6 +4326,13 @@
 #taskMode .list-panel #tList button.week-day-count-chip:hover .week-day-count-line b,
 .app.app--with-global-nav #taskMode .list-panel #tList button.week-day-count-chip:hover .week-day-count-line b {
   color: inherit;
+}
+
+#taskMode .list-panel #tList button.week-day-count-chip--overdue:hover .week-day-count-line,
+.app.app--with-global-nav #taskMode .list-panel #tList button.week-day-count-chip--overdue:hover .week-day-count-line,
+#taskMode .list-panel #tList button.week-day-count-chip--overdue:hover .week-day-count-line b,
+.app.app--with-global-nav #taskMode .list-panel #tList button.week-day-count-chip--overdue:hover .week-day-count-line b {
+  color: #dc2626;
 }
 
 #taskMode .list-panel #tList .week-day-count-caret,
@@ -5034,6 +5091,12 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count.week-day-count-group.is-single-action {
   grid-template-columns: minmax(0, 92px);
   width: 92px;
+}
+
+#taskMode .list-panel #tList .week-day-count.week-day-count-group.is-single-action.has-overdue-count,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count.week-day-count-group.is-single-action.has-overdue-count {
+  grid-template-columns: max-content;
+  width: max-content;
 }
 
 #taskMode .list-panel #tList .week-day-count.week-day-count-group.is-single-action .week-day-count-chip,
