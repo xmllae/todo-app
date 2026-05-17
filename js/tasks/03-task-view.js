@@ -397,6 +397,23 @@ function weekOverviewRhythmStatus(day){
   if(day.total)return"已清空";
   return"无任务"
 }
+function weekOverviewRhythmTone(day){
+  if(day.pending&&day.isOverdue)return"overdue";
+  if(day.pending)return"pending";
+  if(day.total)return"clear";
+  return"empty"
+}
+function weekOverviewRhythmIcon(day){
+  const tone=weekOverviewRhythmTone(day);
+  if(tone==="overdue")return WEEK_RHYTHM_ICON_OVERDUE;
+  if(tone==="pending")return WEEK_RHYTHM_ICON_PENDING;
+  if(tone==="clear")return WEEK_RHYTHM_ICON_CLEAR;
+  return WEEK_RHYTHM_ICON_EMPTY
+}
+function weekOverviewRhythmStateHtml(day){
+  const tone=weekOverviewRhythmTone(day),status=weekOverviewRhythmStatus(day),chip=tone==="overdue"||tone==="pending";
+  return'<span class="week-rhythm-state week-rhythm-state--'+tone+(chip?' week-rhythm-state--chip':'')+'">'+status+"</span>"
+}
 function getWeekOverviewData(selStr){
   const meta=getTaskWeekMeta(selStr),weekNames=["一","二","三","四","五","六","日"],allRows=[];
   const todayDs=fd(now);
@@ -414,8 +431,8 @@ function renderWeekTaskOverviewSidebar(pct,totalForProg,doneForProg,selStr){
   const data=getWeekOverviewData(selStr),total=data.allRows.length,done=data.allRows.filter(function(row){return row.task.done}).length,pending=data.allRows.filter(function(row){return!row.task.done&&!row.task.frozen}).length;
   const highPending=data.allRows.filter(function(row){return row.task.priority==="high"&&!row.task.done&&!row.task.frozen}).length;
   const rhythmRows=data.dayStats.map(function(day){
-    const status=weekOverviewRhythmStatus(day),progress=day.total?Math.round(day.done/day.total*100):0,load=progress?Math.max(8,progress):0,cls="week-rhythm-day"+(day.isToday?" is-today":"")+(day.isFocus?" is-focus":"")+(day.isOverdue?" is-overdue":"")+(day.pending?" has-pending":day.total?" is-clear":" is-empty");
-    return'<button type="button" class="'+cls+'" style="--rhythm-load:'+load+'%" onclick="jumpWeekDay(\''+day.ds+'\')" aria-label="定位到'+day.label+' '+day.dateText+'，'+status+'"><span class="week-rhythm-label"><span>'+day.label+'</span><small>'+day.dateText+'</small></span><span class="week-rhythm-track" aria-hidden="true"><span class="week-rhythm-load"></span></span><span class="week-rhythm-state">'+status+'</span></button>'
+    const status=weekOverviewRhythmStatus(day),tone=weekOverviewRhythmTone(day),cls="week-rhythm-day"+(day.isToday?" is-today":"")+(day.isFocus?" is-focus":"")+(day.isOverdue?" is-overdue":"")+(day.pending?" has-pending":day.total?" is-clear":" is-empty");
+    return'<button type="button" class="'+cls+'" onclick="jumpWeekDay(\''+day.ds+'\')" aria-label="定位到'+day.label+' '+day.dateText+'，'+status+'"><span class="week-rhythm-rail" aria-hidden="true"><span class="week-rhythm-node week-rhythm-node--'+tone+'">'+weekOverviewRhythmIcon(day)+'</span></span><span class="week-rhythm-main"><span class="week-rhythm-copy"><span class="week-rhythm-week">'+day.label+'</span><span class="week-rhythm-date">'+day.dateText+'</span></span>'+weekOverviewRhythmStateHtml(day)+'</span></button>'
   }).join("");
   shell.innerHTML='<div class="week-overview-head"><span class="week-overview-kicker">\u4efb\u52a1\u6982\u89c8</span></div><div class="week-overview-score"><div class="week-overview-ring" style="--week-pct:'+pct+'"><span>'+pct+'%</span><em>\u5b8c\u6210\u5ea6</em></div><div class="week-overview-score-main"><div class="week-overview-count"><strong class="week-overview-count-done">'+done+'</strong><span class="week-overview-count-rest">/'+total+'</span></div><p>\u5468\u4efb\u52a1\u5df2\u5b8c\u6210</p></div></div><div class="week-overview-metrics"><div><b>'+total+'</b><span>\u5168\u90e8</span></div><div><b>'+pending+'</b><span>\u5f85\u529e</span></div><div><b>'+done+'</b><span>\u5b8c\u6210</span></div><div><b>'+highPending+'</b><span>\u9ad8\u4f18\u5148</span></div></div><div class="week-overview-section week-overview-section--rhythm"><div class="week-overview-section-title"><span>\u672c\u5468\u8282\u594f</span></div><div class="week-rhythm-list">'+rhythmRows+'</div></div>'
 }
@@ -514,6 +531,10 @@ const WEEK_HEADER_ADD_ICON='<svg width="14" height="14" viewBox="0 0 24 24" fill
 const WEEK_HEADER_EXPAND_ICON='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 8 12 13 17 8"></polyline><polyline points="7 12 12 17 17 12"></polyline></svg>';
 const WEEK_HEADER_COLLAPSE_ICON='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 16 12 11 17 16"></polyline><polyline points="7 12 12 7 17 12"></polyline></svg>';
 const WEEK_HEADER_READY_ICON='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+const WEEK_RHYTHM_ICON_OVERDUE='<svg class="week-rhythm-node-svg" viewBox="0 0 16 16" focusable="false" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.75"></circle><path d="M8 4.45v4.05" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"></path><circle cx="8" cy="11.65" r="1" fill="currentColor"></circle></svg>';
+const WEEK_RHYTHM_ICON_PENDING='<svg class="week-rhythm-node-svg" viewBox="0 0 16 16" focusable="false" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.75"></circle><path d="M8 4.4v3.95l2.45 1.45" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
+const WEEK_RHYTHM_ICON_CLEAR='<svg class="week-rhythm-node-svg" viewBox="0 0 16 16" focusable="false" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.75"></circle><path d="M5.15 8.1 7.15 10.05 10.95 6.15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
+const WEEK_RHYTHM_ICON_EMPTY='<svg class="week-rhythm-node-svg" viewBox="0 0 16 16" focusable="false" aria-hidden="true"><circle cx="4" cy="8" r="1.1" fill="currentColor"></circle><circle cx="8" cy="8" r="1.1" fill="currentColor"></circle><circle cx="12" cy="8" r="1.1" fill="currentColor"></circle></svg>';
 const WEEK_OVERDUE_ICON='<span class="week-overdue-icon-wrap" aria-hidden="true"><svg class="week-overdue-icon" viewBox="0 0 24 24" focusable="false"><path d="M12 3 2.8 20h18.4L12 3Z" fill="none" stroke="currentColor" stroke-width="2.05" stroke-linejoin="round"></path><path d="M12 9v5" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linecap="round"></path><circle cx="12" cy="17" r="1.2" fill="currentColor"></circle></svg></span>';
 let weekDoneCollapsed=true;
 let weekQuietDaysExpanded=false;
