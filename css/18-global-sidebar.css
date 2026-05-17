@@ -196,7 +196,7 @@
 
 .gsn-heading {
   color: var(--gsn-title-color);
-  font-size: 1.01rem;
+  font-size: 1.1rem;
   font-weight: 720;
   line-height: 1.2;
   letter-spacing: 0;
@@ -262,7 +262,7 @@
 .gsn-section-title {
   margin: 0 0 6px 8px;
   color: var(--gsn-kicker-color);
-  font-size: 0.64rem;
+  font-size: 0.8rem;
   font-weight: 720;
   line-height: 1.15;
   letter-spacing: 0.05em;
