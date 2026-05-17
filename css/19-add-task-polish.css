@@ -5157,7 +5157,6 @@
   margin: 0 24px 11px 54px;
   padding: 8px 0 2px;
   border: 0;
-  border-top: 1px solid color-mix(in srgb, var(--week-line) 58%, transparent);
   background: linear-gradient(180deg, color-mix(in srgb, var(--card) 96%, transparent), color-mix(in srgb, var(--card) 100%, #fff));
   color: color-mix(in srgb, var(--week-muted) 84%, var(--week-ink));
   display: flex;
@@ -5176,7 +5175,6 @@
 
 #taskMode .list-panel #tList .week-task-more-inline:hover,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-more-inline:hover {
-  border-top-color: color-mix(in srgb, var(--week-accent) 22%, var(--week-line));
   color: color-mix(in srgb, var(--week-accent) 72%, var(--week-ink));
 }
 
@@ -5188,10 +5186,7 @@
 
 #taskMode .list-panel #tList .week-task-more-line,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-more-line {
-  width: 22px;
-  height: 1px;
-  flex: 0 0 22px;
-  background: color-mix(in srgb, currentColor 28%, transparent);
+  display: none;
 }
 
 #taskMode .list-panel #tList .week-task-more-action,
