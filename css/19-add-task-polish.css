@@ -7475,3 +7475,119 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   font-size: 17px !important;
   line-height: 1.2 !important;
 }
+
+#taskMode .list-panel #tList .week-day-head,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-head,
+#taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open) .week-day-head,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open) .week-day-head,
+#taskMode .list-panel #tList .week-day-card.is-empty .week-day-head,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-empty .week-day-head {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
+  min-height: 56px !important;
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+  box-sizing: border-box !important;
+}
+
+#taskMode .list-panel #tList .week-day-title-btn,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-title-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  flex: 1 1 auto !important;
+  gap: 10px !important;
+  min-width: 0 !important;
+  height: 24px !important;
+  min-height: 24px !important;
+  line-height: 1 !important;
+  align-self: center !important;
+}
+
+#taskMode .list-panel #tList .week-day-name,
+#taskMode .list-panel #tList .week-day-meta,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-name,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-meta {
+  display: inline-flex !important;
+  align-items: center !important;
+  height: 24px !important;
+  min-height: 24px !important;
+  line-height: 1 !important;
+}
+
+#taskMode .list-panel #tList .week-day-week,
+#taskMode .list-panel #tList .week-day-date-label,
+#taskMode .list-panel #tList .week-day-date-text,
+#taskMode .list-panel #tList .week-day-status-text,
+#taskMode .list-panel #tList .week-day-overdue-text,
+#taskMode .list-panel #tList .week-day-overdue-count,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-week,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-date-label,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-date-text,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-status-text,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-overdue-text,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-overdue-count {
+  display: inline-flex !important;
+  align-items: center !important;
+  height: 24px !important;
+  line-height: 1 !important;
+}
+
+#taskMode .list-panel #tList .week-day-count,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count,
+#taskMode .list-panel #tList .week-day-count.week-day-count-group,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count.week-day-count-group {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  flex: 0 0 auto !important;
+  gap: 10px !important;
+  width: auto !important;
+  min-width: 0 !important;
+  height: 24px !important;
+  min-height: 24px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  line-height: 1 !important;
+  align-self: center !important;
+}
+
+#taskMode .list-panel #tList .week-day-count-chip,
+#taskMode .list-panel #tList .week-day-count-chip .week-day-count-line,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip .week-day-count-line {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 4px !important;
+  width: auto !important;
+  height: 24px !important;
+  min-height: 24px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  line-height: 1 !important;
+}
+
+#taskMode .list-panel #tList .week-day-count-chip .week-day-count-line span,
+#taskMode .list-panel #tList .week-day-count-chip .week-day-count-line b,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip .week-day-count-line span,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip .week-day-count-line b {
+  display: inline-flex !important;
+  align-items: center !important;
+  height: 24px !important;
+  line-height: 1 !important;
+}
+
+#taskMode .list-panel #tList .week-day-count-caret,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-caret {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transform: none !important;
+}
+
+#taskMode .list-panel #tList .week-day-count-chip.is-open .week-day-count-caret,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip.is-open .week-day-count-caret {
+  transform: rotate(180deg) !important;
+}
