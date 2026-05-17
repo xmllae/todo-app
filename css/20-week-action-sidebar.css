@@ -229,19 +229,19 @@
 .week-rhythm-list {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
   min-height: 0;
-  padding-top: 4px;
+  padding-top: 2px;
   border-top: 0;
 }
 
 .week-rhythm-day {
   display: grid;
-  grid-template-columns: 22px minmax(0, 1fr);
+  grid-template-columns: 24px minmax(0, 1fr);
   align-items: stretch;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
-  min-height: 46px;
+  min-height: 38px;
   padding: 0;
   border: 0;
   background: transparent;
@@ -257,15 +257,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 46px;
+  min-height: 38px;
 }
 
 .week-rhythm-rail::before {
   content: "";
   position: absolute;
   left: 50%;
-  top: -8px;
-  bottom: -8px;
+  top: -5px;
+  bottom: -5px;
   width: 1px;
   border-radius: 999px;
   background: #eef3f8;
@@ -286,14 +286,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   color: #a3afc2;
 }
 
 .week-rhythm-node-svg {
-  width: 17px;
-  height: 17px;
+  width: 19px;
+  height: 19px;
   display: block;
 }
 
@@ -318,8 +318,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  padding: 6px 0 6px 8px;
+  gap: 8px;
+  padding: 3px 0 3px 6px;
   border-radius: 14px;
   transition: background-color .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
@@ -327,9 +327,9 @@
 .week-rhythm-copy {
   display: flex;
   align-items: baseline;
-  gap: 6px;
+  gap: 5px;
   min-width: 0;
-  padding: 5px 0;
+  padding: 3px 0;
   border-radius: 999px;
   transition: background-color .18s ease, box-shadow .18s ease, color .18s ease, padding .18s ease, transform .18s ease;
 }
