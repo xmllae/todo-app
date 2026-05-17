@@ -229,7 +229,7 @@
 .week-rhythm-list {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
   min-height: 0;
   padding-top: 4px;
   border-top: 0;
@@ -237,11 +237,11 @@
 
 .week-rhythm-day {
   display: grid;
-  grid-template-columns: 28px minmax(0, 1fr);
+  grid-template-columns: 22px minmax(0, 1fr);
   align-items: stretch;
-  gap: 14px;
+  gap: 12px;
   width: 100%;
-  min-height: 50px;
+  min-height: 46px;
   padding: 0;
   border: 0;
   background: transparent;
@@ -249,6 +249,7 @@
   cursor: pointer;
   font: inherit;
   text-align: left;
+  transition: transform .18s ease, opacity .18s ease;
 }
 
 .week-rhythm-rail {
@@ -256,18 +257,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 50px;
+  min-height: 46px;
 }
 
 .week-rhythm-rail::before {
   content: "";
   position: absolute;
   left: 50%;
-  top: -10px;
-  bottom: -10px;
-  width: 2px;
+  top: -8px;
+  bottom: -8px;
+  width: 1px;
   border-radius: 999px;
-  background: #edf2f8;
+  background: #eef3f8;
   transform: translateX(-50%);
 }
 
@@ -285,39 +286,39 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
-  border: 2px solid #cbd5e1;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid #d5deea;
   border-radius: 999px;
   background: #fff;
-  color: #94a3b8;
+  color: #a3afc2;
 }
 
 .week-rhythm-node-svg {
-  width: 13px;
-  height: 13px;
+  width: 10px;
+  height: 10px;
   display: block;
 }
 
 .week-rhythm-node--overdue {
-  border-color: color-mix(in srgb, var(--overdue-text-color) 42%, #fecdd3);
+  border-color: color-mix(in srgb, var(--overdue-text-color) 28%, #fbcfe8);
   color: var(--overdue-text-color);
 }
 
 .week-rhythm-node--pending {
-  border-color: color-mix(in srgb, var(--acc) 28%, #c7d2fe);
-  color: color-mix(in srgb, var(--acc) 88%, #6366f1);
+  border-color: color-mix(in srgb, var(--acc) 18%, #c7d2fe);
+  color: color-mix(in srgb, var(--acc) 72%, #6366f1);
 }
 
 .week-rhythm-node--clear {
-  border-color: #cbd5e1;
-  color: #94a3b8;
+  border-color: #cfd8e4;
+  color: #9aa9bd;
 }
 
 .week-rhythm-node--empty {
   border-color: transparent;
   background: transparent;
-  color: #cbd5e1;
+  color: #d6deea;
 }
 
 .week-rhythm-main {
@@ -325,30 +326,33 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 9px 0 9px 12px;
-  border-radius: 18px;
-  transition: background-color .18s ease, box-shadow .18s ease;
+  gap: 10px;
+  padding: 6px 0 6px 8px;
+  border-radius: 14px;
+  transition: background-color .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
 
 .week-rhythm-copy {
   display: flex;
   align-items: baseline;
-  gap: 8px;
+  gap: 6px;
   min-width: 0;
+  padding: 5px 0;
+  border-radius: 999px;
+  transition: background-color .18s ease, box-shadow .18s ease, color .18s ease, padding .18s ease, transform .18s ease;
 }
 
 .week-rhythm-week {
   color: var(--text2);
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.15;
-  font-weight: 500;
+  font-weight: 400;
   white-space: nowrap;
 }
 
 .week-rhythm-date {
   color: #94a3b8;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.15;
   font-weight: 400;
   white-space: nowrap;
@@ -358,7 +362,7 @@
   flex: 0 0 auto;
   overflow: hidden;
   color: var(--text3);
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.1;
   font-weight: 400;
   text-align: right;
@@ -367,17 +371,20 @@
 }
 
 .week-rhythm-state--chip {
-  padding: 8px 12px;
-  border-radius: 14px;
+  padding: 4px 10px;
+  border: 1px solid transparent;
+  border-radius: 999px;
 }
 
 .week-rhythm-state--pending {
   color: #7e8ba0;
-  background: color-mix(in srgb, var(--acc) 10%, #eef2ff);
+  border-color: color-mix(in srgb, var(--acc) 10%, #dde6ff);
+  background: color-mix(in srgb, var(--acc) 4%, #ffffff);
 }
 
 .week-rhythm-state--overdue {
-  background: color-mix(in srgb, var(--overdue-text-color) 10%, #fff1f2);
+  border-color: color-mix(in srgb, var(--overdue-text-color) 12%, #ffd4dd);
+  background: color-mix(in srgb, var(--overdue-text-color) 5%, #ffffff);
 }
 
 .week-rhythm-state--clear {
@@ -388,13 +395,27 @@
   color: #94a3b8;
 }
 
-.week-rhythm-day:hover .week-rhythm-main {
-  background: color-mix(in srgb, var(--task-bd) 16%, transparent);
+.week-rhythm-day:hover {
+  transform: translateX(1px);
+}
+
+.week-rhythm-day:active {
+  transform: translateX(2px) scale(.992);
+}
+
+.week-rhythm-day:hover .week-rhythm-copy {
+  background: color-mix(in srgb, var(--task-bd) 8%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--task-bd) 10%, transparent);
 }
 
 .week-rhythm-day.is-focus .week-rhythm-main {
-  padding-right: 10px;
-  background: color-mix(in srgb, var(--acc) 8%, #f8fafc);
+  background: transparent;
+  box-shadow: none;
+}
+
+.week-rhythm-day.is-focus .week-rhythm-copy {
+  padding: 7px 12px;
+  background: color-mix(in srgb, var(--acc) 4%, #ffffff);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--acc) 10%, transparent);
 }
 
@@ -402,6 +423,11 @@
 .week-rhythm-day.is-focus .week-rhythm-date,
 .week-rhythm-day.is-focus .week-rhythm-state--pending {
   color: color-mix(in srgb, var(--acc) 88%, #4f46e5);
+}
+
+.week-rhythm-day.is-focus .week-rhythm-state--pending {
+  border-color: color-mix(in srgb, var(--acc) 12%, #d9e2ff);
+  background: color-mix(in srgb, var(--acc) 5%, #ffffff);
 }
 
 .week-rhythm-day.is-empty {
