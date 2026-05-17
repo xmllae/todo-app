@@ -411,7 +411,7 @@ function weekOverviewRhythmIcon(day){
   return WEEK_RHYTHM_ICON_EMPTY
 }
 function weekOverviewRhythmStateHtml(day){
-  const tone=weekOverviewRhythmTone(day),status=weekOverviewRhythmStatus(day),chip=tone==="overdue"||tone==="pending";
+  const tone=weekOverviewRhythmTone(day),status=weekOverviewRhythmStatus(day),chip=day.isToday&&(tone==="overdue"||tone==="pending");
   return'<span class="week-rhythm-state week-rhythm-state--'+tone+(chip?' week-rhythm-state--chip':'')+'">'+status+"</span>"
 }
 function getWeekOverviewData(selStr){
