@@ -412,6 +412,7 @@
 }
 
 .week-rhythm-day.is-today .week-rhythm-copy {
+  margin-left: -12px;
   padding: 7px 12px;
   background: color-mix(in srgb, var(--acc) 4%, #ffffff);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--acc) 10%, transparent);
@@ -428,6 +429,7 @@
 }
 
 .week-rhythm-day.is-today .week-rhythm-state--pending {
+  margin-right: -10px;
   border-color: color-mix(in srgb, var(--acc) 12%, #d9e2ff);
   background: color-mix(in srgb, var(--acc) 5%, #ffffff);
 }
