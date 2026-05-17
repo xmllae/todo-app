@@ -7591,3 +7591,49 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip.is-open .week-day-count-caret {
   transform: rotate(180deg) !important;
 }
+
+/* 本周折叠状态：只收窄可见背景层，不移动内部文字和右侧状态。 */
+#taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open),
+#taskMode .list-panel #tList .week-day-card.is-empty,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open),
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-empty {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+#taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open)::after,
+#taskMode .list-panel #tList .week-day-card.is-empty::after,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open)::after,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-empty::after {
+  content: "";
+  position: absolute;
+  inset: 6px 0;
+  z-index: 0;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--card) 98%, #f8fafc);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--week-line) 50%, transparent),
+    0 8px 18px -24px rgba(15, 23, 42, .28);
+  pointer-events: none;
+}
+
+#taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open) .week-day-head,
+#taskMode .list-panel #tList .week-day-card.is-empty .week-day-head,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open) .week-day-head,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-empty .week-day-head {
+  position: relative !important;
+  z-index: 1;
+}
+
+/* 本周日期头部悬浮反馈：统一使用极浅蓝底，保持内容尺寸和位置不变。 */
+#taskMode .list-panel #tList .week-day-head:hover,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-head:hover {
+  background: #f9fafe !important;
+}
+
+#taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open):hover::after,
+#taskMode .list-panel #tList .week-day-card.is-empty:hover::after,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open):hover::after,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-empty:hover::after {
+  background: #f9fafe !important;
+}
