@@ -1,33 +1,34 @@
-(function(){
-  var dot=document.getElementById("headerStatusDot");
-  if(dot){
-    dot.className="user-status-dot";
-    dot.removeAttribute("title");
+(function patchHeaderStatus() {
+  function resetHeaderStatus() {
+    const dot = document.querySelector('#headerStatusDot');
+    const live = document.querySelector('#syncStatus');
+
+    clearTimeout(window._syncFade);
+    if (live) live.textContent = '';
+    if (dot) {
+      dot.className = 'user-status-dot';
+      dot.removeAttribute('title');
+    }
   }
 
-  if(typeof updateSyncStatus==="function"){
-    var originalUpdateSyncStatus=updateSyncStatus;
-    updateSyncStatus=function(s){
-      if(!s){
-        var clearDot=document.getElementById("headerStatusDot");
-        var live=document.getElementById("syncStatus");
-        clearTimeout(window._syncFade);
-        if(live)live.textContent="";
-        if(clearDot){
-          clearDot.className="user-status-dot";
-          clearDot.removeAttribute("title");
-        }
+  resetHeaderStatus();
+
+  if (typeof updateSyncStatus === 'function') {
+    const originalUpdateSyncStatus = updateSyncStatus;
+    updateSyncStatus = function updateSyncStatusWithCleanIdleState(status) {
+      if (!status) {
+        resetHeaderStatus();
         return;
       }
-      return originalUpdateSyncStatus(s);
+      return originalUpdateSyncStatus(status);
     };
   }
 
-  if(typeof loginAs==="function"){
-    var originalLoginAs=loginAs;
-    loginAs=function(user,userData){
-      updateSyncStatus(typeof isGuest!=="undefined"&&isGuest?"offline":"saved");
-      return originalLoginAs(user,userData);
+  if (typeof loginAs === 'function') {
+    const originalLoginAs = loginAs;
+    loginAs = function loginAsWithStatus(user, userData) {
+      updateSyncStatus(typeof isGuest !== 'undefined' && isGuest ? 'offline' : 'saved');
+      return originalLoginAs(user, userData);
     };
   }
 })();

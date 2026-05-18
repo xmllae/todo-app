@@ -1,55 +1,70 @@
-function del(id){
-  var task=null;
-  var taskDate=sel;
-  var dayTasks=T[sel]||[];
-  for(var i=0;i<dayTasks.length;i++){
-    if(+dayTasks[i].id===+id){
-      task=dayTasks[i];
-      taskDate=sel;
-      break;
+(function patchTaskDelete() {
+  function findTaskForDelete(id) {
+    const targetId = +id;
+    const currentTasks = T[sel] || [];
+    const currentTask = currentTasks.find((task) => +task.id === targetId);
+
+    if (currentTask) {
+      return { task: currentTask, date: sel };
     }
+
+    for (const date in T) {
+      const tasks = T[date] || [];
+      const task = tasks.find((item) => +item.id === targetId);
+      if (task) return { task, date };
+    }
+
+    return null;
   }
-  if(!task){
-    for(var ds in T){
-      var arr=T[ds]||[];
-      for(var j=0;j<arr.length;j++){
-        if(+arr[j].id===+id){
-          task=arr[j];
-          taskDate=ds;
-          break;
-        }
+
+  function clearRecurringRuleForDelete(ruleId) {
+    if (!ruleId) return;
+
+    if (typeof deleteRecurRule === 'function') {
+      try {
+        deleteRecurRule(ruleId, true);
+      } catch {
+        return;
       }
-      if(task)break;
+      return;
     }
-  }
-  if(!task)return;
 
-  var rid=task.recurRuleId?String(task.recurRuleId):"";
+    if (Array.isArray(recurRules)) {
+      recurRules = recurRules.filter((rule) => rule.id !== ruleId);
+    }
 
-  pushUndo("\u4efb\u52a1\u5df2\u5220\u9664");
-
-  if(rid){
-    if(typeof deleteRecurRule==="function"){
-      try{
-        deleteRecurRule(rid,true);
-      }catch(e){}
-    }else{
-      if(Array.isArray(recurRules))recurRules=recurRules.filter(function(r){return r.id!==rid});
-      for(var ds2 in T){
-        (T[ds2]||[]).forEach(function(t){
-          if(t.recurRuleId===rid)t.recurRuleId="";
-        });
-      }
+    for (const date in T) {
+      (T[date] || []).forEach((task) => {
+        if (task.recurRuleId === ruleId) task.recurRuleId = '';
+      });
     }
   }
 
-  if(T[taskDate]){
-    T[taskDate]=T[taskDate].filter(function(x){return +x.id!==+id});
-    if(!T[taskDate].length)delete T[taskDate];
+  function removeTaskByDate(date, id) {
+    if (!T[date]) return;
+
+    const targetId = +id;
+    T[date] = T[date].filter((task) => +task.id !== targetId);
+    if (!T[date].length) delete T[date];
   }
-  rCal();
-  rT();
-  if(typeof rKanban==="function")rKanban();
-  save();
-  toast("\ud83d\uddd1\ufe0f \u5df2\u5220\u9664");
-}
+
+  function refreshAfterDelete() {
+    rCal();
+    rT();
+    if (typeof rKanban === 'function') rKanban();
+    save();
+    toast('\ud83d\uddd1\ufe0f \u5df2\u5220\u9664');
+  }
+
+  window.del = function del(id) {
+    const found = findTaskForDelete(id);
+    if (!found) return;
+
+    const ruleId = found.task.recurRuleId ? String(found.task.recurRuleId) : '';
+
+    pushUndo('\u4efb\u52a1\u5df2\u5220\u9664');
+    clearRecurringRuleForDelete(ruleId);
+    removeTaskByDate(found.date, id);
+    refreshAfterDelete();
+  };
+})();

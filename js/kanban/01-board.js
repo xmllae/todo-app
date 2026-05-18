@@ -1,10 +1,428 @@
-// ???????????????
-let kbTouchState=null,kbDragId=null;
-function kbGetTimePeriod(pt){if(!pt)return"unset";if(pt<"09:00")return"morning";if(pt<"12:00")return"forenoon";if(pt<"18:00")return"afternoon";return"evening"}
-function rKanban(){document.getElementById("kbDate").textContent=disp(sel);generateRecurring(sel);checkUnfreeze();const dt=T[sel]||[];let all=dt.filter(t=>!t.archived);if(FTag)all=all.filter(t=>(t.tags||[]).includes(FTag));const allForCount=all;function cntPeriod(pid){return allForCount.filter(t=>{const p=kbGetTimePeriod(t.planTime||"");return pid==="all"||p===pid}).length}const periods=[{id:"all",name:"全部",cnt:allForCount.length},{id:"morning",name:"🌅 早晨 00:00-09:00",cnt:cntPeriod("morning")},{id:"forenoon",name:"☀️ 上午 09:00-12:00",cnt:cntPeriod("forenoon")},{id:"afternoon",name:"🌤 下午 12:00-18:00",cnt:cntPeriod("afternoon")},{id:"evening",name:"🌙 晚上 18:00-24:00",cnt:cntPeriod("evening")},{id:"unset",name:"📌 未安排",cnt:cntPeriod("unset")}];document.getElementById("kbFilterBar").innerHTML=periods.map(p=>`<button class="kb-filter-btn${kbTimeFilter===p.id?" on":""}" onclick="kbTimeFilter='${p.id}';rKanban()">${p.name} <span class="kbf-cnt">${p.cnt}</span></button>`).join("");if(kbTimeFilter!=="all")all=all.filter(t=>kbGetTimePeriod(t.planTime||"")===kbTimeFilter);const doneTasks=all.filter(t=>t.done);const cols=[{id:"high",name:'<span style="background:'+priorityColors.high+';color:#fff;padding:2px 10px;border-radius:10px;font-size:.82rem;font-weight:600">高优先</span>',tasks:all.filter(t=>!t.done&&!t.frozen&&t.priority==="high")},{id:"medium",name:'<span style="background:'+priorityColors.medium+';color:#422006;padding:2px 10px;border-radius:10px;font-size:.82rem;font-weight:600">中优先</span>',tasks:all.filter(t=>!t.done&&!t.frozen&&t.priority==="medium")},{id:"low",name:'<span style="background:'+priorityColors.low+';color:#fff;padding:2px 10px;border-radius:10px;font-size:.82rem;font-weight:600">低优先</span>',tasks:all.filter(t=>!t.done&&!t.frozen&&t.priority==="low")}];const frozen=all.filter(t=>t.frozen&&!t.done);if(frozen.length)cols.push({id:"frozen",name:'<span style="background:#3b82f6;color:#fff;padding:2px 10px;border-radius:10px;font-size:.82rem;font-weight:600">冷冻</span>',tasks:frozen});if(!kbHideDone)cols.push({id:"done",name:'<span style="background:#6366f1;color:#fff;padding:2px 10px;border-radius:10px;font-size:.82rem;font-weight:600">已完成</span>',tasks:doneTasks});const toggleBtn=document.getElementById("kbDoneToggle"),cntEl=document.getElementById("kbDoneCnt");if(toggleBtn){toggleBtn.classList.toggle("active",!kbHideDone);toggleBtn.firstChild.innerHTML=kbHideDone?'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-.15em;margin-right:3px"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 显示已完成列 ':'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-.15em;margin-right:3px"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg> 隐藏已完成列 ';if(cntEl)cntEl.textContent=doneTasks.length}document.getElementById("kanbanWrap").innerHTML=cols.map(col=>`<div class="kb-col" data-col="${col.id}"><div class="kb-col-head"><span class="kb-col-title">${col.name}</span><span class="kb-cnt">${col.tasks.length}</span></div><div class="kb-cards" data-col="${col.id}">${col.tasks.length?col.tasks.map(t=>{const cardColor=t.color||prioColor(t.priority);const subs=t.subtasks||[];const subD=subs.filter(s=>s.done).length;const subT=subs.length;let subH="";if(subT>0){const pct=Math.round(subD/subT*100);subH=`<div class="kc-sub-row" onclick="event.stopPropagation()"><div class="kc-sub-preview" style="${prioSubProgressVars(t.priority)}">📋 ${subD}/${subT} <span class="kc-sub-track"><span class="kc-sub-fill" style="width:${pct}%"></span></span></div></div>`}return`<div class="kb-card${t.frozen?" frozen-card":""}${t.done?" kb-done-card":""}" data-id="${t.id}" style="border-left-color:${cardColor}" onclick="showKbDetail(${t.id})"><div class="kc-text">${esc(t.text)}</div><div class="kc-meta">${subT>0?"":prioBadge(t.priority)}${t.planTime?`<span class="time-badge" style="font-size:.72rem;padding:1px 6px">🕐${t.planTime}</span>`:""}${t.duration?`<span class="meta-badge mb-dur">⏱${fmtDs(t.duration)}</span>`:""}${(t.tags||[]).map(tid=>{const tg=getTag(tid);return tg?`<span class="task-tag" style="background:${tg.color};font-size:.6rem">${tg.name}</span>`:""}).join("")}</div>${subH}</div>`}).join(""):`<div class="kb-empty-hint">拖拽任务到此列</div>`}<div class="kb-drop-zone"></div></div></div>`).join("");document.querySelectorAll(".kb-card").forEach(card=>{card.setAttribute("draggable","true");card.addEventListener("dragstart",e=>{kbDragId=+card.dataset.id;e.dataTransfer.effectAllowed="move"});card.addEventListener("touchstart",kbTouchStart,{passive:false})});document.querySelectorAll(".kb-cards").forEach(col=>{col.addEventListener("dragover",e=>{e.preventDefault();col.querySelector(".kb-drop-zone")?.classList.add("drag-over")});col.addEventListener("dragleave",()=>col.querySelector(".kb-drop-zone")?.classList.remove("drag-over"));col.addEventListener("drop",e=>{e.preventDefault();col.querySelector(".kb-drop-zone")?.classList.remove("drag-over");kbDrop(col.dataset.col)})})}
-function showKbDetail(id){const t=(T[sel]||[]).find(x=>x.id===id);if(!t)return;const subs=t.subtasks||[];const subD=subs.filter(s=>s.done).length;const subT=subs.length;let h=`<p style="font-weight:600;font-size:1.1rem;margin-bottom:12px;text-align:left">${esc(t.text)}</p>`;h+=`<div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">${prioBadge(t.priority)}${t.planTime?`<span class="time-badge">🕐${t.planTime}</span>`:""}${t.duration?`<span class="meta-badge mb-dur" style="font-size:.76rem;padding:2px 8px">⏱${fmtDs(t.duration)}</span>`:""}${(t.tags||[]).map(tid=>{const tg=getTag(tid);return tg?`<span class="task-tag" style="background:${tg.color};font-size:.66rem;padding:2px 6px">${tg.name}</span>`:""}).join("")}</div>`;if(t.note)h+=`<div style="background:var(--hov);padding:10px 12px;border-radius:8px;font-size:.88rem;margin-bottom:12px;text-align:left;white-space:pre-wrap">${esc(t.note)}</div>`;if(subT>0){h+=`<div class="exp-label" style="margin-bottom:6px;text-align:left">📋 子任务 (${subD}/${subT})</div><div class="subtask-list" style="margin-bottom:12px">`;subs.forEach(s=>{h+=`<div class="subtask-item"><div class="sub-ck ${s.done?"checked":""}" onclick="kbToggleSub(${t.id},${s.id})">${s.done?"✓":""}</div><span class="sub-text ${s.done?"sub-done":""}">${esc(s.text)}</span></div>`});h+=`</div>`}h+=`<div class="modal-actions" style="margin-top:14px"><button class="mbtn-c" onclick="clM()">关闭</button><button class="mbtn-a" onclick="clM();navigate('/');expandedId=${t.id};rT()">📝 编辑详情</button></div>`;document.getElementById("mBody").innerHTML=h;document.getElementById("mBg").classList.add("show")}
-function kbToggleSub(tid,sid){const t=(T[sel]||[]).find(x=>x.id===tid);if(!t)return;const s=(t.subtasks||[]).find(x=>x.id===sid);if(s)s.done=!s.done;showKbDetail(tid);rKanban();save()}
-function kbDrop(col){if(kbDragId===null)return;const t=(T[sel]||[]).find(x=>x.id===kbDragId);if(!t)return;if(col==="high"){t.priority="high";t.done=false;t.status="todo";t.frozen=false;t.archived=false}else if(col==="medium"){t.priority="medium";t.done=false;t.status="todo";t.frozen=false;t.archived=false}else if(col==="low"){t.priority="low";t.done=false;t.status="todo";t.frozen=false;t.archived=false}else if(col==="done"){t.status="done";t.done=true;t.frozen=false}else if(col==="frozen"){t.frozen=true}kbDragId=null;rKanban();rCal();save()}
-function kbTouchStart(e){const card=e.currentTarget;const touch=e.touches[0];const ghost=document.createElement("div");ghost.className="kb-ghost";ghost.textContent=card.querySelector(".kc-text").textContent;ghost.style.left=touch.clientX-60+"px";ghost.style.top=touch.clientY-20+"px";document.body.appendChild(ghost);card.classList.add("kb-dragging");kbTouchState={id:+card.dataset.id,ghost:ghost,card:card};document.addEventListener("touchmove",kbTouchMove,{passive:false});document.addEventListener("touchend",kbTouchEnd);e.preventDefault()}
-function kbTouchMove(e){if(!kbTouchState)return;e.preventDefault();const touch=e.touches[0];kbTouchState.ghost.style.left=touch.clientX-60+"px";kbTouchState.ghost.style.top=touch.clientY-20+"px";document.querySelectorAll(".kb-drop-zone").forEach(dz=>dz.classList.remove("drag-over"));const el=document.elementFromPoint(touch.clientX,touch.clientY);if(el){const col=el.closest(".kb-col");if(col)col.querySelector(".kb-drop-zone")?.classList.add("drag-over")}}
-function kbTouchEnd(e){if(!kbTouchState)return;document.removeEventListener("touchmove",kbTouchMove);document.removeEventListener("touchend",kbTouchEnd);const touch=e.changedTouches[0];kbTouchState.ghost.remove();kbTouchState.card.classList.remove("kb-dragging");document.querySelectorAll(".kb-drop-zone").forEach(dz=>dz.classList.remove("drag-over"));const el=document.elementFromPoint(touch.clientX,touch.clientY);if(el){const col=el.closest(".kb-col");if(col){kbDragId=kbTouchState.id;kbDrop(col.dataset.col)}}kbTouchState=null}
+// 看板视图：渲染、详情、拖拽与触屏交互
+let kbTouchState = null;
+let kbDragId = null;
+
+function kbGetTimePeriod(planTime) {
+  if (!planTime) return "unset";
+  if (planTime < "09:00") return "morning";
+  if (planTime < "12:00") return "forenoon";
+  if (planTime < "18:00") return "afternoon";
+  return "evening";
+}
+
+function kbGetVisibleTasks() {
+  generateRecurring(sel);
+  checkUnfreeze();
+
+  const tasks = (T[sel] || []).filter((task) => !task.archived);
+  if (!FTag) return tasks;
+
+  return tasks.filter((task) => (task.tags || []).includes(FTag));
+}
+
+function kbCountTasksByPeriod(tasks, periodId) {
+  if (periodId === "all") return tasks.length;
+  return tasks.filter((task) => kbGetTimePeriod(task.planTime || "") === periodId).length;
+}
+
+function kbBuildPeriodList(tasks) {
+  return [
+    { id: "all", name: "全部", cnt: kbCountTasksByPeriod(tasks, "all") },
+    { id: "morning", name: "🌅 早晨 00:00-09:00", cnt: kbCountTasksByPeriod(tasks, "morning") },
+    { id: "forenoon", name: "☀️ 上午 09:00-12:00", cnt: kbCountTasksByPeriod(tasks, "forenoon") },
+    { id: "afternoon", name: "🌤 下午 12:00-18:00", cnt: kbCountTasksByPeriod(tasks, "afternoon") },
+    { id: "evening", name: "🌙 晚上 18:00-24:00", cnt: kbCountTasksByPeriod(tasks, "evening") },
+    { id: "unset", name: "📌 未安排", cnt: kbCountTasksByPeriod(tasks, "unset") }
+  ];
+}
+
+function kbRenderFilterBar(tasks) {
+  const filterBar = document.getElementById("kbFilterBar");
+  if (!filterBar) return;
+
+  const periods = kbBuildPeriodList(tasks);
+  filterBar.innerHTML = periods
+    .map(
+      (period) => `
+        <button
+          class="kb-filter-btn${kbTimeFilter === period.id ? " active" : ""}"
+          onclick="kbTimeFilter='${period.id}';rKanban()"
+        >
+          ${period.name}
+          <span class="kb-filter-badge">${period.cnt}</span>
+        </button>
+      `
+    )
+    .join("");
+}
+
+function kbApplyTimeFilter(tasks) {
+  if (kbTimeFilter === "all") return tasks;
+  return tasks.filter((task) => kbGetTimePeriod(task.planTime || "") === kbTimeFilter);
+}
+
+function kbGetColumnTitleHtml(id) {
+  if (id === "high") {
+    return `<span style="display:inline-flex;align-items:center;gap:6px;color:${priorityColors.high};">🔺 高优先级</span>`;
+  }
+  if (id === "medium") {
+    return `<span style="display:inline-flex;align-items:center;gap:6px;color:${priorityColors.medium};">🔸 中优先级</span>`;
+  }
+  if (id === "low") {
+    return `<span style="display:inline-flex;align-items:center;gap:6px;color:${priorityColors.low};">⚪ 低优先级</span>`;
+  }
+  if (id === "frozen") {
+    return `<span style="display:inline-flex;align-items:center;gap:6px;color:#64748b;">❄️ 冷冻</span>`;
+  }
+  return `<span style="display:inline-flex;align-items:center;gap:6px;color:#10b981;">✅ 已完成</span>`;
+}
+
+function kbBuildColumns(tasks) {
+  const doneTasks = tasks.filter((task) => task.done);
+  const columns = [
+    {
+      id: "high",
+      name: kbGetColumnTitleHtml("high"),
+      tasks: tasks.filter((task) => !task.done && !task.frozen && task.priority === "high")
+    },
+    {
+      id: "medium",
+      name: kbGetColumnTitleHtml("medium"),
+      tasks: tasks.filter((task) => !task.done && !task.frozen && task.priority === "medium")
+    },
+    {
+      id: "low",
+      name: kbGetColumnTitleHtml("low"),
+      tasks: tasks.filter((task) => !task.done && !task.frozen && task.priority === "low")
+    }
+  ];
+
+  const frozenTasks = tasks.filter((task) => task.frozen && !task.done);
+  if (frozenTasks.length) {
+    columns.push({
+      id: "frozen",
+      name: kbGetColumnTitleHtml("frozen"),
+      tasks: frozenTasks
+    });
+  }
+
+  if (!kbHideDone) {
+    columns.push({
+      id: "done",
+      name: kbGetColumnTitleHtml("done"),
+      tasks: doneTasks
+    });
+  }
+
+  return { columns, doneTasks };
+}
+
+function kbUpdateDoneToggle(doneTasks) {
+  const toggleBtn = document.getElementById("kbDoneToggle");
+  const countEl = document.getElementById("kbDoneCnt");
+  if (!toggleBtn) return;
+
+  toggleBtn.classList.toggle("active", !kbHideDone);
+  const labelEl = toggleBtn.firstElementChild || toggleBtn.firstChild;
+  if (labelEl) {
+    labelEl.innerHTML = kbHideDone
+      ? '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20C7 20 2.73 16.89 1 12c.92-2.6 2.57-4.77 4.66-6.32"/><path d="M9.9 4.24A10.94 10.94 0 0 1 12 4c5 0 9.27 3.11 11 8a11.08 11.08 0 0 1-2.1 3.36"/><path d="M14.12 14.12A3 3 0 0 1 9.88 9.88"/><path d="M1 1l22 22"/></svg> 显示已完成列 '
+      : '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20C7 20 2.73 16.89 1 12"/></svg> 隐藏已完成列 ';
+  }
+  if (countEl) countEl.textContent = String(doneTasks.length);
+}
+
+function kbBuildSubtaskPreview(task) {
+  const subtasks = task.subtasks || [];
+  if (!subtasks.length) return "";
+
+  const doneCount = subtasks.filter((subtask) => subtask.done).length;
+  const percent = Math.round((doneCount / subtasks.length) * 100);
+  return `
+    <div class="kc-sub-row" title="子任务进度">
+      <div class="kc-sub-preview" style="${prioSubProgressVars(task.priority)}">
+        📋 ${doneCount}/${subtasks.length}
+        <span class="kc-sub-track">
+          <span class="kc-sub-fill" style="width:${percent}%"></span>
+        </span>
+      </div>
+    </div>
+  `;
+}
+
+function kbBuildTaskMeta(task) {
+  const timeBadge = task.planTime ? `<span>🕐 ${esc(task.planTime)}</span>` : "";
+  const durationBadge = task.duration ? `<span>⏱ ${esc(fmtDs(task.duration))}</span>` : "";
+  const priorityBadge = task.subtasks && task.subtasks.length > 0 ? "" : prioBadge(task.priority);
+  const tagsHtml = (task.tags || [])
+    .map((tagId) => {
+      const tag = getTag(tagId);
+      return tag
+        ? `<span class="task-tag" style="background:${tag.color}22;color:${tag.color};">${esc(tag.name)}</span>`
+        : "";
+    })
+    .join("");
+
+  return `
+    <div class="kc-meta">
+      ${priorityBadge}
+      ${timeBadge}
+      ${durationBadge}
+    </div>
+    ${tagsHtml ? `<div class="kc-tags">${tagsHtml}</div>` : ""}
+  `;
+}
+
+function kbBuildTaskCard(task) {
+  const cardColor = task.color || prioColor(task.priority);
+  return `
+    <div
+      class="kb-card${task.frozen ? " frozen-card" : ""}${task.done ? " kb-done-card" : ""}"
+      data-id="${task.id}"
+      style="border-left-color:${cardColor}"
+      onclick="showKbDetail(${task.id})"
+    >
+      <div class="kc-title">${esc(task.text)}</div>
+      ${kbBuildTaskMeta(task)}
+      ${kbBuildSubtaskPreview(task)}
+    </div>
+  `;
+}
+
+function kbBuildColumnHtml(column) {
+  const cardsHtml = column.tasks.length
+    ? column.tasks.map(kbBuildTaskCard).join("")
+    : '<div class="kb-empty-hint">拖拽任务到此列</div>';
+
+  return `
+    <div class="kb-col" data-col="${column.id}">
+      <div class="kb-col-head">
+        <span>${column.name}</span>
+        <span>${column.tasks.length}</span>
+      </div>
+      <div class="kb-cards">
+        ${cardsHtml}
+        <div class="kb-drop-zone"></div>
+      </div>
+    </div>
+  `;
+}
+
+function kbRenderColumns(columns) {
+  const wrap = document.getElementById("kanbanWrap");
+  if (!wrap) return;
+  wrap.innerHTML = columns.map(kbBuildColumnHtml).join("");
+}
+
+function kbBindDragEvents() {
+  document.querySelectorAll(".kb-card").forEach((card) => {
+    card.draggable = true;
+    card.addEventListener("dragstart", (event) => {
+      kbDragId = Number(card.dataset.id);
+      event.dataTransfer.setData("text/plain", String(kbDragId));
+    });
+    card.addEventListener("touchstart", kbTouchStart, { passive: false });
+  });
+
+  document.querySelectorAll(".kb-cards").forEach((cards) => {
+    cards.addEventListener("dragover", (event) => {
+      event.preventDefault();
+      cards.querySelector(".kb-drop-zone")?.classList.add("drag-over");
+    });
+
+    cards.addEventListener("dragleave", () => {
+      cards.querySelector(".kb-drop-zone")?.classList.remove("drag-over");
+    });
+
+    cards.addEventListener("drop", (event) => {
+      event.preventDefault();
+      cards.querySelector(".kb-drop-zone")?.classList.remove("drag-over");
+      kbDrop(cards.parentElement.dataset.col);
+    });
+  });
+}
+
+function rKanban() {
+  const dateEl = document.getElementById("kbDate");
+  if (dateEl) dateEl.textContent = disp(sel);
+
+  const visibleTasks = kbGetVisibleTasks();
+  kbRenderFilterBar(visibleTasks);
+
+  const filteredTasks = kbApplyTimeFilter(visibleTasks);
+  const { columns, doneTasks } = kbBuildColumns(filteredTasks);
+
+  kbUpdateDoneToggle(doneTasks);
+  kbRenderColumns(columns);
+  kbBindDragEvents();
+}
+
+function kbBuildDetailMeta(task) {
+  return `
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;color:#64748b;font-size:.95rem;">
+      ${prioBadge(task.priority)}
+      ${task.planTime ? `<span>🕐 ${esc(task.planTime)}</span>` : ""}
+      ${task.duration ? `<span>⏱ ${esc(fmtDs(task.duration))}</span>` : ""}
+      ${task.frozen ? '<span style="color:#64748b">❄️ 冷冻</span>' : ""}
+    </div>
+  `;
+}
+
+function kbBuildDetailTags(task) {
+  const tags = (task.tags || [])
+    .map((tagId) => {
+      const tag = getTag(tagId);
+      return tag
+        ? `<span class="task-tag" style="background:${tag.color}22;color:${tag.color};">${esc(tag.name)}</span>`
+        : "";
+    })
+    .join("");
+
+  return tags ? `<div class="kc-tags" style="margin-top:8px;">${tags}</div>` : "";
+}
+
+function kbBuildDetailNote(task) {
+  if (!task.note) return "";
+  return `
+    <div style="margin-top:12px;padding:12px;border:1px solid #e2e8f0;border-radius:12px;background:#f8fafc;color:#475569;line-height:1.7;">
+      ${esc(task.note)}
+    </div>
+  `;
+}
+
+function kbBuildDetailSubtasks(task) {
+  const subtasks = task.subtasks || [];
+  if (!subtasks.length) return "";
+
+  const itemsHtml = subtasks
+    .map(
+      (subtask) => `
+        <li class="${subtask.done ? "done" : ""}" onclick="kbToggleSub(${task.id},${subtask.id})">
+          <input type="checkbox" ${subtask.done ? "checked" : ""} onclick="event.stopPropagation();kbToggleSub(${task.id},${subtask.id})">
+          <span>${esc(subtask.text)}</span>
+        </li>
+      `
+    )
+    .join("");
+
+  return `
+    <div style="margin-top:14px;">
+      <div style="font-weight:700;color:#0f172a;margin-bottom:10px;">子任务</div>
+      <ul class="subtask-list subtask-list--static">${itemsHtml}</ul>
+    </div>
+  `;
+}
+
+function showKbDetail(id) {
+  const task = (T[sel] || []).find((item) => item.id === id);
+  if (!task) return;
+
+  const modalBody = document.getElementById("mBody");
+  if (!modalBody) return;
+
+  modalBody.innerHTML = `
+    <div class="kb-detail-modal">
+      <p style="font-weight:600;font-size:1.1rem;line-height:1.6;margin:0 0 4px;">${esc(task.text)}</p>
+      ${kbBuildDetailMeta(task)}
+      ${kbBuildDetailTags(task)}
+      ${kbBuildDetailNote(task)}
+      ${kbBuildDetailSubtasks(task)}
+      <div class="kb-detail-actions">
+        <button class="btn btn-ghost" onclick="clM()">关闭</button>
+        <button class="btn btn-primary" onclick="clM();navigate('/');expandedId=${task.id};rT()">查看详情</button>
+      </div>
+    </div>
+  `;
+  document.getElementById("mBg")?.classList.add("show");
+}
+
+function kbToggleSub(taskId, subtaskId) {
+  const task = (T[sel] || []).find((item) => item.id === taskId);
+  const subtask = task?.subtasks?.find((item) => item.id === subtaskId);
+  if (!task || !subtask) return;
+
+  subtask.done = !subtask.done;
+  showKbDetail(taskId);
+  rKanban();
+  save();
+}
+
+function kbDrop(columnId) {
+  const task = (T[sel] || []).find((item) => item.id === kbDragId);
+  if (!task) return;
+
+  if (columnId === "high" || columnId === "medium" || columnId === "low") {
+    task.priority = columnId;
+    task.done = false;
+    task.status = "todo";
+    task.frozen = false;
+    task.archived = false;
+  } else if (columnId === "done") {
+    task.status = "done";
+    task.done = true;
+    task.frozen = false;
+  } else if (columnId === "frozen") {
+    task.frozen = true;
+  }
+
+  kbDragId = null;
+  rKanban();
+  rCal();
+  save();
+}
+
+function kbCreateTouchGhost(sourceCard) {
+  const ghost = sourceCard.cloneNode(true);
+  ghost.classList.add("drag-ghost");
+  ghost.style.width = `${sourceCard.offsetWidth}px`;
+  document.body.appendChild(ghost);
+  return ghost;
+}
+
+function kbTouchStart(event) {
+  const touch = event.touches[0];
+  const sourceCard = event.currentTarget;
+  kbTouchState = {
+    id: Number(sourceCard.dataset.id),
+    ghost: kbCreateTouchGhost(sourceCard)
+  };
+
+  sourceCard.classList.add("dragging");
+  kbTouchMove(event);
+  document.addEventListener("touchmove", kbTouchMove, { passive: false });
+  document.addEventListener("touchend", kbTouchEnd, { passive: false });
+  event.preventDefault();
+}
+
+function kbTouchMove(event) {
+  if (!kbTouchState) return;
+
+  const touch = event.touches[0];
+  kbTouchState.ghost.style.left = `${touch.clientX - 120}px`;
+  kbTouchState.ghost.style.top = `${touch.clientY - 28}px`;
+
+  document.querySelectorAll(".kb-drop-zone").forEach((zone) => zone.classList.remove("drag-over"));
+
+  const target = document.elementFromPoint(touch.clientX, touch.clientY)?.closest(".kb-col");
+  target?.querySelector(".kb-drop-zone")?.classList.add("drag-over");
+  event.preventDefault();
+}
+
+function kbTouchEnd(event) {
+  if (!kbTouchState) return;
+
+  document.removeEventListener("touchmove", kbTouchMove);
+  document.removeEventListener("touchend", kbTouchEnd);
+  document.querySelector(".kb-card.dragging")?.classList.remove("dragging");
+  document.querySelectorAll(".kb-drop-zone").forEach((zone) => zone.classList.remove("drag-over"));
+
+  const touch = event.changedTouches[0];
+  const targetColumn = document.elementFromPoint(touch.clientX, touch.clientY)?.closest(".kb-col");
+  if (targetColumn) {
+    kbDragId = kbTouchState.id;
+    kbDrop(targetColumn.dataset.col);
+  }
+
+  kbTouchState.ghost.remove();
+  kbTouchState = null;
+}
