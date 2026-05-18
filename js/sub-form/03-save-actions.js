@@ -1,4 +1,147 @@
-// ????????????????
-function saveSub(id){const name=(document.getElementById("subNameIn").value||"").trim();const _dEl=document.getElementById("subDateIn");const expireDate=((_dEl?_dEl.value:"")||"").substring(0,10);const cost=parseFloat(document.getElementById("subCostIn").value)||0;const note=(document.getElementById("subNoteIn").value||"").trim();const customDaysEl=document.getElementById("subCustomDaysIn");const customDays=customDaysEl?parseInt(customDaysEl.value)||30:30;const renewal=window._subRenewalVal||"manual";if(!name||!expireDate){if(!name){var _ne=document.getElementById("subNameErr");var _ni=document.getElementById("subNameIn");if(_ne){_ne.style.display="block";_ne.style.animation="none";setTimeout(function(){_ne.style.animation="subNameShake .4s ease"},10)}if(_ni){_ni.scrollIntoView({behavior:"smooth",block:"center"});_ni.focus()}}return}subscriptions=JSON.parse(localStorage.getItem("tuole_subs")||"[]");const entry={name:name,expireDate:expireDate,expireTime:window._subTimeVal||"",cost:cost,cycle:_subCycle,note:note,renewal:renewal,customDays:_subCycle==="custom"?customDays:undefined};if(!id){entry.id=Date.now();subscriptions.push(entry)}else{const idx=subscriptions.findIndex(x=>x.id===id);if(idx>=0)subscriptions[idx]=Object.assign({},subscriptions[idx],entry);else{entry.id=id;subscriptions.push(entry)}}localStorage.setItem("tuole_subs",JSON.stringify(subscriptions));_subClearDraft();clM();var mb=document.getElementById("mBody");if(mb){mb.style.maxWidth="";mb.style.width="";mb.style.borderRadius="";mb.style.padding="";mb.style.textAlign="";mb.style.boxSizing=""}rSubscriptions();toast("✅ 已保存")}
-function editSub(id){openSubModal(id)}
-function delSub(id){if(confirm("确定删除此订阅？")){subscriptions=JSON.parse(localStorage.getItem("tuole_subs")||"[]");subscriptions=subscriptions.filter(x=>x.id!==id);localStorage.setItem("tuole_subs",JSON.stringify(subscriptions));rSubscriptions();toast("🗑️ 已删除")}}
+// 订阅保存动作：负责读取表单值、校验、持久化以及编辑删除入口。
+
+function saveSub(id) {
+  const payload = getSubFormPayload();
+
+  if (!payload.name || !payload.expireDate) {
+    handleInvalidSubPayload(payload);
+    return;
+  }
+
+  subscriptions = readSubscriptionsFromStorage();
+  const entry = buildSubEntry(payload);
+
+  if (!id) {
+    entry.id = Date.now();
+    subscriptions.push(entry);
+  } else {
+    upsertSubEntry(id, entry);
+  }
+
+  writeSubscriptionsToStorage(subscriptions);
+  _subClearDraft();
+  clM();
+  resetSubModalLayout();
+  rSubscriptions();
+  toast("✅ 已保存");
+}
+
+function editSub(id) {
+  openSubModal(id);
+}
+
+function delSub(id) {
+  if (!confirm("确定删除此订阅？")) {
+    return;
+  }
+
+  subscriptions = readSubscriptionsFromStorage().filter(function(item) {
+    return item.id !== id;
+  });
+  writeSubscriptionsToStorage(subscriptions);
+  rSubscriptions();
+  toast("🗑️ 已删除");
+}
+
+function getSubFormPayload() {
+  const name = getTrimmedValue("subNameIn");
+  const dateValue = getInputValue("subDateIn");
+  const expireDate = dateValue.substring(0, 10);
+  const cost = parseFloat(getInputValue("subCostIn")) || 0;
+  const note = getTrimmedValue("subNoteIn");
+  const customDaysInput = document.getElementById("subCustomDaysIn");
+  const customDays = customDaysInput ? parseInt(customDaysInput.value, 10) || 30 : 30;
+
+  return {
+    name: name,
+    expireDate: expireDate,
+    cost: cost,
+    note: note,
+    customDays: customDays,
+    renewal: window._subRenewalVal || "manual"
+  };
+}
+
+function handleInvalidSubPayload(payload) {
+  if (payload.name) {
+    return;
+  }
+
+  const nameError = document.getElementById("subNameErr");
+  const nameInput = document.getElementById("subNameIn");
+
+  if (nameError) {
+    nameError.style.display = "block";
+    nameError.style.animation = "none";
+    setTimeout(function() {
+      nameError.style.animation = "subNameShake .4s ease";
+    }, 10);
+  }
+
+  if (nameInput) {
+    nameInput.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+    nameInput.focus();
+  }
+}
+
+function buildSubEntry(payload) {
+  return {
+    name: payload.name,
+    expireDate: payload.expireDate,
+    expireTime: window._subTimeVal || "",
+    cost: payload.cost,
+    cycle: _subCycle,
+    note: payload.note,
+    renewal: payload.renewal,
+    customDays: _subCycle === "custom" ? payload.customDays : undefined
+  };
+}
+
+function upsertSubEntry(id, entry) {
+  const index = subscriptions.findIndex(function(item) {
+    return item.id === id;
+  });
+
+  if (index >= 0) {
+    subscriptions[index] = Object.assign({}, subscriptions[index], entry);
+    return;
+  }
+
+  entry.id = id;
+  subscriptions.push(entry);
+}
+
+function resetSubModalLayout() {
+  const modalBody = document.getElementById("mBody");
+
+  if (!modalBody) {
+    return;
+  }
+
+  modalBody.style.maxWidth = "";
+  modalBody.style.width = "";
+  modalBody.style.borderRadius = "";
+  modalBody.style.padding = "";
+  modalBody.style.textAlign = "";
+  modalBody.style.boxSizing = "";
+}
+
+function readSubscriptionsFromStorage() {
+  return JSON.parse(localStorage.getItem("tuole_subs") || "[]");
+}
+
+function writeSubscriptionsToStorage(list) {
+  localStorage.setItem("tuole_subs", JSON.stringify(list));
+}
+
+function getInputValue(id) {
+  const element = document.getElementById(id);
+  return element ? element.value || "" : "";
+}
+
+function getTrimmedValue(id) {
+  return getInputValue(id).trim();
+}

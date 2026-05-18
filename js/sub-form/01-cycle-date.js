@@ -1,27 +1,586 @@
-// ??????????????????????
-var _subDraft=null;
-function _subSetCycle(v){window._subCalcDone=false;_subUpdateCalcBtn();_subCycle=v;document.querySelectorAll(".sub-cycle-btn").forEach(function(b){var on=b.dataset.v===v;b.style.background=on?"#6366f1":"#f8faff";b.style.color=on?"#fff":"var(--text2)";b.style.borderColor=on?"#6366f1":"#e2e8f0";b.style.boxShadow=on?"inset 0 2px 8px rgba(0,0,0,.15)":"none";b.style.transform="none";var svgs=b.querySelectorAll("svg");svgs.forEach(function(svg){svg.setAttribute("stroke",on?"#fff":"#6366f1")});var chk=b.querySelector(".cyc-check");if(chk)chk.remove()});const isCustom=v==="custom";const wrap=document.getElementById("subCustomDaysWrap");if(wrap)wrap.style.display=isCustom?"flex":"none";const dateRow=document.getElementById("subDateRow");if(dateRow)dateRow.style.display="block";if(isCustom){setTimeout(_subUpdateDateFromDays,0)}}
-function _subUpdateDaysLeft(){const badge=document.getElementById("subDaysInline");if(!badge)return;const val=window._subDateVal||"";if(!val){badge.style.display="none";return}const e=new Date(val),t=new Date;t.setHours(0,0,0,0);e.setHours(0,0,0,0);const days=Math.ceil((e-t)/864e5);var bg,color,text,anim="";if(days>60){bg="linear-gradient(135deg,#d1fae5,#a7f3d0)";color="#065f46";text="🟢 还剩 "+days+" 天"}else if(days>=30){bg="linear-gradient(135deg,#fef9c3,#fde68a)";color="#854d0e";text="🟡 还剩 "+days+" 天"}else if(days>=1){bg="linear-gradient(135deg,#fee2e2,#fca5a5)";color="#991b1b";text="🔴 还剩 "+days+" 天";anim="subBadgePulse 1.8s ease-in-out infinite"}else{bg="linear-gradient(135deg,#fee2e2,#fca5a5)";color="#991b1b";text="🔴 已过期 "+Math.abs(days)+" 天";anim="subBadgePulse 1.8s ease-in-out infinite"}badge.textContent=text;badge.style.display="inline-block";badge.style.background=bg;badge.style.color=color;badge.style.animation=anim;badge.style.transition="all 0.3s ease"}
-function _subUpdateDateFromDays(){const daysInEl=document.getElementById("subCustomDaysIn");const preview=document.getElementById("subCustomDatePreview");if(!daysInEl)return;const days=parseInt(daysInEl.value)||0;window._subCalcDone=false;_subUpdateCalcBtn();if(days<=0){if(preview)preview.textContent="";return}const d=new Date;d.setDate(d.getDate()+days);const pad=n=>String(n).padStart(2,"0");if(preview)preview.textContent="到期 "+d.getFullYear()+"/"+pad(d.getMonth()+1)+"/"+pad(d.getDate())}
-function _subSaveDraft(){const nameEl=document.getElementById("subNameIn");if(!nameEl)return;const name=(nameEl.value||"").trim();const dateEl=document.getElementById("subDateIn");const costEl=document.getElementById("subCostIn");const noteEl=document.getElementById("subNoteIn");const customDaysEl=document.getElementById("subCustomDaysIn")||document.getElementById("subCustomDaysIn");const cost=(costEl?costEl.value:"")||"";const note=(noteEl?noteEl.value:"")||"";const customDays=(customDaysEl?customDaysEl.value:"")||"";if(!name&&!cost&&!note&&!customDays)return;_subDraft={name:nameEl.value||"",expireDate:dateEl?dateEl.value:"",cost:cost,cycle:_subCycle,note:note,customDays:customDays,renewal:window._subRenewalVal||"manual"}}
-function _subCancel(){var existing=document.getElementById("subCancelConfirm");if(existing)existing.remove();_subClearDraft();clM()}
-function _subSaveClick(e,id){var name=(document.getElementById("subNameIn")||{}).value||"";if(!name.trim()){saveSub(id);return}var r=document.createElement("span");var btn=e.currentTarget;var rect=btn.getBoundingClientRect();r.style="position:absolute;border-radius:50%;background:rgba(255,255,255,.6);transform:scale(0);animation:subRipple .6s linear;pointer-events:none;width:100px;height:100px;left:"+(e.clientX-rect.left-50)+"px;top:"+(e.clientY-rect.top-50)+"px";btn.appendChild(r);setTimeout(function(){r.remove()},700);btn.classList.add("loading");btn.disabled=true;setTimeout(function(){saveSub(id)},120)}
-function _subClearDraft(){_subDraft=null}
-function _subSetRenewal(v){window._subRenewalVal=v;var m=document.getElementById("subRenMan");var a=document.getElementById("subRenAut");if(!m||!a)return;if(v==="manual"){m.classList.add("ren-on");m.style.borderColor="#c7d2fe";m.style.background="#eef2ff";m.style.color="#4338ca";a.classList.remove("ren-on");a.style.borderColor="#e2e8f0";a.style.background="#f8faff";a.style.color="var(--text2)"}else{a.classList.add("ren-on");a.style.borderColor="#c7d2fe";a.style.background="#eef2ff";a.style.color="#4338ca";m.classList.remove("ren-on");m.style.borderColor="#e2e8f0";m.style.background="#f8faff";m.style.color="var(--text2)"}}
-function _subUpdateProgress(){var name=(document.getElementById("subNameIn")||{}).value||"";var date=(document.getElementById("subDateIn")||{}).value||"";var cost=(document.getElementById("subCostIn")||{}).value||"";var filled=(name.trim()?1:0)+(date?1:0)+(cost?1:0);var pct=Math.round(filled/3*100);var bar=document.getElementById("subProgress");var lbl=document.getElementById("subProgressLbl");if(bar)bar.style.width=pct+"%";if(lbl)lbl.textContent=filled+" / 3 必填项"}
-function _subCalcDate(){var cd=new Date;var days=_subCycle==="month"?30:_subCycle==="quarter"?90:_subCycle==="year"?365:_subCycle==="custom"?parseInt((document.getElementById("subCustomDaysIn")||{}).value)||30:30;cd.setDate(cd.getDate()+days);var p=function(n){return String(n).padStart(2,"0")};var datePart=cd.getFullYear()+"-"+p(cd.getMonth()+1)+"-"+p(cd.getDate());window._subCalcDone=true;_subSetDate(datePart,true);var dp=document.getElementById("subDatePicker");if(dp)dp.value=datePart;var di=document.getElementById("subDateInput");if(di)di.value=datePart.replace(/-/g,"/");_subUpdateCalcBtn()}
-function _subUpdateCalcBtn(){var btn=document.getElementById("subCalcBtn");if(!btn)return;if(window._subCalcDone){btn.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-.15em;margin-right:3px"><polyline points="20 6 9 17 4 12"/></svg> 已推算';btn.style.color="#22c55e"}else{btn.textContent="推算到期";btn.style.color="#818cf8"}}
-function _subSyncHiddenDate(){var el=document.getElementById("subDateIn");if(!el)return;var d=window._subDateVal||"";var t=window._subTimeVal||"";el.value=d+(t?"T"+t:"T00:00")}
-function _subOpenDatePicker(){var inp=document.getElementById("subDatePicker");if(inp)inp.showPicker?inp.showPicker():inp.click()}
-function _subOpenTimePicker(){var inp=document.getElementById("subTimePicker");if(inp)inp.showPicker?inp.showPicker():inp.click()}
-function _subSetDate(v,fromCalc){window._subDateVal=v;if(!fromCalc){window._subCalcDone=false;_subUpdateCalcBtn()}var di=document.getElementById("subDateInput");if(di&&v){di.value=v.replace(/-/g,"/");di.style.color="var(--text)";di.style.fontWeight="600"}_subSyncHiddenDate();_subUpdateDaysLeft()}
-function _subSetTime(v){window._subTimeVal=v;var ti=document.getElementById("subTimeInput");var clr=document.getElementById("subTimeClear");if(ti){ti.value=v||"";ti.style.color=v?"var(--text)":"#b4c0d8"}if(clr){if(v){clr.setAttribute("data-has-val","1");clr.style.opacity="1";clr.style.pointerEvents="auto"}else{clr.removeAttribute("data-has-val");clr.style.opacity="0";clr.style.pointerEvents="none"}}_subSyncHiddenDate()}
-function _subClearTime(){window._subTimeVal="";var ti=document.getElementById("subTimeInput");var clr=document.getElementById("subTimeClear");if(ti){ti.value="";ti.style.color="#b4c0d8"}if(clr){clr.removeAttribute("data-has-val");clr.style.opacity="0";clr.style.pointerEvents="none"}_subSyncHiddenDate()}
-function _subBoxMouseEnter(){var clr=document.getElementById("subTimeClear");if(clr&&clr.getAttribute("data-has-val")){clr.style.opacity="1";clr.style.pointerEvents="auto"}}
-function _subBoxMouseLeave(){var clr=document.getElementById("subTimeClear");if(clr){clr.style.opacity="0";clr.style.pointerEvents="none"}}
-function _subDateFocus(el){var b=document.getElementById("subDateTimeBox");if(b){b.style.borderColor="#6c63ff";b.style.boxShadow="0 0 0 3px rgba(108,99,255,.1)"}}
-function _subDateBlur(el){var b=document.getElementById("subDateTimeBox");if(b){b.style.borderColor="#e2e8f0";b.style.boxShadow="none"}}
-function _subTimeFocus(el){var b=document.getElementById("subDateTimeBox");if(b){b.style.borderColor="#6c63ff";b.style.boxShadow="0 0 0 3px rgba(108,99,255,.1)"}}
-function _subTimeBlur(el){var b=document.getElementById("subDateTimeBox");if(b){b.style.borderColor="#e2e8f0";b.style.boxShadow="none"}}
-function _subDateInputChange(v){var inp=document.getElementById("subDateInput");var parts=v.match(/^(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})$/);var ok=false;var clean="";if(parts){var mo=+parts[2],dy=+parts[3];var dayStr=parts[3];var dayComplete=dayStr.length===2||dy>3;if(!dayComplete){inp.style.borderColor="";inp.style.boxShadow="";return}if(mo>=1&&mo<=12&&dy>=1&&dy<=31){clean=parts[1]+"-"+String(mo).padStart(2,"0")+"-"+String(dy).padStart(2,"0");var d=new Date(clean);ok=!isNaN(d.getTime())}}if(ok&&inp){inp.style.borderColor="#6366f1";inp.style.boxShadow="0 0 0 3px rgba(99,102,241,.15)"}else if(!ok&&v.length>=8&&inp){inp.style.borderColor="#ef4444";inp.style.boxShadow="0 0 0 2px rgba(239,68,68,.15)"}else if(inp){inp.style.borderColor="";inp.style.boxShadow=""}if(ok)_subSetDate(clean,false)}
-function _subTimeInputChange(v){var clean=v.trim();clean=clean.replace(/[^0-9:]/g,"");var ok=/^([01]?\d|2[0-3]):[0-5]\d$/.test(clean);var inp=document.getElementById("subTimeInput");if(ok){if(inp)inp.style.color="var(--text)";_subSetTime(clean)}else if(clean){if(inp)inp.style.color="#ef4444"}else{_subSetTime("")}}
+// 订阅弹窗日期与周期联动：负责周期切换、日期推算、草稿、时间输入与即时提示。
+
+var _subDraft = null;
+
+function _subSetCycle(value) {
+  window._subCalcDone = false;
+  _subUpdateCalcBtn();
+  _subCycle = value;
+
+  document.querySelectorAll(".sub-cycle-btn").forEach(function(button) {
+    applySubCycleButtonState(button, button.dataset.v === value);
+  });
+
+  toggleSubCustomDaysWrap(value === "custom");
+
+  if (value === "custom") {
+    setTimeout(_subUpdateDateFromDays, 0);
+  }
+}
+
+function _subUpdateDaysLeft() {
+  const badge = getSubElement("subDaysInline");
+  const dateValue = window._subDateVal || "";
+
+  if (!badge) {
+    return;
+  }
+
+  if (!dateValue) {
+    badge.style.display = "none";
+    return;
+  }
+
+  const targetDate = new Date(dateValue);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  targetDate.setHours(0, 0, 0, 0);
+
+  const days = Math.ceil((targetDate - today) / 864e5);
+  const badgeState = getSubDaysBadgeState(days);
+
+  badge.textContent = badgeState.text;
+  badge.style.display = "inline-block";
+  badge.style.background = badgeState.background;
+  badge.style.color = badgeState.color;
+  badge.style.animation = badgeState.animation;
+  badge.style.transition = "all 0.3s ease";
+}
+
+function _subUpdateDateFromDays() {
+  const customDaysInput = getSubElement("subCustomDaysIn");
+  const preview = getSubElement("subCustomDatePreview");
+
+  if (!customDaysInput) {
+    return;
+  }
+
+  const days = parseInt(customDaysInput.value, 10) || 0;
+  window._subCalcDone = false;
+  _subUpdateCalcBtn();
+
+  if (days <= 0) {
+    if (preview) {
+      preview.textContent = "";
+    }
+    return;
+  }
+
+  const date = new Date();
+  date.setDate(date.getDate() + days);
+
+  if (preview) {
+    preview.textContent = "到期 " + formatSubDatePreview(date);
+  }
+}
+
+function _subSaveDraft() {
+  const nameInput = getSubElement("subNameIn");
+
+  if (!nameInput) {
+    return;
+  }
+
+  const customDaysInput = getSubElement("subCustomDaysIn");
+  const draft = {
+    name: nameInput.value || "",
+    expireDate: getSubInputValue("subDateIn"),
+    cost: getSubInputValue("subCostIn"),
+    cycle: _subCycle,
+    note: getSubInputValue("subNoteIn"),
+    customDays: customDaysInput ? customDaysInput.value || "" : "",
+    renewal: window._subRenewalVal || "manual"
+  };
+
+  if (!draft.name.trim() && !draft.cost && !draft.note && !draft.customDays) {
+    return;
+  }
+
+  _subDraft = draft;
+}
+
+function _subCancel() {
+  const confirmBox = getSubElement("subCancelConfirm");
+
+  if (confirmBox) {
+    confirmBox.remove();
+  }
+
+  _subClearDraft();
+  clM();
+}
+
+function _subSaveClick(event, id) {
+  const name = getSubInputValue("subNameIn");
+
+  if (!name.trim()) {
+    saveSub(id);
+    return;
+  }
+
+  const button = event.currentTarget;
+  createSubRipple(button, event.clientX, event.clientY);
+  button.classList.add("loading");
+  button.disabled = true;
+
+  setTimeout(function() {
+    saveSub(id);
+  }, 120);
+}
+
+function _subClearDraft() {
+  _subDraft = null;
+}
+
+function _subSetRenewal(value) {
+  window._subRenewalVal = value;
+
+  const manualButton = getSubElement("subRenMan");
+  const autoButton = getSubElement("subRenAut");
+
+  if (!manualButton || !autoButton) {
+    return;
+  }
+
+  applySubRenewalButtonState(manualButton, value === "manual");
+  applySubRenewalButtonState(autoButton, value !== "manual");
+}
+
+function _subUpdateProgress() {
+  const filled =
+    (getSubInputValue("subNameIn").trim() ? 1 : 0) +
+    (getSubInputValue("subDateIn") ? 1 : 0) +
+    (getSubInputValue("subCostIn") ? 1 : 0);
+  const percent = Math.round((filled / 3) * 100);
+  const progressBar = getSubElement("subProgress");
+  const progressLabel = getSubElement("subProgressLbl");
+
+  if (progressBar) {
+    progressBar.style.width = percent + "%";
+  }
+
+  if (progressLabel) {
+    progressLabel.textContent = filled + " / 3 必填项";
+  }
+}
+
+function _subCalcDate() {
+  const date = new Date();
+  date.setDate(date.getDate() + getSubCycleDays());
+
+  const datePart = formatSubDateValue(date);
+  const datePicker = getSubElement("subDatePicker");
+  const dateInput = getSubElement("subDateInput");
+
+  window._subCalcDone = true;
+  _subSetDate(datePart, true);
+
+  if (datePicker) {
+    datePicker.value = datePart;
+  }
+
+  if (dateInput) {
+    dateInput.value = datePart.replace(/-/g, "/");
+  }
+
+  _subUpdateCalcBtn();
+}
+
+function _subUpdateCalcBtn() {
+  const button = getSubElement("subCalcBtn");
+
+  if (!button) {
+    return;
+  }
+
+  if (window._subCalcDone) {
+    button.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-.15em;margin-right:3px"><polyline points="20 6 9 17 4 12"/></svg> 已推算';
+    button.style.color = "#22c55e";
+    return;
+  }
+
+  button.textContent = "推算到期";
+  button.style.color = "#818cf8";
+}
+
+function _subSyncHiddenDate() {
+  const hiddenInput = getSubElement("subDateIn");
+  const dateValue = window._subDateVal || "";
+  const timeValue = window._subTimeVal || "";
+
+  if (!hiddenInput) {
+    return;
+  }
+
+  hiddenInput.value = dateValue + (timeValue ? "T" + timeValue : "T00:00");
+}
+
+function _subOpenDatePicker() {
+  openSubPicker("subDatePicker");
+}
+
+function _subOpenTimePicker() {
+  openSubPicker("subTimePicker");
+}
+
+function _subSetDate(value, fromCalc) {
+  const dateInput = getSubElement("subDateInput");
+
+  window._subDateVal = value;
+
+  if (!fromCalc) {
+    window._subCalcDone = false;
+    _subUpdateCalcBtn();
+  }
+
+  if (dateInput && value) {
+    dateInput.value = value.replace(/-/g, "/");
+    dateInput.style.color = "var(--text)";
+    dateInput.style.fontWeight = "600";
+  }
+
+  _subSyncHiddenDate();
+  _subUpdateDaysLeft();
+}
+
+function _subSetTime(value) {
+  const timeInput = getSubElement("subTimeInput");
+
+  window._subTimeVal = value;
+
+  if (timeInput) {
+    timeInput.value = value || "";
+    timeInput.style.color = value ? "var(--text)" : "#b4c0d8";
+  }
+
+  toggleSubTimeClearState(!!value);
+  _subSyncHiddenDate();
+}
+
+function _subClearTime() {
+  const timeInput = getSubElement("subTimeInput");
+
+  window._subTimeVal = "";
+
+  if (timeInput) {
+    timeInput.value = "";
+    timeInput.style.color = "#b4c0d8";
+  }
+
+  toggleSubTimeClearState(false);
+  _subSyncHiddenDate();
+}
+
+function _subBoxMouseEnter() {
+  const clearButton = getSubElement("subTimeClear");
+
+  if (clearButton && clearButton.getAttribute("data-has-val")) {
+    clearButton.style.opacity = "1";
+    clearButton.style.pointerEvents = "auto";
+  }
+}
+
+function _subBoxMouseLeave() {
+  const clearButton = getSubElement("subTimeClear");
+
+  if (clearButton) {
+    clearButton.style.opacity = "0";
+    clearButton.style.pointerEvents = "none";
+  }
+}
+
+function _subDateFocus() {
+  setSubDateTimeBoxFocus(true);
+}
+
+function _subDateBlur() {
+  setSubDateTimeBoxFocus(false);
+}
+
+function _subTimeFocus() {
+  setSubDateTimeBoxFocus(true);
+}
+
+function _subTimeBlur() {
+  setSubDateTimeBoxFocus(false);
+}
+
+function _subDateInputChange(value) {
+  const input = getSubElement("subDateInput");
+  const parsed = parseSubDateInput(value);
+
+  if (!input) {
+    return;
+  }
+
+  if (!parsed.dayComplete) {
+    input.style.borderColor = "";
+    input.style.boxShadow = "";
+    return;
+  }
+
+  if (parsed.valid) {
+    input.style.borderColor = "#6366f1";
+    input.style.boxShadow = "0 0 0 3px rgba(99,102,241,.15)";
+    _subSetDate(parsed.value, false);
+    return;
+  }
+
+  if (value.length >= 8) {
+    input.style.borderColor = "#ef4444";
+    input.style.boxShadow = "0 0 0 2px rgba(239,68,68,.15)";
+    return;
+  }
+
+  input.style.borderColor = "";
+  input.style.boxShadow = "";
+}
+
+function _subTimeInputChange(value) {
+  const timeInput = getSubElement("subTimeInput");
+  const cleanValue = value.trim().replace(/[^0-9:]/g, "");
+  const valid = /^([01]?\d|2[0-3]):[0-5]\d$/.test(cleanValue);
+
+  if (valid) {
+    if (timeInput) {
+      timeInput.style.color = "var(--text)";
+    }
+    _subSetTime(cleanValue);
+    return;
+  }
+
+  if (cleanValue) {
+    if (timeInput) {
+      timeInput.style.color = "#ef4444";
+    }
+    return;
+  }
+
+  _subSetTime("");
+}
+
+function applySubCycleButtonState(button, isActive) {
+  button.style.background = isActive ? "#6366f1" : "#f8faff";
+  button.style.color = isActive ? "#fff" : "var(--text2)";
+  button.style.borderColor = isActive ? "#6366f1" : "#e2e8f0";
+  button.style.boxShadow = isActive ? "inset 0 2px 8px rgba(0,0,0,.15)" : "none";
+  button.style.transform = "none";
+
+  button.querySelectorAll("svg").forEach(function(svg) {
+    svg.setAttribute("stroke", isActive ? "#fff" : "#6366f1");
+  });
+
+  const checkmark = button.querySelector(".cyc-check");
+  if (checkmark) {
+    checkmark.remove();
+  }
+}
+
+function toggleSubCustomDaysWrap(isCustom) {
+  const customDaysWrap = getSubElement("subCustomDaysWrap");
+  const dateRow = getSubElement("subDateRow");
+
+  if (customDaysWrap) {
+    customDaysWrap.style.display = isCustom ? "flex" : "none";
+  }
+
+  if (dateRow) {
+    dateRow.style.display = "block";
+  }
+}
+
+function getSubDaysBadgeState(days) {
+  if (days > 60) {
+    return {
+      background: "linear-gradient(135deg,#d1fae5,#a7f3d0)",
+      color: "#065f46",
+      text: "🟢 还剩 " + days + " 天",
+      animation: ""
+    };
+  }
+
+  if (days >= 30) {
+    return {
+      background: "linear-gradient(135deg,#fef9c3,#fde68a)",
+      color: "#854d0e",
+      text: "🟡 还剩 " + days + " 天",
+      animation: ""
+    };
+  }
+
+  if (days >= 1) {
+    return {
+      background: "linear-gradient(135deg,#fee2e2,#fca5a5)",
+      color: "#991b1b",
+      text: "🔴 还剩 " + days + " 天",
+      animation: "subBadgePulse 1.8s ease-in-out infinite"
+    };
+  }
+
+  return {
+    background: "linear-gradient(135deg,#fee2e2,#fca5a5)",
+    color: "#991b1b",
+    text: "🔴 已过期 " + Math.abs(days) + " 天",
+    animation: "subBadgePulse 1.8s ease-in-out infinite"
+  };
+}
+
+function createSubRipple(button, clientX, clientY) {
+  const rect = button.getBoundingClientRect();
+  const ripple = document.createElement("span");
+
+  ripple.style =
+    "position:absolute;border-radius:50%;background:rgba(255,255,255,.6);transform:scale(0);animation:subRipple .6s linear;pointer-events:none;width:100px;height:100px;left:" +
+    (clientX - rect.left - 50) +
+    "px;top:" +
+    (clientY - rect.top - 50) +
+    "px";
+  button.appendChild(ripple);
+
+  setTimeout(function() {
+    ripple.remove();
+  }, 700);
+}
+
+function applySubRenewalButtonState(button, isActive) {
+  button.classList.toggle("ren-on", isActive);
+  button.style.borderColor = isActive ? "#c7d2fe" : "#e2e8f0";
+  button.style.background = isActive ? "#eef2ff" : "#f8faff";
+  button.style.color = isActive ? "#4338ca" : "var(--text2)";
+}
+
+function getSubCycleDays() {
+  if (_subCycle === "month") {
+    return 30;
+  }
+
+  if (_subCycle === "quarter") {
+    return 90;
+  }
+
+  if (_subCycle === "year") {
+    return 365;
+  }
+
+  if (_subCycle === "custom") {
+    return parseInt(getSubInputValue("subCustomDaysIn"), 10) || 30;
+  }
+
+  return 30;
+}
+
+function toggleSubTimeClearState(hasValue) {
+  const clearButton = getSubElement("subTimeClear");
+
+  if (!clearButton) {
+    return;
+  }
+
+  if (hasValue) {
+    clearButton.setAttribute("data-has-val", "1");
+    clearButton.style.opacity = "1";
+    clearButton.style.pointerEvents = "auto";
+    return;
+  }
+
+  clearButton.removeAttribute("data-has-val");
+  clearButton.style.opacity = "0";
+  clearButton.style.pointerEvents = "none";
+}
+
+function setSubDateTimeBoxFocus(isActive) {
+  const dateTimeBox = getSubElement("subDateTimeBox");
+
+  if (!dateTimeBox) {
+    return;
+  }
+
+  dateTimeBox.style.borderColor = isActive ? "#6c63ff" : "#e2e8f0";
+  dateTimeBox.style.boxShadow = isActive ? "0 0 0 3px rgba(108,99,255,.1)" : "none";
+}
+
+function parseSubDateInput(value) {
+  const parts = value.match(/^(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})$/);
+
+  if (!parts) {
+    return {
+      dayComplete: value.length < 8,
+      valid: false,
+      value: ""
+    };
+  }
+
+  const month = +parts[2];
+  const day = +parts[3];
+  const dayComplete = parts[3].length === 2 || day > 3;
+
+  if (!dayComplete) {
+    return {
+      dayComplete: false,
+      valid: false,
+      value: ""
+    };
+  }
+
+  if (month < 1 || month > 12 || day < 1 || day > 31) {
+    return {
+      dayComplete: true,
+      valid: false,
+      value: ""
+    };
+  }
+
+  const normalizedValue =
+    parts[1] +
+    "-" +
+    String(month).padStart(2, "0") +
+    "-" +
+    String(day).padStart(2, "0");
+  const parsedDate = new Date(normalizedValue);
+
+  return {
+    dayComplete: true,
+    valid: !isNaN(parsedDate.getTime()),
+    value: normalizedValue
+  };
+}
+
+function openSubPicker(id) {
+  const input = getSubElement(id);
+
+  if (!input) {
+    return;
+  }
+
+  if (input.showPicker) {
+    input.showPicker();
+    return;
+  }
+
+  input.click();
+}
+
+function formatSubDateValue(date) {
+  return [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, "0"),
+    String(date.getDate()).padStart(2, "0")
+  ].join("-");
+}
+
+function formatSubDatePreview(date) {
+  return [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, "0"),
+    String(date.getDate()).padStart(2, "0")
+  ].join("/");
+}
+
+function getSubElement(id) {
+  return document.getElementById(id);
+}
+
+function getSubInputValue(id) {
+  const element = getSubElement(id);
+  return element ? element.value || "" : "";
+}
