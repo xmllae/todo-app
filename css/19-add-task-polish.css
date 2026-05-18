@@ -7667,6 +7667,8 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 #taskMode .list-panel #tList .week-day-card.is-empty,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open),
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-empty {
+  /* 折叠态的卡片边框统一交给 ::after 负责，避免本体边框和伪层边框叠成双线。 */
+  border-color: transparent !important;
   background: transparent !important;
   box-shadow: none !important;
 }
