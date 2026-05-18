@@ -6172,18 +6172,19 @@
 
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card,
 #taskMode .list-panel #tList .week-day-card {
+  box-sizing: border-box;
   border-radius: 16px;
+  border: 1px solid #d6daf8;
   background: color-mix(in srgb, var(--card) 98%, #f8fafc);
   box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--week-line) 50%, transparent),
     0 8px 18px -24px rgba(15, 23, 42, 0.28);
 }
 
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card:hover,
 #taskMode .list-panel #tList .week-day-card:hover {
   transform: none;
+  border-color: #d6daf8;
   box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--week-line) 58%, transparent),
     0 8px 18px -24px rgba(15, 23, 42, 0.28);
 }
 
@@ -6191,8 +6192,8 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-today,
 #taskMode .list-panel #tList .week-day-card.is-focus,
 #taskMode .list-panel #tList .week-day-card.is-today {
+  border-color: #d6daf8;
   box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--week-accent) 16%, transparent),
     0 10px 22px -28px color-mix(in srgb, var(--week-accent) 28%, transparent);
 }
 
@@ -7679,11 +7680,12 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   inset: 6px 0;
   z-index: 0;
   border-radius: 16px;
+  border: 1px solid #d6daf8;
   background: color-mix(in srgb, var(--card) 98%, #f8fafc);
   box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--week-line) 50%, transparent),
     0 8px 18px -24px rgba(15, 23, 42, .28);
   pointer-events: none;
+  box-sizing: border-box;
 }
 
 #taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open) .week-day-head,
