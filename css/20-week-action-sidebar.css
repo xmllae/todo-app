@@ -229,7 +229,7 @@
 .week-rhythm-list {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
   min-height: 0;
   padding-top: 2px;
   border-top: 0;
@@ -239,9 +239,9 @@
   display: grid;
   grid-template-columns: 24px minmax(0, 1fr);
   align-items: stretch;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
-  min-height: 38px;
+  min-height: 34px;
   padding: 0;
   border: 0;
   background: transparent;
@@ -257,15 +257,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 38px;
+  min-height: 34px;
 }
 
 .week-rhythm-rail::before {
   content: "";
   position: absolute;
   left: 50%;
-  top: -5px;
-  bottom: -5px;
+  top: -3px;
+  bottom: -3px;
   width: 1px;
   border-radius: 999px;
   background: #eef3f8;
@@ -319,7 +319,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 3px 0 3px 6px;
+  padding: 2px 0 2px 5px;
   border-radius: 14px;
   transition: background-color .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
@@ -329,14 +329,14 @@
   align-items: baseline;
   gap: 5px;
   min-width: 0;
-  padding: 3px 0;
+  padding: 2px 0;
   border-radius: 999px;
   transition: background-color .18s ease, box-shadow .18s ease, color .18s ease, padding .18s ease, transform .18s ease;
 }
 
 .week-rhythm-week {
   color: var(--text2);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.15;
   font-weight: 400;
   white-space: nowrap;
@@ -344,7 +344,7 @@
 
 .week-rhythm-date {
   color: #94a3b8;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.15;
   font-weight: 400;
   white-space: nowrap;
@@ -354,7 +354,7 @@
   flex: 0 0 auto;
   overflow: hidden;
   color: var(--text3);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.1;
   font-weight: 400;
   text-align: right;
@@ -414,7 +414,7 @@
 }
 
 .week-rhythm-day.is-focus .week-rhythm-copy {
-  padding: 5px 0;
+  padding: 4px 0;
   background: transparent;
   box-shadow: none;
 }
@@ -755,7 +755,7 @@
 
 .week-rhythm-day.is-today .week-rhythm-copy {
   margin-left: -10px;
-  padding: 7px 12px;
+  padding: 5px 12px;
   background: linear-gradient(
     180deg,
     color-mix(in srgb, var(--acc) 8%, #ffffff) 0%,
