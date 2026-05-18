@@ -7662,13 +7662,37 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   transform: rotate(180deg) !important;
 }
 
+/* 本周卡片外框最终收口：
+   1. 普通卡片统一使用真实 border，保证所有日期都稳定可见；
+   2. 折叠态卡片只让 ::after 承担外框，避免与本体边框叠成双线。 */
+#taskMode .list-panel #tList .week-day-card,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card {
+  border: 1px solid #d6daf8 !important;
+  box-sizing: border-box;
+  box-shadow: 0 8px 18px -24px rgba(15, 23, 42, .28) !important;
+}
+
+#taskMode .list-panel #tList .week-day-card:hover,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card:hover {
+  border-color: #d6daf8 !important;
+  box-shadow: 0 8px 18px -24px rgba(15, 23, 42, .28) !important;
+}
+
+#taskMode .list-panel #tList .week-day-card.is-focus,
+#taskMode .list-panel #tList .week-day-card.is-today,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-focus,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-today {
+  border-color: #d6daf8 !important;
+  box-shadow: 0 10px 22px -28px color-mix(in srgb, var(--week-accent) 28%, transparent) !important;
+}
+
 /* 本周折叠状态：只收窄可见背景层，不移动内部文字和右侧状态。 */
 #taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open),
 #taskMode .list-panel #tList .week-day-card.is-empty,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open),
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-empty {
-  /* 折叠态的卡片边框统一交给 ::after 负责，避免本体边框和伪层边框叠成双线。 */
-  border-color: transparent !important;
+  /* 折叠态的卡片外框统一交给 ::after 负责，避免本体框线和伪层框线叠成双线。 */
+  border: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
 }
@@ -7682,10 +7706,9 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   inset: 6px 0;
   z-index: 0;
   border-radius: 16px;
-  border: 1px solid #d6daf8;
+  border: 1px solid #d6daf8 !important;
   background: color-mix(in srgb, var(--card) 98%, #f8fafc);
-  box-shadow:
-    0 8px 18px -24px rgba(15, 23, 42, .28);
+  box-shadow: 0 8px 18px -24px rgba(15, 23, 42, .28);
   pointer-events: none;
   box-sizing: border-box;
 }
