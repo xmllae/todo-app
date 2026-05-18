@@ -369,7 +369,7 @@
 }
 
 .week-rhythm-state--pending {
-  color: #5f6f89;
+  color: #000000;
 }
 
 .week-rhythm-state--overdue {
@@ -388,7 +388,7 @@
 }
 
 .week-rhythm-state--clear {
-  color: #64748b;
+  color: #000000;
 }
 
 .week-rhythm-state--empty {
@@ -769,7 +769,7 @@
 .week-rhythm-day.is-today .week-rhythm-week,
 .week-rhythm-day.is-today .week-rhythm-date,
 .week-rhythm-day.is-today .week-rhythm-state--pending {
-  color: color-mix(in srgb, var(--week-ink) 76%, var(--acc));
+  color: #000000;
 }
 
 .week-rhythm-day.is-today .week-rhythm-state--pending {
