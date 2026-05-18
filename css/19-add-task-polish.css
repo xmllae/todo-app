@@ -5995,15 +5995,11 @@
   }
 }
 
-/* 周概览空状态：无任务日期始终保持浅色，不受今天或当前定位高亮影响。 */
+/* 周概览空状态：普通无任务日期保持浅色，但“今天”仍应保留当前日期样式。 */
 #taskMode .list-panel #tList .week-view-day-pill.is-empty,
-#taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today,
 #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-focus,
-#taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today.is-focus,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-focus,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today.is-focus {
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-focus {
   color: color-mix(in srgb, var(--week-muted) 58%, transparent);
   background: transparent;
   border-color: transparent;
@@ -6011,29 +6007,15 @@
 }
 
 #taskMode .list-panel #tList .week-view-day-pill.is-empty::before,
-#taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today::before,
 #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-focus::before,
-#taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today.is-focus::before,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty::before,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today::before,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-focus::before,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today.is-focus::before {
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-focus::before {
   opacity: 0;
 }
 
 #taskMode .list-panel #tList .week-view-day-pill.is-empty .week-view-day-pill-state-text,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty .week-view-day-pill-state-text {
   color: color-mix(in srgb, var(--week-muted) 62%, transparent);
-}
-
-/* 今天保留上方指示条，但文字仍然沿用无任务浅色。 */
-#taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today::before,
-#taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today.is-focus::before,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today::before,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today.is-focus::before {
-  width: min(36px, calc(100% - 18px));
-  opacity: .72;
-  background: color-mix(in srgb, var(--week-ink) 56%, var(--week-muted));
 }
 
 /* 周概览日期指示条固定在今天，避免 hover 或当前定位时跟随其他日期移动。 */
@@ -6055,13 +6037,9 @@
 #taskMode .list-panel #tList .week-view-day-pill.is-today::before,
 #taskMode .list-panel #tList .week-view-day-pill.is-today:hover::before,
 #taskMode .list-panel #tList .week-view-day-pill.is-today.is-focus::before,
-#taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today::before,
-#taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today.is-focus::before,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today::before,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today:hover::before,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today.is-focus::before,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today::before,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-empty.is-today.is-focus::before {
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today.is-focus::before {
   left: 50%;
   right: auto;
   top: 5px;
@@ -7022,9 +7000,9 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   transform: translateY(-1px);
 }
 
-#taskMode .list-panel #tList .week-view-day-pill.is-focus,
+#taskMode .list-panel #tList .week-view-day-pill.is-today,
 #taskMode .list-panel #tList .week-view-day-pill.is-today.is-focus,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today.is-focus {
   width: 56px;
   height: 96px;
@@ -7064,10 +7042,10 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   font-variant-numeric: tabular-nums;
 }
 
-#taskMode .list-panel #tList .week-view-day-pill.is-focus .week-view-day-pill-name,
-#taskMode .list-panel #tList .week-view-day-pill.is-focus .week-view-day-pill-date,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus .week-view-day-pill-name,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus .week-view-day-pill-date {
+#taskMode .list-panel #tList .week-view-day-pill.is-today .week-view-day-pill-name,
+#taskMode .list-panel #tList .week-view-day-pill.is-today .week-view-day-pill-date,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today .week-view-day-pill-name,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today .week-view-day-pill-date {
   color: #fff;
 }
 
@@ -7122,8 +7100,8 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   opacity: 0;
 }
 
-#taskMode .list-panel #tList .week-view-day-pill.is-focus .week-view-day-pill-state,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus .week-view-day-pill-state {
+#taskMode .list-panel #tList .week-view-day-pill.is-today .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today .week-view-day-pill-state {
   color: #818cf8;
   opacity: 1;
 }
@@ -7162,9 +7140,9 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   border-radius: 12px;
 }
 
-#taskMode .list-panel #tList .week-view-day-pill.is-focus,
+#taskMode .list-panel #tList .week-view-day-pill.is-today,
 #taskMode .list-panel #tList .week-view-day-pill.is-today.is-focus,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today.is-focus {
   width: 40px;
   height: 64px;
@@ -7172,6 +7150,25 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   padding: 7px 0 6px;
   border-radius: 13px;
   box-shadow: 0 8px 18px -15px rgba(15, 23, 42, .36);
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.is-focus:not(.is-today),
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus:not(.is-today) {
+  width: 42px;
+  height: 56px;
+  min-height: 56px;
+  padding: 6px 0 5px;
+  border-radius: 12px;
+  background: transparent;
+  color: color-mix(in srgb, var(--week-ink) 84%, var(--week-muted));
+  box-shadow: none;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.is-focus:not(.is-today):hover,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus:not(.is-today):hover {
+  background: color-mix(in srgb, var(--week-line) 18%, transparent);
+  box-shadow: none;
+  transform: translateY(-1px);
 }
 
 #taskMode .list-panel #tList .week-view-day-pill-main,
@@ -7224,10 +7221,10 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   opacity: 1;
 }
 
-#taskMode .list-panel #tList .week-view-day-pill.is-focus.has-pending .week-view-day-pill-state,
-#taskMode .list-panel #tList .week-view-day-pill.is-focus.is-clear .week-view-day-pill-state,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus.has-pending .week-view-day-pill-state,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus.is-clear .week-view-day-pill-state {
+#taskMode .list-panel #tList .week-view-day-pill.is-today.has-pending .week-view-day-pill-state,
+#taskMode .list-panel #tList .week-view-day-pill.is-today.is-clear .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today.has-pending .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today.is-clear .week-view-day-pill-state {
   color: #818cf8;
   opacity: 1;
 }
@@ -7259,23 +7256,53 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   background: #aeb8c8 !important;
 }
 
-#taskMode .list-panel #tList .week-view-day-pill.is-focus.has-pending .week-view-day-pill-state,
-#taskMode .list-panel #tList .week-view-day-pill.is-focus.is-overdue .week-view-day-pill-state,
-#taskMode .list-panel #tList .week-view-day-pill.is-focus.is-clear .week-view-day-pill-state,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus.has-pending .week-view-day-pill-state,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus.is-overdue .week-view-day-pill-state,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus.is-clear .week-view-day-pill-state {
+#taskMode .list-panel #tList .week-view-day-pill.is-today.has-pending .week-view-day-pill-state,
+#taskMode .list-panel #tList .week-view-day-pill.is-today.is-overdue .week-view-day-pill-state,
+#taskMode .list-panel #tList .week-view-day-pill.is-today.is-clear .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today.has-pending .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today.is-overdue .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today.is-clear .week-view-day-pill-state {
   color: #818cf8 !important;
   opacity: 1 !important;
 }
 
-#taskMode .list-panel #tList .week-view-day-pill.is-focus.has-pending .week-view-day-pill-state::before,
-#taskMode .list-panel #tList .week-view-day-pill.is-focus.is-overdue .week-view-day-pill-state::before,
-#taskMode .list-panel #tList .week-view-day-pill.is-focus.is-clear .week-view-day-pill-state::before,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus.has-pending .week-view-day-pill-state::before,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus.is-overdue .week-view-day-pill-state::before,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus.is-clear .week-view-day-pill-state::before {
+#taskMode .list-panel #tList .week-view-day-pill.is-today.has-pending .week-view-day-pill-state::before,
+#taskMode .list-panel #tList .week-view-day-pill.is-today.is-overdue .week-view-day-pill-state::before,
+#taskMode .list-panel #tList .week-view-day-pill.is-today.is-clear .week-view-day-pill-state::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today.has-pending .week-view-day-pill-state::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today.is-overdue .week-view-day-pill-state::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today.is-clear .week-view-day-pill-state::before {
   background: #818cf8 !important;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.is-focus:not(.is-today) .week-view-day-pill-name,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus:not(.is-today) .week-view-day-pill-name {
+  color: color-mix(in srgb, var(--week-muted) 88%, var(--week-ink));
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.is-focus:not(.is-today) .week-view-day-pill-date,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus:not(.is-today) .week-view-day-pill-date {
+  color: var(--week-ink);
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.is-focus:not(.is-today) .week-view-day-pill-state,
+#taskMode .list-panel #tList .week-view-day-pill.is-focus:not(.is-today) .week-view-day-pill-state--overdue,
+#taskMode .list-panel #tList .week-view-day-pill.is-focus:not(.is-today) .week-view-day-pill-state--quiet,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus:not(.is-today) .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus:not(.is-today) .week-view-day-pill-state--overdue,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus:not(.is-today) .week-view-day-pill-state--quiet {
+  color: #aeb8c8 !important;
+  opacity: 1 !important;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.is-focus:not(.is-today).is-empty .week-view-day-pill-state,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus:not(.is-today).is-empty .week-view-day-pill-state {
+  opacity: 0 !important;
+}
+
+#taskMode .list-panel #tList .week-view-day-pill.is-focus:not(.is-today) .week-view-day-pill-state::before,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus:not(.is-today) .week-view-day-pill-state::before {
+  background: currentColor !important;
 }
 
 #taskMode .list-panel #tList .week-view-day-pill.is-empty .week-view-day-pill-state::before,
