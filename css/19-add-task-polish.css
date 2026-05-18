@@ -1323,7 +1323,7 @@
   background: transparent;
 }
 
-/* 瀛愪换鍔℃爣绛撅細鍏ㄩ儴瀹屾垚鏃舵暣棰楁爣绛撅紙鍥炬爣 + 鏁板瓧锛夋挱鏀惧垝绾垮姩鐢?*/
+/* 子任务标签：全部完成时，整颗标签（图标 + 数字）播放划线动画。 */
 #taskMode .list-panel #tList .sub-task-pill.sub-task-pill--inline,
 #taskMode .list-panel #tList .sub-task-pill-btn.sub-task-pill--inline,
 .app.app--with-global-nav #taskMode .list-panel #tList .sub-task-pill.sub-task-pill--inline,
@@ -1506,6 +1506,9 @@
   min-height: 14px !important;
   flex: 0 0 10px !important;
   color: currentColor !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  overflow: visible !important;
   transform: rotate(0deg) !important;
   transform-origin: 50% 50% !important;
   transition: transform .28s cubic-bezier(.4, 0, .2, 1) !important;
@@ -1543,12 +1546,11 @@
   position: absolute !important;
   left: 50% !important;
   top: 50% !important;
-  width: 0 !important;
-  height: 0 !important;
-  background: none !important;
-  border-top: 4px solid transparent !important;
-  border-bottom: 4px solid transparent !important;
-  border-left: 6px solid currentColor !important;
+  width: 7px !important;
+  height: 9px !important;
+  background: currentColor !important;
+  clip-path: polygon(0 0, 100% 50%, 0 100%) !important;
+  border: 0 !important;
   transform: translate(-42%, -50%) !important;
   -webkit-mask: none !important;
   mask: none !important;
@@ -1822,7 +1824,7 @@
   }
 }
 
-/* 鏈懆涓昏鍥撅細杞婚噺 + 鑸掗€?*/
+/* 本周主视图：轻量 + 舒适。 */
 #taskMode .list-panel #tList .week-view,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view {
   display: flex;
@@ -7401,8 +7403,6 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 #taskMode .list-panel #tList .task-item .task-time-col .task-time-sep,
 #taskMode .list-panel #tList .task-item .task-time-col .task-recur-badge,
 #taskMode .list-panel #tList .task-item .task-time-col .task-recur-badge *,
-#taskMode .list-panel #tList .task-item .task-time-col .sub-task-pill,
-#taskMode .list-panel #tList .task-item .task-time-col .sub-task-pill *,
 #taskMode .list-panel #tList .task-item .task-time-col svg,
 #taskMode .list-panel #tList .week-task-meta,
 #taskMode .list-panel #tList .week-task-meta-row .time-plain.time-disp,
@@ -7416,8 +7416,6 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 .app.app--with-global-nav #taskMode .list-panel #tList .task-item .task-time-col .task-time-sep,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-item .task-time-col .task-recur-badge,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-item .task-time-col .task-recur-badge *,
-.app.app--with-global-nav #taskMode .list-panel #tList .task-item .task-time-col .sub-task-pill,
-.app.app--with-global-nav #taskMode .list-panel #tList .task-item .task-time-col .sub-task-pill *,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-item .task-time-col svg,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-meta,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-meta-row .time-plain.time-disp,
@@ -7453,15 +7451,6 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   opacity: 1 !important;
 }
 
-#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill .stp-icon,
-#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn .stp-icon,
-.app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill .stp-icon,
-.app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn .stp-icon {
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-}
-
 #taskMode .list-panel #tList .task-row-center > .task-time-col .task-recur-badge-ico,
 #taskMode .list-panel #tList .week-task-meta-row .task-recur-badge-ico,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .task-recur-badge-ico,
@@ -7471,21 +7460,10 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   opacity: 1 !important;
 }
 
-#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill,
-#taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn,
-.app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill,
-.app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .sub-task-pill-btn {
-  border-color: color-mix(in srgb, var(--task-meta-fg) 36%, transparent) !important;
-}
-
 /* 任务卡片下方的时间/重复/子任务信息统一字号与字重，避免同层级信息观感不一致。 */
 #taskMode .list-panel #tList .task-item .task-time-col .time-plain.time-disp,
 #taskMode .list-panel #tList .task-item .task-time-col .task-recur-badge,
 #taskMode .list-panel #tList .task-item .task-time-col .task-recur-badge-txt,
-#taskMode .list-panel #tList .task-item .task-time-col .sub-task-pill,
-#taskMode .list-panel #tList .task-item .task-time-col .sub-task-pill .stp-n,
-#taskMode .list-panel #tList .task-item .task-time-col .sub-task-pill-btn,
-#taskMode .list-panel #tList .task-item .task-time-col .sub-task-pill-btn .stp-n,
 #taskMode .list-panel #tList .week-task-meta-row .time-plain.time-disp,
 #taskMode .list-panel #tList .week-task-meta-row .task-recur-badge,
 #taskMode .list-panel #tList .week-task-meta-row .task-recur-badge-txt,
@@ -7494,10 +7472,6 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 .app.app--with-global-nav #taskMode .list-panel #tList .task-item .task-time-col .time-plain.time-disp,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-item .task-time-col .task-recur-badge,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-item .task-time-col .task-recur-badge-txt,
-.app.app--with-global-nav #taskMode .list-panel #tList .task-item .task-time-col .sub-task-pill,
-.app.app--with-global-nav #taskMode .list-panel #tList .task-item .task-time-col .sub-task-pill .stp-n,
-.app.app--with-global-nav #taskMode .list-panel #tList .task-item .task-time-col .sub-task-pill-btn,
-.app.app--with-global-nav #taskMode .list-panel #tList .task-item .task-time-col .sub-task-pill-btn .stp-n,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-meta-row .time-plain.time-disp,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-meta-row .task-recur-badge,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-meta-row .task-recur-badge-txt,
