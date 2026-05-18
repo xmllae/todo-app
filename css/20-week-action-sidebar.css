@@ -369,12 +369,20 @@
 }
 
 .week-rhythm-state--pending {
-  color: #7e8ba0;
-  border-color: color-mix(in srgb, var(--acc) 10%, #dde6ff);
-  background: color-mix(in srgb, var(--acc) 4%, #ffffff);
+  color: #5f6f89;
 }
 
 .week-rhythm-state--overdue {
+  color: var(--overdue-text-color);
+}
+
+.week-rhythm-state--pending.week-rhythm-state--chip {
+  border-color: color-mix(in srgb, var(--acc) 10%, #dde6ff);
+  background: color-mix(in srgb, var(--acc) 4%, #ffffff);
+  box-shadow: none;
+}
+
+.week-rhythm-state--overdue.week-rhythm-state--chip {
   border-color: color-mix(in srgb, var(--overdue-text-color) 12%, #ffd4dd);
   background: color-mix(in srgb, var(--overdue-text-color) 5%, #ffffff);
 }
@@ -384,7 +392,7 @@
 }
 
 .week-rhythm-state--empty {
-  color: #94a3b8;
+  color: #b8c4d6;
 }
 
 .week-rhythm-day:hover {
@@ -766,9 +774,9 @@
 
 .week-rhythm-day.is-today .week-rhythm-state--pending {
   margin-right: -8px;
-  border-color: color-mix(in srgb, var(--acc) 14%, transparent);
-  background: color-mix(in srgb, var(--acc) 6%, #ffffff);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--acc) 8%, transparent);
+  border-color: color-mix(in srgb, var(--acc) 10%, transparent);
+  background: color-mix(in srgb, var(--acc) 4%, #ffffff);
+  box-shadow: none;
 }
 
 .week-rhythm-day.is-today:hover .week-rhythm-copy {
