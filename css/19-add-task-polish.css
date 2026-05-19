@@ -7551,9 +7551,9 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   align-items: center !important;
   justify-content: space-between !important;
   gap: 16px !important;
-  min-height: 48px !important;
-  padding-top: 8px !important;
-  padding-bottom: 8px !important;
+  min-height: 44px !important;
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
   box-sizing: border-box !important;
 }
 
