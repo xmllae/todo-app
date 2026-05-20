@@ -7691,51 +7691,38 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   z-index: 1;
 }
 
-/* 本周日期头部悬浮反馈：统一使用极浅蓝底，保持内容尺寸和位置不变。 */
+#taskMode .list-panel #tList .week-day-card,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card {
+  --week-day-head-highlight: #eef4ff;
+}
+
+/* 本周日期头部悬浮反馈：统一使用浅蓝底，保持内容尺寸和位置不变。 */
 #taskMode .list-panel #tList .week-day-head:hover,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-head:hover {
-  background: #f9fafe !important;
+  background: var(--week-day-head-highlight) !important;
+}
+
+#taskMode .list-panel #tList .week-day-head > :not(.week-day-head-breath),
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-head > :not(.week-day-head-breath) {
+  position: relative;
+  z-index: 1;
+}
+
+#taskMode .list-panel #tList .week-day-head-breath,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-head-breath {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: var(--week-day-head-highlight);
+  opacity: 0;
+  will-change: opacity;
 }
 
 #taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open):hover::after,
 #taskMode .list-panel #tList .week-day-card.is-empty:hover::after,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open):hover::after,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-empty:hover::after {
-  background: #f9fafe !important;
-}
-
-#taskMode .list-panel #tList .week-day-head.is-week-breathing,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-day-head.is-week-breathing {
-  background-color: #f9fafe !important;
-  box-shadow: none !important;
-  will-change: background-color;
-  animation: week-day-head-breathe 1.2s cubic-bezier(.22, 1, .36, 1) 2 both;
-}
-
-@keyframes week-day-head-breathe {
-  0% {
-    background-color: rgba(249, 250, 254, 0);
-    box-shadow: none;
-  }
-  40% {
-    background-color: rgba(249, 250, 254, 1);
-    box-shadow: none;
-  }
-  75% {
-    background-color: rgba(249, 250, 254, 0.86);
-    box-shadow: none;
-  }
-  100% {
-    background-color: rgba(249, 250, 254, 0);
-    box-shadow: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  #taskMode .list-panel #tList .week-day-head.is-week-breathing,
-  .app.app--with-global-nav #taskMode .list-panel #tList .week-day-head.is-week-breathing {
-    animation: none !important;
-    background-color: #f9fafe !important;
-    box-shadow: none !important;
-  }
+  background: var(--week-day-head-highlight) !important;
 }

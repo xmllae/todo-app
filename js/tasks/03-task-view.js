@@ -602,45 +602,82 @@ function toggleWeekDoneCollapse(){
   })
 }
 function getWeekDayCard(ds){const list=document.getElementById("tList");return list?list.querySelector('.week-day-card[data-week-ds="'+ds+'"]'):null}
-const WEEK_DAY_HEAD_HIGHLIGHT_MS=2400;
-const WEEK_DAY_HEAD_HIGHLIGHT_REDUCED_MS=960;
-function weekViewPrefersReducedMotion(){
-  return typeof window!=="undefined"&&window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches
+const WEEK_DAY_HEAD_BREATH_ANIMATION=Object.freeze({
+  keyframes:[
+    {opacity:0,offset:0},
+    {opacity:.18,offset:.08},
+    {opacity:.88,offset:.22},
+    {opacity:.88,offset:.42},
+    {opacity:.16,offset:.62},
+    {opacity:.16,offset:.74},
+    {opacity:.62,offset:.88},
+    {opacity:.62,offset:.94},
+    {opacity:0,offset:1}
+  ],
+  options:{duration:1680,easing:"cubic-bezier(.22, 1, .36, 1)",iterations:1},
+  fallbackMs:960
+});
+function getWeekDayCardTaskTotal(card){
+  return card?Number(card.dataset.weekTaskTotal||card.dataset.weekTaskCount||0):0
 }
-function weekDayCardHasTasks(card){
-  return !!card&&Number(card.dataset.weekTaskTotal||card.dataset.weekTaskCount||0)>0
+function hasWeekDayCardTasks(card){
+  return getWeekDayCardTaskTotal(card)>0
 }
-function clearWeekDayHeadBreath(head){
-  if(!head)return;
-  if(head._weekHeadBreathTimer){
-    clearTimeout(head._weekHeadBreathTimer);
-    head._weekHeadBreathTimer=null
+function ensureWeekDayHeadBreathLayer(card){
+  if(!card||!card.querySelector)return null;
+  const head=card.querySelector(".week-day-head");
+  if(!head)return null;
+  let layer=head.querySelector(".week-day-head-breath");
+  if(layer)return layer;
+  layer=document.createElement("span");
+  layer.className="week-day-head-breath";
+  layer.setAttribute("aria-hidden","true");
+  head.insertBefore(layer,head.firstChild);
+  return layer
+}
+function stopWeekDayHeadBreath(layer){
+  if(!layer)return;
+  if(layer._weekHeadBreathTimer){
+    clearTimeout(layer._weekHeadBreathTimer);
+    layer._weekHeadBreathTimer=null
   }
-  head.classList.remove("is-week-breathing");
+  if(layer._weekHeadBreathAnim){
+    try{layer._weekHeadBreathAnim.cancel()}catch(e){}
+    layer._weekHeadBreathAnim=null
+  }
+  layer.style.opacity="0"
 }
 function playWeekDayHeadBreath(card){
-  if(!weekDayCardHasTasks(card))return false;
-  const head=card&&card.querySelector?card.querySelector(".week-day-head"):null;
-  if(!head)return false;
-  clearWeekDayHeadBreath(head);
-  void head.offsetWidth;
-  head.classList.add("is-week-breathing");
-  head._weekHeadBreathTimer=setTimeout(function(){
-    clearWeekDayHeadBreath(head)
-  },weekViewPrefersReducedMotion()?WEEK_DAY_HEAD_HIGHLIGHT_REDUCED_MS:WEEK_DAY_HEAD_HIGHLIGHT_MS);
-  return true
-}
-function triggerWeekDayCardJumpHighlight(ds){
-  const card=getWeekDayCard(ds);
-  if(!card)return false;
-  card.scrollIntoView({behavior:"smooth",block:"center"});
-  playWeekDayHeadBreath(card);
+  if(!hasWeekDayCardTasks(card))return false;
+  const layer=ensureWeekDayHeadBreathLayer(card);
+  if(!layer)return false;
+  stopWeekDayHeadBreath(layer);
+  layer.style.opacity="0";
+  if(typeof layer.animate!=="function"){
+    layer.style.opacity="1";
+    layer._weekHeadBreathTimer=setTimeout(function(){
+      stopWeekDayHeadBreath(layer)
+    },WEEK_DAY_HEAD_BREATH_ANIMATION.fallbackMs);
+    return true
+  }
+  const anim=layer.animate(WEEK_DAY_HEAD_BREATH_ANIMATION.keyframes,WEEK_DAY_HEAD_BREATH_ANIMATION.options);
+  layer._weekHeadBreathAnim=anim;
+  const cleanup=function(){
+    if(layer._weekHeadBreathAnim===anim)layer._weekHeadBreathAnim=null;
+    layer.style.opacity="0"
+  };
+  anim.onfinish=cleanup;
+  anim.oncancel=cleanup;
   return true
 }
 function jumpWeekDay(ds){
   const targetDs=String(ds||"");
   if(!targetDs)return;
-  if(triggerWeekDayCardJumpHighlight(targetDs))return;
+  const card=getWeekDayCard(targetDs);
+  if(card&&playWeekDayHeadBreath(card)){
+    card.scrollIntoView({behavior:"smooth",block:"center"});
+    return
+  }
   pick(targetDs)
 }
 function syncWeekDoneSlideHeights(root){
