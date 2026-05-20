@@ -7693,13 +7693,13 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 
 #taskMode .list-panel #tList .week-day-card,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card {
-  --week-day-head-highlight: #eef4ff;
+  --week-day-head-attention-bg: #eef4ff;
 }
 
-/* 本周日期头部悬浮反馈：统一使用浅蓝底，保持内容尺寸和位置不变。 */
+/* 本周日期头部的悬浮与点击高亮共用同一层浅蓝底，保持内容尺寸和位置不变。 */
 #taskMode .list-panel #tList .week-day-head:hover,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-head:hover {
-  background: var(--week-day-head-highlight) !important;
+  background: var(--week-day-head-attention-bg) !important;
 }
 
 #taskMode .list-panel #tList .week-day-head > :not(.week-day-head-breath),
@@ -7715,7 +7715,7 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   z-index: 0;
   pointer-events: none;
   border-radius: inherit;
-  background: var(--week-day-head-highlight);
+  background: var(--week-day-head-attention-bg);
   opacity: 0;
   will-change: opacity;
 }
@@ -7724,5 +7724,5 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 #taskMode .list-panel #tList .week-day-card.is-empty:hover::after,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open):hover::after,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-empty:hover::after {
-  background: var(--week-day-head-highlight) !important;
+  background: var(--week-day-head-attention-bg) !important;
 }

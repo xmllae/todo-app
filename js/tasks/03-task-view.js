@@ -601,7 +601,15 @@ function toggleWeekDoneCollapse(){
     animateWeekDoneSlide(slide,showDone,height,function(){if(card&&!showDone)card.classList.remove("is-done-open")})
   })
 }
-function getWeekDayCard(ds){const list=document.getElementById("tList");return list?list.querySelector('.week-day-card[data-week-ds="'+ds+'"]'):null}
+const WEEK_DAY_CARD_SELECTOR=".week-day-card";
+const WEEK_DAY_HEAD_SELECTOR=".week-day-head";
+const WEEK_DAY_HEAD_BREATH_CLASS="week-day-head-breath";
+const WEEK_DAY_CARD_SCROLL_OPTIONS=Object.freeze({behavior:"smooth",block:"center"});
+const weekDayHeadBreathStateByLayer=new WeakMap();
+function getWeekDayCard(ds){
+  const list=document.getElementById("tList");
+  return list?list.querySelector(`${WEEK_DAY_CARD_SELECTOR}[data-week-ds="${ds}"]`):null
+}
 const WEEK_DAY_HEAD_BREATH_ANIMATION=Object.freeze({
   keyframes:[
     {opacity:0,offset:0},
@@ -617,57 +625,80 @@ const WEEK_DAY_HEAD_BREATH_ANIMATION=Object.freeze({
   options:{duration:1680,easing:"cubic-bezier(.22, 1, .36, 1)",iterations:1},
   fallbackMs:960
 });
+function getWeekDayHead(card){
+  return card&&card.querySelector?card.querySelector(WEEK_DAY_HEAD_SELECTOR):null
+}
 function getWeekDayCardTaskTotal(card){
   return card?Number(card.dataset.weekTaskTotal||card.dataset.weekTaskCount||0):0
 }
 function hasWeekDayCardTasks(card){
   return getWeekDayCardTaskTotal(card)>0
 }
-function ensureWeekDayHeadBreathLayer(card){
-  if(!card||!card.querySelector)return null;
-  const head=card.querySelector(".week-day-head");
-  if(!head)return null;
-  let layer=head.querySelector(".week-day-head-breath");
+function ensureWeekDayHeadBreathLayer(head){
+  if(!head||!head.querySelector)return null;
+  let layer=head.querySelector(`.${WEEK_DAY_HEAD_BREATH_CLASS}`);
   if(layer)return layer;
   layer=document.createElement("span");
-  layer.className="week-day-head-breath";
+  layer.className=WEEK_DAY_HEAD_BREATH_CLASS;
   layer.setAttribute("aria-hidden","true");
   head.insertBefore(layer,head.firstChild);
   return layer
 }
-function stopWeekDayHeadBreath(layer){
+function getWeekDayHeadBreathState(layer){
+  if(!layer)return null;
+  let state=weekDayHeadBreathStateByLayer.get(layer);
+  if(state)return state;
+  state={anim:null,timer:null};
+  weekDayHeadBreathStateByLayer.set(layer,state);
+  return state
+}
+function clearWeekDayHeadBreath(layer){
   if(!layer)return;
-  if(layer._weekHeadBreathTimer){
-    clearTimeout(layer._weekHeadBreathTimer);
-    layer._weekHeadBreathTimer=null
+  const state=getWeekDayHeadBreathState(layer);
+  if(state&&state.timer){
+    clearTimeout(state.timer);
+    state.timer=null
   }
-  if(layer._weekHeadBreathAnim){
-    try{layer._weekHeadBreathAnim.cancel()}catch(e){}
-    layer._weekHeadBreathAnim=null
+  if(state&&state.anim){
+    try{state.anim.cancel()}catch(e){}
+    state.anim=null
   }
   layer.style.opacity="0"
 }
-function playWeekDayHeadBreath(card){
-  if(!hasWeekDayCardTasks(card))return false;
-  const layer=ensureWeekDayHeadBreathLayer(card);
-  if(!layer)return false;
-  stopWeekDayHeadBreath(layer);
-  layer.style.opacity="0";
+function playWeekDayHeadBreathFallback(layer){
+  const state=getWeekDayHeadBreathState(layer);
+  layer.style.opacity="1";
+  state.timer=setTimeout(function(){
+    clearWeekDayHeadBreath(layer)
+  },WEEK_DAY_HEAD_BREATH_ANIMATION.fallbackMs)
+}
+function animateWeekDayHeadBreath(layer){
   if(typeof layer.animate!=="function"){
-    layer.style.opacity="1";
-    layer._weekHeadBreathTimer=setTimeout(function(){
-      stopWeekDayHeadBreath(layer)
-    },WEEK_DAY_HEAD_BREATH_ANIMATION.fallbackMs);
-    return true
+    playWeekDayHeadBreathFallback(layer);
+    return
   }
+  const state=getWeekDayHeadBreathState(layer);
   const anim=layer.animate(WEEK_DAY_HEAD_BREATH_ANIMATION.keyframes,WEEK_DAY_HEAD_BREATH_ANIMATION.options);
-  layer._weekHeadBreathAnim=anim;
+  state.anim=anim;
   const cleanup=function(){
-    if(layer._weekHeadBreathAnim===anim)layer._weekHeadBreathAnim=null;
+    const currentState=getWeekDayHeadBreathState(layer);
+    if(currentState&&currentState.anim===anim)currentState.anim=null;
     layer.style.opacity="0"
   };
   anim.onfinish=cleanup;
-  anim.oncancel=cleanup;
+  anim.oncancel=cleanup
+}
+function scrollWeekDayCardIntoView(card){
+  if(card&&card.scrollIntoView)card.scrollIntoView(WEEK_DAY_CARD_SCROLL_OPTIONS)
+}
+function playWeekDayHeadBreath(card){
+  if(!hasWeekDayCardTasks(card))return false;
+  const head=getWeekDayHead(card);
+  if(!head)return false;
+  const layer=ensureWeekDayHeadBreathLayer(head);
+  if(!layer)return false;
+  clearWeekDayHeadBreath(layer);
+  animateWeekDayHeadBreath(layer);
   return true
 }
 function jumpWeekDay(ds){
@@ -675,7 +706,7 @@ function jumpWeekDay(ds){
   if(!targetDs)return;
   const card=getWeekDayCard(targetDs);
   if(card&&playWeekDayHeadBreath(card)){
-    card.scrollIntoView({behavior:"smooth",block:"center"});
+    scrollWeekDayCardIntoView(card);
     return
   }
   pick(targetDs)
