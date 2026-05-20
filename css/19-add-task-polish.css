@@ -4823,11 +4823,6 @@
   box-shadow: none;
 }
 
-#taskMode .list-panel #tList .week-day-card.is-jump-highlight,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-jump-highlight {
-  animation: week-day-jump-pulse .9s cubic-bezier(.22, 1, .36, 1);
-}
-
 /* 无待办日期瘦身：减少已完成/空状态卡片的视觉占用，突出真正需要处理的日期。 */
 #taskMode .list-panel #tList .week-day-card.is-clear .week-day-head,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-clear .week-day-head {
@@ -4890,24 +4885,6 @@
 #taskMode .list-panel #tList .week-day-card.is-empty .week-task-list,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-empty .week-task-list {
   display: none;
-}
-
-@keyframes week-day-jump-pulse {
-  0% {
-    box-shadow:
-      inset 0 0 0 1px color-mix(in srgb, var(--week-accent) 34%, transparent),
-      0 0 0 0 color-mix(in srgb, var(--week-accent) 18%, transparent);
-  }
-  65% {
-    box-shadow:
-      inset 0 0 0 1px color-mix(in srgb, var(--week-accent) 26%, transparent),
-      0 0 0 8px color-mix(in srgb, var(--week-accent) 0%, transparent);
-  }
-  100% {
-    box-shadow:
-      inset 0 0 0 1px color-mix(in srgb, var(--week-line) 72%, transparent),
-      0 10px 22px -24px rgba(15, 23, 42, .28);
-  }
 }
 
 @media (max-width: 640px) {
@@ -5099,12 +5076,10 @@
   #taskMode .list-panel #tList .week-task-item.task-toggle-anim .week-task-title::after,
   #taskMode .list-panel #tList .week-day-count.week-done-count-toggle,
   #taskMode .list-panel #tList .week-day-count-chip,
-  #taskMode .list-panel #tList .week-day-card.is-jump-highlight,
   .app.app--with-global-nav #taskMode .list-panel #tList .week-task-item.task-toggle-anim .week-task-title,
   .app.app--with-global-nav #taskMode .list-panel #tList .week-task-item.task-toggle-anim .week-task-title::after,
   .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count.week-done-count-toggle,
-  .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip,
-  .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-jump-highlight {
+  .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip {
     transition: none !important;
     animation: none !important;
   }
@@ -7727,4 +7702,53 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-clear:not(.is-done-open):hover::after,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-empty:hover::after {
   background: #f9fafe !important;
+}
+
+#taskMode .list-panel #tList .week-day-head.is-week-breathing,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-head.is-week-breathing {
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--week-head-breathe-peak) 82%, #fff) 0%, color-mix(in srgb, var(--week-head-breathe-base) 92%, transparent) 72%, transparent 100%) !important;
+  box-shadow:
+    inset 0 0 0 1px var(--week-head-breathe-ring),
+    0 12px 22px -24px var(--week-head-breathe-glow) !important;
+  will-change: background-color, box-shadow;
+  animation: week-day-head-breathe 1.2s cubic-bezier(.22, 1, .36, 1) 2 both;
+}
+
+@keyframes week-day-head-breathe {
+  0% {
+    background:
+      linear-gradient(90deg, color-mix(in srgb, var(--week-head-breathe-base) 68%, #fff) 0%, color-mix(in srgb, var(--week-head-breathe-base) 40%, transparent) 78%, transparent 100%);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--week-head-breathe-ring) 30%, transparent),
+      0 0 0 0 color-mix(in srgb, var(--week-head-breathe-glow) 0%, transparent);
+  }
+  35% {
+    background:
+      linear-gradient(90deg, var(--week-head-breathe-peak) 0%, color-mix(in srgb, var(--week-head-breathe-base) 92%, transparent) 76%, transparent 100%);
+    box-shadow:
+      inset 0 0 0 1px var(--week-head-breathe-ring),
+      0 14px 26px -24px var(--week-head-breathe-glow);
+  }
+  70% {
+    background:
+      linear-gradient(90deg, color-mix(in srgb, var(--week-head-breathe-base) 92%, #fff) 0%, color-mix(in srgb, var(--week-head-breathe-base) 58%, transparent) 76%, transparent 100%);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--week-head-breathe-ring) 58%, transparent),
+      0 8px 18px -24px color-mix(in srgb, var(--week-head-breathe-glow) 42%, transparent);
+  }
+  100% {
+    background:
+      linear-gradient(90deg, color-mix(in srgb, var(--week-head-breathe-base) 66%, #fff) 0%, color-mix(in srgb, var(--week-head-breathe-base) 34%, transparent) 78%, transparent 100%);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--week-head-breathe-ring) 18%, transparent),
+      0 0 0 0 color-mix(in srgb, var(--week-head-breathe-glow) 0%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #taskMode .list-panel #tList .week-day-head.is-week-breathing,
+  .app.app--with-global-nav #taskMode .list-panel #tList .week-day-head.is-week-breathing {
+    animation: none !important;
+  }
 }

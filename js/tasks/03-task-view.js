@@ -602,17 +602,110 @@ function toggleWeekDoneCollapse(){
   })
 }
 function getWeekDayCard(ds){const list=document.getElementById("tList");return list?list.querySelector('.week-day-card[data-week-ds="'+ds+'"]'):null}
-function jumpWeekDay(ds){
-  const card=getWeekDayCard(ds);
-  if(!card){
-    pick(ds);
+function weekViewPrefersReducedMotion(){
+  return typeof window!=="undefined"&&window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches
+}
+function weekDayCardHasTasks(card){
+  if(!card)return false;
+  const totalCount=Number(card.getAttribute("data-week-task-total")||card.getAttribute("data-week-task-count")||"0");
+  return Number.isFinite(totalCount)&&totalCount>0
+}
+function getWeekDayJumpTone(card){
+  if(card.classList.contains("is-overdue"))return{fill:"rgba(244, 63, 94, 0.14)",ring:"rgba(244, 63, 94, 0.2)",breatheBase:"rgba(255, 241, 242, 0.94)",breathePeak:"rgba(254, 226, 226, 0.98)",glow:"rgba(244, 63, 94, 0.2)"};
+  if(card.classList.contains("is-clear"))return{fill:"rgba(52, 211, 153, 0.12)",ring:"rgba(52, 211, 153, 0.18)",breatheBase:"rgba(236, 253, 245, 0.94)",breathePeak:"rgba(209, 250, 229, 0.98)",glow:"rgba(52, 211, 153, 0.18)"};
+  if(card.classList.contains("is-empty"))return{fill:"rgba(148, 163, 184, 0.1)",ring:"rgba(148, 163, 184, 0.16)",breatheBase:"rgba(248, 250, 252, 0.94)",breathePeak:"rgba(241, 245, 249, 0.98)",glow:"rgba(148, 163, 184, 0.14)"};
+  return{fill:"rgba(129, 140, 248, 0.14)",ring:"rgba(129, 140, 248, 0.2)",breatheBase:"rgba(242, 244, 255, 0.94)",breathePeak:"rgba(224, 231, 255, 0.98)",glow:"rgba(129, 140, 248, 0.22)"}
+}
+function playWeekDayJumpPulse(target,tone){
+  if(!target||!tone)return;
+  if(target._jumpPulseTimer){
+    clearTimeout(target._jumpPulseTimer);
+    target._jumpPulseTimer=null
+  }
+  if(target._jumpPulseAnim){
+    try{target._jumpPulseAnim.cancel()}catch(e){}
+    target._jumpPulseAnim=null
+  }
+  target.style.willChange="background-color, box-shadow";
+  if(weekViewPrefersReducedMotion()){
+    target.style.backgroundColor=tone.fill;
+    target.style.boxShadow="inset 0 0 0 1px "+tone.ring;
+    target._jumpPulseTimer=setTimeout(function(){
+      target.style.backgroundColor="";
+      target.style.boxShadow="";
+      target.style.willChange="";
+      target._jumpPulseTimer=null
+    },180);
     return
   }
+  if(typeof target.animate!=="function"){
+    target.style.backgroundColor=tone.fill;
+    target.style.boxShadow="inset 0 0 0 1px "+tone.ring;
+    target._jumpPulseTimer=setTimeout(function(){
+      target.style.backgroundColor="";
+      target.style.boxShadow="";
+      target.style.willChange="";
+      target._jumpPulseTimer=null
+    },900);
+    return
+  }
+  const anim=target.animate([
+    {backgroundColor:"rgba(255, 255, 255, 0)",boxShadow:"inset 0 0 0 0 rgba(255, 255, 255, 0)"},
+    {offset:.28,backgroundColor:tone.fill,boxShadow:"inset 0 0 0 1px "+tone.ring},
+    {offset:.58,backgroundColor:tone.fill,boxShadow:"inset 0 0 0 1px "+tone.ring},
+    {backgroundColor:"rgba(255, 255, 255, 0)",boxShadow:"inset 0 0 0 0 rgba(255, 255, 255, 0)"}
+  ],{duration:900,easing:"cubic-bezier(.22, 1, .36, 1)"});
+  target._jumpPulseAnim=anim;
+  const cleanup=function(){
+    if(target._jumpPulseAnim===anim)target._jumpPulseAnim=null;
+    target.style.backgroundColor="";
+    target.style.boxShadow="";
+    target.style.willChange=""
+  };
+  anim.onfinish=cleanup;
+  anim.oncancel=cleanup
+}
+function clearWeekDayHeadBreath(head){
+  if(!head)return;
+  if(head._weekHeadBreathTimer){
+    clearTimeout(head._weekHeadBreathTimer);
+    head._weekHeadBreathTimer=null
+  }
+  head.classList.remove("is-week-breathing");
+  head.style.removeProperty("--week-head-breathe-base");
+  head.style.removeProperty("--week-head-breathe-peak");
+  head.style.removeProperty("--week-head-breathe-ring");
+  head.style.removeProperty("--week-head-breathe-glow")
+}
+function playWeekDayHeadBreath(card,head,tone){
+  if(!card||!head||!tone||!weekDayCardHasTasks(card))return false;
+  const reduceMotion=weekViewPrefersReducedMotion();
+  clearWeekDayHeadBreath(head);
+  head.style.setProperty("--week-head-breathe-base",tone.breatheBase||tone.fill||"rgba(242, 244, 255, 0.94)");
+  head.style.setProperty("--week-head-breathe-peak",tone.breathePeak||tone.fill||"rgba(224, 231, 255, 0.98)");
+  head.style.setProperty("--week-head-breathe-ring",tone.ring||"rgba(129, 140, 248, 0.2)");
+  head.style.setProperty("--week-head-breathe-glow",tone.glow||tone.ring||"rgba(129, 140, 248, 0.22)");
+  void head.offsetWidth;
+  head.classList.add("is-week-breathing");
+  head._weekHeadBreathTimer=setTimeout(function(){
+    clearWeekDayHeadBreath(head)
+  },reduceMotion?960:2400);
+  return true
+}
+function triggerWeekDayCardJumpHighlight(ds){
+  const card=getWeekDayCard(ds);
+  if(!card)return false;
+  const head=card.querySelector(".week-day-head");
   card.scrollIntoView({behavior:"smooth",block:"center"});
-  card.classList.remove("is-jump-highlight");
-  void card.offsetWidth;
-  card.classList.add("is-jump-highlight");
-  setTimeout(function(){card.classList.remove("is-jump-highlight")},900)
+  const tone=getWeekDayJumpTone(card);
+  if(!playWeekDayHeadBreath(card,head,tone))playWeekDayJumpPulse(head||card,tone);
+  return true
+}
+function jumpWeekDay(ds){
+  const targetDs=String(ds||"");
+  if(!targetDs)return;
+  if(triggerWeekDayCardJumpHighlight(targetDs))return;
+  pick(targetDs)
 }
 function syncWeekDoneSlideHeights(root){
   const scope=root||document;
@@ -1033,7 +1126,7 @@ function renderWeekTaskScene(list,baseDs){
     const activeCountCls="week-day-count week-day-count-group"+(dayDoneRows.length?"":" is-single-action")+(isOverdueDay?" has-overdue-count":""),activeCountControls=todoControl+(dayDoneRows.length?doneControl:"");
     const countHtml=dayPending?'<div class="'+activeCountCls+'" title="'+countTip+'" aria-label="'+countTip+'">'+activeCountControls+'</div>':dayDoneRows.length?'<div class="week-day-count week-day-count-group is-single-action" title="'+countTip+'" aria-label="'+countTip+'">'+doneControl+'</div>':"";
     const taskBody=rowsHtml||'<button type="button" class="week-day-empty" onclick="pick(\''+ds+'\')" title="\u6253\u5f00\u5f53\u65e5\u8be6\u60c5"><span class="week-day-empty-dot" aria-hidden="true"></span><span>\u6682\u65e0\u4efb\u52a1</span></button>';
-    return{html:'<section class="'+cls+'" data-week-ds="'+ds+'" data-week-task-count="'+dayRows.length+'" style="--week-delay:'+(idx*24)+'ms"><div class="week-day-head"><button type="button" class="week-day-title-btn" onclick="pick(\''+ds+'\')" aria-label="\u6253\u5f00\u5468'+weekNames[idx]+' '+md+'"><span class="week-day-name"><span class="week-day-week">\u5468'+weekNames[idx]+'</span></span><span class="week-day-meta"><span class="week-day-date-label">'+titleMeta+'</span></span></button>'+countHtml+'</div><div class="'+listCls+'">'+taskBody+'</div></section>',pending:dayPending,done:dayDoneCount,total:totalDayRows,idx:idx,ds:ds,weekName:weekNames[idx],md:md}
+    return{html:'<section class="'+cls+'" data-week-ds="'+ds+'" data-week-task-count="'+dayRows.length+'" data-week-task-total="'+totalDayRows+'" style="--week-delay:'+(idx*24)+'ms"><div class="week-day-head"><button type="button" class="week-day-title-btn" onclick="pick(\''+ds+'\')" aria-label="\u6253\u5f00\u5468'+weekNames[idx]+' '+md+'"><span class="week-day-name"><span class="week-day-week">\u5468'+weekNames[idx]+'</span></span><span class="week-day-meta"><span class="week-day-date-label">'+titleMeta+'</span></span></button>'+countHtml+'</div><div class="'+listCls+'">'+taskBody+'</div></section>',pending:dayPending,done:dayDoneCount,total:totalDayRows,idx:idx,ds:ds,weekName:weekNames[idx],md:md}
   });
   const totalAll=weekAllTasks.length,pct=totalAll?Math.round(doneAll/totalAll*100):0;
   const doneStatHtml='<span class="week-view-stat week-view-stat--done"><b>'+doneAll+'</b><span>\u5b8c\u6210</span></span>';
