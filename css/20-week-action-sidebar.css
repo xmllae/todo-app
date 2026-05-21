@@ -1,20 +1,23 @@
 /* 本周右侧栏：把任务概览集中到一块轻量信息面板。 */
-.task-dash-col:not(.is-week-action) .week-action-shell {
+.task-dash-col:not(.is-week-action):not(.is-overdue-action) .week-action-shell {
   display: none;
 }
 
-#taskMode .task-dash-col.is-week-action {
+#taskMode .task-dash-col.is-week-action,
+#taskMode .task-dash-col.is-overdue-action {
   align-self: stretch;
   gap: 0;
   min-height: 0;
   overflow: hidden;
 }
 
-#taskMode .task-dash-col.is-week-action > .dash-card {
+#taskMode .task-dash-col.is-week-action > .dash-card,
+#taskMode .task-dash-col.is-overdue-action > .dash-card {
   display: none !important;
 }
 
-#taskMode .task-dash-col.is-week-action .week-action-shell {
+#taskMode .task-dash-col.is-week-action .week-action-shell,
+#taskMode .task-dash-col.is-overdue-action .week-action-shell {
   flex: 1 1 auto;
   width: 100%;
   height: 100%;
@@ -29,6 +32,151 @@
   border-radius: 16px;
   background: var(--card);
   box-shadow: 0 12px 32px rgba(15, 23, 42, .06);
+}
+
+.overdue-action-shell {
+  gap: 0;
+}
+
+#taskMode .task-dash-col.is-overdue-action .week-action-shell {
+  border-color: color-mix(in srgb, var(--task-bd) 76%, transparent);
+  box-shadow: 0 8px 22px rgba(15, 23, 42, .04);
+}
+
+.overdue-overview-hero {
+  padding: 0 0 14px;
+  border-bottom: 1px solid color-mix(in srgb, var(--task-bd) 58%, transparent);
+}
+
+.overdue-overview-count {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  color: var(--text);
+}
+
+.overdue-overview-count strong {
+  font-size: 1.86rem;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.overdue-overview-count span {
+  color: var(--text2);
+  font-size: .88rem;
+  font-weight: 600;
+}
+
+.overdue-overview-hero p {
+  margin: 9px 0 0;
+  color: var(--text2);
+  font-size: .84rem;
+  line-height: 1.6;
+}
+
+.overdue-overview-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  padding: 14px 0 12px;
+  border-bottom: 1px solid color-mix(in srgb, var(--task-bd) 52%, transparent);
+}
+
+.overdue-overview-metrics div {
+  min-width: 0;
+  text-align: center;
+  padding: 0 8px;
+}
+
+.overdue-overview-metrics div + div {
+  border-left: 1px solid color-mix(in srgb, var(--task-bd) 50%, transparent);
+}
+
+.overdue-overview-metrics b {
+  display: block;
+  color: var(--text);
+  font-size: 1rem;
+  line-height: 1;
+  font-weight: 780;
+  font-variant-numeric: tabular-nums;
+}
+
+.overdue-overview-metrics span {
+  display: block;
+  margin-top: 6px;
+  color: var(--text3);
+  font-size: .7rem;
+  line-height: 1.2;
+}
+
+.overdue-overview-section {
+  padding-top: 16px;
+}
+
+.overdue-overview-section-title {
+  color: var(--text);
+  font-size: .84rem;
+  font-weight: 680;
+  line-height: 1.25;
+}
+
+.overdue-overview-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 10px;
+}
+
+.overdue-overview-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 0;
+  border: 0;
+  border-top: 1px solid color-mix(in srgb, var(--task-bd) 54%, transparent);
+  border-radius: 0;
+  background: transparent;
+}
+
+.overdue-overview-row-copy {
+  min-width: 0;
+}
+
+.overdue-overview-row-copy strong {
+  display: block;
+  color: var(--text);
+  font-size: .84rem;
+  line-height: 1.25;
+  font-weight: 650;
+}
+
+.overdue-overview-row-copy span {
+  display: block;
+  margin-top: 5px;
+  color: var(--text3);
+  font-size: .73rem;
+  line-height: 1.2;
+}
+
+.overdue-overview-row em {
+  flex-shrink: 0;
+  color: var(--overdue-text-color);
+  font-size: .75rem;
+  line-height: 1.2;
+  font-style: normal;
+  font-weight: 650;
+}
+
+.overdue-overview-empty {
+  padding: 14px 0 0;
+  border-top: 1px solid color-mix(in srgb, var(--task-bd) 54%, transparent);
+  color: var(--text3);
+  font-size: .8rem;
+  line-height: 1.6;
 }
 
 .week-overview-head {
@@ -644,7 +792,8 @@
   font-weight: 680;
 }
 
-.dark #taskMode .task-dash-col.is-week-action .week-action-shell {
+.dark #taskMode .task-dash-col.is-week-action .week-action-shell,
+.dark #taskMode .task-dash-col.is-overdue-action .week-action-shell {
   background: color-mix(in srgb, var(--card) 92%, #020617);
   box-shadow: 0 18px 40px rgba(0, 0, 0, .28);
 }
@@ -654,12 +803,14 @@
 }
 
 @media (max-width: 980px) {
-  #taskMode .task-dash-col.is-week-action {
+  #taskMode .task-dash-col.is-week-action,
+  #taskMode .task-dash-col.is-overdue-action {
     width: 100%;
     overflow: visible;
   }
 
-  #taskMode .task-dash-col.is-week-action .week-action-shell {
+  #taskMode .task-dash-col.is-week-action .week-action-shell,
+  #taskMode .task-dash-col.is-overdue-action .week-action-shell {
     height: auto;
     min-height: 0;
     overflow: visible;

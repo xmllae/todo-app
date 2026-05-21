@@ -1,6 +1,6 @@
 // 今日行动面板：根据当前任务列表生成下一步建议和快捷入口。
 function taskFlowIsPendingTask(t){
-  return !!t && !t.archived && !t.done && !t.frozen
+  return isPendingListedTask(t)
 }
 
 function taskFlowIsViewFiltered(){
@@ -153,7 +153,7 @@ function taskFlowBindSummary(summary){
 
 function taskFlowCurrentDisplayList(){
   const dt=typeof T!=="undefined"&&T[sel]?T[sel]:[];
-  const nonArchived=dt.filter(function(t){return!t.archived});
+  const nonArchived=dt.filter(function(t){return isListedTask(t)});
   let filtered=nonArchived.filter(function(t){return typeof passesFMulti==="function"?passesFMulti(t):true});
   if(typeof FTag!=="undefined"&&FTag)filtered=filtered.filter(function(t){return(t.tags||[]).includes(FTag)});
   let displayList=filtered,activeSortMode="";
@@ -168,7 +168,7 @@ function taskFlowInjectSummary(){
   if(!list)return;
   const old=list.querySelector(".task-flow-summary");
   if(old)old.remove();
-  if(typeof getTaskQuickMode==="function"&&getTaskQuickMode()==="week")return;
+  if(typeof getTaskQuickMode==="function"&&["week","overdue"].includes(getTaskQuickMode()))return;
   const data=taskFlowCurrentDisplayList();
   const html=taskFlowSummaryHTML(data.displayList,data.nonArchived,data.filtered,{isEmpty:!data.displayList.length});
   list.insertAdjacentHTML("beforeend",html);

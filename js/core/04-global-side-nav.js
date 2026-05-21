@@ -104,12 +104,12 @@
   function rowsFor(ds) {
     if (typeof T === "undefined" || !T) return [];
     return (T[ds] || []).filter(function (task) {
-      return !task.archived;
+      return isListedTask(task);
     });
   }
 
   function isPending(task) {
-    return task && !task.done && !task.frozen && !task.archived;
+    return isPendingListedTask(task);
   }
 
   function pendingFor(ds) {
@@ -136,7 +136,7 @@
     if (typeof T === "undefined" || !T) return out;
     Object.keys(T).forEach(function (ds) {
       (T[ds] || []).forEach(function (task) {
-        if (!task.archived) out.push({ ds: ds, task: task });
+        if (isListedTask(task)) out.push({ ds: ds, task: task });
       });
     });
     return out;
@@ -515,7 +515,7 @@
 
   function renderTaskListSummary(list, currentDs, rows, pending, high) {
     var done = rows.filter(function (task) {
-      return task.done && !task.archived;
+      return task.done;
     }).length;
     var minutes = pending.reduce(function (sum, task) {
       var n = parseInt(task.duration, 10);

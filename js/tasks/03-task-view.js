@@ -347,12 +347,12 @@ const accA=pt?taskTimeAccent(pt,sel):taskTimeAccent("",sel);
 const archTimeInner=hasRecur?taskRowRecurTimeInnerHtml(t,pt):pt?`<span class="time-plain time-disp" style="opacity:.88">${pt}</span>`:`<span class="time-plain time-disp" style="opacity:.88">\u5168\u5929</span>`;
 const archTc=hasRecur?"var(--task-time-recur-fg)":accA.text;
 const timeColArch=`<div class="task-time-col${subT>0?"":" task-time-col--no-sub"}" style="color:${archTc};--task-time-rail:${accA.rail}">${archTimeInner}${subTimeSep}${subTitleSuffix}</div>`;
-return`<div class="task-item archived-item relative group" data-id="${t.id}" onclick="onTaskItemMultiBackdrop(event,${t.id})" style="--task-prio:${borderColor}"><div class="task-row">${taskRowCornersHTML()}${prioListRail(t,true)}<div class="task-rail" onclick="event.stopPropagation()"></div><div class="task-ck-slot" onclick="event.stopPropagation()">${taskListCkRing(t.id,true,t.priority,true,borderColor)}</div><div class="task-row-center" onclick="onTaskRowCenterClick(event,${t.id})"><div class="txt-line"><span class="txt">${esc(t.text)}</span></div>${timeColArch}</div><div class="task-actions" onclick="event.stopPropagation()"><button class="act-btn" onclick="event.stopPropagation();restoreArchived('${sel}',${t.id})" title="\u6062\u590d">鈫?/button></div></div></div>`
+return`<div class="task-item archived-item relative group" data-id="${t.id}" onclick="onTaskItemMultiBackdrop(event,${t.id})" style="--task-prio:${borderColor}"><div class="task-row">${taskRowCornersHTML()}${prioListRail(t,true)}<div class="task-rail" onclick="event.stopPropagation()"></div><div class="task-ck-slot" onclick="event.stopPropagation()">${taskListCkRing(t.id,true,t.priority,true,borderColor)}</div><div class="task-row-center" onclick="onTaskRowCenterClick(event,${t.id})"><div class="txt-line"><span class="txt">${esc(t.text)}</span></div>${timeColArch}</div><div class="task-actions" onclick="event.stopPropagation()"><button class="act-btn" onclick="event.stopPropagation();restoreArchived('${sel}',${t.id})" title="\u6062\u590d">闂?/button></div></div></div>`
 }
 let timeH="";
 let acc=taskTimeAccent("",sel);
 if(editingTimeId===t.id){
-const _teInp=`<input type="time" class="te-input te-input--pill" id="te_${t.id}" value="${pt}" onclick="event.stopPropagation()" onkeydown="if(event.key==='Enter'){event.preventDefault();saveTimeEdit(${t.id})}else if(event.key==='Escape'){event.preventDefault();cancelTimeEdit()}" title="Enter \u4fdd\u5b58 路 \u5931\u7126\u4fdd\u5b58 路 Esc \u53d6\u6d88" onblur="setTimeout(function(){if(editingTimeId===${t.id})saveTimeEdit(${t.id})},100)">`;
+const _teInp=`<input type="time" class="te-input te-input--pill" id="te_${t.id}" value="${pt}" onclick="event.stopPropagation()" onkeydown="if(event.key==='Enter'){event.preventDefault();saveTimeEdit(${t.id})}else if(event.key==='Escape'){event.preventDefault();cancelTimeEdit()}" title="Enter 婵烇絽娲︾换鍌炴偤?閻?婵犮垺鍎兼禍顒勫礉瀹ュ棛鈹嶆繝闈涙閹?閻?Esc 闂佸憡鐟﹂悧妤冪矓? onblur="setTimeout(function(){if(editingTimeId===${t.id})saveTimeEdit(${t.id})},100)">`;
 const _tePfx=hasRecur?`<span class="time-edit-pill-prefix">${esc(getRecurDesc(t.recurRuleId)||"\u91cd\u590d")}${pt?" ":""}</span>`:"";
 const _teMid=hasRecur?`<span class="te-pill-time-core">${_tePfx}${_teInp}</span>`:_teInp;
 timeH=`<div class="time-edit time-edit--inline time-edit--pill" onclick="event.stopPropagation()">${hasRecur?taskRecurRowBadgeSvg():""}${_teMid}<button type="button" class="te-pill-clock-btn" aria-label="\u9009\u62e9\u65f6\u95f4" title="\u9009\u62e9\u65f6\u95f4" onmousedown="event.preventDefault()" onclick="event.stopPropagation();openTimePillPicker(${t.id})"><svg class="te-pill-clock-ico" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></button></div>`;
@@ -376,14 +376,83 @@ return`<div class="task-item${t.done&&subAllDone?" done":""}${t.done?" task-main
 }
 
 function initTaskDashReorder(){var root=document.getElementById("taskDashCol");if(!root||root._dashReorderInit)return;root._dashReorderInit=1;function saveOrd(){var ids=[];root.querySelectorAll(".dash-card[data-dash-id]").forEach(function(c){ids.push(c.getAttribute("data-dash-id"))});try{localStorage.setItem("tuole_dash_order",JSON.stringify(ids))}catch(e){}}function applyOrd(){var cards=[].slice.call(root.querySelectorAll(".dash-card[data-dash-id]"));if(!cards.length)return;var map={};cards.forEach(function(c){map[c.getAttribute("data-dash-id")]=c});var def=cards.map(function(c){return c.getAttribute("data-dash-id")});var order;try{order=JSON.parse(localStorage.getItem("tuole_dash_order")||"null")}catch(e){order=null}if(!Array.isArray(order)||!order.length)return;var seen=new Set,merged=[];order.forEach(function(id){if(map[id]&&!seen.has(id)){seen.add(id);merged.push(id)}});def.forEach(function(id){if(!seen.has(id)){seen.add(id);merged.push(id)}});merged.forEach(function(id){var el=map[id];if(el)root.appendChild(el)})}applyOrd();var allowD=0,dragId=null;root.addEventListener("mousedown",function(e){allowD=e.target.closest(".dash-drag-handle")?1:0});root.addEventListener("mouseup",function(){allowD=0});[].forEach.call(root.querySelectorAll(".dash-card[data-dash-id]"),function(card){card.setAttribute("draggable","true");card.addEventListener("dragstart",function(e){if(!allowD){e.preventDefault();return}allowD=0;dragId=card.getAttribute("data-dash-id");e.dataTransfer.effectAllowed="move";e.dataTransfer.setData("text/plain",dragId);card.classList.add("dash-dragging")});card.addEventListener("dragend",function(){card.classList.remove("dash-dragging");[].forEach.call(root.querySelectorAll(".dash-card.drag-dash-over"),function(c){c.classList.remove("drag-dash-over")});dragId=null});card.addEventListener("dragover",function(e){e.preventDefault();if(!dragId||dragId===card.getAttribute("data-dash-id"))return;e.dataTransfer.dropEffect="move";[].forEach.call(root.querySelectorAll(".dash-card.drag-dash-over"),function(c){c.classList.remove("drag-dash-over")});card.classList.add("drag-dash-over")});card.addEventListener("dragleave",function(e){if(!card.contains(e.relatedTarget))card.classList.remove("drag-dash-over")});card.addEventListener("drop",function(e){e.preventDefault();card.classList.remove("drag-dash-over");var fromId=e.dataTransfer.getData("text/plain"),toId=card.getAttribute("data-dash-id");if(!fromId||fromId===toId)return;var fromEl=root.querySelector('.dash-card[data-dash-id="'+fromId+'"]');if(!fromEl)return;var rect=card.getBoundingClientRect(),before=e.clientY<rect.top+rect.height/2;if(before)root.insertBefore(fromEl,card);else root.insertBefore(fromEl,card.nextSibling);saveOrd()})})}
-function renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,selStr){const root=document.getElementById("taskDashCol");if(!root)return;const p=selStr.split("-");const shortDate=`${+p[1]}月${+p[2]}日`;const sdEl=document.getElementById("dashShortDate");if(sdEl)sdEl.textContent=shortDate;const pctEl=document.getElementById("dashProgPct");if(pctEl)pctEl.textContent=pct+"%";const C=2*Math.PI*52;const ring=document.getElementById("dashRingProg");if(ring){ring.style.strokeDasharray=String(C);ring.style.strokeDashoffset=String(C*(1-pct/100))}const dEl=document.getElementById("dashDone"),tEl=document.getElementById("dashTotal");if(dEl)dEl.textContent=String(doneForProg);if(tEl)tEl.textContent=String(totalForProg);const hiP=nonArchived.filter(t=>t.priority==="high"),hiCol=typeof priorityColors!=="undefined"&&priorityColors.high||"#ef4444",hiN=hiP.length,hiDone=hiP.filter(t=>t.done).length;const elHi=document.getElementById("dashOvHiCnt");if(elHi)elHi.textContent=String(hiN);const bMain=document.getElementById("dashMainBar"),bHi=document.getElementById("dashOvHiBar");const mainW=totalForProg?Math.round(doneForProg/totalForProg*100):0;if(bMain)bMain.style.width=mainW+"%";const hiW=hiN?Math.round(hiDone/hiN*100):0;if(bHi)bHi.style.width=hiW+"%";const cardH=document.querySelector(".dash-ov-prio-card--high");if(cardH){cardH.style.setProperty("--ov-prio",hiCol);if(bHi)bHi.style.background=hiCol}const wdBase=parseDS(selStr);const mondayOff=wdBase.getDay()===0?-6:1-wdBase.getDay();const start=new Date(wdBase);start.setDate(wdBase.getDate()+mondayOff);const labels=["一","二","三","四","五","六","日"];const strip=document.getElementById("dashWeekStrip");const wtitle=document.getElementById("dashWeekTitle");if(wtitle)wtitle.textContent=wdBase.getFullYear()+"年"+(wdBase.getMonth()+1)+"月";if(strip){const todayStr=fd(now);let h="",wkTot=0,wkDone=0;for(let i=0;i<7;i++){const dd=new Date(start);dd.setDate(start.getDate()+i);const ds=fd(dd);const isWkSel=ds===selStr,isToday=ds===todayStr;let wcls="dash-wd"+(isWkSel?" dash-wd-sel":"")+(isToday?" dash-wd-today":"");const arr=T[ds]?T[ds].filter(function(x){return!x.archived}):[];const n=arr.length;if(n){wkTot+=n;wkDone+=arr.filter(function(x){return x.done}).length}let taskDot="";if(n){const allD=arr.every(function(x){return x.done});taskDot='<span class="dash-wd-dot dash-wd-dot--task'+(allD?" dash-wd-dot--done":"")+'" aria-hidden="true"></span>'}h+='<button type="button" class="'+wcls+'" onclick="pick(\''+ds+'\')"><span class="dash-wd-lab">'+labels[i]+'</span><span class="dash-wd-num">'+dd.getDate()+'</span><div class="dash-wd-dots" aria-hidden="true"><span class="dash-wd-dot dash-wd-dot--today"></span>'+taskDot+"</div></button>"}strip.innerHTML=h;const foot=document.getElementById("dashWeekFoot");if(foot){if(!wkTot)foot.innerHTML='<div class="dash-week-foot-inner dash-week-foot--empty">本周暂无任务</div>';else foot.innerHTML='<div class="dash-week-foot-inner"><div class="dwf-line"><span class="dwf-k">本周</span> <strong class="dwf-num">'+wkTot+'</strong><span class="dwf-u">项</span><span class="dwf-dotsep">·</span><span class="dwf-k">已完成</span> <strong class="dwf-num dwf-done">'+wkDone+'</strong><span class="dwf-dotsep">·</span><span class="dwf-k">待办</span> <strong class="dwf-num dwf-pend">'+(wkTot-wkDone)+"</strong></div></div>"}}}
+function renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,selStr){
+  const root=document.getElementById("taskDashCol");
+  if(!root)return;
+  const base=parseDS(selStr);
+  if(!base)return;
+  const shortDate=(base.getMonth()+1)+"\u6708"+base.getDate()+"\u65e5";
+  const sdEl=document.getElementById("dashShortDate");
+  if(sdEl)sdEl.textContent=shortDate;
+  const pctEl=document.getElementById("dashProgPct");
+  if(pctEl)pctEl.textContent=pct+"%";
+  const C=2*Math.PI*52;
+  const ring=document.getElementById("dashRingProg");
+  if(ring){
+    ring.style.strokeDasharray=String(C);
+    ring.style.strokeDashoffset=String(C*(1-pct/100))
+  }
+  const dEl=document.getElementById("dashDone"),tEl=document.getElementById("dashTotal");
+  if(dEl)dEl.textContent=String(doneForProg);
+  if(tEl)tEl.textContent=String(totalForProg);
+  const listedTasks=Array.isArray(nonArchived)?nonArchived:[];
+  const hiP=listedTasks.filter(function(task){return task.priority==="high"}),hiCol=typeof priorityColors!=="undefined"&&priorityColors.high||"#ef4444",hiN=hiP.length,hiDone=hiP.filter(function(task){return task.done}).length;
+  const elHi=document.getElementById("dashOvHiCnt");
+  if(elHi)elHi.textContent=String(hiN);
+  const bMain=document.getElementById("dashMainBar"),bHi=document.getElementById("dashOvHiBar");
+  const mainW=totalForProg?Math.round(doneForProg/totalForProg*100):0;
+  if(bMain)bMain.style.width=mainW+"%";
+  const hiW=hiN?Math.round(hiDone/hiN*100):0;
+  if(bHi)bHi.style.width=hiW+"%";
+  const cardH=document.querySelector(".dash-ov-prio-card--high");
+  if(cardH){
+    cardH.style.setProperty("--ov-prio",hiCol);
+    if(bHi)bHi.style.background=hiCol
+  }
+  const mondayOff=base.getDay()===0?-6:1-base.getDay();
+  const startDate=new Date(base);
+  startDate.setDate(base.getDate()+mondayOff);
+  const labels=["\u4e00","\u4e8c","\u4e09","\u56db","\u4e94","\u516d","\u65e5"];
+  const strip=document.getElementById("dashWeekStrip");
+  const wtitle=document.getElementById("dashWeekTitle");
+  if(wtitle)wtitle.textContent=base.getFullYear()+"\u5e74"+(base.getMonth()+1)+"\u6708";
+  if(strip){
+    const todayStr=fd(now);
+    let h="",wkTot=0,wkDone=0;
+    for(let i=0;i<7;i++){
+      const dd=new Date(startDate);
+      dd.setDate(startDate.getDate()+i);
+      const ds=fd(dd);
+      const isWkSel=ds===selStr,isToday=ds===todayStr;
+      const wcls="dash-wd"+(isWkSel?" dash-wd-sel":"")+(isToday?" dash-wd-today":"");
+      const arr=T[ds]?T[ds].filter(function(item){return isListedTask(item)}):[];
+      const n=arr.length;
+      if(n){
+        wkTot+=n;
+        wkDone+=arr.filter(function(item){return item.done}).length
+      }
+      let taskDot="";
+      if(n){
+        const allDone=arr.every(function(item){return item.done});
+        taskDot='<span class="dash-wd-dot dash-wd-dot--task'+(allDone?" dash-wd-dot--done":"")+'" aria-hidden="true"></span>'
+      }
+      h+='<button type="button" class="'+wcls+'" onclick="pick(\''+ds+'\')"><span class="dash-wd-lab">'+labels[i]+'</span><span class="dash-wd-num">'+dd.getDate()+'</span><div class="dash-wd-dots" aria-hidden="true"><span class="dash-wd-dot dash-wd-dot--today"></span>'+taskDot+'</div></button>'
+    }
+    strip.innerHTML=h;
+    const foot=document.getElementById("dashWeekFoot");
+    if(foot){
+      if(!wkTot)foot.innerHTML='<div class="dash-week-foot-inner dash-week-foot--empty">\u672c\u5468\u6682\u65e0\u4efb\u52a1\u5b89\u6392</div>';
+      else foot.innerHTML='<div class="dash-week-foot-inner"><div class="dwf-line"><span class="dwf-k">\u672c\u5468</span> <strong class="dwf-num">'+wkTot+'</strong><span class="dwf-u">\u9879</span><span class="dwf-dotsep">|</span><span class="dwf-k">\u5df2\u5b8c\u6210</span> <strong class="dwf-num dwf-done">'+wkDone+'</strong><span class="dwf-dotsep">|</span><span class="dwf-k">\u5f85\u529e</span> <strong class="dwf-num dwf-pend">'+(wkTot-wkDone)+'</strong></div></div>'
+    }
+  }
+}
 function ensureWeekTaskOverviewShell(root){
   if(!root)return null;
   let shell=root.querySelector(".week-action-shell");
   if(!shell){
     shell=document.createElement("section");
     shell.className="week-action-shell week-task-overview";
-    shell.setAttribute("aria-label","本周任务概览");
+    shell.setAttribute("aria-label","\u672c\u5468\u4efb\u52a1\u603b\u89c8");
     root.appendChild(shell)
   }
   return shell
@@ -393,9 +462,9 @@ function weekOverviewMonthDay(ds){
   return d?(d.getMonth()+1)+"/"+d.getDate():""
 }
 function weekOverviewRhythmStatus(day){
-  if(day.pending)return day.pending+" "+(day.isOverdue?"逾期":"待办");
-  if(day.total)return"已清空";
-  return"无任务"
+  if(day.pending)return day.pending+"\u00a0\u9879"+(day.isOverdue?"\u5df2\u903e\u671f":"\u5f85\u5904\u7406");
+  if(day.total)return"\u5df2\u5b8c\u6210";
+  return"\u6682\u65e0\u4efb\u52a1"
 }
 function weekOverviewRhythmTone(day){
   if(day.pending&&day.isOverdue)return"overdue";
@@ -412,42 +481,185 @@ function weekOverviewRhythmIcon(day){
 }
 function weekOverviewRhythmStateHtml(day){
   const tone=weekOverviewRhythmTone(day),status=weekOverviewRhythmStatus(day),chip=day.isToday&&(tone==="overdue"||tone==="pending");
-  return'<span class="week-rhythm-state week-rhythm-state--'+tone+(chip?' week-rhythm-state--chip':'')+'">'+status+"</span>"
+  return '<span class="week-rhythm-state week-rhythm-state--'+tone+(chip?' week-rhythm-state--chip':'')+'">'+status+'</span>'
 }
 function getWeekOverviewData(selStr){
-  const meta=getTaskWeekMeta(selStr),weekNames=["一","二","三","四","五","六","日"],allRows=[];
+  const meta=getTaskWeekMeta(selStr),weekNames=["\u5468\u4e00","\u5468\u4e8c","\u5468\u4e09","\u5468\u56db","\u5468\u4e94","\u5468\u516d","\u5468\u65e5"],allRows=[];
   const todayDs=fd(now);
   const dayStats=meta.days.map(function(ds,idx){
-    const raw=(T[ds]||[]).filter(function(t){return!t.archived});
-    raw.forEach(function(t){allRows.push({task:t,ds:ds,idx:idx})});
-    const done=raw.filter(function(t){return t.done}).length,pending=raw.filter(function(t){return!t.done&&!t.frozen}).length,high=raw.filter(function(t){return t.priority==="high"}).length;
-    return{ds:ds,idx:idx,label:"周"+weekNames[idx],dateText:weekOverviewMonthDay(ds),total:raw.length,done:done,pending:pending,high:high,isFocus:ds===selStr,isToday:ds===todayDs,isOverdue:ds<todayDs&&pending>0}
+    const raw=(T[ds]||[]).filter(function(task){return isListedTask(task)});
+    raw.forEach(function(task){allRows.push({task:task,ds:ds,idx:idx})});
+    const done=raw.filter(function(task){return task.done}).length,pending=raw.filter(function(task){return !task.done&&!task.frozen}).length,high=raw.filter(function(task){return task.priority==="high"}).length;
+    return {ds:ds,idx:idx,label:weekNames[idx],dateText:weekOverviewMonthDay(ds),total:raw.length,done:done,pending:pending,high:high,isFocus:ds===selStr,isToday:ds===todayDs,isOverdue:ds<todayDs&&pending>0}
   });
-  return{meta:meta,weekNames:weekNames,allRows:allRows,dayStats:dayStats}
+  return {meta:meta,weekNames:weekNames,allRows:allRows,dayStats:dayStats}
 }
 function renderWeekTaskOverviewSidebar(pct,totalForProg,doneForProg,selStr){
   const root=document.getElementById("taskDashCol"),shell=ensureWeekTaskOverviewShell(root);
   if(!root||!shell)return;
-  const data=getWeekOverviewData(selStr),total=data.allRows.length,done=data.allRows.filter(function(row){return row.task.done}).length,pending=data.allRows.filter(function(row){return!row.task.done&&!row.task.frozen}).length;
+  const data=getWeekOverviewData(selStr),total=data.allRows.length,done=data.allRows.filter(function(row){return row.task.done}).length,pending=data.allRows.filter(function(row){return !row.task.done&&!row.task.frozen}).length;
   const highPending=data.allRows.filter(function(row){return row.task.priority==="high"&&!row.task.done&&!row.task.frozen}).length;
   const rhythmRows=data.dayStats.map(function(day){
     const status=weekOverviewRhythmStatus(day),tone=weekOverviewRhythmTone(day),cls="week-rhythm-day"+(day.isToday?" is-today":"")+(day.isFocus?" is-focus":"")+(day.isOverdue?" is-overdue":"")+(day.pending?" has-pending":day.total?" is-clear":" is-empty");
-    return'<button type="button" class="'+cls+'" onclick="jumpWeekDay(\''+day.ds+'\')" aria-label="定位到'+day.label+' '+day.dateText+'，'+status+'"><span class="week-rhythm-rail" aria-hidden="true"><span class="week-rhythm-node week-rhythm-node--'+tone+'">'+weekOverviewRhythmIcon(day)+'</span></span><span class="week-rhythm-main"><span class="week-rhythm-copy"><span class="week-rhythm-week">'+day.label+'</span><span class="week-rhythm-date">'+day.dateText+'</span></span>'+weekOverviewRhythmStateHtml(day)+'</span></button>'
+    return '<button type="button" class="'+cls+'" onclick="jumpWeekDay(\''+day.ds+'\')" aria-label="\u5207\u6362\u5230 '+day.label+' '+day.dateText+' '+status+'"><span class="week-rhythm-rail" aria-hidden="true"><span class="week-rhythm-node week-rhythm-node--'+tone+'">'+weekOverviewRhythmIcon(day)+'</span></span><span class="week-rhythm-main"><span class="week-rhythm-copy"><span class="week-rhythm-week">'+day.label+'</span><span class="week-rhythm-date">'+day.dateText+'</span></span>'+weekOverviewRhythmStateHtml(day)+'</span></button>'
   }).join("");
-  shell.innerHTML='<div class="week-overview-head"><span class="week-overview-kicker">\u4efb\u52a1\u6982\u89c8</span></div><div class="week-overview-score"><div class="week-overview-ring" style="--week-pct:'+pct+'"><span>'+pct+'%</span><em>\u5b8c\u6210\u5ea6</em></div><div class="week-overview-score-main"><div class="week-overview-count"><strong class="week-overview-count-done">'+done+'</strong><span class="week-overview-count-rest">/'+total+'</span></div><p>\u5468\u4efb\u52a1\u5df2\u5b8c\u6210</p></div></div><div class="week-overview-metrics"><div><b>'+total+'</b><span>\u5168\u90e8</span></div><div><b>'+pending+'</b><span>\u5f85\u529e</span></div><div><b>'+done+'</b><span>\u5b8c\u6210</span></div><div><b>'+highPending+'</b><span>\u9ad8\u4f18\u5148</span></div></div><div class="week-overview-section week-overview-section--rhythm"><div class="week-overview-section-title"><span>\u672c\u5468\u8282\u594f</span></div><div class="week-rhythm-list">'+rhythmRows+'</div></div>'
+  shell.innerHTML='<div class="week-overview-head"><span class="week-overview-kicker">\u672c\u5468\u603b\u89c8</span></div><div class="week-overview-score"><div class="week-overview-ring" style="--week-pct:'+pct+'"><span>'+pct+'%</span><em>\u5b8c\u6210\u5ea6</em></div><div class="week-overview-score-main"><div class="week-overview-count"><strong class="week-overview-count-done">'+done+'</strong><span class="week-overview-count-rest">/'+total+'</span></div><p>\u672c\u5468\u4efb\u52a1\u8282\u594f\u4e00\u773c\u53ef\u89c1\uff0c\u628a\u6ce8\u610f\u529b\u653e\u5728\u8fd8\u6ca1\u6536\u5c3e\u7684\u4e8b\u4e0a\u3002</p></div></div><div class="week-overview-metrics"><div><b>'+total+'</b><span>\u5168\u90e8\u4efb\u52a1</span></div><div><b>'+pending+'</b><span>\u5f85\u5904\u7406</span></div><div><b>'+done+'</b><span>\u5df2\u5b8c\u6210</span></div><div><b>'+highPending+'</b><span>\u9ad8\u4f18\u5148\u5f85\u529e</span></div></div><div class="week-overview-section week-overview-section--rhythm"><div class="week-overview-section-title"><span>\u672c\u5468\u8282\u594f</span></div><div class="week-rhythm-list">'+rhythmRows+'</div></div>'
+}
+function ensureOverdueTaskOverviewShell(root){
+  if(!root)return null;
+  let shell=root.querySelector(".overdue-action-shell");
+  if(!shell){
+    shell=document.createElement("section");
+    shell.className="week-action-shell overdue-action-shell";
+    shell.setAttribute("aria-label","\u903e\u671f\u4efb\u52a1\u603b\u89c8");
+    root.appendChild(shell)
+  }
+  return shell
+}
+function overdueAgeDays(ds,todayDs){
+  const start=parseDS(ds),end=parseDS(todayDs||fd(now));
+  if(!start||!end)return 1;
+  const startTime=new Date(start.getFullYear(),start.getMonth(),start.getDate()).getTime();
+  const endTime=new Date(end.getFullYear(),end.getMonth(),end.getDate()).getTime();
+  return Math.max(1,Math.round((endTime-startTime)/86400000))
+}
+function overdueAgeText(days){
+  return "\u5df2\u903e\u671f "+Math.max(1,days)+" \u5929"
+}
+function overdueActiveSortMode(){
+  if(sortStates&&sortStates[sel])return normalizeSortMode(sortStates[sel]);
+  if(autoSortEnabled)return normalizeSortMode(defaultSortMode||lastSort||"created");
+  return""
+}
+function sortOverdueGroupEntries(entries,activeSortMode){
+  if(activeSortMode&&entries.length>1&&typeof sortDisplayList==="function"){
+    const orderedTasks=sortDisplayList(entries.map(function(entry){return entry.task}),activeSortMode);
+    const entryMap=new Map(entries.map(function(entry){return[String(entry.task.id),entry]}));
+    return orderedTasks.map(function(task){return entryMap.get(String(task.id))}).filter(Boolean)
+  }
+  return entries.slice().sort(function(a,b){
+    const pa=(a.task.priority||"medium")==="high"?0:1,pb=(b.task.priority||"medium")==="high"?0:1;
+    if(pa!==pb)return pa-pb;
+    if(a.ds!==b.ds)return b.ds.localeCompare(a.ds);
+    return(a.task.createdAt||"").localeCompare(b.task.createdAt||"")
+  })
+}
+function getOverdueTaskSceneState(){
+  const todayDs=fd(now),allEntries=[];
+  Object.keys(T||{}).forEach(function(ds){
+    if(ds>=todayDs)return;
+    (T[ds]||[]).forEach(function(task){
+      if(!isPendingListedTask(task))return;
+      allEntries.push({ds:ds,task:task,overdueDays:overdueAgeDays(ds,todayDs)})
+    })
+  });
+  const filteredEntries=allEntries.filter(function(entry){
+    if(!passesFMulti(entry.task))return false;
+    if(FTag&&!(entry.task.tags||[]).includes(FTag))return false;
+    return true
+  });
+  const grouped=new Map(),activeSortMode=overdueActiveSortMode();
+  filteredEntries.forEach(function(entry){
+    if(!grouped.has(entry.ds))grouped.set(entry.ds,[]);
+    grouped.get(entry.ds).push(entry)
+  });
+  const groups=Array.from(grouped.keys()).sort(function(a,b){return b.localeCompare(a)}).map(function(ds){
+    const items=sortOverdueGroupEntries(grouped.get(ds)||[],activeSortMode);
+    return{ds:ds,items:items,count:items.length,maxOverdueDays:items.reduce(function(max,entry){return Math.max(max,entry.overdueDays)},1)}
+  });
+  const visibleCount=filteredEntries.length,totalCount=allEntries.length,highCount=filteredEntries.filter(function(entry){return(entry.task.priority||"medium")==="high"}).length,oldestDays=filteredEntries.reduce(function(max,entry){return Math.max(max,entry.overdueDays)},0);
+  return{todayDs:todayDs,totalCount:totalCount,visibleCount:visibleCount,highCount:highCount,oldestDays:oldestDays,groupCount:groups.length,groups:groups}
+}
+function overdueTaskAgeValueText(days){
+  return Math.max(1,parseInt(days,10)||1)+"\u5929"
+}
+function overdueTaskDateParts(ds){
+  const text=typeof disp==="function"?String(disp(ds)||""):String(ds||""),splitIdx=text.lastIndexOf(" ");
+  return{dateText:splitIdx>0?text.slice(0,splitIdx):text,weekText:splitIdx>0?text.slice(splitIdx+1):""}
+}
+function overdueTaskPriorityRingHtml(task){
+  const high=(task.priority||"normal")==="high",hex=high?(prioColor("high")||"#ef4444"):"#94a3b8",label=high?"\u9ad8\u4f18\u5148\u7ea7":"\u65e0\u4f18\u5148\u7ea7";
+  return'<span class="overdue-task-priority-ring task-ck-ring'+(high?" task-ck-ring--prio-high":"")+'" style="--ck-prio:'+hex+'" role="img" aria-label="'+label+'"><span class="tc-check" aria-hidden="true"><span class="chk-ring"></span></span></span>'
+}
+function overdueTaskAgeHtml(entry){
+  return'<span class="overdue-task-age">'+esc(overdueTaskAgeValueText(entry.overdueDays))+'</span>'
+}
+function overdueTaskScheduleMeta(entry){
+  const task=entry.task;
+  let mainText="";
+  if(task.planTime){
+    const raw=typeof formatPlanTimeDisp==="function"?formatPlanTimeDisp(task.planTime):task.planTime;
+    mainText=typeof taskRowPlainTimeText==="function"?taskRowPlainTimeText(task,raw):raw
+  }else if(parseInt(task.duration,10)>0){
+    mainText="\u9884\u8ba1 "+parseInt(task.duration,10)+" \u5206\u949f"
+  }else mainText="\u5168\u5929";
+  const subtasks=Array.isArray(task.subtasks)?task.subtasks:[],subDone=subtasks.reduce(function(total,item){return total+(item&&item.done?1:0)},0);
+  return{mainText:mainText,subText:subtasks.length?("\u5b50\u4efb\u52a1 "+subDone+" / "+subtasks.length):""}
+}
+function overdueTaskStatusHtml(entry){
+  const schedule=overdueTaskScheduleMeta(entry),parts=overdueTaskDateParts(entry.ds);
+  return'<div class="overdue-task-status-stack"><div class="overdue-task-status-line">'+overdueTaskAgeHtml(entry)+'</div><div class="overdue-task-status-subline"><span class="overdue-task-time-main">'+esc(schedule.mainText)+'</span><span class="overdue-task-status-sub-sep" aria-hidden="true"></span><span class="overdue-task-status-date">'+esc(parts.dateText)+'</span>'+(parts.weekText?'<span class="overdue-task-status-week">'+esc(parts.weekText)+'</span>':"")+(schedule.subText?'<span class="overdue-task-status-sub-sep" aria-hidden="true"></span><span class="overdue-task-time-sub">'+esc(schedule.subText)+'</span>':"")+'</div></div>'
+}
+function renderOverdueTaskRow(entry){
+  const task=entry.task,tone=(task.priority||"normal")==="high"?"high":"normal";
+  return'<tr class="overdue-task-row overdue-task-row--'+tone+'"><td class="overdue-task-cell overdue-task-cell--title" data-label="\u6807\u9898"><div class="overdue-task-title-row">'+overdueTaskPriorityRingHtml(task)+'<div class="overdue-task-copy-stack"><strong class="overdue-task-title" title="'+esc(task.text)+'">'+esc(task.text)+'</strong></div></div></td><td class="overdue-task-cell overdue-task-cell--status" data-label="\u72b6\u6001">'+overdueTaskStatusHtml(entry)+'</td><td class="overdue-task-cell overdue-task-cell--action" data-label="\u64cd\u4f5c"><button type="button" class="overdue-task-dismiss" onclick="event.stopPropagation();dismissOverdueTask(\''+entry.ds+'\','+task.id+')" aria-label="\u653e\u5f03\u4efb\u52a1 '+esc(task.text)+'">\u653e\u5f03</button></td></tr>'
+}
+function renderOverdueTaskTable(entries){
+  return'<div class="overdue-task-table-wrap overdue-task-table-wrap--single"><table class="overdue-task-table"><thead><tr><th scope="col">\u6807\u9898</th><th scope="col">\u72b6\u6001</th><th scope="col">\u64cd\u4f5c</th></tr></thead><tbody>'+entries.map(renderOverdueTaskRow).join("")+'</tbody></table></div>'
+}
+function renderOverdueTaskScene(list){
+  const state=getOverdueTaskSceneState();
+  if(!state.totalCount){
+    list.innerHTML='<section class="overdue-scene overdue-scene--empty"><div class="overdue-empty"><div class="overdue-empty-icon" aria-hidden="true">OK</div><p class="overdue-empty-title">\u5f53\u524d\u6ca1\u6709\u903e\u671f\u4efb\u52a1</p><p class="overdue-empty-sub">\u5386\u53f2\u672a\u5b8c\u6210\u4efb\u52a1\u4f1a\u96c6\u4e2d\u663e\u793a\u5728\u8fd9\u91cc\u3002</p></div></section>';
+    return state
+  }
+  if(!state.visibleCount){
+    list.innerHTML='<section class="overdue-scene overdue-scene--empty"><div class="overdue-empty"><div class="overdue-empty-icon overdue-empty-icon--soft" aria-hidden="true">\u7b5b</div><p class="overdue-empty-title">\u5f53\u524d\u7b5b\u9009\u4e0b\u6ca1\u6709\u5339\u914d\u7684\u903e\u671f\u4efb\u52a1</p><p class="overdue-empty-sub">\u53ef\u4ee5\u5207\u6362\u7b5b\u9009\u6761\u4ef6\uff0c\u67e5\u770b\u5176\u4f59\u5386\u53f2\u4efb\u52a1\u3002</p></div></section>';
+    return state
+  }
+  const entries=state.groups.reduce(function(all,group){
+    return all.concat(group.items)
+  },[]);
+  list.innerHTML='<section class="overdue-scene">'+renderOverdueTaskTable(entries)+'</section>';
+  return state
+}
+function dismissOverdueTask(ds,id){
+  const rows=T[ds]||[],task=rows.find(function(item){return+item.id===+id});
+  if(!isPendingListedTask(task))return;
+  pushUndo("\u653e\u5f03\u903e\u671f\u4efb\u52a1");
+  task.dismissed=true;
+  if(typeof syncTaskDetailPanelIfNeeded==="function")syncTaskDetailPanelIfNeeded(id);
+  rCal();
+  rT();
+  if(typeof rKanban==="function")rKanban();
+  save();
+  toast("\u5df2\u653e\u5f03\u8be5\u903e\u671f\u4efb\u52a1")
+}
+function renderOverdueTaskOverviewSidebar(state){
+  const root=document.getElementById("taskDashCol"),shell=ensureOverdueTaskOverviewShell(root);
+  if(!root||!shell)return;
+  root.classList.remove("is-week-action");
+  root.classList.add("is-overdue-action");
+  root.setAttribute("aria-label","\u903e\u671f\u4efb\u52a1\u603b\u89c8");
+  const leadText=state.visibleCount?("\u5206\u5e03\u5728 "+state.groupCount+" \u5929\uff0c\u6700\u4e45\u5df2\u903e\u671f "+state.oldestDays+" \u5929"):(state.totalCount?"\u5f53\u524d\u7b5b\u9009\u4e0b\u6682\u65e0\u5339\u914d\u4efb\u52a1":"\u5386\u53f2\u4efb\u52a1\u5df2\u6e05\u7a7a");
+  const listHtml=state.groups.slice(0,4).map(function(group){
+    return'<div class="overdue-overview-row"><div class="overdue-overview-row-copy"><strong>'+esc(disp(group.ds))+'</strong><span>'+group.count+' \u9879\u672a\u5b8c\u6210</span></div><em>'+esc(overdueAgeText(group.maxOverdueDays))+'</em></div>'
+  }).join("");
+  shell.innerHTML='<div class="week-overview-head"><span class="week-overview-kicker">\u903e\u671f\u603b\u89c8</span></div><div class="overdue-overview-hero"><div class="overdue-overview-count"><strong>'+state.visibleCount+'</strong><span>\u5f53\u524d\u5f85\u5904\u7406</span></div><p>'+leadText+'</p></div><div class="overdue-overview-metrics"><div><b>'+state.totalCount+'</b><span>\u5168\u90e8\u903e\u671f</span></div><div><b>'+state.highCount+'</b><span>\u9ad8\u4f18\u5148</span></div><div><b>'+state.groupCount+'</b><span>\u6d89\u53ca\u65e5\u671f</span></div></div><div class="overdue-overview-section"><div class="overdue-overview-section-title">\u6700\u8fd1\u903e\u671f\u65e5\u671f</div><div class="overdue-overview-list">'+(listHtml||'<div class="overdue-overview-empty">\u5f53\u524d\u6ca1\u6709\u9700\u8981\u5904\u7406\u7684\u903e\u671f\u4efb\u52a1\u3002</div>')+'</div></div>'
 }
 const renderTaskDashLegacy=renderTaskDash;
 renderTaskDash=function(pct,totalForProg,doneForProg,nonArchived,fl,selStr){
   const root=document.getElementById("taskDashCol");
   if(!root)return;
   if(getTaskQuickMode()==="week"){
+    root.classList.remove("is-overdue-action");
     root.classList.add("is-week-action");
-    root.setAttribute("aria-label","本周任务概览");
+    root.setAttribute("aria-label","\u672c\u5468\u4efb\u52a1\u6982\u89c8");
     renderWeekTaskOverviewSidebar(pct,totalForProg,doneForProg,selStr);
     return
   }
-  root.classList.remove("is-week-action");
-  root.setAttribute("aria-label","今日概览");
+  root.classList.remove("is-week-action","is-overdue-action");
+  root.setAttribute("aria-label","\u4eca\u65e5\u6982\u89c8");
   return renderTaskDashLegacy(pct,totalForProg,doneForProg,nonArchived,fl,selStr)
 };
 var _ftInited=false,_ftIv=null,_ftO=null;
@@ -460,21 +672,21 @@ function focusTimerSyncEnd(){if(!_ftO.run||_ftO.p||!_ftO.end)return;var x=Math.c
 function focusTimerTick(){if(!document.getElementById("ftRingProg")||!_ftO)return;if(_ftO.run&&!_ftO.p&&_ftO.end){focusTimerSyncEnd();if(_ftO.rem<=0){_ftO.rem=0;focusTimerSave();focusTimerOnPhaseEnd()}else focusTimerPaint()}}
 function focusTimerVis(){if(document.visibilityState==="visible"&&_ftO&&_ftO.run&&!_ftO.p)focusTimerSyncEnd();focusTimerPaint()}
 function focusTimerAfterRender(){if(!document.getElementById("ftRingProg"))return;if(!_ftInited){_ftInited=true;focusTimerLoad();_ftIv=setInterval(focusTimerTick,1e3);document.addEventListener("visibilitychange",focusTimerVis)}focusTimerSyncTaskLabel();focusTimerPaint()}
-function focusTimerSyncTaskLabel(){var el=document.getElementById("ftTaskLabel");if(!el)return;var tk=_ftO&&_ftO.task;if(!tk){el.textContent="+ 关联任务（可选）";return}var arr=typeof T!=="undefined"&&T[tk.d]||[],x=arr.find(function(q){return q.id===tk.id});el.textContent=x&&x.text?x.text:"+ 关联任务（可选）"}
+function focusTimerSyncTaskLabel(){var el=document.getElementById("ftTaskLabel");if(!el)return;var tk=_ftO&&_ftO.task;if(!tk){el.textContent="+ \u5173\u8054\u4efb\u52a1\uff08\u53ef\u9009\uff09";return}var arr=typeof T!=="undefined"&&T[tk.d]||[],x=arr.find(function(q){return q.id===tk.id});el.textContent=x&&x.text?x.text:"+ \u5173\u8054\u4efb\u52a1\uff08\u53ef\u9009\uff09"}
 function focusTimerUpdateTabLabels(){var f=document.getElementById("ftLabF"),s=document.getElementById("ftLabS"),l=document.getElementById("ftLabL");if(f)f.textContent=String(_ftO.F);if(s)s.textContent=String(_ftO.S);if(l)l.textContent=String(_ftO.L)}
 function focusTimerUpdateTabs(){var m=_ftO.mode,f=document.getElementById("ftTabFocus"),a=document.getElementById("ftTabShort"),b=document.getElementById("ftTabLong");if(f)f.classList.toggle("active",m==="focus");if(a)a.classList.toggle("active",m==="short");if(b)b.classList.toggle("active",m==="long")}
-function focusTimerPaintDots(){var el=document.getElementById("ftDots"),dm=document.getElementById("ftDotsMeta");if(!el)return;var h="",o=_ftO;for(var i=1;i<=4;i++){var c="ft-dot";if(i<o.round)c+=" on";else if(i===o.round)c+=" on cur";h+='<div class="'+c+'"></div>'}el.innerHTML=h;if(dm)dm.textContent=o.mode==="focus"?"第 "+o.round+" 个":o.mode==="short"?"短休息":"长休息"}
-function focusTimerPaint(){if(!_ftO)return;focusTimerUpdateTabLabels();focusTimerUpdateTabs();var o=_ftO,te=document.getElementById("ftTimeDisp"),st=document.getElementById("ftStatusDisp"),pb=document.getElementById("ftPlayBtn"),ring=document.getElementById("ftRingProg");if(!te||!ring)return;var mx=Math.floor(o.rem/60),sx=o.rem%60;te.textContent=(mx<10?"0":"")+mx+":"+(sx<10?"0":"")+sx;var lab=o.mode==="focus"?"专注中":o.mode==="short"?"短休中":"长休中";if(!o.run)st.textContent="就绪";else if(o.p)st.textContent="已暂停";else st.textContent=lab;var pip=pb&&pb.querySelector(".ft-ico-play"),pau=pb&&pb.querySelector(".ft-ico-pause");if(pip&&pau){if(o.run&&!o.p){pip.classList.add("hidden");pau.classList.remove("hidden")}else{pau.classList.add("hidden");pip.classList.remove("hidden")}}if(pb)pb.classList.toggle("ft-running",!!(o.run&&!o.p));var tot=Math.max(1,focusTimerTotalSec()),C=2*Math.PI*52;ring.style.strokeDasharray=String(C);ring.style.strokeDashoffset=String(C*(1-Math.min(1,o.rem/tot)));var td=fd(now),rec=o.byDay[td]||{p:0,m:0},sp=document.getElementById("ftStatPomo"),sm=document.getElementById("ftStatMin"),ss=document.getElementById("ftStatStreak");if(sp)sp.textContent=String(rec.p||0);if(sm)sm.textContent=String(rec.m||0);if(ss)ss.textContent=String(o.streak||0);focusTimerPaintDots()}
+function focusTimerPaintDots(){var el=document.getElementById("ftDots"),dm=document.getElementById("ftDotsMeta");if(!el)return;var h="",o=_ftO;for(var i=1;i<=4;i++){var c="ft-dot";if(i<o.round)c+=" on";else if(i===o.round)c+=" on cur";h+='<div class="'+c+'"></div>'}el.innerHTML=h;if(dm)dm.textContent=o.mode==="focus"?"\u7b2c "+o.round+" \u4e2a":o.mode==="short"?"\u77ed\u4f11\u606f":"\u957f\u4f11\u606f"}
+function focusTimerPaint(){if(!_ftO)return;focusTimerUpdateTabLabels();focusTimerUpdateTabs();var o=_ftO,te=document.getElementById("ftTimeDisp"),st=document.getElementById("ftStatusDisp"),pb=document.getElementById("ftPlayBtn"),ring=document.getElementById("ftRingProg");if(!te||!ring)return;var mx=Math.floor(o.rem/60),sx=o.rem%60;te.textContent=(mx<10?"0":"")+mx+":"+(sx<10?"0":"")+sx;var lab=o.mode==="focus"?"\u4e13\u6ce8\u4e2d":o.mode==="short"?"\u77ed\u4f11\u4e2d":"\u957f\u4f11\u4e2d";if(!o.run)st.textContent="\u5c31\u7eea";else if(o.p)st.textContent="\u5df2\u6682\u505c";else st.textContent=lab;var pip=pb&&pb.querySelector(".ft-ico-play"),pau=pb&&pb.querySelector(".ft-ico-pause");if(pip&&pau){if(o.run&&!o.p){pip.classList.add("hidden");pau.classList.remove("hidden")}else{pau.classList.add("hidden");pip.classList.remove("hidden")}}if(pb)pb.classList.toggle("ft-running",!!(o.run&&!o.p));var tot=Math.max(1,focusTimerTotalSec()),C=2*Math.PI*52;ring.style.strokeDasharray=String(C);ring.style.strokeDashoffset=String(C*(1-Math.min(1,o.rem/tot)));var td=fd(now),rec=o.byDay[td]||{p:0,m:0},sp=document.getElementById("ftStatPomo"),sm=document.getElementById("ftStatMin"),ss=document.getElementById("ftStatStreak");if(sp)sp.textContent=String(rec.p||0);if(sm)sm.textContent=String(rec.m||0);if(ss)ss.textContent=String(o.streak||0);focusTimerPaintDots()}
 function focusTimerRecordPomo(){var o=_ftO,td=fd(now),n=Math.round(o.F);if(!o.byDay[td])o.byDay[td]={p:0,m:0};o.byDay[td].p=(o.byDay[td].p||0)+1;o.byDay[td].m=(o.byDay[td].m||0)+n;var yd=focusTimerYesterday();if(o.lastDay!==td){if(o.lastDay===yd)o.streak=(o.streak||0)+1;else o.streak=1;o.lastDay=td}}
 function focusTimerAdvance(donePomo){var o=_ftO;if(o.mode==="focus"){if(donePomo)focusTimerRecordPomo();if(o.round===4){o.mode="long";o.round=1}else{o.mode="short";o.round=o.round+1}}else{o.mode="focus"}o.rem=focusTimerTotalSec()}
-function focusTimerOnPhaseEnd(){if(!_ftO)return;_ftO.run=0;_ftO.p=0;_ftO.end=0;focusTimerAdvance(true);focusTimerSave();toast("⏱ 时间到");focusTimerPaint()}
+function focusTimerOnPhaseEnd(){if(!_ftO)return;_ftO.run=0;_ftO.p=0;_ftO.end=0;focusTimerAdvance(true);focusTimerSave();toast("\u23f1 \u65f6\u95f4\u5230");focusTimerPaint()}
 function focusTimerSetMode(m){if(!_ftO)focusTimerLoad();if(m===_ftO.mode)return;_ftO.mode=m;_ftO.run=0;_ftO.p=0;_ftO.end=0;_ftO.rem=focusTimerTotalSec();focusTimerSave();focusTimerPaint()}
 function focusTimerTogglePlay(){if(!_ftO)focusTimerLoad();if(_ftO.run&&!_ftO.p){_ftO.p=1;focusTimerSyncEnd();_ftO.end=0;focusTimerSave();focusTimerPaint()}else{_ftO.run=1;_ftO.p=0;if(_ftO.rem<=0)_ftO.rem=focusTimerTotalSec();_ftO.end=Date.now()+_ftO.rem*1e3;focusTimerSave();focusTimerPaint()}}
 function focusTimerReset(){if(!_ftO)return;_ftO.run=0;_ftO.p=0;_ftO.end=0;_ftO.rem=focusTimerTotalSec();focusTimerSave();focusTimerPaint()}
 function focusTimerSkip(){if(!_ftO)return;_ftO.run=0;_ftO.p=0;_ftO.end=0;focusTimerAdvance(false);focusTimerSave();focusTimerPaint()}
-function focusTimerToggleSettings(){var sv=document.getElementById("ftSettingsView"),tv=document.getElementById("ftTimerView");if(!sv||!tv||!_ftO)return;var show=sv.classList.contains("hidden");if(show){sv.classList.remove("hidden");tv.classList.add("hidden");var f=document.getElementById("ftInF"),s=document.getElementById("ftInS"),l=document.getElementById("ftInL");if(f)f.value=_ftO.F;if(s)s.value=_ftO.S;if(l)l.value=_ftO.L;var tx=document.querySelector("#dashFocusCard .dash-focus-set-txt");if(tx)tx.textContent="返回";var b=document.querySelector("#dashFocusCard .dash-focus-set");if(b)b.title="返回"}else{sv.classList.add("hidden");tv.classList.remove("hidden");var tx=document.querySelector("#dashFocusCard .dash-focus-set-txt");if(tx)tx.textContent="设置";var b=document.querySelector("#dashFocusCard .dash-focus-set");if(b)b.title="设置"}}
-function focusTimerSaveSettings(){if(!_ftO)return;var a=+document.getElementById("ftInF").value,b=+document.getElementById("ftInS").value,c=+document.getElementById("ftInL").value;if(a>=1&&a<=180)_ftO.F=Math.round(a);if(b>=1&&b<=60)_ftO.S=Math.round(b);if(c>=1&&c<=90)_ftO.L=Math.round(c);_ftO.run=0;_ftO.p=0;_ftO.end=0;_ftO.rem=focusTimerTotalSec();var sv=document.getElementById("ftSettingsView"),tv=document.getElementById("ftTimerView");if(sv)sv.classList.add("hidden");if(tv)tv.classList.remove("hidden");var tx=document.querySelector("#dashFocusCard .dash-focus-set-txt");if(tx)tx.textContent="设置";var b=document.querySelector("#dashFocusCard .dash-focus-set");if(b)b.title="设置";focusTimerSave();focusTimerPaint();toast("⚙ 已保存")}
-function focusTimerOpenTaskPick(){var day=fd(now),tasks=(T[day]||[]).filter(function(t){return!t.done&&!t.archived&&!t.frozen});var body=document.getElementById("mBody"),bg=document.getElementById("mBg");if(!body||!bg)return;var h;if(!tasks.length)h='<div class="m-sheet-wrap"><p class="m-sheet-title">今日无可用任务</p><button type="button" class="m-sheet-btn m-sheet-btn--accent" onclick="clM()">关闭</button></div>';else h='<div class="m-sheet-wrap"><p class="m-sheet-title">选择专注任务</p><div class="ft-pick-list">'+tasks.map(function(t){return'<button type="button" class="ft-pick-item" onclick="focusTimerPickTask(\''+day+"',"+t.id+')">'+esc(t.text)+"</button>"}).join("")+'</div><div class="ft-pick-actions"><button type="button" class="m-sheet-btn m-sheet-btn--ghost" onclick="clM()">取消</button><button type="button" class="m-sheet-btn ft-pick-deselect" onclick="focusTimerClearPick()">取消选择</button></div></div>';body.innerHTML=h;bg.classList.add("show")}
+function focusTimerToggleSettings(){var sv=document.getElementById("ftSettingsView"),tv=document.getElementById("ftTimerView");if(!sv||!tv||!_ftO)return;var show=sv.classList.contains("hidden");if(show){sv.classList.remove("hidden");tv.classList.add("hidden");var f=document.getElementById("ftInF"),s=document.getElementById("ftInS"),l=document.getElementById("ftInL");if(f)f.value=_ftO.F;if(s)s.value=_ftO.S;if(l)l.value=_ftO.L;var tx=document.querySelector("#dashFocusCard .dash-focus-set-txt");if(tx)tx.textContent="\u8fd4\u56de";var b=document.querySelector("#dashFocusCard .dash-focus-set");if(b)b.title="\u8fd4\u56de"}else{sv.classList.add("hidden");tv.classList.remove("hidden");var tx=document.querySelector("#dashFocusCard .dash-focus-set-txt");if(tx)tx.textContent="\u8bbe\u7f6e";var b=document.querySelector("#dashFocusCard .dash-focus-set");if(b)b.title="\u8bbe\u7f6e"}}
+function focusTimerSaveSettings(){if(!_ftO)return;var a=+document.getElementById("ftInF").value,b=+document.getElementById("ftInS").value,c=+document.getElementById("ftInL").value;if(a>=1&&a<=180)_ftO.F=Math.round(a);if(b>=1&&b<=60)_ftO.S=Math.round(b);if(c>=1&&c<=90)_ftO.L=Math.round(c);_ftO.run=0;_ftO.p=0;_ftO.end=0;_ftO.rem=focusTimerTotalSec();var sv=document.getElementById("ftSettingsView"),tv=document.getElementById("ftTimerView");if(sv)sv.classList.add("hidden");if(tv)tv.classList.remove("hidden");var tx=document.querySelector("#dashFocusCard .dash-focus-set-txt");if(tx)tx.textContent="\u8bbe\u7f6e";var b=document.querySelector("#dashFocusCard .dash-focus-set");if(b)b.title="\u8bbe\u7f6e";focusTimerSave();focusTimerPaint();toast("\u5df2\u4fdd\u5b58")}
+function focusTimerOpenTaskPick(){var day=fd(now),tasks=(T[day]||[]).filter(function(t){return isPendingListedTask(t)});var body=document.getElementById("mBody"),bg=document.getElementById("mBg");if(!body||!bg)return;var h;if(!tasks.length)h='<div class="m-sheet-wrap"><p class="m-sheet-title">\u4eca\u65e5\u65e0\u53ef\u7528\u4efb\u52a1</p><button type="button" class="m-sheet-btn m-sheet-btn--accent" onclick="clM()">\u5173\u95ed</button></div>';else h='<div class="m-sheet-wrap"><p class="m-sheet-title">\u9009\u62e9\u4e13\u6ce8\u4efb\u52a1</p><div class="ft-pick-list">'+tasks.map(function(t){return'<button type="button" class="ft-pick-item" onclick="focusTimerPickTask(\''+day+'\','+t.id+')">'+esc(t.text)+'</button>'}).join("")+'</div><div class="ft-pick-actions"><button type="button" class="m-sheet-btn m-sheet-btn--ghost" onclick="clM()">\u53d6\u6d88</button><button type="button" class="m-sheet-btn ft-pick-deselect" onclick="focusTimerClearPick()">\u53d6\u6d88\u9009\u62e9</button></div></div>';body.innerHTML=h;bg.classList.add("show")}
 function focusTimerPickTask(d,id){if(!_ftO)focusTimerLoad();_ftO.task={d:d,id:+id};focusTimerSave();clM();rT()}
 function focusTimerClearPick(){if(!_ftO)focusTimerLoad();_ftO.task=null;focusTimerSave();clM();rT()}
 function setTaskBackTodayBtn(ds){
@@ -519,7 +731,7 @@ function getTaskWeekRangeText(meta){
 function getTaskWeekOffset(ds){const targetStart=getTaskWeekMeta(ds).start,baseStart=getTaskWeekMeta(fd(now)).start,targetDate=new Date(targetStart.getFullYear(),targetStart.getMonth(),targetStart.getDate()),baseDate=new Date(baseStart.getFullYear(),baseStart.getMonth(),baseStart.getDate());return Math.round((targetDate-baseDate)/604800000)}
 function getCnWeekNum(n){const d=["\u96f6","\u4e00","\u4e8c","\u4e09","\u56db","\u4e94","\u516d","\u4e03","\u516b","\u4e5d"],v=Math.max(0,Math.floor(Number(n)||0));if(v<10)return d[v];if(v===10)return"\u5341";if(v<20)return"\u5341"+d[v%10];const t=Math.floor(v/10),u=v%10;return d[t]+"\u5341"+(u?d[u]:"")}
 function getTaskWeekScopeTitle(ds){const off=getTaskWeekOffset(ds);if(off===0)return"\u672c\u5468";if(off===1)return"\u4e0b\u5468";if(off===-1)return"\u4e0a\u5468";if(off>1)return"\u7b2c"+getCnWeekNum(off+1)+"\u5468";return"\u524d"+getCnWeekNum(-off+1)+"\u5468"}
-function setTaskDashScope(scope,metaText){const titleEl=document.querySelector(".dash-overview .dash-hd-tit"),subEl=document.querySelector(".dash-overview .dash-ov-count-sub"),shortEl=document.getElementById("dashShortDate"),root=document.getElementById("taskDashCol");if(scope==="week"){if(titleEl)titleEl.textContent="\u672c\u5468\u603b\u89c8";if(subEl)subEl.textContent="\u5468\u4efb\u52a1\u5df2\u5b8c\u6210";if(shortEl&&metaText)shortEl.textContent=metaText;if(root)root.setAttribute("aria-label","\u672c\u5468\u6982\u89c8");return}if(titleEl)titleEl.textContent="\u4eca\u65e5\u603b\u89c8";if(subEl)subEl.textContent="\u4efb\u52a1\u5df2\u5b8c\u6210";if(root)root.setAttribute("aria-label","\u4eca\u65e5\u6982\u89c8")}
+function setTaskDashScope(scope,metaText){const titleEl=document.querySelector(".dash-overview .dash-hd-tit"),subEl=document.querySelector(".dash-overview .dash-ov-count-sub"),shortEl=document.getElementById("dashShortDate"),root=document.getElementById("taskDashCol");if(scope==="week"){if(titleEl)titleEl.textContent="\u672c\u5468\u603b\u89c8";if(subEl)subEl.textContent="\u5468\u4efb\u52a1\u5df2\u5b8c\u6210";if(shortEl&&metaText)shortEl.textContent=metaText;if(root)root.setAttribute("aria-label","\u672c\u5468\u6982\u89c8");return}if(scope==="overdue"){if(titleEl)titleEl.textContent="\u903e\u671f\u603b\u89c8";if(subEl)subEl.textContent="\u5386\u53f2\u672a\u5b8c\u6210\u4efb\u52a1";if(shortEl)shortEl.textContent=metaText||"\u5386\u53f2";if(root)root.setAttribute("aria-label","\u903e\u671f\u6982\u89c8");return}if(titleEl)titleEl.textContent="\u4eca\u65e5\u603b\u89c8";if(subEl)subEl.textContent="\u4efb\u52a1\u5df2\u5b8c\u6210";if(root)root.setAttribute("aria-label","\u4eca\u65e5\u6982\u89c8")}
 const weekDayExpandState=new Set();
 const weekDoneDayRevealState=new Set();
 const weekTaskTogglePendingIds=new Set();
@@ -608,7 +820,7 @@ const WEEK_DAY_CARD_SCROLL_OPTIONS=Object.freeze({behavior:"smooth",block:"cente
 const weekDayHeadBreathStateByLayer=new WeakMap();
 function getWeekDayCard(ds){
   const list=document.getElementById("tList");
-  return list?list.querySelector(`${WEEK_DAY_CARD_SELECTOR}[data-week-ds="${ds}"]`):null
+  return list?list.querySelector(WEEK_DAY_CARD_SELECTOR+'[data-week-ds="'+ds+'"]'):null
 }
 const WEEK_DAY_HEAD_BREATH_ANIMATION=Object.freeze({
   keyframes:[
@@ -966,7 +1178,7 @@ function toggleWeekTaskDone(ds,id){
   if(typeof syncTaskDetailPanelIfNeeded==="function")syncTaskDetailPanelIfNeeded(id)
 }
 function getWeekVisibleRows(ds){
-  let rows=(T[ds]||[]).filter(function(t){return!t.archived});
+  let rows=(T[ds]||[]).filter(function(t){return isListedTask(t)});
   if(FTag)rows=rows.filter(function(t){return(t.tags||[]).includes(FTag)});
   return rows
 }
@@ -1089,7 +1301,7 @@ function renderWeekTaskScene(list,baseDs){
   const dailyOverview=[];
   const weekNames=["\u4e00","\u4e8c","\u4e09","\u56db","\u4e94","\u516d","\u65e5"];
   const cardList=meta.days.map(function(ds,idx){
-    const raw=(T[ds]||[]).filter(function(t){return!t.archived});
+    const raw=(T[ds]||[]).filter(function(t){return isListedTask(t)});
     raw.forEach(function(t){weekAllTasks.push(t)});
     const dayDone=raw.filter(function(t){return t.done}).length,dayPending=raw.filter(function(t){return!t.done&&!t.frozen}).length;
     doneAll+=dayDone;
@@ -1113,7 +1325,7 @@ function renderWeekTaskScene(list,baseDs){
     const d=parseDS(ds),md=d.getMonth()+1+"\u6708"+d.getDate()+"\u65e5",dayLabel="\u5468"+weekNames[idx]+" "+md,statusTxt=dayPending?"":raw.length?"\u5df2\u5168\u90e8\u5b8c\u6210":"\u6682\u65e0\u4efb\u52a1",dateTxt='<span class="week-day-date-text">'+md+'</span>',titleMeta=dateTxt+(statusTxt?'<span class="week-day-meta-dot">\u00b7</span><span class="week-day-status-text">'+statusTxt+'</span>':""),hasTaskBody=dayRows.length||dayDoneRows.length,isClearDay=!dayPending&&raw.length>0,cls="week-day-card"+(ds===todayDs?" is-today":"")+(ds===baseDs?" is-focus":"")+(isOverdueDay?" is-overdue":"")+(isClearDay?" is-clear":"")+(showDayDone?" is-done-open":"")+(hasTaskBody?"":" is-empty"),previewMax=WEEK_DAY_PREVIEW_MAX,isExpandable=dayRows.length>previewMax,isExpanded=isExpandable&&isWeekDayExpanded(ds),previewRows=dayRows.slice(0,previewMax),extraRows=isExpandable?dayRows.slice(previewMax):[],hiddenCount=extraRows.length,listCls="week-task-list"+(isExpanded&&dayRows.length>10?" is-scroll":"")+(isExpandable&&!isExpanded?" has-more-collapsed":"")+(hasTaskBody?"":" is-empty");
     if(isExpandable)expandableDays.push(ds);
     const renderWeekRow=function(t){
-      const pending=weekTaskTogglePendingIds.has(t.id),isTaskOverdue=isOverdueDay&&!t.done&&!pending&&!t.frozen,doneCls=(t.done||pending)?" is-done":"",animCls=pending?" task-toggle-anim":"",highCls=t.priority==="high"?" is-high":"",frozenCls=t.frozen?" is-frozen":"",subs=Array.isArray(t.subtasks)?t.subtasks:[],subT=subs.length,subD=subT?subs.reduce(function(n,s){return n+(s&&s.done?1:0)},0):0,timeMeta=weekTaskTimeMetaHtml(t),overdueMeta=isTaskOverdue?'<span class="week-task-overdue-meta" title="\u8be5\u4efb\u52a1\u5df2\u903e\u671f">'+WEEK_OVERDUE_ICON+'<span>\u5df2\u903e\u671f</span></span>':"",subMeta=subT?'<span class="week-task-sub-meta'+(subD===subT?" is-done":"")+'" title="子任务 '+subD+'/'+subT+'"><span class="week-task-sub-meta-dot" aria-hidden="true"></span><span>子任务 '+subD+" / "+subT+'</span></span>':"",metaHtml='<span class="week-task-meta-row">'+timeMeta+overdueMeta+subMeta+'</span>';
+      const pending=weekTaskTogglePendingIds.has(t.id),isTaskOverdue=isOverdueDay&&!t.done&&!pending&&!t.frozen,doneCls=(t.done||pending)?" is-done":"",animCls=pending?" task-toggle-anim":"",highCls=t.priority==="high"?" is-high":"",frozenCls=t.frozen?" is-frozen":"",subs=Array.isArray(t.subtasks)?t.subtasks:[],subT=subs.length,subD=subT?subs.reduce(function(n,s){return n+(s&&s.done?1:0)},0):0,timeMeta=weekTaskTimeMetaHtml(t),overdueMeta=isTaskOverdue?'<span class="week-task-overdue-meta" title="\u8be5\u4efb\u52a1\u5df2\u903e\u671f">'+WEEK_OVERDUE_ICON+'<span>\u5df2\u903e\u671f</span></span>':"",subMeta=subT?'<span class="week-task-sub-meta'+(subD===subT?" is-done":"")+'" title="\u5b50\u4efb\u52a1 '+subD+'/'+subT+'"><span class="week-task-sub-meta-dot" aria-hidden="true"></span><span>\u5b50\u4efb\u52a1 '+subD+' / '+subT+'</span></span>':"",metaHtml='<span class="week-task-meta-row">'+timeMeta+overdueMeta+subMeta+'</span>';
       let badge="";
       if(t.frozen)badge='<span class="week-task-badge week-task-badge--frozen">\u51bb\u7ed3</span>';
       else if(t.done)badge='<span class="week-task-badge week-task-badge--done">\u5b8c\u6210</span>';
@@ -1148,5 +1360,72 @@ function renderWeekTaskScene(list,baseDs){
   initWeekViewPressFeedback(list);
   return{allTasks:weekAllTasks,filteredTasks:weekFilteredTasks,totalAll:totalAll,doneAll:doneAll,rangeText:rangeText,expandableDays:expandableDays,allExpanded:expandableDays.length>0&&expandableDays.every(function(ds){return isWeekDayExpanded(ds)})}
 }
-function setTaskDateTitle(ds){const el=document.getElementById("dTitle");if(!el)return;let mainEl=el.querySelector(".date-nav-date-main"),subEl=el.querySelector(".date-nav-date-sub");if(!mainEl||!subEl){el.innerHTML='<span class="date-nav-date-main"></span><span class="date-nav-date-sub"></span>';mainEl=el.querySelector(".date-nav-date-main");subEl=el.querySelector(".date-nav-date-sub")}mainEl.style.display="block";mainEl.style.fontFamily='-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif';mainEl.style.fontSize="24px";mainEl.style.fontWeight="700";mainEl.style.lineHeight="1";mainEl.style.letterSpacing="-0.025em";mainEl.style.color="#0f172a";mainEl.style.margin="0 0 4px 0";subEl.style.display="block";subEl.style.fontFamily='-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif';subEl.style.fontSize="13px";subEl.style.fontWeight="500";subEl.style.lineHeight="1.5";subEl.style.letterSpacing="0.025em";subEl.style.color="#64748b";subEl.style.margin="0";if(!el.dataset.animBound){el.dataset.animBound="1";el.addEventListener("animationend",function(){el.classList.remove("is-animating");el.classList.remove("is-animating-prev");el.classList.remove("is-animating-next")})}const isWeekScope=getTaskQuickMode()==="week";let useRangeOffset=false,useRelative=false,mainText="",subText="",modeKey="d";if(isWeekScope){mainText=getTaskWeekScopeTitle(ds);subText=getTaskWeekRangeText(getTaskWeekMeta(ds));modeKey="week"}else{const text=String(disp(ds)||""),splitIdx=text.lastIndexOf(" "),dateText=splitIdx>0?text.slice(0,splitIdx):text,weekText=splitIdx>0?text.slice(splitIdx+1):"";let dayOffset=99;try{const base=parseDS(fd(now)),target=parseDS(ds);if(base&&target){const baseDate=new Date(base.getFullYear(),base.getMonth(),base.getDate()),targetDate=new Date(target.getFullYear(),target.getMonth(),target.getDate());dayOffset=Math.round((targetDate-baseDate)/86400000)}}catch(e){}const abs=Math.abs(dayOffset);let relativeText="";if(dayOffset===0)relativeText="今天";else if(dayOffset===1)relativeText="明天";else if(dayOffset===2)relativeText="后天";else if(dayOffset===-1)relativeText="昨天";else if(dayOffset===-2)relativeText="前天";useRangeOffset=abs>=3;useRelative=!useRangeOffset&&!!relativeText;const rangeText=dayOffset>0?"未来"+abs+"天":"过去"+abs+"天";mainText=useRangeOffset?rangeText:(useRelative?relativeText:dateText);subText=useRangeOffset?dateText+(weekText?" "+weekText:""):(useRelative?dateText+(weekText?" "+weekText:""):weekText);modeKey=useRangeOffset?"range":(useRelative?"r":"d")}const renderKey=ds+"|"+modeKey+"|"+mainText+"|"+subText,prevKey=el.dataset.renderKey||"",prevDs=el.dataset.lastDs||"",shouldUpdate=prevKey!==renderKey;if(shouldUpdate){mainEl.textContent=mainText;subEl.textContent=subText;el.classList.toggle("is-week-scope",isWeekScope);el.classList.toggle("is-range-offset",!isWeekScope&&useRangeOffset);el.classList.toggle("is-relative",!isWeekScope&&useRelative);el.classList.toggle("is-plain-date",!isWeekScope&&!useRangeOffset&&!useRelative);subEl.classList.toggle("is-empty",!subText);const shouldAnimate=!!prevDs&&prevDs!==ds;el.classList.remove("is-animating");el.classList.remove("is-animating-prev");el.classList.remove("is-animating-next");if(shouldAnimate){let dirCls="";try{const prevDate=parseDS(prevDs),nextDate=parseDS(ds);if(prevDate&&nextDate){const prevTime=new Date(prevDate.getFullYear(),prevDate.getMonth(),prevDate.getDate()).getTime(),nextTime=new Date(nextDate.getFullYear(),nextDate.getMonth(),nextDate.getDate()).getTime();if(nextTime>prevTime)dirCls="is-animating-next";else if(nextTime<prevTime)dirCls="is-animating-prev"}}catch(e){}if(dirCls)el.classList.add(dirCls);void el.offsetWidth;el.classList.add("is-animating")}el.dataset.renderKey=renderKey;el.dataset.lastDs=ds}else{el.classList.remove("is-animating");el.classList.remove("is-animating-prev");el.classList.remove("is-animating-next");el.classList.toggle("is-week-scope",isWeekScope);el.classList.toggle("is-range-offset",!isWeekScope&&useRangeOffset);el.classList.toggle("is-relative",!isWeekScope&&useRelative);el.classList.toggle("is-plain-date",!isWeekScope&&!useRangeOffset&&!useRelative);if(subEl.classList.contains("is-empty")===!!subText)subEl.classList.toggle("is-empty",!subText)}setTaskBackTodayBtn(ds)}
-function rT(){if(_togPendingDoneId!=null){flushPendingTogIfAny();return}hydrateCompletedSubtaskCollapseState();hydrateTodoSubtaskCollapseState();hydrateSortModes();const list=document.getElementById("tList");if(!list)return;const weekMode=getTaskQuickMode()==="week";if(weekMode){const wm=getTaskWeekMeta(sel);wm.days.forEach(function(ds){generateRecurring(ds)})}else generateRecurring(sel);checkUnfreeze();setTaskDateTitle(sel);updateHeaderContext();const batchBar=document.getElementById("batchBar");if(batchBar)batchBar.style.display=weekMode?"none":"flex";updateSortUI();if(weekMode){const wk=renderWeekTaskScene(list,sel),pct=wk.totalAll>0?Math.round(wk.doneAll/wk.totalAll*100):0;renderTaskDash(pct,wk.totalAll,wk.doneAll,wk.allTasks,wk.filteredTasks,sel);setTaskDashScope("week",wk.rangeText);syncWeekHeaderAction(true,wk);requestAnimationFrame(function(){syncWeekHeaderAction(true,wk)});focusTimerAfterRender();return}syncWeekHeaderAction(false);requestAnimationFrame(function(){syncWeekHeaderAction(false)});const dt=T[sel]||[],nonArchived=dt.filter(t=>!t.archived),archivedTasks=dt.filter(t=>t.archived),dn=nonArchived.filter(t=>t.done).length,archDn=archivedTasks.length,tot=nonArchived.length;let fl=nonArchived.filter(t=>passesFMulti(t));if(FTag)fl=fl.filter(t=>(t.tags||[]).includes(FTag));let archVisible=[];if(showArchivedInList&&archivedTasks.length>0){let af=archivedTasks;if(FTag)af=af.filter(t=>(t.tags||[]).includes(FTag));archVisible=af}const totalForProg=tot+archDn,doneForProg=dn+archDn,pct=totalForProg>0?Math.round(doneForProg/totalForProg*100):0;let displayList=fl,activeSortMode="";if(sortStates&&sortStates[sel])activeSortMode=normalizeSortMode(sortStates[sel]);else if(autoSortEnabled)activeSortMode=normalizeSortMode(defaultSortMode||lastSort||"created");if(activeSortMode&&displayList.length>1)displayList=sortDisplayList([...displayList],activeSortMode);if(!displayList.length&&!archVisible.length){const isZero=tot===0&&archDn===0;list.innerHTML=`<div class="empty"><div class="em">\u2705</div><p class="empty-main">${isZero?"\u4eca\u5929\u4efb\u52a1\u5df2\u5168\u90e8\u5b8c\u6210":"\u6ca1\u6709\u5339\u914d\u7684\u4efb\u52a1"}</p><p class="empty-sub">${isZero?"\u4f11\u606f\u4e00\u4e0b\uff0c\u6216\u6dfb\u52a0\u65b0\u4efb\u52a1":"\u8bd5\u8bd5\u5176\u4ed6\u7b5b\u9009\u6761\u4ef6"}</p></div>`;renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,sel);setTaskDashScope("day","");focusTimerAfterRender();return}let h=displayList.map(t=>taskHTML(t,false)).join("");if(archVisible.length>0)h+=archVisible.map(t=>taskHTML(t,true)).join("");list.innerHTML=h;ensureSubtaskGeometryResizeSync();syncSubtaskGeometry();requestAnimationFrame(syncSubtaskGeometry);renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,sel);setTaskDashScope("day","");focusTimerAfterRender()}
+function setTaskDateTitle(ds){const el=document.getElementById("dTitle");if(!el)return;let mainEl=el.querySelector(".date-nav-date-main"),subEl=el.querySelector(".date-nav-date-sub");if(!mainEl||!subEl){el.innerHTML='<span class="date-nav-date-main"></span><span class="date-nav-date-sub"></span>';mainEl=el.querySelector(".date-nav-date-main");subEl=el.querySelector(".date-nav-date-sub")}mainEl.style.display="block";mainEl.style.fontFamily='-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif';mainEl.style.fontSize="24px";mainEl.style.fontWeight="700";mainEl.style.lineHeight="1";mainEl.style.letterSpacing="-0.025em";mainEl.style.color="#0f172a";mainEl.style.margin="0 0 4px 0";subEl.style.display="block";subEl.style.fontFamily='-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif';subEl.style.fontSize="13px";subEl.style.fontWeight="500";subEl.style.lineHeight="1.5";subEl.style.letterSpacing="0.025em";subEl.style.color="#64748b";subEl.style.margin="0";if(!el.dataset.animBound){el.dataset.animBound="1";el.addEventListener("animationend",function(){el.classList.remove("is-animating");el.classList.remove("is-animating-prev");el.classList.remove("is-animating-next")})}const isWeekScope=getTaskQuickMode()==="week";let useRangeOffset=false,useRelative=false,mainText="",subText="",modeKey="d";if(isWeekScope){mainText=getTaskWeekScopeTitle(ds);subText=getTaskWeekRangeText(getTaskWeekMeta(ds));modeKey="week"}else{const text=String(disp(ds)||""),splitIdx=text.lastIndexOf(" "),dateText=splitIdx>0?text.slice(0,splitIdx):text,weekText=splitIdx>0?text.slice(splitIdx+1):"";let dayOffset=99;try{const base=parseDS(fd(now)),target=parseDS(ds);if(base&&target){const baseDate=new Date(base.getFullYear(),base.getMonth(),base.getDate()),targetDate=new Date(target.getFullYear(),target.getMonth(),target.getDate());dayOffset=Math.round((targetDate-baseDate)/86400000)}}catch(e){}const abs=Math.abs(dayOffset);let relativeText="";if(dayOffset===0)relativeText="\u4eca\u5929";else if(dayOffset===1)relativeText="\u660e\u5929";else if(dayOffset===2)relativeText="\u540e\u5929";else if(dayOffset===-1)relativeText="\u6628\u5929";else if(dayOffset===-2)relativeText="\u524d\u5929";useRangeOffset=abs>=3;useRelative=!useRangeOffset&&!!relativeText;const rangeText=dayOffset>0?"\u672a\u6765"+abs+"\u5929":"\u8fc7\u53bb"+abs+"\u5929";mainText=useRangeOffset?rangeText:(useRelative?relativeText:dateText);subText=useRangeOffset?dateText+(weekText?" "+weekText:""):(useRelative?dateText+(weekText?" "+weekText:""):weekText);modeKey=useRangeOffset?"range":(useRelative?"r":"d")}const renderKey=ds+"|"+modeKey+"|"+mainText+"|"+subText,prevKey=el.dataset.renderKey||"",prevDs=el.dataset.lastDs||"",shouldUpdate=prevKey!==renderKey;if(shouldUpdate){mainEl.textContent=mainText;subEl.textContent=subText;el.classList.toggle("is-week-scope",isWeekScope);el.classList.toggle("is-range-offset",!isWeekScope&&useRangeOffset);el.classList.toggle("is-relative",!isWeekScope&&useRelative);el.classList.toggle("is-plain-date",!isWeekScope&&!useRangeOffset&&!useRelative);subEl.classList.toggle("is-empty",!subText);const shouldAnimate=!!prevDs&&prevDs!==ds;el.classList.remove("is-animating");el.classList.remove("is-animating-prev");el.classList.remove("is-animating-next");if(shouldAnimate){let dirCls="";try{const prevDate=parseDS(prevDs),nextDate=parseDS(ds);if(prevDate&&nextDate){const prevTime=new Date(prevDate.getFullYear(),prevDate.getMonth(),prevDate.getDate()).getTime(),nextTime=new Date(nextDate.getFullYear(),nextDate.getMonth(),nextDate.getDate()).getTime();if(nextTime>prevTime)dirCls="is-animating-next";else if(nextTime<prevTime)dirCls="is-animating-prev"}}catch(e){}if(dirCls)el.classList.add(dirCls);void el.offsetWidth;el.classList.add("is-animating")}el.dataset.renderKey=renderKey;el.dataset.lastDs=ds}else{el.classList.remove("is-animating");el.classList.remove("is-animating-prev");el.classList.remove("is-animating-next");el.classList.toggle("is-week-scope",isWeekScope);el.classList.toggle("is-range-offset",!isWeekScope&&useRangeOffset);el.classList.toggle("is-relative",!isWeekScope&&useRelative);el.classList.toggle("is-plain-date",!isWeekScope&&!useRangeOffset&&!useRelative);if(subEl.classList.contains("is-empty")===!!subText)subEl.classList.toggle("is-empty",!subText)}setTaskBackTodayBtn(ds)}
+function rT(){
+  if(_togPendingDoneId!=null){flushPendingTogIfAny();return}
+  hydrateCompletedSubtaskCollapseState();
+  hydrateTodoSubtaskCollapseState();
+  hydrateSortModes();
+  const list=document.getElementById("tList");
+  if(!list)return;
+  const quickMode=getTaskQuickMode(),weekMode=quickMode==="week",overdueMode=quickMode==="overdue";
+  if(weekMode){
+    const wm=getTaskWeekMeta(sel);
+    wm.days.forEach(function(ds){generateRecurring(ds)})
+  }else generateRecurring(sel);
+  checkUnfreeze();
+  setTaskDateTitle(sel);
+  updateHeaderContext();
+  const batchBar=document.getElementById("batchBar");
+  if(batchBar)batchBar.style.display=weekMode||overdueMode?"none":"flex";
+  updateSortUI();
+  if(weekMode){
+    const wk=renderWeekTaskScene(list,sel),pct=wk.totalAll>0?Math.round(wk.doneAll/wk.totalAll*100):0;
+    renderTaskDash(pct,wk.totalAll,wk.doneAll,wk.allTasks,wk.filteredTasks,sel);
+    setTaskDashScope("week",wk.rangeText);
+    syncWeekHeaderAction(true,wk);
+    requestAnimationFrame(function(){syncWeekHeaderAction(true,wk)});
+    focusTimerAfterRender();
+    return
+  }
+  syncWeekHeaderAction(false);
+  requestAnimationFrame(function(){syncWeekHeaderAction(false)});
+  if(overdueMode){
+    const overdueState=renderOverdueTaskScene(list);
+    renderOverdueTaskOverviewSidebar(overdueState);
+    setTaskDashScope("overdue","");
+    focusTimerAfterRender();
+    return
+  }
+  const dt=T[sel]||[],nonArchived=dt.filter(function(t){return isListedTask(t)}),archivedTasks=dt.filter(function(t){return t.archived&&!t.dismissed}),dn=nonArchived.filter(function(t){return t.done}).length,archDn=archivedTasks.length,tot=nonArchived.length;
+  let fl=nonArchived.filter(function(t){return passesFMulti(t)});
+  if(FTag)fl=fl.filter(function(t){return(t.tags||[]).includes(FTag)});
+  let archVisible=[];
+  if(showArchivedInList&&archivedTasks.length>0){
+    let af=archivedTasks;
+    if(FTag)af=af.filter(function(t){return(t.tags||[]).includes(FTag)});
+    archVisible=af
+  }
+  const totalForProg=tot+archDn,doneForProg=dn+archDn,pct=totalForProg>0?Math.round(doneForProg/totalForProg*100):0;
+  let displayList=fl,activeSortMode="";
+  if(sortStates&&sortStates[sel])activeSortMode=normalizeSortMode(sortStates[sel]);
+  else if(autoSortEnabled)activeSortMode=normalizeSortMode(defaultSortMode||lastSort||"created");
+  if(activeSortMode&&displayList.length>1)displayList=sortDisplayList([...displayList],activeSortMode);
+  if(!displayList.length&&!archVisible.length){
+    const isZero=tot===0&&archDn===0;
+    list.innerHTML=`<div class="empty"><div class="em">\u2705</div><p class="empty-main">${isZero?"\u4eca\u5929\u4efb\u52a1\u5df2\u5168\u90e8\u5b8c\u6210":"\u6ca1\u6709\u5339\u914d\u7684\u4efb\u52a1"}</p><p class="empty-sub">${isZero?"\u4f11\u606f\u4e00\u4e0b\uff0c\u6216\u6dfb\u52a0\u65b0\u4efb\u52a1":"\u8bd5\u8bd5\u5176\u4ed6\u7b5b\u9009\u6761\u4ef6"}</p></div>`;
+    renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,sel);
+    setTaskDashScope("day","");
+    focusTimerAfterRender();
+    return
+  }
+  let h=displayList.map(function(t){return taskHTML(t,false)}).join("");
+  if(archVisible.length>0)h+=archVisible.map(function(t){return taskHTML(t,true)}).join("");
+  list.innerHTML=h;
+  ensureSubtaskGeometryResizeSync();
+  syncSubtaskGeometry();
+  requestAnimationFrame(syncSubtaskGeometry);
+  renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,sel);
+  setTaskDashScope("day","");
+  focusTimerAfterRender()
+}

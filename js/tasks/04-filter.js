@@ -146,7 +146,7 @@ function getFilterDayTasks() {
 }
 
 function getFilterVisibleTasks(dayTasks) {
-  return dayTasks.filter((task) => !task.archived);
+  return dayTasks.filter((task) => isListedTask(task));
 }
 
 function getFilteredTaskCount(filterKey, visibleTasks, dayTasks) {
@@ -161,7 +161,7 @@ function getFilteredTaskCount(filterKey, visibleTasks, dayTasks) {
   } else if (filterKey === 'high') {
     filteredTasks = visibleTasks.filter((task) => task.priority === 'high');
   } else if (filterKey === 'frozen') {
-    filteredTasks = dayTasks.filter((task) => task.frozen && !task.archived);
+    filteredTasks = dayTasks.filter((task) => task.frozen && isListedTask(task));
   } else {
     filteredTasks = visibleTasks.filter((task) => !task.frozen);
   }

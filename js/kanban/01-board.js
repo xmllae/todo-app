@@ -14,7 +14,7 @@ function kbGetVisibleTasks() {
   generateRecurring(sel);
   checkUnfreeze();
 
-  const tasks = (T[sel] || []).filter((task) => !task.archived);
+  const tasks = (T[sel] || []).filter((task) => isListedTask(task));
   if (!FTag) return tasks;
 
   return tasks.filter((task) => (task.tags || []).includes(FTag));
