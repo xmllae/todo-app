@@ -27,7 +27,7 @@ let defaultSortMode="created",autoSortEnabled=false;
 let multiSelect=false,selectedIds=new Set,lastSort="created",ppOpenId=null,taskMoreMenuId=null,_taskMoreFloatEl=null;
 let undoStack=[],undoTimer=null,kbHideDone=true,kbTimeFilter="all";
 let archQYear="",archQMonth="",archQDay="",archSearch="",archYearMap={};
-let odCollapsed=false;
+
 let saveTimer=null,pendingSave=false,_togVisualPendingIds=new Set,_togDoneTimer=null,_togPendingDoneId=null,_togCollapseFallbackTimer=null,_togCollapseGen=0;
 if(!window._archCollapsed)window._archCollapsed={};
 if(!window._archPages)window._archPages={};

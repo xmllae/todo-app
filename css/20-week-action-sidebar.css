@@ -456,9 +456,6 @@
 #taskMode .list-panel #tList .week-view-day-pill.is-overdue,
 #taskMode .list-panel #tList .week-view-day-pill.is-overdue .week-view-day-pill-state,
 #taskMode .list-panel #tList .week-view-day-pill-state--overdue,
-#taskMode .list-panel #tList .od-title,
-#taskMode #overdueArea .od-title,
-.od-title,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-overdue-meta,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-overdue-icon-wrap,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip--overdue .week-day-count-line,
@@ -467,9 +464,7 @@
 .app.app--with-global-nav #taskMode .list-panel #tList button.week-day-count-chip--overdue:hover .week-day-count-line b,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-overdue,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-overdue .week-view-day-pill-state,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill-state--overdue,
-.app.app--with-global-nav #taskMode .list-panel #tList .od-title,
-.app.app--with-global-nav #taskMode #overdueArea .od-title {
+.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill-state--overdue {
   color: var(--overdue-text-color) !important;
 }
 

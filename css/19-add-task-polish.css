@@ -1,4 +1,4 @@
-﻿/* Add-task inline visual polish:
+/* Add-task inline visual polish:
    hard override to ensure visible change over 18-global-sidebar.css */
 
 .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-card {
@@ -7350,7 +7350,6 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 #taskMode .list-panel #tList .week-task-title-text,
 #taskMode .list-panel #tList .week-task-item.is-done .week-task-title,
 #taskMode .list-panel #tList .week-task-item.is-done .week-task-title-text,
-#taskMode .list-panel #tList .od-item .od-text,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-item .task-row-center > .txt-line,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-item .task-row-center > .txt-line .txt,
 .app.app--with-global-nav #taskMode .list-panel #tList .task-item .task-row-center > .txt-line .txt-edit,
@@ -7360,8 +7359,7 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-title,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-title-text,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-item.is-done .week-task-title,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-task-item.is-done .week-task-title-text,
-.app.app--with-global-nav #taskMode .list-panel #tList .od-item .od-text {
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-item.is-done .week-task-title-text {
   font-weight: 400 !important;
 }
 
