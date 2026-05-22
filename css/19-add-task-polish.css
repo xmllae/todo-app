@@ -7482,6 +7482,16 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 }
 
 /* 去掉本周卡片左侧指示条，并收回对应留白。 */
+#taskMode .list-panel #tList .task-row-center > .task-time-col .week-task-overdue-meta,
+#taskMode .list-panel #tList .task-row-center > .task-time-col .week-task-overdue-meta > span,
+#taskMode .list-panel #tList .task-row-center > .task-time-col .week-task-overdue-meta svg,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .week-task-overdue-meta,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .week-task-overdue-meta > span,
+.app.app--with-global-nav #taskMode .list-panel #tList .task-row-center > .task-time-col .week-task-overdue-meta svg {
+  color: #ef4444 !important;
+  stroke: #ef4444 !important;
+}
+
 #taskMode .list-panel #tList .week-day-card::before,
 #taskMode .list-panel #tList .week-day-head::before,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card::before,
