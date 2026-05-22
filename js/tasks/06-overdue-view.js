@@ -64,6 +64,23 @@
     });
   }
 
+  function syncReturnTodayButton(dateNav, hidden) {
+    if (!dateNav) return;
+
+    var btn = dateNav.querySelector(".date-nav-return-today");
+    if (hidden) {
+      if (!btn) return;
+      btn.classList.remove("is-visible", "has-range");
+      btn.setAttribute("aria-hidden", "true");
+      btn.tabIndex = -1;
+      return;
+    }
+
+    if (typeof setTaskBackTodayBtn === "function" && typeof sel === "string" && sel) {
+      setTaskBackTodayBtn(sel);
+    }
+  }
+
   function closeOverdueCreateEntries() {
     if (typeof closeAddSplitMenu === "function") closeAddSplitMenu();
     if (window._quickImportModalOpen && typeof closeQuickImportModal === "function") closeQuickImportModal();
@@ -180,6 +197,7 @@
       dateNav.classList.toggle(OVERDUE_NAV_CLASS, overdue);
       bindOverdueTitleClickGuard(dateNav);
       setArrowAvailability(dateNav, overdue);
+      syncReturnTodayButton(dateNav, overdue);
     }
 
     if (overdue) {
