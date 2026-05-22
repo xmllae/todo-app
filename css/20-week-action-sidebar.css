@@ -43,20 +43,44 @@
   box-shadow: 0 8px 22px rgba(15, 23, 42, .04);
 }
 
+.overdue-overview-head {
+  padding-bottom: 16px;
+  border-bottom: 1px solid color-mix(in srgb, var(--task-bd) 56%, transparent);
+}
+
+.overdue-overview-head-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.overdue-overview-caption {
+  margin: 0;
+  color: var(--text2);
+  font-size: .76rem;
+  line-height: 1.55;
+}
+
 .overdue-overview-hero {
-  padding: 0 0 14px;
-  border-bottom: 1px solid color-mix(in srgb, var(--task-bd) 58%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px 0 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .overdue-overview-count {
   display: flex;
   align-items: baseline;
-  gap: 7px;
+  gap: 8px;
   color: var(--text);
 }
 
 .overdue-overview-count strong {
-  font-size: 1.86rem;
+  font-size: 2.05rem;
   line-height: 1;
   font-weight: 800;
   letter-spacing: -.04em;
@@ -65,54 +89,73 @@
 
 .overdue-overview-count span {
   color: var(--text2);
-  font-size: .88rem;
-  font-weight: 600;
+  font-size: .9rem;
+  font-weight: 650;
 }
 
 .overdue-overview-hero p {
-  margin: 9px 0 0;
+  margin: 0;
   color: var(--text2);
-  font-size: .84rem;
-  line-height: 1.6;
+  font-size: .83rem;
+  line-height: 1.58;
 }
 
 .overdue-overview-metrics {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0;
-  padding: 14px 0 12px;
-  border-bottom: 1px solid color-mix(in srgb, var(--task-bd) 52%, transparent);
+  padding-top: 2px;
 }
 
-.overdue-overview-metrics div {
+.overdue-overview-metric {
   min-width: 0;
-  text-align: center;
-  padding: 0 8px;
+  padding: 0 12px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  transition: opacity .18s ease, transform .18s ease;
 }
 
-.overdue-overview-metrics div + div {
-  border-left: 1px solid color-mix(in srgb, var(--task-bd) 50%, transparent);
+.overdue-overview-metric + .overdue-overview-metric {
+  border-left: 1px solid color-mix(in srgb, var(--task-bd) 54%, transparent);
 }
 
-.overdue-overview-metrics b {
+.overdue-overview-metric:hover {
+  transform: translateY(-1px);
+  opacity: .92;
+}
+
+.overdue-overview-metric b {
   display: block;
   color: var(--text);
-  font-size: 1rem;
+  font-size: 1.02rem;
   line-height: 1;
   font-weight: 780;
   font-variant-numeric: tabular-nums;
 }
 
-.overdue-overview-metrics span {
+.overdue-overview-metric span {
   display: block;
-  margin-top: 6px;
+  margin-top: 5px;
   color: var(--text3);
-  font-size: .7rem;
-  line-height: 1.2;
+  font-size: .68rem;
+  line-height: 1.25;
 }
 
 .overdue-overview-section {
-  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 18px;
+  border-top: 1px solid color-mix(in srgb, var(--task-bd) 52%, transparent);
+}
+
+.overdue-overview-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .overdue-overview-section-title {
@@ -122,11 +165,20 @@
   line-height: 1.25;
 }
 
+.overdue-overview-section-note {
+  color: var(--text3);
+  font-size: .69rem;
+  line-height: 1.2;
+  font-weight: 620;
+  letter-spacing: .03em;
+  white-space: nowrap;
+}
+
 .overdue-overview-list {
   display: flex;
   flex-direction: column;
   gap: 0;
-  margin-top: 10px;
+  margin-top: 0;
 }
 
 .overdue-overview-row {
@@ -134,16 +186,40 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  padding: 12px 0;
+  gap: 12px;
+  padding: 14px 0 14px 14px;
   border: 0;
-  border-top: 1px solid color-mix(in srgb, var(--task-bd) 54%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--task-bd) 50%, transparent);
   border-radius: 0;
   background: transparent;
+  box-shadow: none;
+  overflow: visible;
+  transition:
+    transform .18s ease,
+    opacity .18s ease;
+}
+
+.overdue-overview-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 14px;
+  bottom: 14px;
+  width: 3px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--overdue-text-color) 56%, #ffd8e0);
+}
+
+.overdue-overview-row:hover {
+  transform: translateY(-1px);
+  opacity: .96;
 }
 
 .overdue-overview-row-copy {
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .overdue-overview-row-copy strong {
@@ -156,24 +232,35 @@
 
 .overdue-overview-row-copy span {
   display: block;
-  margin-top: 5px;
   color: var(--text3);
   font-size: .73rem;
   line-height: 1.2;
 }
 
 .overdue-overview-row em {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+  min-width: 68px;
+  height: 26px;
+  padding: 0 10px;
+  border: 1px solid color-mix(in srgb, var(--overdue-text-color) 16%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--overdue-text-color) 4%, var(--card));
   color: var(--overdue-text-color);
-  font-size: .75rem;
+  font-size: .72rem;
   line-height: 1.2;
   font-style: normal;
-  font-weight: 650;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .overdue-overview-empty {
   padding: 14px 0 0;
   border-top: 1px solid color-mix(in srgb, var(--task-bd) 54%, transparent);
+  border-radius: 0;
+  background: transparent;
   color: var(--text3);
   font-size: .8rem;
   line-height: 1.6;
@@ -798,6 +885,25 @@
   box-shadow: 0 18px 40px rgba(0, 0, 0, .28);
 }
 
+.dark .overdue-overview-hero {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.dark .overdue-overview-metric,
+.dark .overdue-overview-row,
+.dark .overdue-overview-empty {
+  background: transparent;
+  border-color: color-mix(in srgb, var(--task-bd) 58%, transparent);
+  box-shadow: none;
+}
+
+.dark .overdue-overview-row:hover,
+.dark .overdue-overview-metric:hover {
+  background: transparent;
+}
+
 .dark .week-overview-ring::after {
   background: color-mix(in srgb, var(--card) 90%, #020617);
 }
@@ -814,6 +920,14 @@
     height: auto;
     min-height: 0;
     overflow: visible;
+  }
+
+  .overdue-overview-hero {
+    padding: 14px 0 0;
+  }
+
+  .overdue-overview-row {
+    padding-right: 0;
   }
 
   .week-overview-section--days {

@@ -642,10 +642,17 @@ function renderOverdueTaskOverviewSidebar(state){
   root.classList.add("is-overdue-action");
   root.setAttribute("aria-label","\u903e\u671f\u4efb\u52a1\u603b\u89c8");
   const leadText=state.visibleCount?("\u5206\u5e03\u5728 "+state.groupCount+" \u5929\uff0c\u6700\u4e45\u5df2\u903e\u671f "+state.oldestDays+" \u5929"):(state.totalCount?"\u5f53\u524d\u7b5b\u9009\u4e0b\u6682\u65e0\u5339\u914d\u4efb\u52a1":"\u5386\u53f2\u4efb\u52a1\u5df2\u6e05\u7a7a");
-  const listHtml=state.groups.slice(0,4).map(function(group){
-    return'<div class="overdue-overview-row"><div class="overdue-overview-row-copy"><strong>'+esc(disp(group.ds))+'</strong><span>'+group.count+' \u9879\u672a\u5b8c\u6210</span></div><em>'+esc(overdueAgeText(group.maxOverdueDays))+'</em></div>'
+  const metricsHtml=[
+    {value:state.totalCount,label:"\u5168\u90e8\u903e\u671f"},
+    {value:state.highCount,label:"\u9ad8\u4f18\u5148"},
+    {value:state.groupCount,label:"\u6d89\u53ca\u65e5\u671f"}
+  ].map(function(item){
+    return'<div class="overdue-overview-metric"><b>'+item.value+'</b><span>'+item.label+'</span></div>'
   }).join("");
-  shell.innerHTML='<div class="week-overview-head"><span class="week-overview-kicker">\u903e\u671f\u603b\u89c8</span></div><div class="overdue-overview-hero"><div class="overdue-overview-count"><strong>'+state.visibleCount+'</strong><span>\u5f53\u524d\u5f85\u5904\u7406</span></div><p>'+leadText+'</p></div><div class="overdue-overview-metrics"><div><b>'+state.totalCount+'</b><span>\u5168\u90e8\u903e\u671f</span></div><div><b>'+state.highCount+'</b><span>\u9ad8\u4f18\u5148</span></div><div><b>'+state.groupCount+'</b><span>\u6d89\u53ca\u65e5\u671f</span></div></div><div class="overdue-overview-section"><div class="overdue-overview-section-title">\u6700\u8fd1\u903e\u671f\u65e5\u671f</div><div class="overdue-overview-list">'+(listHtml||'<div class="overdue-overview-empty">\u5f53\u524d\u6ca1\u6709\u9700\u8981\u5904\u7406\u7684\u903e\u671f\u4efb\u52a1\u3002</div>')+'</div></div>'
+  const listHtml=state.groups.slice(0,4).map(function(group){
+    return'<div class="overdue-overview-row"><div class="overdue-overview-row-copy"><strong>'+esc(disp(group.ds))+'</strong><span>'+group.count+' \u9879\u5f85\u5904\u7406</span></div><em>'+esc(overdueAgeText(group.maxOverdueDays))+'</em></div>'
+  }).join("");
+  shell.innerHTML='<div class="week-overview-head overdue-overview-head"><div class="overdue-overview-head-copy"><span class="week-overview-kicker">\u903e\u671f\u603b\u89c8</span><p class="overdue-overview-caption">\u628a\u5386\u53f2\u672a\u5b8c\u6210\u4efb\u52a1\u6536\u675f\u5230\u4e00\u4e2a\u6e05\u6670\u5165\u53e3</p></div></div><div class="overdue-overview-hero"><div class="overdue-overview-count"><strong>'+state.visibleCount+'</strong><span>\u5f53\u524d\u5f85\u5904\u7406</span></div><p>'+leadText+'</p><div class="overdue-overview-metrics">'+metricsHtml+'</div></div><div class="overdue-overview-section"><div class="overdue-overview-section-head"><div class="overdue-overview-section-title">\u6700\u8fd1\u903e\u671f\u65e5\u671f</div><span class="overdue-overview-section-note">\u6309\u65e5\u671f\u6536\u675f</span></div><div class="overdue-overview-list">'+(listHtml||'<div class="overdue-overview-empty">\u5f53\u524d\u6ca1\u6709\u9700\u8981\u5904\u7406\u7684\u903e\u671f\u4efb\u52a1\u3002</div>')+'</div></div>'
 }
 const renderTaskDashLegacy=renderTaskDash;
 renderTaskDash=function(pct,totalForProg,doneForProg,nonArchived,fl,selStr){
