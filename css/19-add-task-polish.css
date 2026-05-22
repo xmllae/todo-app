@@ -6271,7 +6271,7 @@
 #taskMode .list-panel #tList .week-task-title,
 #taskMode .list-panel #tList .week-task-title-text {
   color: color-mix(in srgb, var(--week-ink) 92%, #111827);
-  font-size: 15px;
+  font-size: var(--task-title-size-week);
   font-weight: 640;
   letter-spacing: 0;
 }
@@ -7366,6 +7366,7 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 /* 任务卡片下方元信息统一为清晰的蓝灰色。 */
 #taskMode .list-panel #tList,
 .app.app--with-global-nav #taskMode .list-panel #tList {
+  --task-title-size-week: 15px;
   --task-meta-fg: #94a3b8;
   --task-time-muted: #94a3b8;
 }
@@ -7731,16 +7732,21 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   display: flex;
   flex-direction: column;
   gap: 0;
-  padding: 4px 0 2px;
+  padding: 2px 0 0;
 }
 
 #taskMode .list-panel #tList .overdue-task-table-wrap,
 .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-table-wrap {
+  --overdue-head-size: .8rem;
+  --overdue-head-color: color-mix(in srgb, var(--text2) 88%, #25304b);
+  --overdue-head-tracking: .03em;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--task-bd) 64%, transparent);
-  border-radius: 20px;
-  background: color-mix(in srgb, var(--card) 97%, #fcfdff);
-  box-shadow: 0 18px 38px color-mix(in srgb, var(--task-bd) 9%, transparent);
+  border: 1px solid color-mix(in srgb, var(--task-bd) 62%, transparent);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--card) 99%, #ffffff);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #ffffff 72%, transparent),
+    0 14px 28px color-mix(in srgb, var(--task-bd) 8%, transparent);
 }
 
 #taskMode .list-panel #tList .overdue-task-table-wrap--single,
@@ -7751,33 +7757,46 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 #taskMode .list-panel #tList .overdue-task-table,
 .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-table {
   width: 100%;
+  min-width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   table-layout: fixed;
 }
 
-#taskMode .list-panel #tList .overdue-task-table thead th,
-.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-table thead th {
-  padding: 13px 20px 12px;
-  border-bottom: 1px solid color-mix(in srgb, var(--task-bd) 58%, transparent);
-  background: color-mix(in srgb, var(--hov) 58%, transparent);
-  color: var(--text3);
-  font-size: .72rem;
-  line-height: 1.2;
-  font-weight: 680;
-  letter-spacing: .03em;
+#taskMode .list-panel #tList .overdue-task-head,
+.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-head {
+  padding: 11px 18px;
+  border-bottom: 1px solid color-mix(in srgb, var(--task-bd) 56%, transparent);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, #ffffff 58%, var(--card)) 0%, color-mix(in srgb, var(--hov) 18%, var(--card)) 100%);
+  color: var(--overdue-head-color);
+  font-size: var(--overdue-head-size);
+  line-height: 1.22;
+  font-weight: 720;
+  letter-spacing: var(--overdue-head-tracking);
   text-align: left;
+  text-shadow: 0 1px 0 color-mix(in srgb, #ffffff 82%, transparent);
 }
 
-#taskMode .list-panel #tList .overdue-task-table thead th:nth-child(2),
-.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-table thead th:nth-child(2) {
-  width: 288px;
+#taskMode .list-panel #tList .overdue-task-head--status,
+.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-head--status {
+  width: 15.5rem;
 }
 
-#taskMode .list-panel #tList .overdue-task-table thead th:nth-child(3),
-.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-table thead th:nth-child(3) {
-  width: 112px;
+#taskMode .list-panel #tList .overdue-task-head--action,
+.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-head--action {
+  width: 6rem;
   text-align: right;
+}
+
+#taskMode .list-panel #tList .overdue-task-head--title,
+.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-head--title {
+  border-top-left-radius: 18px;
+}
+
+#taskMode .list-panel #tList .overdue-task-head--action,
+.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-head--action {
+  border-top-right-radius: 18px;
 }
 
 #taskMode .list-panel #tList .overdue-task-row,
@@ -7785,40 +7804,37 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   transition: background .18s ease;
 }
 
-#taskMode .list-panel #tList .overdue-task-row td,
-.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-row td {
-  padding: 16px 20px;
-  border-bottom: 1px solid color-mix(in srgb, var(--task-bd) 54%, transparent);
-  background: transparent;
-  vertical-align: middle;
-  transition: background .18s ease, color .18s ease;
-}
-
-#taskMode .list-panel #tList .overdue-task-table tbody tr:last-child td,
-.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-table tbody tr:last-child td {
-  border-bottom: 0;
-}
-
-#taskMode .list-panel #tList .overdue-task-table tbody tr:hover td,
-.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-table tbody tr:hover td {
-  background: color-mix(in srgb, var(--hov) 82%, transparent);
-}
-
-#taskMode .list-panel #tList .overdue-task-table tbody tr:hover td:first-child,
-.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-table tbody tr:hover td:first-child {
-  border-top-left-radius: 14px;
-  border-bottom-left-radius: 14px;
-}
-
-#taskMode .list-panel #tList .overdue-task-table tbody tr:hover td:last-child,
-.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-table tbody tr:hover td:last-child {
-  border-top-right-radius: 14px;
-  border-bottom-right-radius: 14px;
-}
-
 #taskMode .list-panel #tList .overdue-task-cell,
 .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-cell {
   min-width: 0;
+  padding: 12px 18px;
+  border-bottom: 1px solid color-mix(in srgb, var(--task-bd) 42%, transparent);
+  background: color-mix(in srgb, var(--card) 99%, #ffffff);
+  vertical-align: middle;
+  transition:
+    background .18s ease,
+    border-color .18s ease;
+}
+
+#taskMode .list-panel #tList .overdue-task-row:hover .overdue-task-cell,
+.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-row:hover .overdue-task-cell {
+  background: color-mix(in srgb, var(--hov) 18%, var(--card));
+  border-bottom-color: color-mix(in srgb, var(--task-bd) 56%, transparent);
+}
+
+#taskMode .list-panel #tList .overdue-task-row:last-child .overdue-task-cell,
+.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-row:last-child .overdue-task-cell {
+  border-bottom: 0;
+}
+
+#taskMode .list-panel #tList .overdue-task-row:last-child .overdue-task-cell--title,
+.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-row:last-child .overdue-task-cell--title {
+  border-bottom-left-radius: 18px;
+}
+
+#taskMode .list-panel #tList .overdue-task-row:last-child .overdue-task-cell--action,
+.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-row:last-child .overdue-task-cell--action {
+  border-bottom-right-radius: 18px;
 }
 
 #taskMode .list-panel #tList .overdue-task-cell--action,
@@ -7826,16 +7842,11 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   text-align: right;
 }
 
-#taskMode .list-panel #tList .overdue-task-cell--status,
-.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-cell--status {
-  min-width: 0;
-}
-
 #taskMode .list-panel #tList .overdue-task-title-row,
 .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-title-row {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 7px;
   min-width: 0;
 }
 
@@ -7845,7 +7856,8 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
-  gap: 2px;
+  justify-content: center;
+  gap: 0;
 }
 
 #taskMode .list-panel #tList .overdue-task-priority-ring,
@@ -7854,18 +7866,17 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  min-width: 22px;
-  margin-top: 1px;
+  width: 20px;
+  min-width: 20px;
   pointer-events: none;
 }
 
 #taskMode .list-panel #tList .overdue-task-priority-ring .tc-check,
 .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-priority-ring .tc-check {
-  width: 22px;
-  min-width: 22px;
-  height: 22px;
-  min-height: 22px;
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  min-height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -7873,11 +7884,11 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 
 #taskMode .list-panel #tList .overdue-task-priority-ring .chk-ring,
 .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-priority-ring .chk-ring {
-  width: 18px;
-  min-width: 18px;
-  height: 18px;
-  min-height: 18px;
-  border-width: 1.5px;
+  width: 16px;
+  min-width: 16px;
+  height: 16px;
+  min-height: 16px;
+  border-width: 1.35px;
   pointer-events: none;
   transition:
     transform .18s ease,
@@ -7888,7 +7899,7 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 
 #taskMode .list-panel #tList .overdue-task-priority-ring.task-ck-ring--prio-high .chk-ring,
 .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-priority-ring.task-ck-ring--prio-high .chk-ring {
-  border-width: 1.75px;
+  border-width: 1.55px;
 }
 
 #taskMode .list-panel #tList .overdue-task-priority-ring .chk-ring-ico,
@@ -7898,20 +7909,20 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 
 #taskMode .list-panel #tList .overdue-task-row:hover .overdue-task-priority-ring .chk-ring,
 .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-row:hover .overdue-task-priority-ring .chk-ring {
-  transform: scale(1.05);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--ck-prio, #94a3b8) 9%, transparent);
+  transform: scale(1.04);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ck-prio, #94a3b8) 8%, transparent);
 }
 
 #taskMode .list-panel #tList .overdue-task-title,
 .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-title {
   display: -webkit-box;
   min-width: 0;
-  color: var(--text);
-  font-size: .96rem;
-  line-height: 1.42;
-  font-weight: 650;
+  color: #191a2d;
+  font-size: var(--task-title-size-week);
+  line-height: 1.35;
+  font-weight: 400;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -7920,12 +7931,20 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-age {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-width: 46px;
+  height: 24px;
+  padding: 0 10px;
+  border: 1px solid color-mix(in srgb, var(--overdue-text-color) 14%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--overdue-text-color) 7%, var(--card));
   color: var(--overdue-text-color);
-  font-size: .88rem;
+  font-size: .76rem;
   line-height: 1.2;
-  font-weight: 700;
+  font-weight: 760;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #ffffff 68%, transparent);
 }
 
 #taskMode .list-panel #tList .overdue-task-status-stack,
@@ -7933,45 +7952,44 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 6px;
+  gap: 4px;
   min-width: 0;
 }
 
-#taskMode .list-panel #tList .overdue-task-status-line,
-.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-status-line {
-  display: inline-flex;
+#taskMode .list-panel #tList .overdue-task-status-top,
+.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-status-top {
+  display: flex;
   align-items: center;
-  gap: 0;
   min-width: 0;
-  width: 100%;
 }
 
 #taskMode .list-panel #tList .overdue-task-status-date,
 .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-status-date {
-  color: var(--text3);
-  font-size: .74rem;
+  color: var(--text2);
+  font-size: .79rem;
   line-height: 1.2;
-  font-weight: 590;
+  font-weight: 650;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
-#taskMode .list-panel #tList .overdue-task-status-week,
-.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-status-week {
+#taskMode .list-panel #tList .overdue-task-status-meta-row,
+.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-status-meta-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+#taskMode .list-panel #tList .overdue-task-time-main,
+.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-time-main {
   color: var(--text3);
   font-size: .72rem;
   line-height: 1.2;
-  font-weight: 560;
+  font-weight: 620;
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
-}
-
-#taskMode .list-panel #tList .overdue-task-status-subline,
-.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-status-subline {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-  flex-wrap: wrap;
 }
 
 #taskMode .list-panel #tList .overdue-task-status-sub-sep,
@@ -7980,31 +7998,14 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   height: 3px;
   border-radius: 999px;
   background: color-mix(in srgb, var(--text3) 50%, transparent);
-  opacity: .75;
+  opacity: .72;
   flex-shrink: 0;
-}
-
-#taskMode .list-panel #tList .overdue-task-time-main,
-.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-time-main,
-#taskMode .list-panel #tList .overdue-task-time-sub,
-.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-time-sub {
-  display: block;
-}
-
-#taskMode .list-panel #tList .overdue-task-time-main,
-.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-time-main {
-  color: var(--text2);
-  font-size: .76rem;
-  line-height: 1.2;
-  font-weight: 620;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
 }
 
 #taskMode .list-panel #tList .overdue-task-time-sub,
 .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-time-sub {
   color: var(--text3);
-  font-size: .72rem;
+  font-size: .71rem;
   line-height: 1.25;
 }
 
@@ -8013,14 +8014,14 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   position: relative;
   overflow: hidden;
   flex-shrink: 0;
-  min-width: 72px;
-  height: 34px;
-  padding: 0 14px;
+  min-width: 68px;
+  height: 32px;
+  padding: 0 13px;
   border-radius: 999px;
   border: 1px solid color-mix(in srgb, var(--task-bd) 74%, transparent);
   background: color-mix(in srgb, var(--card) 96%, #fff7f8);
   color: var(--text2);
-  font-size: .82rem;
+  font-size: .76rem;
   font-weight: 650;
   cursor: pointer;
   box-shadow: none;
@@ -8037,6 +8038,7 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   border-color: color-mix(in srgb, var(--overdue-text-color) 16%, #ffd7df);
   background: color-mix(in srgb, var(--overdue-text-color) 5%, var(--card));
   transform: translateY(-1px);
+  box-shadow: 0 8px 14px color-mix(in srgb, var(--task-bd) 9%, transparent);
 }
 
 #taskMode .list-panel #tList .overdue-task-dismiss:active,
@@ -8115,10 +8117,10 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
     animation: none;
   }
 
+  #taskMode .list-panel #tList .overdue-task-status-stack,
+  .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-status-stack,
   #taskMode .list-panel #tList .overdue-task-row,
   .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-row,
-  #taskMode .list-panel #tList .overdue-task-row td,
-  .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-row td,
   #taskMode .list-panel #tList .overdue-task-priority-ring .chk-ring,
   .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-priority-ring .chk-ring,
   #taskMode .list-panel #tList .overdue-task-dismiss,
@@ -8128,72 +8130,31 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 }
 
 @media (max-width: 860px) {
+  #taskMode .list-panel #tList .overdue-task-table-wrap,
+  .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-table-wrap {
+    border-radius: 18px;
+    overflow-x: auto;
+  }
+
   #taskMode .list-panel #tList .overdue-task-table,
-  .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-table,
-  #taskMode .list-panel #tList .overdue-task-table tbody,
-  .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-table tbody,
-  #taskMode .list-panel #tList .overdue-task-table tr,
-  .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-table tr,
-  #taskMode .list-panel #tList .overdue-task-table td,
-  .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-table td {
-    display: block;
-    width: 100%;
+  .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-table {
+    min-width: 31rem;
   }
 
-  #taskMode .list-panel #tList .overdue-task-table thead,
-  .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-table thead {
-    display: none;
+  #taskMode .list-panel #tList .overdue-task-head,
+  .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-head,
+  #taskMode .list-panel #tList .overdue-task-cell,
+  .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-cell {
+    padding: 11px 14px;
   }
 
-  #taskMode .list-panel #tList .overdue-task-row,
-  .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-row {
-    padding: 12px 14px;
-    border-bottom: 1px solid color-mix(in srgb, var(--task-bd) 54%, transparent);
-  }
-
-  #taskMode .list-panel #tList .overdue-task-table tbody tr:last-child,
-  .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-table tbody tr:last-child {
-    border-bottom: 0;
-  }
-
-  #taskMode .list-panel #tList .overdue-task-row:hover,
-  .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-row:hover {
-    background: color-mix(in srgb, var(--hov) 76%, transparent);
-  }
-
-  #taskMode .list-panel #tList .overdue-task-row td,
-  .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-row td {
-    padding: 0;
-    border: 0;
-    background: transparent !important;
-  }
-
-  #taskMode .list-panel #tList .overdue-task-cell:not(.overdue-task-cell--title):not(.overdue-task-cell--action),
-  .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-cell:not(.overdue-task-cell--title):not(.overdue-task-cell--action) {
-    display: grid;
-    grid-template-columns: 76px minmax(0, 1fr);
-    gap: 12px;
-    align-items: center;
-    margin-top: 12px;
-  }
-
-  #taskMode .list-panel #tList .overdue-task-cell:not(.overdue-task-cell--title):not(.overdue-task-cell--action)::before,
-  .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-cell:not(.overdue-task-cell--title):not(.overdue-task-cell--action)::before {
-    content: attr(data-label);
-    color: var(--text3);
-    font-size: .72rem;
-    line-height: 1.2;
-    font-weight: 650;
-  }
-
-  #taskMode .list-panel #tList .overdue-task-cell--action,
-  .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-cell--action {
-    margin-top: 12px;
-    text-align: left;
+  #taskMode .list-panel #tList .overdue-task-head--status,
+  .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-head--status {
+    width: 13.5rem;
   }
 
   #taskMode .list-panel #tList .overdue-task-dismiss,
   .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-dismiss {
-    width: 100%;
+    min-width: 66px;
   }
 }

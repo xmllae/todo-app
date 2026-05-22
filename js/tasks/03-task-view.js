@@ -597,15 +597,15 @@ function overdueTaskScheduleMeta(entry){
   return{mainText:mainText,subText:subtasks.length?("\u5b50\u4efb\u52a1 "+subDone+" / "+subtasks.length):""}
 }
 function overdueTaskStatusHtml(entry){
-  const schedule=overdueTaskScheduleMeta(entry),parts=overdueTaskDateParts(entry.ds);
-  return'<div class="overdue-task-status-stack"><div class="overdue-task-status-line">'+overdueTaskAgeHtml(entry)+'</div><div class="overdue-task-status-subline"><span class="overdue-task-time-main">'+esc(schedule.mainText)+'</span><span class="overdue-task-status-sub-sep" aria-hidden="true"></span><span class="overdue-task-status-date">'+esc(parts.dateText)+'</span>'+(parts.weekText?'<span class="overdue-task-status-week">'+esc(parts.weekText)+'</span>':"")+(schedule.subText?'<span class="overdue-task-status-sub-sep" aria-hidden="true"></span><span class="overdue-task-time-sub">'+esc(schedule.subText)+'</span>':"")+'</div></div>'
+  const schedule=overdueTaskScheduleMeta(entry),parts=overdueTaskDateParts(entry.ds),dateText=parts.dateText+(parts.weekText?" "+parts.weekText:"");
+  return'<div class="overdue-task-status-stack"><div class="overdue-task-status-top">'+overdueTaskAgeHtml(entry)+'</div><div class="overdue-task-status-meta-row"><span class="overdue-task-status-date">'+esc(dateText)+'</span><span class="overdue-task-status-sub-sep" aria-hidden="true"></span><span class="overdue-task-time-main">'+esc(schedule.mainText)+'</span>'+(schedule.subText?'<span class="overdue-task-status-sub-sep" aria-hidden="true"></span><span class="overdue-task-time-sub">'+esc(schedule.subText)+'</span>':"")+'</div></div>'
 }
 function renderOverdueTaskRow(entry){
   const task=entry.task,tone=(task.priority||"normal")==="high"?"high":"normal";
   return'<tr class="overdue-task-row overdue-task-row--'+tone+'"><td class="overdue-task-cell overdue-task-cell--title" data-label="\u6807\u9898"><div class="overdue-task-title-row">'+overdueTaskPriorityRingHtml(task)+'<div class="overdue-task-copy-stack"><strong class="overdue-task-title" title="'+esc(task.text)+'">'+esc(task.text)+'</strong></div></div></td><td class="overdue-task-cell overdue-task-cell--status" data-label="\u72b6\u6001">'+overdueTaskStatusHtml(entry)+'</td><td class="overdue-task-cell overdue-task-cell--action" data-label="\u64cd\u4f5c"><button type="button" class="overdue-task-dismiss" onclick="event.stopPropagation();dismissOverdueTask(\''+entry.ds+'\','+task.id+')" aria-label="\u653e\u5f03\u4efb\u52a1 '+esc(task.text)+'">\u653e\u5f03</button></td></tr>'
 }
 function renderOverdueTaskTable(entries){
-  return'<div class="overdue-task-table-wrap overdue-task-table-wrap--single"><table class="overdue-task-table"><thead><tr><th scope="col">\u6807\u9898</th><th scope="col">\u72b6\u6001</th><th scope="col">\u64cd\u4f5c</th></tr></thead><tbody>'+entries.map(renderOverdueTaskRow).join("")+'</tbody></table></div>'
+  return'<div class="overdue-task-table-wrap overdue-task-table-wrap--single"><table class="overdue-task-table"><thead><tr><th class="overdue-task-head overdue-task-head--title" scope="col">\u6807\u9898</th><th class="overdue-task-head overdue-task-head--status" scope="col">\u72b6\u6001</th><th class="overdue-task-head overdue-task-head--action" scope="col">\u64cd\u4f5c</th></tr></thead><tbody>'+entries.map(renderOverdueTaskRow).join("")+'</tbody></table></div>'
 }
 function renderOverdueTaskScene(list){
   const state=getOverdueTaskSceneState();
