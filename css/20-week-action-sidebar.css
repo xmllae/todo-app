@@ -234,6 +234,12 @@
   transition:
     transform .18s ease,
     opacity .18s ease;
+  width: 100%;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  appearance: none;
 }
 
 .overdue-overview-row + .overdue-overview-row {
@@ -252,6 +258,12 @@
 }
 
 .overdue-overview-row:hover {
+  transform: translateY(-1px);
+  opacity: .96;
+}
+
+.overdue-overview-row:focus-visible {
+  outline: none;
   transform: translateY(-1px);
   opacity: .96;
 }

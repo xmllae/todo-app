@@ -600,9 +600,18 @@ function overdueTaskStatusHtml(entry){
   const schedule=overdueTaskScheduleMeta(entry),parts=overdueTaskDateParts(entry.ds),dateText=parts.dateText+(parts.weekText?" "+parts.weekText:"");
   return'<div class="overdue-task-status-stack"><div class="overdue-task-status-top">'+overdueTaskAgeHtml(entry)+'</div><div class="overdue-task-status-meta-row"><span class="overdue-task-status-date">'+esc(dateText)+'</span><span class="overdue-task-status-sub-sep" aria-hidden="true"></span><span class="overdue-task-time-main">'+esc(schedule.mainText)+'</span>'+(schedule.subText?'<span class="overdue-task-status-sub-sep" aria-hidden="true"></span><span class="overdue-task-time-sub">'+esc(schedule.subText)+'</span>':"")+'</div></div>'
 }
+function jumpOverdueDate(ds){
+  const targetDs=String(ds||"");
+  if(!targetDs||typeof pick!=="function")return;
+  pick(targetDs)
+}
+function overdueTaskTitleButtonHtml(entry){
+  const task=entry.task,dateLabel=typeof disp==="function"?String(disp(entry.ds)||entry.ds):String(entry.ds||"");
+  return'<button type="button" class="overdue-task-open" onclick="jumpOverdueDate(\''+entry.ds+'\')" aria-label="打开 '+esc(task.text)+' 所在日期 '+esc(dateLabel)+'"><span class="overdue-task-title-row">'+overdueTaskPriorityRingHtml(task)+'<span class="overdue-task-copy-stack"><strong class="overdue-task-title" title="'+esc(task.text)+'">'+esc(task.text)+'</strong></span></span></button>'
+}
 function renderOverdueTaskRow(entry){
   const task=entry.task,tone=(task.priority||"normal")==="high"?"high":"normal";
-  return'<tr class="overdue-task-row overdue-task-row--'+tone+'"><td class="overdue-task-cell overdue-task-cell--title" data-label="\u6807\u9898"><div class="overdue-task-title-row">'+overdueTaskPriorityRingHtml(task)+'<div class="overdue-task-copy-stack"><strong class="overdue-task-title" title="'+esc(task.text)+'">'+esc(task.text)+'</strong></div></div></td><td class="overdue-task-cell overdue-task-cell--status" data-label="\u72b6\u6001">'+overdueTaskStatusHtml(entry)+'</td><td class="overdue-task-cell overdue-task-cell--action" data-label="\u64cd\u4f5c"><button type="button" class="overdue-task-dismiss" onclick="event.stopPropagation();dismissOverdueTask(\''+entry.ds+'\','+task.id+')" aria-label="\u653e\u5f03\u4efb\u52a1 '+esc(task.text)+'">\u653e\u5f03</button></td></tr>'
+  return'<tr class="overdue-task-row overdue-task-row--'+tone+'"><td class="overdue-task-cell overdue-task-cell--title" data-label="\u6807\u9898">'+overdueTaskTitleButtonHtml(entry)+'</td><td class="overdue-task-cell overdue-task-cell--status" data-label="\u72b6\u6001">'+overdueTaskStatusHtml(entry)+'</td><td class="overdue-task-cell overdue-task-cell--action" data-label="\u64cd\u4f5c"><button type="button" class="overdue-task-dismiss" onclick="event.stopPropagation();dismissOverdueTask(\''+entry.ds+'\','+task.id+')" aria-label="\u653e\u5f03\u4efb\u52a1 '+esc(task.text)+'">\u653e\u5f03</button></td></tr>'
 }
 function renderOverdueTaskTable(entries){
   return'<div class="overdue-task-table-wrap overdue-task-table-wrap--single"><table class="overdue-task-table"><thead><tr><th class="overdue-task-head overdue-task-head--title" scope="col">\u6807\u9898</th><th class="overdue-task-head overdue-task-head--status" scope="col">\u72b6\u6001</th><th class="overdue-task-head overdue-task-head--action" scope="col">\u64cd\u4f5c</th></tr></thead><tbody>'+entries.map(renderOverdueTaskRow).join("")+'</tbody></table></div>'
@@ -653,7 +662,7 @@ function renderOverdueTaskOverviewSidebar(state){
     return'<div class="overdue-overview-metric"><b>'+item.value+'</b><span>'+item.label+'</span></div>'
   }).join("");
   const listHtml=state.groups.slice(0,4).map(function(group){
-    return'<div class="overdue-overview-row"><div class="overdue-overview-row-copy"><strong>'+esc(disp(group.ds))+'</strong><span>'+group.count+' \u9879\u5f85\u5904\u7406</span></div><em>'+esc(overdueAgeText(group.maxOverdueDays))+'</em></div>'
+    return'<button type="button" class="overdue-overview-row" onclick="jumpOverdueDate(\''+group.ds+'\')" aria-label="打开 '+esc(disp(group.ds))+' 的逾期任务"><span class="overdue-overview-row-copy"><strong>'+esc(disp(group.ds))+'</strong><span>'+group.count+' \u9879\u5f85\u5904\u7406</span></span><em>'+esc(overdueAgeText(group.maxOverdueDays))+'</em></button>'
   }).join("");
   shell.innerHTML='<div class="week-overview-head overdue-overview-head"><div class="overdue-overview-head-copy"><span class="week-overview-kicker">\u903e\u671f\u603b\u89c8</span><p class="overdue-overview-caption">\u628a\u5386\u53f2\u672a\u5b8c\u6210\u4efb\u52a1\u6536\u675f\u5230\u4e00\u4e2a\u6e05\u6670\u5165\u53e3</p></div></div><div class="overdue-overview-hero"><div class="overdue-overview-summary-main"><div class="overdue-overview-count"><strong>'+state.visibleCount+'</strong><div class="overdue-overview-count-copy"><span>\u5f53\u524d\u5f85\u5904\u7406</span><small>\u903e\u671f\u4efb\u52a1</small></div></div>'+summaryCopyHtml+'</div><div class="overdue-overview-metrics">'+metricsHtml+'</div></div><div class="overdue-overview-section"><div class="overdue-overview-section-head"><div class="overdue-overview-section-title">\u6700\u8fd1\u903e\u671f\u65e5\u671f</div><span class="overdue-overview-section-note">\u6309\u65e5\u671f\u6536\u675f</span></div><div class="overdue-overview-list">'+(listHtml||'<div class="overdue-overview-empty">\u5f53\u524d\u6ca1\u6709\u9700\u8981\u5904\u7406\u7684\u903e\u671f\u4efb\u52a1\u3002</div>')+'</div></div>'
 }
