@@ -7798,6 +7798,12 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 #taskMode .list-panel #tList .overdue-task-head--status,
 .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-head--status {
   width: 15.5rem;
+  text-align: center;
+}
+
+#taskMode .list-panel #tList .overdue-task-cell--status,
+.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-cell--status {
+  text-align: center;
 }
 
 #taskMode .list-panel #tList .overdue-task-head--action,
@@ -8040,17 +8046,30 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-status-stack {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 4px;
   min-width: 0;
   padding-block: 1px;
+  text-align: center;
+}
+
+#taskMode .list-panel #tList .overdue-task-status-stack,
+.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-status-stack,
+#taskMode .list-panel #tList .overdue-task-status-top,
+.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-status-top,
+#taskMode .list-panel #tList .overdue-task-status-meta-row,
+.app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-status-meta-row {
+  width: max-content;
+  margin-inline: auto;
 }
 
 #taskMode .list-panel #tList .overdue-task-status-top,
 .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-status-top {
   display: flex;
   align-items: center;
+  justify-content: center;
   min-width: 0;
+  width: 100%;
 }
 
 #taskMode .list-panel #tList .overdue-task-status-date,
@@ -8060,6 +8079,7 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   line-height: 1.32;
   font-weight: 560;
   font-variant-numeric: tabular-nums;
+  text-align: center;
   white-space: nowrap;
 }
 
@@ -8067,9 +8087,11 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-status-meta-row {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 5px;
   min-width: 0;
   flex-wrap: wrap;
+  width: 100%;
 }
 
 #taskMode .list-panel #tList .overdue-task-time-main,
@@ -8079,6 +8101,7 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   line-height: 1.32;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
+  text-align: center;
   white-space: nowrap;
 }
 
