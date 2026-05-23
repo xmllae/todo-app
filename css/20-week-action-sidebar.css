@@ -280,7 +280,7 @@
   color: var(--text);
   font-size: .84rem;
   line-height: 1.25;
-  font-weight: 650;
+  font-weight: 400;
 }
 
 .overdue-overview-row-copy span {
