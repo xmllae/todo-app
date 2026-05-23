@@ -449,16 +449,25 @@ function renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,selStr){
     }
   }
 }
-function ensureWeekTaskOverviewShell(root){
+function ensureTaskOverviewShell(root,mode){
   if(!root)return null;
-  let shell=root.querySelector(".week-action-shell");
+  const shellClass=mode==="overdue"?"overdue-action-shell":"week-task-overview";
+  const ariaLabel=mode==="overdue"?"\u903e\u671f\u4efb\u52a1\u603b\u89c8":"\u672c\u5468\u4efb\u52a1\u603b\u89c8";
+  const shells=Array.from(root.querySelectorAll(".week-action-shell"));
+  let shell=shells.find(function(node){return node.classList&&node.classList.contains(shellClass)})||shells[0]||null;
   if(!shell){
     shell=document.createElement("section");
-    shell.className="week-action-shell week-task-overview";
-    shell.setAttribute("aria-label","\u672c\u5468\u4efb\u52a1\u603b\u89c8");
     root.appendChild(shell)
   }
+  shells.forEach(function(node){
+    if(node!==shell)node.remove()
+  });
+  shell.className="week-action-shell "+shellClass;
+  shell.setAttribute("aria-label",ariaLabel);
   return shell
+}
+function ensureWeekTaskOverviewShell(root){
+  return ensureTaskOverviewShell(root,"week")
 }
 function weekOverviewMonthDay(ds){
   const d=parseDS(ds);
@@ -509,15 +518,7 @@ function renderWeekTaskOverviewSidebar(pct,totalForProg,doneForProg,selStr){
   shell.innerHTML='<div class="week-overview-head"><span class="week-overview-kicker">\u672c\u5468\u603b\u89c8</span></div><div class="week-overview-score"><div class="week-overview-ring" style="--week-pct:'+pct+'"><span>'+pct+'%</span><em>\u5b8c\u6210\u5ea6</em></div><div class="week-overview-score-main"><div class="week-overview-count"><strong class="week-overview-count-done">'+done+'</strong><span class="week-overview-count-rest">/'+total+'</span></div><p>\u672c\u5468\u4efb\u52a1\u8282\u594f\u4e00\u773c\u53ef\u89c1\uff0c\u628a\u6ce8\u610f\u529b\u653e\u5728\u8fd8\u6ca1\u6536\u5c3e\u7684\u4e8b\u4e0a\u3002</p></div></div><div class="week-overview-metrics"><div><b>'+total+'</b><span>\u5168\u90e8\u4efb\u52a1</span></div><div><b>'+pending+'</b><span>\u5f85\u5904\u7406</span></div><div><b>'+done+'</b><span>\u5df2\u5b8c\u6210</span></div><div><b>'+highPending+'</b><span>\u9ad8\u4f18\u5148\u5f85\u529e</span></div></div><div class="week-overview-section week-overview-section--rhythm"><div class="week-overview-section-title"><span>\u672c\u5468\u8282\u594f</span></div><div class="week-rhythm-list">'+rhythmRows+'</div></div>'
 }
 function ensureOverdueTaskOverviewShell(root){
-  if(!root)return null;
-  let shell=root.querySelector(".overdue-action-shell");
-  if(!shell){
-    shell=document.createElement("section");
-    shell.className="week-action-shell overdue-action-shell";
-    shell.setAttribute("aria-label","\u903e\u671f\u4efb\u52a1\u603b\u89c8");
-    root.appendChild(shell)
-  }
-  return shell
+  return ensureTaskOverviewShell(root,"overdue")
 }
 function overdueAgeDays(ds,todayDs){
   const start=parseDS(ds),end=parseDS(todayDs||fd(now));
