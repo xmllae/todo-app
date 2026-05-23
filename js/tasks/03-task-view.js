@@ -586,7 +586,7 @@ function overdueTaskPriorityRingHtml(task){
   return'<span class="overdue-task-priority-ring task-ck-ring'+(high?" task-ck-ring--prio-high":"")+'" style="--ck-prio:'+hex+'" role="img" aria-label="'+label+'"><span class="tc-check" aria-hidden="true"><span class="chk-ring"></span></span></span>'
 }
 function overdueTaskAgeHtml(entry){
-  return'<span class="overdue-task-age">'+esc(overdueTaskAgeValueText(entry.overdueDays))+'</span>'
+  return'<span class="overdue-task-age"><span class="overdue-task-age-kicker">已逾期</span><strong class="overdue-task-age-value">'+esc(overdueTaskAgeValueText(entry.overdueDays))+'</strong></span>'
 }
 function overdueTaskScheduleMeta(entry){
   const task=entry.task;
@@ -618,7 +618,7 @@ function renderOverdueTaskRow(entry){
   return'<tr class="overdue-task-row overdue-task-row--'+tone+'"><td class="overdue-task-cell overdue-task-cell--title" data-label="\u6807\u9898">'+overdueTaskTitleButtonHtml(entry)+'</td><td class="overdue-task-cell overdue-task-cell--status" data-label="\u72b6\u6001">'+overdueTaskStatusHtml(entry)+'</td><td class="overdue-task-cell overdue-task-cell--action" data-label="\u64cd\u4f5c"><button type="button" class="overdue-task-dismiss" onclick="event.stopPropagation();dismissOverdueTask(\''+entry.ds+'\','+task.id+')" aria-label="\u653e\u5f03\u4efb\u52a1 '+esc(task.text)+'">\u653e\u5f03</button></td></tr>'
 }
 function renderOverdueTaskTable(entries){
-  return'<div class="overdue-task-table-wrap overdue-task-table-wrap--single"><table class="overdue-task-table"><thead><tr><th class="overdue-task-head overdue-task-head--title" scope="col">\u6807\u9898</th><th class="overdue-task-head overdue-task-head--status" scope="col">\u72b6\u6001</th><th class="overdue-task-head overdue-task-head--action" scope="col">\u64cd\u4f5c</th></tr></thead><tbody>'+entries.map(renderOverdueTaskRow).join("")+'</tbody></table></div>'
+  return'<div class="overdue-task-table-wrap overdue-task-table-wrap--single"><table class="overdue-task-table"><thead><tr><th class="overdue-task-head overdue-task-head--title" scope="col">\u6807\u9898</th><th class="overdue-task-head overdue-task-head--status" scope="col">\u5df2\u903e\u671f</th><th class="overdue-task-head overdue-task-head--action" scope="col">\u64cd\u4f5c</th></tr></thead><tbody>'+entries.map(renderOverdueTaskRow).join("")+'</tbody></table></div>'
 }
 function renderOverdueTaskScene(list){
   const state=getOverdueTaskSceneState();
