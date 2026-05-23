@@ -346,7 +346,7 @@
       navButton("item", "today-calendar", "今天", pendingFor(todayKey()).length, "today", "", activeDate === "today") +
       navButton("item", "ph-arrow-fat-lines-right", "明天", null, "tomorrow", "", activeDate === "tomorrow") +
       navButton("item", "ph-calendar-dots", "本周", countWeek(), "week", "", activeDate === "week") +
-      navButton("item", "overdue-warning", "逾期", null, "overdue", "", activeDate === "overdue") +
+      navButton("item", "overdue-warning", "逾期", countOverdue(), "overdue", "", activeDate === "overdue") +
       "</section>" +
       '<section class="gsn-section" aria-labelledby="gsnFilterTitle">' +
       '<h4 class="gsn-section-title" id="gsnFilterTitle">筛选</h4>' +

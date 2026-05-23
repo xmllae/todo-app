@@ -137,6 +137,33 @@
   --gsn-count-active-shadow:
     0 1px 2px rgba(15, 23, 42, 0.12),
     0 0 0 1px rgba(142, 158, 179, 0.26);
+  --gsn-section-title-size: 0.84rem;
+  --gsn-entry-min-height: 38px;
+  --gsn-entry-font-size: 0.92rem;
+  --gsn-entry-gap: 11px;
+  --gsn-entry-pad-y: 7px;
+  --gsn-entry-pad-x: 10px;
+  --gsn-entry-icon-size: 18px;
+  --gsn-entry-icon-font-size: 1.02rem;
+  --gsn-count-size: 19px;
+  --gsn-count-font-size: 0.64rem;
+  --gsn-overdue-fg: #e64b5d;
+  --gsn-overdue-bg: color-mix(in srgb, #ef4444 12%, #ffffff);
+  --gsn-overdue-bg-hover: color-mix(in srgb, #ef4444 9%, #ffffff);
+  --gsn-overdue-border-hover: color-mix(in srgb, #ef4444 18%, rgba(255, 255, 255, 0));
+  --gsn-overdue-border: color-mix(in srgb, #ef4444 24%, rgba(255, 255, 255, 0));
+  --gsn-overdue-shadow:
+    0 0 0 1px color-mix(in srgb, #ef4444 9%, transparent),
+    0 8px 18px -18px rgba(239, 68, 68, 0.36);
+  --gsn-overdue-count-bg: color-mix(in srgb, #ef4444 10%, #ffffff);
+  --gsn-overdue-count-fg: #d43b4f;
+  --gsn-overdue-count-hover-bg: #ffffff;
+  --gsn-overdue-count-hover-fg: #cf3850;
+  --gsn-overdue-count-hover-shadow:
+    0 1px 2px rgba(239, 68, 68, 0.12),
+    0 0 0 1px color-mix(in srgb, #ef4444 14%, transparent);
+  --gsn-overdue-count-active-bg: #ffffff;
+  --gsn-overdue-count-active-fg: #cf3850;
   --gsn-head-action-hover-border: rgba(89, 117, 152, 0.34);
   --gsn-head-action-hover-shadow: 0 8px 16px -12px rgba(89, 117, 152, 0.32);
   --gsn-focus-ring: color-mix(in srgb, var(--acc) 30%, transparent);
@@ -262,7 +289,7 @@
 .gsn-section-title {
   margin: 0 0 6px 8px;
   color: var(--gsn-kicker-color);
-  font-size: 0.8rem;
+  font-size: var(--gsn-section-title-size);
   font-weight: 720;
   line-height: 1.15;
   letter-spacing: 0.05em;
@@ -272,18 +299,18 @@
 .gsn-project,
 .gsn-filter {
   width: 100%;
-  min-height: 34px;
+  min-height: var(--gsn-entry-min-height);
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 6px 9px;
+  gap: var(--gsn-entry-gap);
+  padding: var(--gsn-entry-pad-y) var(--gsn-entry-pad-x);
   border: 1px solid transparent;
   border-radius: 9px;
   background: transparent;
   color: var(--gsn-item-fg);
   cursor: pointer;
   font: inherit;
-  font-size: 0.84rem;
+  font-size: var(--gsn-entry-font-size);
   font-weight: 400;
   text-align: left;
   position: relative;
@@ -314,6 +341,14 @@
   background: var(--gsn-item-hover-bg);
   color: var(--gsn-item-fg-hover);
   border-color: color-mix(in srgb, var(--gsn-item-active-border) 56%, transparent);
+}
+
+.gsn-item:hover .gsn-count:not(.gsn-count--empty),
+.gsn-project:hover .gsn-count:not(.gsn-count--empty),
+.gsn-filter:hover .gsn-count:not(.gsn-count--empty) {
+  background: var(--gsn-count-active-bg);
+  color: var(--gsn-count-active-fg);
+  box-shadow: var(--gsn-count-active-shadow);
 }
 
 .gsn-item:not(.is-active):hover,
@@ -390,20 +425,20 @@
 .gsn-item-main {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--gsn-entry-gap);
   flex: 1;
   min-width: 0;
 }
 
 .gsn-item-main i,
 .gsn-filter-icon {
-  width: 17px;
-  height: 17px;
-  flex: 0 0 17px;
+  width: var(--gsn-entry-icon-size);
+  height: var(--gsn-entry-icon-size);
+  flex: 0 0 var(--gsn-entry-icon-size);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.96rem;
+  font-size: var(--gsn-entry-icon-font-size);
   line-height: 1;
   color: currentColor;
 }
@@ -445,11 +480,42 @@
 .global-side-nav [data-gsn-action="overdue"]:hover,
 .global-side-nav [data-gsn-action="overdue"].is-active,
 .global-side-nav [data-gsn-action="overdue"].is-active:hover {
-  color: #ef4444 !important;
+  color: var(--gsn-overdue-fg) !important;
 }
 
 .global-side-nav [data-gsn-action="overdue"] .gsn-nav-overdue-icon {
-  color: #ef4444;
+  color: var(--gsn-overdue-fg);
+}
+
+.global-side-nav [data-gsn-action="overdue"] .gsn-count:not(.gsn-count--empty) {
+  background: var(--gsn-overdue-count-bg);
+  color: var(--gsn-overdue-count-fg);
+}
+
+.global-side-nav [data-gsn-action="overdue"]:hover {
+  background: var(--gsn-overdue-bg-hover);
+  border-color: var(--gsn-overdue-border-hover);
+}
+
+.global-side-nav [data-gsn-action="overdue"]:hover .gsn-count:not(.gsn-count--empty) {
+  background: var(--gsn-overdue-count-hover-bg);
+  color: var(--gsn-overdue-count-hover-fg);
+  box-shadow: var(--gsn-overdue-count-hover-shadow);
+}
+
+.global-side-nav [data-gsn-action="overdue"].is-active,
+.global-side-nav [data-gsn-action="overdue"].is-active:hover {
+  background: var(--gsn-overdue-bg);
+  border-color: var(--gsn-overdue-border);
+  box-shadow: var(--gsn-overdue-shadow);
+}
+
+.global-side-nav [data-gsn-action="overdue"].is-active .gsn-count:not(.gsn-count--empty) {
+  background: var(--gsn-overdue-count-active-bg);
+  color: var(--gsn-overdue-count-active-fg);
+  box-shadow:
+    0 1px 2px rgba(239, 68, 68, 0.14),
+    0 0 0 1px color-mix(in srgb, #ef4444 15%, transparent);
 }
 
 .gsn-project-name {
@@ -527,8 +593,8 @@
 }
 
 .gsn-count {
-  min-width: 18px;
-  height: 18px;
+  min-width: var(--gsn-count-size);
+  height: var(--gsn-count-size);
   padding: 0 6px;
   display: inline-flex;
   align-items: center;
@@ -536,7 +602,7 @@
   border-radius: 999px;
   background: var(--gsn-count-bg);
   color: var(--gsn-count-fg);
-  font-size: 0.62rem;
+  font-size: var(--gsn-count-font-size);
   font-weight: 730;
   font-variant-numeric: tabular-nums;
   line-height: 1;
@@ -571,18 +637,18 @@
 }
 
 .gsn-filter-ico {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   display: block;
 }
 
 .gsn-filter-ico-ph {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1;
 }
 
@@ -626,6 +692,23 @@
   --gsn-count-active-shadow:
     0 1px 2px rgba(2, 6, 23, 0.36),
     0 0 0 1px rgba(203, 221, 240, 0.2);
+  --gsn-overdue-fg: #ff6b7c;
+  --gsn-overdue-bg: color-mix(in srgb, #ef4444 18%, rgba(255, 255, 255, 0));
+  --gsn-overdue-bg-hover: color-mix(in srgb, #ef4444 14%, rgba(255, 255, 255, 0));
+  --gsn-overdue-border-hover: color-mix(in srgb, #fb7185 24%, transparent);
+  --gsn-overdue-border: color-mix(in srgb, #fb7185 34%, transparent);
+  --gsn-overdue-shadow:
+    0 0 0 1px color-mix(in srgb, #fb7185 16%, transparent),
+    0 10px 18px -18px rgba(251, 113, 133, 0.5);
+  --gsn-overdue-count-bg: color-mix(in srgb, #fb7185 24%, rgba(255, 255, 255, 0));
+  --gsn-overdue-count-fg: #ffe1e7;
+  --gsn-overdue-count-hover-bg: rgba(255, 255, 255, 0.95);
+  --gsn-overdue-count-hover-fg: #cf3850;
+  --gsn-overdue-count-hover-shadow:
+    0 1px 2px rgba(2, 6, 23, 0.28),
+    0 0 0 1px color-mix(in srgb, #fb7185 20%, transparent);
+  --gsn-overdue-count-active-bg: rgba(255, 255, 255, 0.92);
+  --gsn-overdue-count-active-fg: #cf3850;
   --gsn-head-action-hover-border: rgba(149, 183, 206, 0.56);
   --gsn-head-action-hover-shadow: 0 10px 18px -14px rgba(149, 183, 206, 0.52);
   --gsn-focus-ring: rgba(149, 183, 206, 0.34);
