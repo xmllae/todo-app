@@ -130,8 +130,11 @@
   --gsn-item-active-shadow:
     0 0 0 1px rgba(145, 162, 184, 0.2),
     0 6px 14px -16px rgba(32, 53, 79, 0.22);
-  --gsn-count-bg: rgba(100, 116, 139, 0.1);
-  --gsn-count-fg: #667890;
+  --gsn-count-bg: color-mix(in srgb, #ffffff 90%, #edf2f7);
+  --gsn-count-fg: #556b86;
+  --gsn-count-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.08),
+    0 0 0 1px rgba(142, 158, 179, 0.22);
   --gsn-count-active-bg: #ffffff;
   --gsn-count-active-fg: #253d5a;
   --gsn-count-active-shadow:
@@ -145,8 +148,8 @@
   --gsn-entry-pad-x: 10px;
   --gsn-entry-icon-size: 18px;
   --gsn-entry-icon-font-size: 1.02rem;
-  --gsn-count-size: 19px;
-  --gsn-count-font-size: 0.64rem;
+  --gsn-count-size: 22px;
+  --gsn-count-font-size: 0.84rem;
   --gsn-overdue-fg: #e64b5d;
   --gsn-overdue-bg: color-mix(in srgb, #ef4444 12%, #ffffff);
   --gsn-overdue-bg-hover: color-mix(in srgb, #ef4444 9%, #ffffff);
@@ -155,8 +158,11 @@
   --gsn-overdue-shadow:
     0 0 0 1px color-mix(in srgb, #ef4444 9%, transparent),
     0 8px 18px -18px rgba(239, 68, 68, 0.36);
-  --gsn-overdue-count-bg: color-mix(in srgb, #ef4444 10%, #ffffff);
+  --gsn-overdue-count-bg: #ffffff;
   --gsn-overdue-count-fg: #d43b4f;
+  --gsn-overdue-count-shadow:
+    0 1px 2px rgba(239, 68, 68, 0.08),
+    0 0 0 1px color-mix(in srgb, #ef4444 16%, transparent);
   --gsn-overdue-count-hover-bg: #ffffff;
   --gsn-overdue-count-hover-fg: #cf3850;
   --gsn-overdue-count-hover-shadow:
@@ -490,6 +496,7 @@
 .global-side-nav [data-gsn-action="overdue"] .gsn-count:not(.gsn-count--empty) {
   background: var(--gsn-overdue-count-bg);
   color: var(--gsn-overdue-count-fg);
+  box-shadow: var(--gsn-overdue-count-shadow);
 }
 
 .global-side-nav [data-gsn-action="overdue"]:hover {
@@ -603,11 +610,12 @@
   background: var(--gsn-count-bg);
   color: var(--gsn-count-fg);
   font-size: var(--gsn-count-font-size);
-  font-weight: 730;
+  font-weight: 740;
   font-variant-numeric: tabular-nums;
   line-height: 1;
   letter-spacing: 0.01em;
   flex-shrink: 0;
+  box-shadow: var(--gsn-count-shadow);
   transition:
     background 0.2s ease,
     color 0.2s ease,
@@ -685,8 +693,11 @@
   --gsn-item-active-shadow:
     0 0 0 1px rgba(203, 221, 240, 0.16),
     0 8px 16px -16px rgba(149, 183, 206, 0.36);
-  --gsn-count-bg: rgba(148, 163, 184, 0.2);
-  --gsn-count-fg: #d6e0ed;
+  --gsn-count-bg: rgba(248, 251, 255, 0.12);
+  --gsn-count-fg: #e6eef8;
+  --gsn-count-shadow:
+    0 1px 2px rgba(2, 6, 23, 0.24),
+    0 0 0 1px rgba(203, 221, 240, 0.14);
   --gsn-count-active-bg: #f8fbff;
   --gsn-count-active-fg: #1f344d;
   --gsn-count-active-shadow:
@@ -700,8 +711,11 @@
   --gsn-overdue-shadow:
     0 0 0 1px color-mix(in srgb, #fb7185 16%, transparent),
     0 10px 18px -18px rgba(251, 113, 133, 0.5);
-  --gsn-overdue-count-bg: color-mix(in srgb, #fb7185 24%, rgba(255, 255, 255, 0));
+  --gsn-overdue-count-bg: rgba(255, 255, 255, 0.14);
   --gsn-overdue-count-fg: #ffe1e7;
+  --gsn-overdue-count-shadow:
+    0 1px 2px rgba(2, 6, 23, 0.2),
+    0 0 0 1px color-mix(in srgb, #fb7185 18%, transparent);
   --gsn-overdue-count-hover-bg: rgba(255, 255, 255, 0.95);
   --gsn-overdue-count-hover-fg: #cf3850;
   --gsn-overdue-count-hover-shadow:

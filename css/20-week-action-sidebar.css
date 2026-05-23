@@ -133,7 +133,9 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0;
-  padding-top: 4px;
+  margin-top: 2px;
+  padding-top: 12px;
+  border-top: 1px solid color-mix(in srgb, var(--task-bd) 54%, transparent);
 }
 
 .overdue-overview-metric {
