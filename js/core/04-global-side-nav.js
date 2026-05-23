@@ -151,7 +151,7 @@
   function countOverdue() {
     var today = todayKey();
     return allEntries().filter(function (entry) {
-      return entry.ds < today && isPending(entry.task);
+      return entry.ds < today && (typeof isOverdueListedTask === "function" ? isOverdueListedTask(entry.task, entry.ds) : isPending(entry.task));
     }).length;
   }
 
