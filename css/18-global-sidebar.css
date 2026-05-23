@@ -148,8 +148,8 @@
   --gsn-entry-pad-x: 10px;
   --gsn-entry-icon-size: 18px;
   --gsn-entry-icon-font-size: 1.02rem;
-  --gsn-count-size: 22px;
-  --gsn-count-font-size: 0.84rem;
+  --gsn-count-size: 20px;
+  --gsn-count-font-size: 0.78rem;
   --gsn-overdue-fg: #e64b5d;
   --gsn-overdue-bg: color-mix(in srgb, #ef4444 12%, #ffffff);
   --gsn-overdue-bg-hover: color-mix(in srgb, #ef4444 9%, #ffffff);

@@ -7535,9 +7535,9 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   align-items: center !important;
   justify-content: space-between !important;
   gap: 16px !important;
-  min-height: 44px !important;
-  padding-top: 6px !important;
-  padding-bottom: 6px !important;
+  min-height: var(--week-day-shell-min-height, 56px) !important;
+  padding-top: var(--week-day-shell-pad-y, 10px) !important;
+  padding-bottom: var(--week-day-shell-pad-y, 10px) !important;
   box-sizing: border-box !important;
 }
 
@@ -7682,9 +7682,9 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card.is-empty::after {
   content: "";
   position: absolute;
-  inset: 6px 0;
+  inset: 0;
   z-index: 0;
-  border-radius: 16px;
+  border-radius: var(--week-day-shell-radius, 16px);
   border: 1px solid #d6daf8 !important;
   background: color-mix(in srgb, var(--card) 98%, #f8fafc);
   box-shadow: 0 8px 18px -24px rgba(15, 23, 42, .28);
@@ -7703,6 +7703,10 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 #taskMode .list-panel #tList .week-day-card,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-card {
   --week-day-head-attention-bg: #eef4ff;
+  /* 统一展开头部与折叠行的可见框体尺寸，避免已完成折叠行被单独缩小。 */
+  --week-day-shell-radius: 16px;
+  --week-day-shell-min-height: 56px;
+  --week-day-shell-pad-y: 10px;
 }
 
 /* 本周日期头部的悬浮与点击高亮共用同一层浅蓝底，保持内容尺寸和位置不变。 */

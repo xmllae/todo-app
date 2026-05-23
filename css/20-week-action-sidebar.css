@@ -95,7 +95,7 @@
 }
 
 .overdue-overview-count-badge strong {
-  color: var(--text);
+  color: var(--overdue-text-color);
   font-size: 1.92rem;
   line-height: 1;
   font-weight: 800;
@@ -389,7 +389,7 @@
 .week-overview-count {
   display: flex;
   align-items: baseline;
-  gap: 5px;
+  gap: 0;
   color: var(--text);
   font-size: 22px;
   line-height: 1;
@@ -406,14 +406,15 @@
 .week-overview-count-rest {
   color: #94a3b8;
   font-size: 15px;
-  font-weight: 500;
+  margin-left: 4px;
+  font-weight: 400;
 }
 
 .week-overview-score-main p {
-  margin: 8px 0 0;
+  margin: 10px 0 0;
   color: var(--text2);
-  font-size: 14px;
-  line-height: 1.25;
+  font-size: 12px;
+  line-height: 1.38;
   font-weight: 400;
 }
 
