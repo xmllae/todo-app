@@ -202,15 +202,6 @@
   line-height: 1.25;
 }
 
-.overdue-overview-section-note {
-  color: var(--text3);
-  font-size: .69rem;
-  line-height: 1.2;
-  font-weight: 620;
-  letter-spacing: .03em;
-  white-space: nowrap;
-}
-
 .overdue-overview-list {
   display: flex;
   flex-direction: column;
