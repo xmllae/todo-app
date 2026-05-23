@@ -41,6 +41,11 @@
 #taskMode .task-dash-col.is-overdue-action .week-action-shell {
   border-color: color-mix(in srgb, var(--task-bd) 76%, transparent);
   box-shadow: 0 8px 22px rgba(15, 23, 42, .04);
+  --overdue-overview-heading-color: #0f172a;
+  --overdue-overview-heading-size: 14px;
+  --overdue-overview-heading-line: 1.2;
+  --overdue-overview-heading-weight: 650;
+  --overdue-overview-heading-gap: 12px;
 }
 
 .overdue-overview-head {
@@ -48,24 +53,20 @@
   border-bottom: 0;
 }
 
-.overdue-overview-head-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.overdue-overview-caption {
-  margin: 0;
-  color: var(--text2);
-  font-size: .77rem;
-  line-height: 1.58;
+#taskMode .task-dash-col.is-overdue-action .overdue-overview-head .week-overview-kicker,
+#taskMode .task-dash-col.is-overdue-action .overdue-overview-section-title {
+  color: var(--overdue-overview-heading-color);
+  font-size: var(--overdue-overview-heading-size);
+  line-height: var(--overdue-overview-heading-line);
+  font-weight: var(--overdue-overview-heading-weight);
+  letter-spacing: 0;
 }
 
 .overdue-overview-hero {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 22px 0 18px;
+  padding: var(--overdue-overview-heading-gap) 0 18px;
   border-bottom: 1px solid color-mix(in srgb, var(--task-bd) 54%, transparent);
   background: transparent;
   box-shadow: none;
@@ -103,7 +104,7 @@
   color: var(--text);
   font-size: .93rem;
   line-height: 1.15;
-  font-weight: 700;
+  font-weight: 400;
 }
 
 .overdue-overview-count-copy small {
@@ -184,7 +185,7 @@
 .overdue-overview-section {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0;
   padding-top: 18px;
 }
 
@@ -196,17 +197,14 @@
 }
 
 .overdue-overview-section-title {
-  color: var(--text);
-  font-size: .84rem;
-  font-weight: 680;
-  line-height: 1.25;
+  margin: 0;
 }
 
 .overdue-overview-list {
   display: flex;
   flex-direction: column;
   gap: 0;
-  margin-top: 0;
+  margin-top: var(--overdue-overview-heading-gap);
 }
 
 .overdue-overview-row {
