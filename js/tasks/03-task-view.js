@@ -815,10 +815,24 @@ function focusTimerSaveSettings(){if(!_ftO)return;var a=+document.getElementById
 function focusTimerOpenTaskPick(){var day=fd(now),tasks=(T[day]||[]).filter(function(t){return isPendingListedTask(t)});var body=document.getElementById("mBody"),bg=document.getElementById("mBg");if(!body||!bg)return;var h;if(!tasks.length)h='<div class="m-sheet-wrap"><p class="m-sheet-title">\u4eca\u65e5\u65e0\u53ef\u7528\u4efb\u52a1</p><button type="button" class="m-sheet-btn m-sheet-btn--accent" onclick="clM()">\u5173\u95ed</button></div>';else h='<div class="m-sheet-wrap"><p class="m-sheet-title">\u9009\u62e9\u4e13\u6ce8\u4efb\u52a1</p><div class="ft-pick-list">'+tasks.map(function(t){return'<button type="button" class="ft-pick-item" onclick="focusTimerPickTask(\''+day+'\','+t.id+')">'+esc(t.text)+'</button>'}).join("")+'</div><div class="ft-pick-actions"><button type="button" class="m-sheet-btn m-sheet-btn--ghost" onclick="clM()">\u53d6\u6d88</button><button type="button" class="m-sheet-btn ft-pick-deselect" onclick="focusTimerClearPick()">\u53d6\u6d88\u9009\u62e9</button></div></div>';body.innerHTML=h;bg.classList.add("show")}
 function focusTimerPickTask(d,id){if(!_ftO)focusTimerLoad();_ftO.task={d:d,id:+id};focusTimerSave();clM();rT()}
 function focusTimerClearPick(){if(!_ftO)focusTimerLoad();_ftO.task=null;focusTimerSave();clM();rT()}
+function isTaskOverdueHeaderMode(){
+const root=document.getElementById("taskMode");
+return getTaskQuickMode()==="overdue"||!!(root&&root.classList&&root.classList.contains("task-mode--overdue-view"))
+}
+function hideTaskBackTodayBtn(btn){
+if(!btn)return;
+btn.classList.remove("is-visible","has-range");
+btn.setAttribute("aria-hidden","true");
+btn.tabIndex=-1
+}
 function setTaskBackTodayBtn(ds){
 const nav=document.querySelector("#taskMode .task-main-col > .task-card > .date-nav");
 if(!nav)return;
 let btn=nav.querySelector(".date-nav-return-today");
+if(isTaskOverdueHeaderMode()){
+hideTaskBackTodayBtn(btn);
+return
+}
 if(!btn){
 btn=document.createElement("button");
 btn.type="button";
@@ -843,9 +857,12 @@ metaEl.setAttribute("aria-hidden","true")
 const dividerEl=btn.querySelector(".date-nav-return-today-divider");
 if(dividerEl)dividerEl.setAttribute("aria-hidden","true");
 btn.classList.remove("has-range");
-btn.classList.toggle("is-visible",show);
-btn.setAttribute("aria-hidden",show?"false":"true");
-btn.tabIndex=show?0:-1;
+if(!show)hideTaskBackTodayBtn(btn);
+else{
+btn.classList.add("is-visible");
+btn.setAttribute("aria-hidden","false");
+btn.tabIndex=0
+}
 btn.setAttribute("aria-label",backText)
 }
 function getTaskQuickMode(){return typeof getGlobalSideNavQuickMode==="function"?getGlobalSideNavQuickMode():(window.__gsnQuickMode||"")}
