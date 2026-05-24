@@ -7759,7 +7759,7 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   --overdue-head-surface:
     linear-gradient(180deg, color-mix(in srgb, #f7f8fb 82%, var(--card)) 0%, color-mix(in srgb, #fbfcff 88%, #fff5f6 12%) 100%);
   --overdue-head-border: color-mix(in srgb, var(--task-bd) 76%, #e8edf6);
-  --overdue-title-indent: 2.35rem;
+  --overdue-title-indent: calc(2.35rem + 2px);
   --overdue-action-col-width: 7.4rem;
   --overdue-action-pad-inline: 1rem;
   --overdue-action-reveal-offset: 6px;
