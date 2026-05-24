@@ -535,6 +535,47 @@ function overdueActiveSortMode(){
   if(autoSortEnabled)return normalizeSortMode(defaultSortMode||lastSort||"created");
   return""
 }
+const OVERDUE_AGE_SORT_LS_KEY="tuole_overdue_age_sort_v1";
+let _overdueAgeSortDirectionHydrated=false;
+let _overdueAgeSortDirection="asc";
+function overdueAgeSortStorage(){
+  try{
+    if(typeof window!=="undefined"&&window.localStorage)return window.localStorage;
+    if(typeof localStorage!=="undefined")return localStorage
+  }catch(e){}
+  return null
+}
+function hydrateOverdueAgeSortDirection(){
+  if(_overdueAgeSortDirectionHydrated)return;
+  _overdueAgeSortDirectionHydrated=true;
+  try{
+    const storage=overdueAgeSortStorage(),raw=storage?storage.getItem(OVERDUE_AGE_SORT_LS_KEY):"";
+    if(raw==="asc"||raw==="desc")_overdueAgeSortDirection=raw
+  }catch(e){}
+}
+function getOverdueAgeSortDirection(){
+  hydrateOverdueAgeSortDirection();
+  return _overdueAgeSortDirection
+}
+function setOverdueAgeSortDirection(direction){
+  const next=direction==="desc"?"desc":"asc";
+  hydrateOverdueAgeSortDirection();
+  if(_overdueAgeSortDirection===next)return;
+  _overdueAgeSortDirection=next;
+  try{
+    const storage=overdueAgeSortStorage();
+    if(storage)storage.setItem(OVERDUE_AGE_SORT_LS_KEY,next)
+  }catch(e){}
+}
+function toggleOverdueAgeSortDirection(evt){
+  if(evt&&typeof evt.preventDefault==="function")evt.preventDefault();
+  if(evt&&typeof evt.stopPropagation==="function")evt.stopPropagation();
+  setOverdueAgeSortDirection(getOverdueAgeSortDirection()==="asc"?"desc":"asc");
+  rT()
+}
+function orderOverdueGroupsByAge(groups,direction){
+  return(direction==="desc"?groups.slice().reverse():groups.slice())
+}
 function sortOverdueGroupEntries(entries,activeSortMode){
   if(activeSortMode&&entries.length>1&&typeof sortDisplayList==="function"){
     const orderedTasks=sortDisplayList(entries.map(function(entry){return entry.task}),activeSortMode);
@@ -562,7 +603,7 @@ function getOverdueTaskSceneState(){
     if(FTag&&!(entry.task.tags||[]).includes(FTag))return false;
     return true
   });
-  const grouped=new Map(),activeSortMode=overdueActiveSortMode();
+  const grouped=new Map(),activeSortMode=overdueActiveSortMode(),overdueSortDirection=getOverdueAgeSortDirection();
   filteredEntries.forEach(function(entry){
     if(!grouped.has(entry.ds))grouped.set(entry.ds,[]);
     grouped.get(entry.ds).push(entry)
@@ -571,8 +612,9 @@ function getOverdueTaskSceneState(){
     const items=sortOverdueGroupEntries(grouped.get(ds)||[],activeSortMode);
     return{ds:ds,items:items,count:items.length,maxOverdueDays:items.reduce(function(max,entry){return Math.max(max,entry.overdueDays)},1)}
   });
+  const tableGroups=orderOverdueGroupsByAge(groups,overdueSortDirection);
   const visibleCount=filteredEntries.length,totalCount=allEntries.length,highCount=filteredEntries.filter(function(entry){return(entry.task.priority||"medium")==="high"}).length,oldestDays=filteredEntries.reduce(function(max,entry){return Math.max(max,entry.overdueDays)},0),peakCount=groups.reduce(function(max,group){return Math.max(max,group.count)},0);
-  return{todayDs:todayDs,totalCount:totalCount,visibleCount:visibleCount,highCount:highCount,oldestDays:oldestDays,peakCount:peakCount,groupCount:groups.length,groups:groups}
+  return{todayDs:todayDs,totalCount:totalCount,visibleCount:visibleCount,highCount:highCount,oldestDays:oldestDays,peakCount:peakCount,groupCount:groups.length,groups:groups,tableGroups:tableGroups,overdueSortDirection:overdueSortDirection}
 }
 function overdueTaskAgeValueText(days){
   return Math.max(1,parseInt(days,10)||1)+"\u5929"
@@ -618,17 +660,35 @@ function renderOverdueTaskRow(entry){
   const task=entry.task,tone=(task.priority||"normal")==="high"?"high":"normal";
   return'<tr class="overdue-task-row overdue-task-row--'+tone+'"><td class="overdue-task-cell overdue-task-cell--title" data-label="\u6807\u9898">'+overdueTaskTitleButtonHtml(entry)+'</td><td class="overdue-task-cell overdue-task-cell--status" data-label="\u72b6\u6001">'+overdueTaskStatusHtml(entry)+'</td><td class="overdue-task-cell overdue-task-cell--action" data-label="\u64cd\u4f5c"><button type="button" class="overdue-task-dismiss" onclick="event.stopPropagation();dismissOverdueTask(\''+entry.ds+'\','+task.id+')" aria-label="\u4ece\u903e\u671f\u5217\u8868\u79fb\u9664\u4efb\u52a1 '+esc(task.text)+'">\u653e\u5f03</button></td></tr>'
 }
-function overdueTaskHeadChipHtml(label,tone,extraClass){
-  const cls="overdue-task-head-chip"+(tone?" overdue-task-head-chip--"+tone:"")+(extraClass?" "+extraClass:"");
-  return'<span class="'+cls+'"><span class="overdue-task-head-chip-label">'+esc(label)+'</span></span>'
+function overdueTaskHeadIconHtml(kind){
+  if(kind==="calendar")return'<span class="overdue-task-head-icon overdue-task-head-icon--calendar" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="1.75" y="2.5" width="8.5" height="7.75" rx="1.8"></rect><path d="M3.5 1.5v2.3M8.5 1.5v2.3M1.75 4.6h8.5"></path></svg></span>';
+  return""
 }
-function overdueTaskHeadHtml(label,tone,metaLabel,metaTone){
-  if(!metaLabel)return overdueTaskHeadChipHtml(label,tone,"");
-  return'<span class="overdue-task-head-group overdue-task-head-group--'+tone+'">'+overdueTaskHeadChipHtml(label,tone,"")+
-    overdueTaskHeadChipHtml(metaLabel,metaTone||tone,"overdue-task-head-chip--meta overdue-task-head-chip--mini")+'</span>'
+function overdueTaskHeadSortHtml(direction){
+  const cls="overdue-task-head-sort"+(direction?" overdue-task-head-sort--"+direction:"");
+  return'<span class="'+cls+'" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3"></path><path d="M3.8 5.2 6 3l2.2 2.2"></path></svg></span>'
 }
-function renderOverdueTaskTable(entries){
-  return'<div class="overdue-task-table-wrap overdue-task-table-wrap--single"><table class="overdue-task-table"><thead><tr><th class="overdue-task-head overdue-task-head--title" scope="col">'+overdueTaskHeadHtml("\u6807\u9898","title","\u903e\u671f","overdue")+'</th><th class="overdue-task-head overdue-task-head--status" scope="col">'+overdueTaskHeadHtml("\u5b89\u6392","status")+'</th><th class="overdue-task-head overdue-task-head--action" scope="col">'+overdueTaskHeadHtml("\u64cd\u4f5c","action")+'</th></tr></thead><tbody>'+entries.map(renderOverdueTaskRow).join("")+'</tbody></table></div>'
+function overdueTaskHeadLabelHtml(label,tone,options){
+  const opts=options||{},cls="overdue-task-head-chip"+(tone?" overdue-task-head-chip--"+tone:"")+(opts.extraClass?" "+opts.extraClass:"");
+  return'<span class="'+cls+'">'+(opts.icon?overdueTaskHeadIconHtml(opts.icon):"")+'<span class="overdue-task-head-chip-label">'+esc(label)+'</span>'+(opts.sort?overdueTaskHeadSortHtml(opts.sort):"")+'</span>'
+}
+function overdueTaskSortDirectionText(direction){
+  return direction==="desc"?"\u964d\u5e8f":"\u5347\u5e8f"
+}
+function overdueTaskSortableHeadHtml(label,direction){
+  const currentDirectionText=overdueTaskSortDirectionText(direction),nextDirection=direction==="desc"?"asc":"desc",nextDirectionText=overdueTaskSortDirectionText(nextDirection);
+  return'<button type="button" class="overdue-task-head-chip overdue-task-head-chip--overdue overdue-task-head-chip--interactive" onclick="toggleOverdueAgeSortDirection(event)" aria-label="\u6309\u903e\u671f\u5929\u6570\u6392\u5e8f\uff0c\u5f53\u524d'+currentDirectionText+'\uff0c\u70b9\u51fb\u5207\u6362\u4e3a'+nextDirectionText+'" title="\u5f53\u524d'+currentDirectionText+'\uff0c\u70b9\u51fb\u5207\u6362\u4e3a'+nextDirectionText+'"><span class="overdue-task-head-chip-label">'+esc(label)+'</span>'+overdueTaskHeadSortHtml(direction)+'</button>'
+}
+function overdueTaskHeadHtml(kind,overdueSortDirection){
+  if(kind==="title")return'<span class="overdue-task-head-group overdue-task-head-group--title">'+
+    overdueTaskHeadLabelHtml("\u6807\u9898","title",{extraClass:"overdue-task-head-chip--title"})+
+    overdueTaskSortableHeadHtml("\u903e\u671f",overdueSortDirection)+
+  '</span>';
+  if(kind==="status")return overdueTaskHeadLabelHtml("\u5b89\u6392","status",{icon:"calendar",extraClass:"overdue-task-head-chip--status"});
+  return'<span class="overdue-task-head-spacer" aria-hidden="true"></span>'
+}
+function renderOverdueTaskTable(entries,overdueSortDirection){
+  return'<div class="overdue-task-table-wrap overdue-task-table-wrap--single"><table class="overdue-task-table"><thead><tr><th class="overdue-task-head overdue-task-head--title" scope="col">'+overdueTaskHeadHtml("title",overdueSortDirection)+'</th><th class="overdue-task-head overdue-task-head--status" scope="col">'+overdueTaskHeadHtml("status",overdueSortDirection)+'</th><th class="overdue-task-head overdue-task-head--action" scope="col" aria-label="\u64cd\u4f5c">'+overdueTaskHeadHtml("action",overdueSortDirection)+'</th></tr></thead><tbody>'+entries.map(renderOverdueTaskRow).join("")+'</tbody></table></div>'
 }
 function renderOverdueTaskScene(list){
   const state=getOverdueTaskSceneState();
@@ -640,10 +700,10 @@ function renderOverdueTaskScene(list){
     list.innerHTML='<section class="overdue-scene overdue-scene--empty"><div class="overdue-empty"><div class="overdue-empty-icon overdue-empty-icon--soft" aria-hidden="true">\u7b5b</div><p class="overdue-empty-title">\u5f53\u524d\u7b5b\u9009\u4e0b\u6ca1\u6709\u5339\u914d\u7684\u903e\u671f\u4efb\u52a1</p><p class="overdue-empty-sub">\u53ef\u4ee5\u5207\u6362\u7b5b\u9009\u6761\u4ef6\uff0c\u67e5\u770b\u5176\u4f59\u5386\u53f2\u4efb\u52a1\u3002</p></div></section>';
     return state
   }
-  const entries=state.groups.reduce(function(all,group){
+  const entries=state.tableGroups.reduce(function(all,group){
     return all.concat(group.items)
   },[]);
-  list.innerHTML='<section class="overdue-scene">'+renderOverdueTaskTable(entries)+'</section>';
+  list.innerHTML='<section class="overdue-scene">'+renderOverdueTaskTable(entries,state.overdueSortDirection)+'</section>';
   return state
 }
 function dismissOverdueTask(ds,id){
