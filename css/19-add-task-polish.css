@@ -7979,15 +7979,20 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  width: var(--overdue-sort-icon-size);
+  height: var(--overdue-sort-icon-size);
   color: color-mix(in srgb, var(--text2) 72%, #6f7d96);
   opacity: 1;
 }
 
 #taskMode .list-panel #tList .overdue-task-head-sort svg,
 .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-head-sort svg {
+  display: block;
   width: var(--overdue-sort-icon-size);
   height: var(--overdue-sort-icon-size);
   stroke-width: 1.42;
+  transform-origin: 50% 50%;
+  transform-box: view-box;
   transition: transform .22s cubic-bezier(.22, 1, .36, 1);
 }
 
