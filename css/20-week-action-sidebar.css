@@ -74,7 +74,7 @@
   --overdue-overview-heading-line: 1.2;
   --overdue-overview-heading-weight: 650;
   --overdue-overview-heading-gap: 12px;
-  --overdue-overview-section-gap-trim: 2px;
+  --overdue-overview-section-gap-trim: 3px;
 }
 
 .overdue-overview-head {
