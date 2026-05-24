@@ -8111,18 +8111,21 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
+  align-self: center;
   justify-content: center;
   gap: 0;
 }
 
 #taskMode .list-panel #tList .overdue-task-priority-ring,
 .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-priority-ring {
+  position: relative;
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 20px;
   min-width: 20px;
+  inset-block-start: -.5px;
   pointer-events: none;
 }
 
@@ -8174,7 +8177,7 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   min-width: 0;
   color: #191a2d;
   font-size: var(--task-title-size-week);
-  line-height: 1.35;
+  line-height: 1.3;
   font-weight: 430;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
