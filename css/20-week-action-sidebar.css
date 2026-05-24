@@ -42,6 +42,8 @@
   --task-overview-group-title-weight: 650;
   --task-overview-group-title-min-height: calc(var(--task-overview-group-title-size) * var(--task-overview-group-title-line));
   --task-overview-group-title-gap: 8px;
+  --task-overview-group-content-offset: 2px;
+  --week-rhythm-group-optical-offset: 2px;
   --task-overview-head-gap: 12px;
   --task-overview-summary-copy-height: 82px;
   flex: 1 1 auto;
@@ -72,6 +74,7 @@
   --overdue-overview-heading-line: 1.2;
   --overdue-overview-heading-weight: 650;
   --overdue-overview-heading-gap: 12px;
+  --overdue-overview-section-gap-trim: 2px;
 }
 
 .overdue-overview-head {
@@ -225,7 +228,10 @@
   justify-content: space-between;
   gap: 10px;
   min-height: var(--task-overview-group-title-min-height);
-  margin-bottom: var(--task-overview-group-title-gap);
+  margin-bottom: calc(
+    var(--task-overview-group-title-gap) -
+    var(--overdue-overview-section-gap-trim)
+  );
 }
 
 .overdue-overview-section-title {
@@ -237,6 +243,7 @@
   flex-direction: column;
   gap: 0;
   margin-top: 0;
+  padding-top: var(--task-overview-group-content-offset);
 }
 
 .overdue-overview-row {
@@ -512,7 +519,10 @@
   flex-direction: column;
   gap: 1px;
   min-height: 0;
-  padding-top: 2px;
+  padding-top: calc(
+    var(--task-overview-group-content-offset) +
+    var(--week-rhythm-group-optical-offset)
+  );
   border-top: 0;
 }
 
