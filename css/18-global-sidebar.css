@@ -1445,6 +1445,16 @@
     will-change: max-width, opacity, transform, margin-left, padding;
   }
 
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today.date-nav-return-today--no-motion {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .app.app--with-global-nav #taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav .date-nav-return-today {
+    transition: none !important;
+    animation: none !important;
+  }
+
   .app.app--with-global-nav #taskMode.task-mode--route-enter .task-main-col > .task-card > .date-nav .date-nav-return-today,
   .app.app--with-global-nav #taskMode.task-mode--route-enter .task-main-col > .task-card > .date-nav .date-nav-actions .add-split,
   .app.app--with-global-nav #taskMode.task-mode--route-enter .task-main-col > .task-card > .date-nav .date-nav-actions .add-split-main {

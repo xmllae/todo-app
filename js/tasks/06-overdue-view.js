@@ -70,9 +70,12 @@
     var btn = dateNav.querySelector(".date-nav-return-today");
     if (hidden) {
       if (!btn) return;
-      btn.classList.remove("is-visible", "has-range");
-      btn.setAttribute("aria-hidden", "true");
-      btn.tabIndex = -1;
+      if (typeof hideTaskBackTodayBtn === "function") hideTaskBackTodayBtn(btn, true);
+      else {
+        btn.classList.remove("is-visible", "has-range");
+        btn.setAttribute("aria-hidden", "true");
+        btn.tabIndex = -1;
+      }
       return;
     }
 

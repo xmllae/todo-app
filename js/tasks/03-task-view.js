@@ -819,18 +819,33 @@ function isTaskOverdueHeaderMode(){
 const root=document.getElementById("taskMode");
 return getTaskQuickMode()==="overdue"||!!(root&&root.classList&&root.classList.contains("task-mode--overdue-view"))
 }
-function hideTaskBackTodayBtn(btn){
+function runTaskBackTodayBtnWithoutMotion(btn,mutate){
+if(!btn){
+if(typeof mutate==="function")mutate();
+return
+}
+btn.classList.add("date-nav-return-today--no-motion");
+if(typeof mutate==="function")mutate();
+const clearNoMotion=function(){btn.classList.remove("date-nav-return-today--no-motion")};
+if(typeof requestAnimationFrame==="function")requestAnimationFrame(function(){requestAnimationFrame(clearNoMotion)});
+else setTimeout(clearNoMotion,0)
+}
+function hideTaskBackTodayBtn(btn,immediate){
 if(!btn)return;
+const applyHide=function(){
 btn.classList.remove("is-visible","has-range");
 btn.setAttribute("aria-hidden","true");
 btn.tabIndex=-1
+};
+if(immediate)runTaskBackTodayBtnWithoutMotion(btn,applyHide);
+else applyHide()
 }
 function setTaskBackTodayBtn(ds){
 const nav=document.querySelector("#taskMode .task-main-col > .task-card > .date-nav");
 if(!nav)return;
 let btn=nav.querySelector(".date-nav-return-today");
 if(isTaskOverdueHeaderMode()){
-hideTaskBackTodayBtn(btn);
+hideTaskBackTodayBtn(btn,true);
 return
 }
 if(!btn){
