@@ -760,12 +760,18 @@ function renderOverdueTaskOverviewSidebar(state){
     {value:state.groupCount,label:"\u6d89\u53ca\u65e5\u671f"},
     {value:state.peakCount,label:"\u5355\u65e5\u6700\u591a"}
   ].map(function(item){
-    return'<div class="task-overview-metric overdue-overview-metric"><b>'+item.value+'</b><span>'+item.label+'</span></div>'
+    return'<div class="task-overview-metric overdue-overview-metric"><b>'+item.value+'</b><span>'+item.label+'</span></div>';
   }).join("");
   const listHtml=state.groups.slice(0,4).map(function(group){
-    return'<button type="button" class="overdue-overview-row" onclick="jumpOverdueDate(\''+group.ds+'\')" aria-label="打开 '+esc(disp(group.ds))+' 的逾期任务"><span class="overdue-overview-row-copy"><strong>'+esc(disp(group.ds))+'</strong><span>'+group.count+' \u9879\u5f85\u5904\u7406</span></span><em>'+esc(overdueAgeText(group.maxOverdueDays))+'</em></button>'
+    return'<button type="button" class="overdue-overview-row" onclick="jumpOverdueDate(\''+group.ds+'\')" aria-label="\u6253\u5f00 '+esc(disp(group.ds))+' \u7684\u903e\u671f\u4efb\u52a1"><span class="overdue-overview-row-copy"><strong>'+esc(disp(group.ds))+'</strong><span>'+group.count+' \u9879\u5f85\u5904\u7406</span></span><em>'+esc(overdueAgeText(group.maxOverdueDays))+'</em></button>';
   }).join("");
-  shell.innerHTML='<div class="week-overview-head overdue-overview-head"><span class="week-overview-kicker">\u903e\u671f\u603b\u89c8</span></div><div class="overdue-overview-hero"><div class="overdue-overview-count"><div class="overdue-overview-count-badge"><strong>'+state.visibleCount+'</strong></div><div class="overdue-overview-count-main"><span class="overdue-overview-count-copy">\u5f53\u524d\u5f85\u5904\u7406</span>'+summaryCopyHtml+'</div></div><div class="task-overview-metrics overdue-overview-metrics">'+metricsHtml+'</div></div><div class="overdue-overview-section"><div class="overdue-overview-section-head"><div class="overdue-overview-section-title">\u6700\u8fd1\u903e\u671f\u65e5\u671f</div></div><div class="overdue-overview-list">'+(listHtml||'<div class="overdue-overview-empty">\u5f53\u524d\u6ca1\u6709\u9700\u8981\u5904\u7406\u7684\u903e\u671f\u4efb\u52a1\u3002</div>')+'</div></div>'
+  shell.innerHTML=
+    '<div class="week-overview-head overdue-overview-head"><span class="week-overview-kicker">\u903e\u671f\u603b\u89c8</span></div>'+
+    '<div class="overdue-overview-hero"><div class="overdue-overview-count"><div class="overdue-overview-count-badge"><strong>'+state.visibleCount+'</strong></div><div class="overdue-overview-count-main"><span class="overdue-overview-count-copy">\u5f53\u524d\u5f85\u5904\u7406</span>'+summaryCopyHtml+'</div></div></div>'+
+    '<div class="task-overview-metrics overdue-overview-metrics">'+metricsHtml+'</div>'+
+    '<div class="overdue-overview-section"><div class="overdue-overview-section-head"><div class="overdue-overview-section-title">\u6700\u8fd1\u903e\u671f\u65e5\u671f</div></div><div class="overdue-overview-list">'+
+      (listHtml||'<div class="overdue-overview-empty">\u5f53\u524d\u6ca1\u6709\u9700\u8981\u5904\u7406\u7684\u903e\u671f\u4efb\u52a1\u3002</div>')+
+    '</div></div>';
 }
 const renderTaskDashLegacy=renderTaskDash;
 renderTaskDash=function(pct,totalForProg,doneForProg,nonArchived,fl,selStr){

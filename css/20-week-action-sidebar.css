@@ -28,12 +28,22 @@
   --task-overview-metric-label-gap: 7px;
   --task-overview-metric-label-line: 1.1;
   --task-overview-metric-label-weight: 400;
+  --task-overview-metrics-height:
+    calc(
+      var(--task-overview-metrics-block-start) +
+      var(--task-overview-metrics-block-end) +
+      var(--task-overview-metric-value-size) +
+      (var(--task-overview-metric-label-size) * var(--task-overview-metric-label-line)) +
+      var(--task-overview-metric-label-gap) +
+      2px
+    );
   --task-overview-group-title-size: 14px;
   --task-overview-group-title-line: 1.2;
   --task-overview-group-title-weight: 650;
   --task-overview-group-title-min-height: calc(var(--task-overview-group-title-size) * var(--task-overview-group-title-line));
   --task-overview-group-title-gap: 8px;
   --task-overview-head-gap: 12px;
+  --task-overview-summary-copy-height: 82px;
   flex: 1 1 auto;
   width: 100%;
   height: 100%;
@@ -82,8 +92,10 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 0 0 18px;
-  border-bottom: 0;
+  min-height: var(--task-overview-summary-copy-height);
+  padding: 0 0 16px;
+  box-sizing: border-box;
+  border-bottom: 1px solid color-mix(in srgb, var(--task-bd) 62%, transparent);
   background: transparent;
   box-shadow: none;
 }
@@ -150,8 +162,10 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0;
   margin-top: 0;
+  min-height: var(--task-overview-metrics-height);
   padding: var(--task-overview-metrics-block-start) 0 var(--task-overview-metrics-block-end);
   border-top: 1px solid var(--task-overview-metrics-border-color);
+  box-sizing: border-box;
 }
 
 .task-overview-metric {
@@ -346,7 +360,9 @@
   display: flex;
   align-items: center;
   gap: 16px;
+  min-height: var(--task-overview-summary-copy-height);
   padding: 0 0 16px;
+  box-sizing: border-box;
   border-bottom: 1px solid color-mix(in srgb, var(--task-bd) 62%, transparent);
   background: transparent;
 }
