@@ -538,6 +538,7 @@ function overdueActiveSortMode(){
 const OVERDUE_AGE_SORT_LS_KEY="tuole_overdue_age_sort_v1";
 let _overdueAgeSortDirectionHydrated=false;
 let _overdueAgeSortDirection="asc";
+let _overdueAgeSortPendingAnimation="";
 function overdueAgeSortStorage(){
   try{
     if(typeof window!=="undefined"&&window.localStorage)return window.localStorage;
@@ -567,10 +568,38 @@ function setOverdueAgeSortDirection(direction){
     if(storage)storage.setItem(OVERDUE_AGE_SORT_LS_KEY,next)
   }catch(e){}
 }
+function queueOverdueAgeSortAnimation(direction){
+  _overdueAgeSortPendingAnimation=direction==="desc"?"to-desc":"to-asc"
+}
+function consumeOverdueAgeSortAnimation(){
+  const next=_overdueAgeSortPendingAnimation;
+  _overdueAgeSortPendingAnimation="";
+  return next==="to-desc"||next==="to-asc"?next:""
+}
+function cleanupOverdueAgeSortAnimation(root){
+  if(!root||typeof root.querySelector!=="function")return;
+  const sort=root.querySelector(".overdue-task-head-sort");
+  if(!sort||!sort.classList)return;
+  const animClass=[].find.call(sort.classList,function(name){
+    return String(name||"").indexOf("overdue-task-head-sort--anim-")===0
+  });
+  if(!animClass)return;
+  let cleaned=false;
+  const clear=function(){
+    if(cleaned)return;
+    cleaned=true;
+    sort.classList.remove(animClass);
+    sort.removeEventListener("animationend",clear)
+  };
+  sort.addEventListener("animationend",clear);
+  setTimeout(clear,320)
+}
 function toggleOverdueAgeSortDirection(evt){
   if(evt&&typeof evt.preventDefault==="function")evt.preventDefault();
   if(evt&&typeof evt.stopPropagation==="function")evt.stopPropagation();
-  setOverdueAgeSortDirection(getOverdueAgeSortDirection()==="asc"?"desc":"asc");
+  const nextDirection=getOverdueAgeSortDirection()==="asc"?"desc":"asc";
+  queueOverdueAgeSortAnimation(nextDirection);
+  setOverdueAgeSortDirection(nextDirection);
   rT()
 }
 function orderOverdueGroupsByAge(groups,direction){
@@ -660,8 +689,8 @@ function renderOverdueTaskRow(entry){
   const task=entry.task,tone=(task.priority||"normal")==="high"?"high":"normal";
   return'<tr class="overdue-task-row overdue-task-row--'+tone+'"><td class="overdue-task-cell overdue-task-cell--title" data-label="\u6807\u9898">'+overdueTaskTitleButtonHtml(entry)+'</td><td class="overdue-task-cell overdue-task-cell--status" data-label="\u72b6\u6001">'+overdueTaskStatusHtml(entry)+'</td><td class="overdue-task-cell overdue-task-cell--action" data-label="\u64cd\u4f5c"><button type="button" class="overdue-task-dismiss" onclick="event.stopPropagation();dismissOverdueTask(\''+entry.ds+'\','+task.id+')" aria-label="\u4ece\u903e\u671f\u5217\u8868\u79fb\u9664\u4efb\u52a1 '+esc(task.text)+'">\u653e\u5f03</button></td></tr>'
 }
-function overdueTaskHeadSortHtml(direction){
-  const cls="overdue-task-head-sort"+(direction?" overdue-task-head-sort--"+direction:"");
+function overdueTaskHeadSortHtml(direction,animation){
+  const cls="overdue-task-head-sort"+(direction?" overdue-task-head-sort--"+direction:"")+(animation?" overdue-task-head-sort--anim-"+animation:"");
   return'<span class="'+cls+'" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22.25V4.25"></path><path d="M5.8 10.45 12 4.25l6.2 6.2"></path></svg></span>'
 }
 function overdueTaskHeadLabelHtml(label,tone,options){
@@ -671,23 +700,24 @@ function overdueTaskHeadLabelHtml(label,tone,options){
 function overdueTaskSortDirectionText(direction){
   return direction==="desc"?"\u964d\u5e8f":"\u5347\u5e8f"
 }
-function overdueTaskSortableHeadHtml(label,direction){
+function overdueTaskSortableHeadHtml(label,direction,animation){
   const currentDirectionText=overdueTaskSortDirectionText(direction),nextDirection=direction==="desc"?"asc":"desc",nextDirectionText=overdueTaskSortDirectionText(nextDirection);
-  return'<button type="button" class="overdue-task-head-chip overdue-task-head-chip--overdue overdue-task-head-chip--interactive" onclick="toggleOverdueAgeSortDirection(event)" aria-label="\u6309\u903e\u671f\u5929\u6570\u6392\u5e8f\uff0c\u5f53\u524d'+currentDirectionText+'\uff0c\u70b9\u51fb\u5207\u6362\u4e3a'+nextDirectionText+'" title="\u5f53\u524d'+currentDirectionText+'\uff0c\u70b9\u51fb\u5207\u6362\u4e3a'+nextDirectionText+'"><span class="overdue-task-head-anchor"><span class="overdue-task-head-chip-label">'+esc(label)+'</span>'+overdueTaskHeadSortHtml(direction)+'</span></button>'
+  return'<button type="button" class="overdue-task-head-chip overdue-task-head-chip--overdue overdue-task-head-chip--interactive" onclick="toggleOverdueAgeSortDirection(event)" aria-label="\u6309\u903e\u671f\u5929\u6570\u6392\u5e8f\uff0c\u5f53\u524d'+currentDirectionText+'\uff0c\u70b9\u51fb\u5207\u6362\u4e3a'+nextDirectionText+'" title="\u5f53\u524d'+currentDirectionText+'\uff0c\u70b9\u51fb\u5207\u6362\u4e3a'+nextDirectionText+'"><span class="overdue-task-head-anchor"><span class="overdue-task-head-chip-label">'+esc(label)+'</span>'+overdueTaskHeadSortHtml(direction,animation)+'</span></button>'
 }
-function overdueTaskHeadHtml(kind,overdueSortDirection){
+function overdueTaskHeadHtml(kind,overdueSortDirection,overdueSortAnimation){
   if(kind==="title")return'<span class="overdue-task-head-group overdue-task-head-group--title">'+
     overdueTaskHeadLabelHtml("\u6807\u9898","title",{extraClass:"overdue-task-head-chip--title"})+
-    overdueTaskSortableHeadHtml("\u903e\u671f",overdueSortDirection)+
+    overdueTaskSortableHeadHtml("\u903e\u671f",overdueSortDirection,overdueSortAnimation)+
   '</span>';
   if(kind==="status")return overdueTaskHeadLabelHtml("\u5b89\u6392","status",{extraClass:"overdue-task-head-chip--status"});
   return'<span class="overdue-task-head-spacer" aria-hidden="true"></span>'
 }
-function renderOverdueTaskTable(entries,overdueSortDirection){
-  return'<div class="overdue-task-table-wrap overdue-task-table-wrap--single"><table class="overdue-task-table"><thead><tr><th class="overdue-task-head overdue-task-head--title" scope="col">'+overdueTaskHeadHtml("title",overdueSortDirection)+'</th><th class="overdue-task-head overdue-task-head--status" scope="col">'+overdueTaskHeadHtml("status",overdueSortDirection)+'</th><th class="overdue-task-head overdue-task-head--action" scope="col" aria-label="\u64cd\u4f5c">'+overdueTaskHeadHtml("action",overdueSortDirection)+'</th></tr></thead><tbody>'+entries.map(renderOverdueTaskRow).join("")+'</tbody></table></div>'
+function renderOverdueTaskTable(entries,overdueSortDirection,overdueSortAnimation){
+  return'<div class="overdue-task-table-wrap overdue-task-table-wrap--single"><table class="overdue-task-table"><thead><tr><th class="overdue-task-head overdue-task-head--title" scope="col">'+overdueTaskHeadHtml("title",overdueSortDirection,overdueSortAnimation)+'</th><th class="overdue-task-head overdue-task-head--status" scope="col">'+overdueTaskHeadHtml("status",overdueSortDirection,overdueSortAnimation)+'</th><th class="overdue-task-head overdue-task-head--action" scope="col" aria-label="\u64cd\u4f5c">'+overdueTaskHeadHtml("action",overdueSortDirection,overdueSortAnimation)+'</th></tr></thead><tbody>'+entries.map(renderOverdueTaskRow).join("")+'</tbody></table></div>'
 }
 function renderOverdueTaskScene(list){
   const state=getOverdueTaskSceneState();
+  const overdueSortAnimation=consumeOverdueAgeSortAnimation();
   if(!state.totalCount){
     list.innerHTML='<section class="overdue-scene overdue-scene--empty"><div class="overdue-empty"><div class="overdue-empty-icon" aria-hidden="true">OK</div><p class="overdue-empty-title">\u5f53\u524d\u6ca1\u6709\u903e\u671f\u4efb\u52a1</p><p class="overdue-empty-sub">\u5386\u53f2\u672a\u5b8c\u6210\u4efb\u52a1\u4f1a\u96c6\u4e2d\u663e\u793a\u5728\u8fd9\u91cc\u3002</p></div></section>';
     return state
@@ -699,7 +729,8 @@ function renderOverdueTaskScene(list){
   const entries=state.tableGroups.reduce(function(all,group){
     return all.concat(group.items)
   },[]);
-  list.innerHTML='<section class="overdue-scene">'+renderOverdueTaskTable(entries,state.overdueSortDirection)+'</section>';
+  list.innerHTML='<section class="overdue-scene">'+renderOverdueTaskTable(entries,state.overdueSortDirection,overdueSortAnimation)+'</section>';
+  if(overdueSortAnimation)cleanupOverdueAgeSortAnimation(list);
   return state
 }
 function dismissOverdueTask(ds,id){
