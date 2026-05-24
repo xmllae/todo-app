@@ -7757,7 +7757,8 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   --overdue-head-tracking: .012em;
   --overdue-detail-size: 12px;
   --overdue-sort-icon-size: 14px;
-  --overdue-sort-icon-block-size: calc(var(--overdue-head-size) * 1.08);
+  --overdue-sort-icon-block-size: calc(var(--overdue-head-size) - 1px);
+  --overdue-sort-optical-offset-y: -1px;
   --overdue-sort-group-shift: calc((var(--overdue-sort-icon-size) + .02rem) / 2);
   --overdue-sort-hover-bg: #fef2f2;
   --overdue-sort-hover-radius: 6px;
@@ -8016,12 +8017,13 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-head-chip--overdue .overdue-task-head-sort {
   position: absolute;
   inset-inline-start: calc(100% + .02rem);
-  top: 0;
+  inset-block-start: auto;
+  inset-block-end: 0;
   color: var(--overdue-head-accent);
   margin-inline-start: 0;
   opacity: .92;
   pointer-events: none;
-  transform: none;
+  transform: translateY(var(--overdue-sort-optical-offset-y));
   transition:
     color .18s ease,
     opacity .18s ease;
