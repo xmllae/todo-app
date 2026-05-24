@@ -681,9 +681,13 @@ function jumpOverdueDate(ds){
   if(!targetDs||typeof pick!=="function")return;
   pick(targetDs)
 }
-function overdueTaskTitleButtonHtml(entry){
+function overdueTaskTitleButtonHtmlLegacy(entry){
   const task=entry.task,dateLabel=typeof disp==="function"?String(disp(entry.ds)||entry.ds):String(entry.ds||"");
   return'<button type="button" class="overdue-task-open" onclick="jumpOverdueDate(\''+entry.ds+'\')" aria-label="打开 '+esc(task.text)+' 所在日期 '+esc(dateLabel)+'"><span class="overdue-task-title-row">'+overdueTaskPriorityRingHtml(task)+'<span class="overdue-task-copy-stack"><strong class="overdue-task-title" title="'+esc(task.text)+'">'+esc(task.text)+'</strong></span>'+overdueTaskAgeHtml(entry,"overdue-task-age--title")+'</span></button>'
+}
+function overdueTaskTitleButtonHtml(entry){
+  const task=entry.task,dateLabel=typeof disp==="function"?String(disp(entry.ds)||entry.ds):String(entry.ds||"");
+  return'<span class="overdue-task-title-row"><button type="button" class="overdue-task-open" onclick="jumpOverdueDate(\''+entry.ds+'\')" aria-label="鎵撳紑 '+esc(task.text)+' 鎵€鍦ㄦ棩鏈?'+esc(dateLabel)+'">'+overdueTaskPriorityRingHtml(task)+'<span class="overdue-task-copy-stack"><strong class="overdue-task-title" title="'+esc(task.text)+'">'+esc(task.text)+'</strong></span></button>'+overdueTaskAgeHtml(entry,"overdue-task-age--title")+'</span>'
 }
 function renderOverdueTaskRow(entry){
   const task=entry.task,tone=(task.priority||"normal")==="high"?"high":"normal";
