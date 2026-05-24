@@ -660,17 +660,13 @@ function renderOverdueTaskRow(entry){
   const task=entry.task,tone=(task.priority||"normal")==="high"?"high":"normal";
   return'<tr class="overdue-task-row overdue-task-row--'+tone+'"><td class="overdue-task-cell overdue-task-cell--title" data-label="\u6807\u9898">'+overdueTaskTitleButtonHtml(entry)+'</td><td class="overdue-task-cell overdue-task-cell--status" data-label="\u72b6\u6001">'+overdueTaskStatusHtml(entry)+'</td><td class="overdue-task-cell overdue-task-cell--action" data-label="\u64cd\u4f5c"><button type="button" class="overdue-task-dismiss" onclick="event.stopPropagation();dismissOverdueTask(\''+entry.ds+'\','+task.id+')" aria-label="\u4ece\u903e\u671f\u5217\u8868\u79fb\u9664\u4efb\u52a1 '+esc(task.text)+'">\u653e\u5f03</button></td></tr>'
 }
-function overdueTaskHeadIconHtml(kind){
-  if(kind==="calendar")return'<span class="overdue-task-head-icon overdue-task-head-icon--calendar" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="1.75" y="2.5" width="8.5" height="7.75" rx="1.8"></rect><path d="M3.5 1.5v2.3M8.5 1.5v2.3M1.75 4.6h8.5"></path></svg></span>';
-  return""
-}
 function overdueTaskHeadSortHtml(direction){
   const cls="overdue-task-head-sort"+(direction?" overdue-task-head-sort--"+direction:"");
   return'<span class="'+cls+'" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3"></path><path d="M3.8 5.2 6 3l2.2 2.2"></path></svg></span>'
 }
 function overdueTaskHeadLabelHtml(label,tone,options){
   const opts=options||{},cls="overdue-task-head-chip"+(tone?" overdue-task-head-chip--"+tone:"")+(opts.extraClass?" "+opts.extraClass:"");
-  return'<span class="'+cls+'">'+(opts.icon?overdueTaskHeadIconHtml(opts.icon):"")+'<span class="overdue-task-head-chip-label">'+esc(label)+'</span>'+(opts.sort?overdueTaskHeadSortHtml(opts.sort):"")+'</span>'
+  return'<span class="'+cls+'"><span class="overdue-task-head-chip-label">'+esc(label)+'</span>'+(opts.sort?overdueTaskHeadSortHtml(opts.sort):"")+'</span>'
 }
 function overdueTaskSortDirectionText(direction){
   return direction==="desc"?"\u964d\u5e8f":"\u5347\u5e8f"
@@ -684,7 +680,7 @@ function overdueTaskHeadHtml(kind,overdueSortDirection){
     overdueTaskHeadLabelHtml("\u6807\u9898","title",{extraClass:"overdue-task-head-chip--title"})+
     overdueTaskSortableHeadHtml("\u903e\u671f",overdueSortDirection)+
   '</span>';
-  if(kind==="status")return overdueTaskHeadLabelHtml("\u5b89\u6392","status",{icon:"calendar",extraClass:"overdue-task-head-chip--status"});
+  if(kind==="status")return overdueTaskHeadLabelHtml("\u5b89\u6392","status",{extraClass:"overdue-task-head-chip--status"});
   return'<span class="overdue-task-head-spacer" aria-hidden="true"></span>'
 }
 function renderOverdueTaskTable(entries,overdueSortDirection){
