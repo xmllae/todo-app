@@ -8135,7 +8135,7 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 
 #taskMode .list-panel #tList .overdue-task-row:hover .overdue-task-cell,
 .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-row:hover .overdue-task-cell {
-  background: color-mix(in srgb, var(--card) 99%, #ffffff);
+  background: #f9fafb;
   border-bottom-color: color-mix(in srgb, var(--task-bd) 42%, transparent);
 }
 
