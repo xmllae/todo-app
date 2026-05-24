@@ -618,8 +618,17 @@ function renderOverdueTaskRow(entry){
   const task=entry.task,tone=(task.priority||"normal")==="high"?"high":"normal";
   return'<tr class="overdue-task-row overdue-task-row--'+tone+'"><td class="overdue-task-cell overdue-task-cell--title" data-label="\u6807\u9898">'+overdueTaskTitleButtonHtml(entry)+'</td><td class="overdue-task-cell overdue-task-cell--status" data-label="\u72b6\u6001">'+overdueTaskStatusHtml(entry)+'</td><td class="overdue-task-cell overdue-task-cell--action" data-label="\u64cd\u4f5c"><button type="button" class="overdue-task-dismiss" onclick="event.stopPropagation();dismissOverdueTask(\''+entry.ds+'\','+task.id+')" aria-label="\u4ece\u903e\u671f\u5217\u8868\u79fb\u9664\u4efb\u52a1 '+esc(task.text)+'">\u653e\u5f03</button></td></tr>'
 }
+function overdueTaskHeadChipHtml(label,tone,extraClass){
+  const cls="overdue-task-head-chip"+(tone?" overdue-task-head-chip--"+tone:"")+(extraClass?" "+extraClass:"");
+  return'<span class="'+cls+'"><span class="overdue-task-head-chip-label">'+esc(label)+'</span></span>'
+}
+function overdueTaskHeadHtml(label,tone,metaLabel,metaTone){
+  if(!metaLabel)return overdueTaskHeadChipHtml(label,tone,"");
+  return'<span class="overdue-task-head-group overdue-task-head-group--'+tone+'">'+overdueTaskHeadChipHtml(label,tone,"")+
+    overdueTaskHeadChipHtml(metaLabel,metaTone||tone,"overdue-task-head-chip--meta overdue-task-head-chip--mini")+'</span>'
+}
 function renderOverdueTaskTable(entries){
-  return'<div class="overdue-task-table-wrap overdue-task-table-wrap--single"><table class="overdue-task-table"><thead><tr><th class="overdue-task-head overdue-task-head--title" scope="col">\u6807\u9898</th><th class="overdue-task-head overdue-task-head--status" scope="col">\u5b89\u6392</th><th class="overdue-task-head overdue-task-head--action" scope="col">\u64cd\u4f5c</th></tr></thead><tbody>'+entries.map(renderOverdueTaskRow).join("")+'</tbody></table></div>'
+  return'<div class="overdue-task-table-wrap overdue-task-table-wrap--single"><table class="overdue-task-table"><thead><tr><th class="overdue-task-head overdue-task-head--title" scope="col">'+overdueTaskHeadHtml("\u6807\u9898","title","\u903e\u671f","overdue")+'</th><th class="overdue-task-head overdue-task-head--status" scope="col">'+overdueTaskHeadHtml("\u5b89\u6392","status")+'</th><th class="overdue-task-head overdue-task-head--action" scope="col">'+overdueTaskHeadHtml("\u64cd\u4f5c","action")+'</th></tr></thead><tbody>'+entries.map(renderOverdueTaskRow).join("")+'</tbody></table></div>'
 }
 function renderOverdueTaskScene(list){
   const state=getOverdueTaskSceneState();
