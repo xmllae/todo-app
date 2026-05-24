@@ -673,7 +673,7 @@ function overdueTaskSortDirectionText(direction){
 }
 function overdueTaskSortableHeadHtml(label,direction){
   const currentDirectionText=overdueTaskSortDirectionText(direction),nextDirection=direction==="desc"?"asc":"desc",nextDirectionText=overdueTaskSortDirectionText(nextDirection);
-  return'<button type="button" class="overdue-task-head-chip overdue-task-head-chip--overdue overdue-task-head-chip--interactive" onclick="toggleOverdueAgeSortDirection(event)" aria-label="\u6309\u903e\u671f\u5929\u6570\u6392\u5e8f\uff0c\u5f53\u524d'+currentDirectionText+'\uff0c\u70b9\u51fb\u5207\u6362\u4e3a'+nextDirectionText+'" title="\u5f53\u524d'+currentDirectionText+'\uff0c\u70b9\u51fb\u5207\u6362\u4e3a'+nextDirectionText+'"><span class="overdue-task-head-chip-label">'+esc(label)+'</span>'+overdueTaskHeadSortHtml(direction)+'</button>'
+  return'<button type="button" class="overdue-task-head-chip overdue-task-head-chip--overdue overdue-task-head-chip--interactive" onclick="toggleOverdueAgeSortDirection(event)" aria-label="\u6309\u903e\u671f\u5929\u6570\u6392\u5e8f\uff0c\u5f53\u524d'+currentDirectionText+'\uff0c\u70b9\u51fb\u5207\u6362\u4e3a'+nextDirectionText+'" title="\u5f53\u524d'+currentDirectionText+'\uff0c\u70b9\u51fb\u5207\u6362\u4e3a'+nextDirectionText+'"><span class="overdue-task-head-anchor"><span class="overdue-task-head-chip-label">'+esc(label)+'</span>'+overdueTaskHeadSortHtml(direction)+'</span></button>'
 }
 function overdueTaskHeadHtml(kind,overdueSortDirection){
   if(kind==="title")return'<span class="overdue-task-head-group overdue-task-head-group--title">'+
