@@ -7758,7 +7758,7 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   --overdue-detail-size: 12px;
   --overdue-sort-icon-size: 14px;
   --overdue-sort-icon-block-size: calc(var(--overdue-head-size) - 1px);
-  --overdue-sort-optical-offset-y: -1px;
+  --overdue-sort-optical-offset-y: -.5px;
   --overdue-sort-group-shift: calc((var(--overdue-sort-icon-size) + .02rem) / 2);
   --overdue-sort-hover-bg: #fef2f2;
   --overdue-sort-hover-radius: 6px;
