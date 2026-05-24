@@ -28,6 +28,12 @@
   --task-overview-metric-label-gap: 7px;
   --task-overview-metric-label-line: 1.1;
   --task-overview-metric-label-weight: 400;
+  --task-overview-group-title-size: 14px;
+  --task-overview-group-title-line: 1.2;
+  --task-overview-group-title-weight: 650;
+  --task-overview-group-title-min-height: calc(var(--task-overview-group-title-size) * var(--task-overview-group-title-line));
+  --task-overview-group-title-gap: 8px;
+  --task-overview-head-gap: 12px;
   flex: 1 1 auto;
   width: 100%;
   height: 100%;
@@ -59,7 +65,7 @@
 }
 
 .overdue-overview-head {
-  padding-bottom: 0;
+  padding-bottom: var(--task-overview-head-gap);
   border-bottom: 0;
 }
 
@@ -76,7 +82,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: var(--overdue-overview-heading-gap) 0 18px;
+  padding: 0 0 18px;
   border-bottom: 0;
   background: transparent;
   box-shadow: none;
@@ -200,6 +206,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  min-height: var(--task-overview-group-title-min-height);
+  margin-bottom: var(--task-overview-group-title-gap);
 }
 
 .overdue-overview-section-title {
@@ -210,7 +218,7 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  margin-top: var(--overdue-overview-heading-gap);
+  margin-top: 0;
 }
 
 .overdue-overview-row {
@@ -319,16 +327,18 @@
   align-items: center;
   justify-content: flex-start;
   gap: 10px;
-  padding-bottom: 12px;
+  padding-bottom: var(--task-overview-head-gap);
 }
 
 .week-overview-kicker {
-  display: block;
+  display: inline-flex;
+  align-items: center;
   margin-bottom: 0;
   color: #0f172a;
-  font-size: 14px;
-  line-height: 1.2;
-  font-weight: 650;
+  min-height: var(--task-overview-group-title-min-height);
+  font-size: var(--task-overview-group-title-size);
+  line-height: var(--task-overview-group-title-line);
+  font-weight: var(--task-overview-group-title-weight);
   letter-spacing: 0;
 }
 
@@ -450,14 +460,15 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin-bottom: 8px;
+  min-height: var(--task-overview-group-title-min-height);
+  margin-bottom: var(--task-overview-group-title-gap);
 }
 
 .week-overview-section-title span {
   color: #0f172a;
-  font-size: 14px;
-  line-height: 1.2;
-  font-weight: 650;
+  font-size: var(--task-overview-group-title-size);
+  line-height: var(--task-overview-group-title-line);
+  font-weight: var(--task-overview-group-title-weight);
 }
 
 .week-overview-section-title small {
