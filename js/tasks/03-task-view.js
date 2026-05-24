@@ -662,7 +662,7 @@ function renderOverdueTaskRow(entry){
 }
 function overdueTaskHeadSortHtml(direction){
   const cls="overdue-task-head-sort"+(direction?" overdue-task-head-sort--"+direction:"");
-  return'<span class="'+cls+'" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V4.25"></path><path d="M5.8 10.45 12 4.25l6.2 6.2"></path></svg></span>'
+  return'<span class="'+cls+'" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22.25V4.25"></path><path d="M5.8 10.45 12 4.25l6.2 6.2"></path></svg></span>'
 }
 function overdueTaskHeadLabelHtml(label,tone,options){
   const opts=options||{},cls="overdue-task-head-chip"+(tone?" overdue-task-head-chip--"+tone:"")+(opts.extraClass?" "+opts.extraClass:"");
