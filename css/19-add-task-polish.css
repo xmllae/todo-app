@@ -7755,6 +7755,7 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   --overdue-head-color: color-mix(in srgb, var(--text) 78%, #27324a);
   --overdue-head-accent: #f43f5e;
   --overdue-head-tracking: .012em;
+  --overdue-detail-size: 12px;
   --overdue-meta-slot-width: 4.6rem;
   --overdue-title-row-pad-inline-end: 14px;
   --overdue-head-border: color-mix(in srgb, var(--task-bd) 82%, #dce4ef);
@@ -8236,7 +8237,7 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   border-radius: 0;
   background: transparent;
   color: var(--overdue-text-color);
-  font-size: .7rem;
+  font-size: var(--overdue-detail-size);
   line-height: 1;
   font-weight: 500;
   letter-spacing: .005em;
@@ -8280,7 +8281,7 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   background: var(--overdue-age-pill-bg);
   box-shadow: var(--overdue-age-pill-shadow);
   color: color-mix(in srgb, var(--overdue-text-color) 88%, var(--text));
-  font-size: .74rem;
+  font-size: inherit;
   line-height: 1;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
@@ -8333,7 +8334,7 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 #taskMode .list-panel #tList .overdue-task-status-date,
 .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-status-date {
   color: var(--text2);
-  font-size: .75rem;
+  font-size: var(--overdue-detail-size);
   line-height: 1.32;
   font-weight: 430;
   font-variant-numeric: tabular-nums;
@@ -8355,7 +8356,7 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 #taskMode .list-panel #tList .overdue-task-time-main,
 .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-time-main {
   color: color-mix(in srgb, var(--text2) 70%, var(--text3));
-  font-size: .75rem;
+  font-size: var(--overdue-detail-size);
   line-height: 1.32;
   font-weight: 430;
   font-variant-numeric: tabular-nums;
@@ -8376,7 +8377,7 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 #taskMode .list-panel #tList .overdue-task-time-sub,
 .app.app--with-global-nav #taskMode .list-panel #tList .overdue-task-time-sub {
   color: color-mix(in srgb, var(--text2) 60%, var(--text3));
-  font-size: .72rem;
+  font-size: var(--overdue-detail-size);
   line-height: 1.25;
   font-weight: 430;
 }
