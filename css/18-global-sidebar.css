@@ -463,34 +463,84 @@
 }
 
 .global-side-nav [data-gsn-action="overdue"].gsn-item--overdue-reveal {
-  will-change: color, background-color, border-color, box-shadow;
-}
-
-.global-side-nav [data-gsn-action="overdue"].gsn-item--overdue-reveal.gsn-item--overdue-reveal-start {
-  color: var(--gsn-item-fg) !important;
-  background: transparent;
-  border-color: transparent;
-  box-shadow: none;
+  will-change: color;
+  animation: gsnOverdueTextReveal 0.42s ease-out both;
 }
 
 .global-side-nav
-  [data-gsn-action="overdue"].gsn-item--overdue-reveal.gsn-item--overdue-reveal-start
+  [data-gsn-action="overdue"].gsn-item--overdue-reveal
   .gsn-item-main {
-  opacity: 0.72;
+  will-change: color;
+  animation: gsnOverdueLabelReveal 0.42s ease-out both;
 }
 
 .global-side-nav
-  [data-gsn-action="overdue"].gsn-item--overdue-reveal.gsn-item--overdue-reveal-start
+  [data-gsn-action="overdue"].gsn-item--overdue-reveal
   .gsn-nav-overdue-icon {
-  color: currentColor;
-  transform: scale(0.92);
+  will-change: color, transform;
+  animation: gsnOverdueIconReveal 0.42s ease-out both;
 }
 
 .global-side-nav
-  [data-gsn-action="overdue"].gsn-item--overdue-reveal.gsn-item--overdue-reveal-start
+  [data-gsn-action="overdue"].gsn-item--overdue-reveal
   .gsn-count:not(.gsn-count--empty) {
-  opacity: 0;
-  transform: scale(0.16);
+  transform-origin: center;
+  will-change: transform, opacity;
+  animation: gsnOverdueBadgePop 0.46s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes gsnOverdueTextReveal {
+  0% {
+    color: var(--gsn-item-fg);
+  }
+
+  100% {
+    color: var(--gsn-overdue-fg);
+  }
+}
+
+@keyframes gsnOverdueLabelReveal {
+  0% {
+    color: var(--gsn-item-fg);
+  }
+
+  100% {
+    color: var(--gsn-overdue-fg);
+  }
+}
+
+@keyframes gsnOverdueIconReveal {
+  0% {
+    color: var(--gsn-item-fg);
+    transform: scale(0.9);
+  }
+
+  60% {
+    color: var(--gsn-overdue-fg);
+    transform: scale(1.05);
+  }
+
+  100% {
+    color: var(--gsn-overdue-fg);
+    transform: scale(1);
+  }
+}
+
+@keyframes gsnOverdueBadgePop {
+  0% {
+    opacity: 0;
+    transform: scale(0.18);
+  }
+
+  68% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .gsn-item-main {
@@ -499,7 +549,9 @@
   gap: var(--gsn-entry-gap);
   flex: 1;
   min-width: 0;
-  transition: opacity 0.24s ease;
+  transition:
+    color 0.24s ease,
+    opacity 0.24s ease;
 }
 
 .gsn-item-main i,
@@ -855,15 +907,17 @@
     transition: none;
   }
 
+  .global-side-nav [data-gsn-action="overdue"].gsn-item--overdue-reveal,
   .global-side-nav
-    [data-gsn-action="overdue"].gsn-item--overdue-reveal.gsn-item--overdue-reveal-start
+    [data-gsn-action="overdue"].gsn-item--overdue-reveal
     .gsn-item-main,
   .global-side-nav
-    [data-gsn-action="overdue"].gsn-item--overdue-reveal.gsn-item--overdue-reveal-start
+    [data-gsn-action="overdue"].gsn-item--overdue-reveal
     .gsn-nav-overdue-icon,
   .global-side-nav
-    [data-gsn-action="overdue"].gsn-item--overdue-reveal.gsn-item--overdue-reveal-start
+    [data-gsn-action="overdue"].gsn-item--overdue-reveal
     .gsn-count:not(.gsn-count--empty) {
+    animation: none;
     opacity: 1;
     transform: none;
   }

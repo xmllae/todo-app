@@ -364,6 +364,7 @@
 
   function overdueNavButton(count, active, shouldReveal) {
     var hasOverdue = count > 0;
+    var revealClass = hasOverdue && shouldReveal ? " gsn-item--overdue-reveal" : "";
     return navButton(
       "item",
       "overdue-warning",
@@ -372,47 +373,9 @@
       "overdue",
       "",
       hasOverdue ? active : false,
-      hasOverdue
-        ? shouldReveal
-          ? " gsn-item--overdue-reveal gsn-item--overdue-reveal-start"
-          : ""
-        : " gsn-item--zero",
+      hasOverdue ? revealClass : " gsn-item--zero",
       hasOverdue ? "" : ' aria-disabled="true" tabindex="-1" disabled'
     );
-  }
-
-  function playOverdueReveal(nav) {
-    var overdueButton =
-      nav &&
-      nav.querySelector('[data-gsn-action="overdue"].gsn-item--overdue-reveal');
-    if (!overdueButton || typeof window.setTimeout !== "function") return;
-    if (overdueButton._gsnRevealFrame) {
-      if (typeof window.cancelAnimationFrame === "function") {
-        window.cancelAnimationFrame(overdueButton._gsnRevealFrame);
-      } else {
-        window.clearTimeout(overdueButton._gsnRevealFrame);
-      }
-      overdueButton._gsnRevealFrame = null;
-    }
-    if (overdueButton._gsnRevealTimer) {
-      window.clearTimeout(overdueButton._gsnRevealTimer);
-      overdueButton._gsnRevealTimer = null;
-    }
-    var startReveal = function () {
-      overdueButton._gsnRevealFrame = null;
-      if (!overdueButton.isConnected) return;
-      overdueButton.classList.remove("gsn-item--overdue-reveal-start");
-      overdueButton._gsnRevealTimer = window.setTimeout(function () {
-        overdueButton._gsnRevealTimer = null;
-        if (!overdueButton.isConnected) return;
-        overdueButton.classList.remove("gsn-item--overdue-reveal");
-      }, 520);
-    };
-    if (typeof window.requestAnimationFrame === "function") {
-      overdueButton._gsnRevealFrame = window.requestAnimationFrame(startReveal);
-      return;
-    }
-    overdueButton._gsnRevealFrame = window.setTimeout(startReveal, 16);
   }
 
   function renderSideNav() {
@@ -462,9 +425,6 @@
         hasSingleFilter("frozen")
       ) +
       "</section>";
-    if (shouldRevealOverdue) {
-      playOverdueReveal(nav);
-    }
     gsnPrevOverdueCount = overdueCount;
   }
 

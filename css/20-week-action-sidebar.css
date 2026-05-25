@@ -996,53 +996,6 @@
 }
 
 /* #region 顶部当天胶囊与右侧节奏当天行视觉同步 */
-#taskMode .list-panel #tList .week-view-day-pill.is-today,
-#taskMode .list-panel #tList .week-view-day-pill.is-today.is-focus,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today.is-focus {
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--acc) 9%, #ffffff) 0%,
-    color-mix(in srgb, var(--acc) 5%, #ffffff) 100%
-  ) !important;
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--acc) 14%, transparent),
-    0 10px 20px -18px color-mix(in srgb, var(--acc) 24%, rgba(15, 23, 42, .18)) !important;
-  color: color-mix(in srgb, var(--week-ink) 76%, var(--acc)) !important;
-}
-
-#taskMode .list-panel #tList .week-view-day-pill.is-today .week-view-day-pill-name,
-#taskMode .list-panel #tList .week-view-day-pill.is-today .week-view-day-pill-date,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today .week-view-day-pill-name,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today .week-view-day-pill-date {
-  color: inherit !important;
-}
-
-#taskMode .list-panel #tList .week-view-day-pill.is-today:hover,
-#taskMode .list-panel #tList .week-view-day-pill.is-today.is-focus:hover,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today:hover,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today.is-focus:hover {
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--acc) 12%, #ffffff) 0%,
-    color-mix(in srgb, var(--acc) 7%, #ffffff) 100%
-  ) !important;
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--acc) 18%, transparent),
-    0 12px 22px -18px color-mix(in srgb, var(--acc) 28%, rgba(15, 23, 42, .18)) !important;
-  transform: translateY(-1px);
-}
-
-#taskMode .list-panel #tList .week-view-day-pill.is-today:active,
-#taskMode .list-panel #tList .week-view-day-pill.is-today.is-focus:active,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today:active,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today.is-focus:active {
-  transform: translateY(0) scale(.985);
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--acc) 20%, transparent),
-    0 8px 14px -16px color-mix(in srgb, var(--acc) 22%, rgba(15, 23, 42, .16)) !important;
-}
-
 .week-rhythm-day.is-today .week-rhythm-copy {
   margin-left: -10px;
   padding: 5px 12px;
