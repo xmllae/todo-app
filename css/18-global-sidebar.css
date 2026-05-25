@@ -457,12 +457,49 @@
   color: currentColor;
 }
 
+.gsn-item.gsn-item--zero .gsn-count,
+.gsn-item.gsn-item--zero .gsn-count--empty {
+  display: none;
+}
+
+.global-side-nav [data-gsn-action="overdue"].gsn-item--overdue-reveal {
+  will-change: color, background-color, border-color, box-shadow;
+}
+
+.global-side-nav [data-gsn-action="overdue"].gsn-item--overdue-reveal.gsn-item--overdue-reveal-start {
+  color: var(--gsn-item-fg) !important;
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.global-side-nav
+  [data-gsn-action="overdue"].gsn-item--overdue-reveal.gsn-item--overdue-reveal-start
+  .gsn-item-main {
+  opacity: 0.72;
+}
+
+.global-side-nav
+  [data-gsn-action="overdue"].gsn-item--overdue-reveal.gsn-item--overdue-reveal-start
+  .gsn-nav-overdue-icon {
+  color: currentColor;
+  transform: scale(0.92);
+}
+
+.global-side-nav
+  [data-gsn-action="overdue"].gsn-item--overdue-reveal.gsn-item--overdue-reveal-start
+  .gsn-count:not(.gsn-count--empty) {
+  opacity: 0;
+  transform: scale(0.16);
+}
+
 .gsn-item-main {
   display: flex;
   align-items: center;
   gap: var(--gsn-entry-gap);
   flex: 1;
   min-width: 0;
+  transition: opacity 0.24s ease;
 }
 
 .gsn-item-main i,
@@ -486,6 +523,13 @@
   align-items: center;
   justify-content: center;
   line-height: 1;
+}
+
+.gsn-nav-overdue-icon {
+  transition:
+    color 0.24s ease,
+    opacity 0.24s ease,
+    transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .gsn-nav-date-icon svg {
@@ -645,10 +689,13 @@
   letter-spacing: 0.01em;
   flex-shrink: 0;
   box-shadow: var(--gsn-count-shadow);
+  transform-origin: center;
   transition:
     background 0.2s ease,
     color 0.2s ease,
-    box-shadow 0.2s ease;
+    box-shadow 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .gsn-count--empty {
@@ -800,6 +847,25 @@
   .gsn-project:active::after,
   .gsn-filter:active::after {
     animation: none;
+  }
+
+  .gsn-item-main,
+  .gsn-nav-overdue-icon,
+  .gsn-count {
+    transition: none;
+  }
+
+  .global-side-nav
+    [data-gsn-action="overdue"].gsn-item--overdue-reveal.gsn-item--overdue-reveal-start
+    .gsn-item-main,
+  .global-side-nav
+    [data-gsn-action="overdue"].gsn-item--overdue-reveal.gsn-item--overdue-reveal-start
+    .gsn-nav-overdue-icon,
+  .global-side-nav
+    [data-gsn-action="overdue"].gsn-item--overdue-reveal.gsn-item--overdue-reveal-start
+    .gsn-count:not(.gsn-count--empty) {
+    opacity: 1;
+    transform: none;
   }
 }
 

@@ -6,6 +6,7 @@
   var missingProjectPrefix = "__gsn_missing_project__";
   var gsnStateKey = "tuole_gsn_state_v1";
   var gsnLastTodayKey = "";
+  var gsnPrevOverdueCount = null;
   var GSN_DAY_BOUNDARY_BUFFER_MS = 120;
 
   var projects = [
@@ -361,7 +362,7 @@
     );
   }
 
-  function overdueNavButton(count, active) {
+  function overdueNavButton(count, active, shouldReveal) {
     var hasOverdue = count > 0;
     return navButton(
       "item",
@@ -371,9 +372,47 @@
       "overdue",
       "",
       hasOverdue ? active : false,
-      hasOverdue ? "" : " gsn-item--zero",
+      hasOverdue
+        ? shouldReveal
+          ? " gsn-item--overdue-reveal gsn-item--overdue-reveal-start"
+          : ""
+        : " gsn-item--zero",
       hasOverdue ? "" : ' aria-disabled="true" tabindex="-1" disabled'
     );
+  }
+
+  function playOverdueReveal(nav) {
+    var overdueButton =
+      nav &&
+      nav.querySelector('[data-gsn-action="overdue"].gsn-item--overdue-reveal');
+    if (!overdueButton || typeof window.setTimeout !== "function") return;
+    if (overdueButton._gsnRevealFrame) {
+      if (typeof window.cancelAnimationFrame === "function") {
+        window.cancelAnimationFrame(overdueButton._gsnRevealFrame);
+      } else {
+        window.clearTimeout(overdueButton._gsnRevealFrame);
+      }
+      overdueButton._gsnRevealFrame = null;
+    }
+    if (overdueButton._gsnRevealTimer) {
+      window.clearTimeout(overdueButton._gsnRevealTimer);
+      overdueButton._gsnRevealTimer = null;
+    }
+    var startReveal = function () {
+      overdueButton._gsnRevealFrame = null;
+      if (!overdueButton.isConnected) return;
+      overdueButton.classList.remove("gsn-item--overdue-reveal-start");
+      overdueButton._gsnRevealTimer = window.setTimeout(function () {
+        overdueButton._gsnRevealTimer = null;
+        if (!overdueButton.isConnected) return;
+        overdueButton.classList.remove("gsn-item--overdue-reveal");
+      }, 520);
+    };
+    if (typeof window.requestAnimationFrame === "function") {
+      overdueButton._gsnRevealFrame = window.requestAnimationFrame(startReveal);
+      return;
+    }
+    overdueButton._gsnRevealFrame = window.setTimeout(startReveal, 16);
   }
 
   function renderSideNav() {
@@ -381,6 +420,7 @@
     if (!nav) return;
     var overdueCount = countOverdue();
     var activeDate = dateActiveKey(overdueCount);
+    var shouldRevealOverdue = gsnPrevOverdueCount === 0 && overdueCount > 0;
 
     nav.innerHTML =
       '<div class="gsn-head">' +
@@ -392,7 +432,7 @@
       navButton("item", "today-calendar", "今天", pendingFor(todayKey()).length, "today", "", activeDate === "today") +
       navButton("item", "ph-arrow-fat-lines-right", "明天", null, "tomorrow", "", activeDate === "tomorrow") +
       navButton("item", "ph-calendar-dots", "本周", countWeek(), "week", "", activeDate === "week") +
-      overdueNavButton(overdueCount, activeDate === "overdue") +
+      overdueNavButton(overdueCount, activeDate === "overdue", shouldRevealOverdue) +
       "</section>" +
       '<section class="gsn-section" aria-labelledby="gsnFilterTitle">' +
       '<h4 class="gsn-section-title" id="gsnFilterTitle">筛选</h4>' +
@@ -422,6 +462,10 @@
         hasSingleFilter("frozen")
       ) +
       "</section>";
+    if (shouldRevealOverdue) {
+      playOverdueReveal(nav);
+    }
+    gsnPrevOverdueCount = overdueCount;
   }
 
   function getCurrentMode() {
