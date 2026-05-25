@@ -732,11 +732,11 @@
 }
 
 /* 统一页面中“逾期”文案及配套警示图标的颜色。 */
-.global-side-nav [data-gsn-action="overdue"],
-.global-side-nav [data-gsn-action="overdue"]:hover,
-.global-side-nav [data-gsn-action="overdue"].is-active,
-.global-side-nav [data-gsn-action="overdue"].is-active:hover,
-.global-side-nav [data-gsn-action="overdue"] .gsn-nav-overdue-icon,
+.global-side-nav [data-gsn-action="overdue"]:not(.gsn-item--zero),
+.global-side-nav [data-gsn-action="overdue"]:not(.gsn-item--zero):hover,
+.global-side-nav [data-gsn-action="overdue"]:not(.gsn-item--zero).is-active,
+.global-side-nav [data-gsn-action="overdue"]:not(.gsn-item--zero).is-active:hover,
+.global-side-nav [data-gsn-action="overdue"]:not(.gsn-item--zero) .gsn-nav-overdue-icon,
 .week-rhythm-day.is-overdue .week-rhythm-state,
 #taskMode .list-panel #tList .week-task-overdue-meta,
 #taskMode .list-panel #tList .week-overdue-icon-wrap,

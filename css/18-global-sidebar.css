@@ -433,6 +433,30 @@
   margin-left: 0;
 }
 
+.gsn-item.gsn-item--zero,
+.gsn-item.gsn-item--zero:hover,
+.gsn-item.gsn-item--zero:active,
+.gsn-item.gsn-item--zero:focus-visible {
+  color: var(--gsn-item-fg);
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  transform: none;
+  cursor: default;
+}
+
+.gsn-item.gsn-item--zero:disabled {
+  pointer-events: none;
+}
+
+.gsn-item.gsn-item--zero .gsn-item-main {
+  opacity: 0.72;
+}
+
+.gsn-item.gsn-item--zero .gsn-nav-overdue-icon {
+  color: currentColor;
+}
+
 .gsn-item-main {
   display: flex;
   align-items: center;
@@ -487,29 +511,29 @@
   transform: scale(1.4);
 }
 
-.global-side-nav [data-gsn-action="overdue"],
-.global-side-nav [data-gsn-action="overdue"]:hover,
-.global-side-nav [data-gsn-action="overdue"].is-active,
-.global-side-nav [data-gsn-action="overdue"].is-active:hover {
+.global-side-nav [data-gsn-action="overdue"]:not(.gsn-item--zero),
+.global-side-nav [data-gsn-action="overdue"]:not(.gsn-item--zero):hover,
+.global-side-nav [data-gsn-action="overdue"]:not(.gsn-item--zero).is-active,
+.global-side-nav [data-gsn-action="overdue"]:not(.gsn-item--zero).is-active:hover {
   color: var(--gsn-overdue-fg) !important;
 }
 
-.global-side-nav [data-gsn-action="overdue"] .gsn-nav-overdue-icon {
+.global-side-nav [data-gsn-action="overdue"]:not(.gsn-item--zero) .gsn-nav-overdue-icon {
   color: var(--gsn-overdue-fg);
 }
 
-.global-side-nav [data-gsn-action="overdue"] .gsn-count:not(.gsn-count--empty) {
+.global-side-nav [data-gsn-action="overdue"]:not(.gsn-item--zero) .gsn-count:not(.gsn-count--empty) {
   background: var(--gsn-overdue-count-bg);
   color: var(--gsn-overdue-count-fg);
   box-shadow: var(--gsn-overdue-count-shadow);
 }
 
-.global-side-nav [data-gsn-action="overdue"]:hover {
+.global-side-nav [data-gsn-action="overdue"]:not(.gsn-item--zero):hover {
   background: var(--gsn-overdue-bg-hover);
   border-color: var(--gsn-overdue-border-hover);
 }
 
-.global-side-nav [data-gsn-action="overdue"]:hover .gsn-count:not(.gsn-count--empty) {
+.global-side-nav [data-gsn-action="overdue"]:not(.gsn-item--zero):hover .gsn-count:not(.gsn-count--empty) {
   background: var(--gsn-overdue-count-hover-bg);
   color: var(--gsn-overdue-count-hover-fg);
   box-shadow: var(--gsn-overdue-count-hover-shadow);

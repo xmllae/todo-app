@@ -1,9 +1,12 @@
 ﻿(function () {
   var gsnRefreshTimer = null;
+  var gsnDayBoundaryTimer = null;
   var gsnActiveQuick = "";
   var gsnActiveProject = "";
   var missingProjectPrefix = "__gsn_missing_project__";
   var gsnStateKey = "tuole_gsn_state_v1";
+  var gsnLastTodayKey = "";
+  var GSN_DAY_BOUNDARY_BUFFER_MS = 120;
 
   var projects = [
     { name: "工作", icon: "ph-briefcase", color: "#3b82f6", tags: ["工作", "work"] },
@@ -47,7 +50,7 @@
     if (!saved) return false;
     var prevQuick = gsnActiveQuick || "";
     var prevSel = typeof sel !== "undefined" ? String(sel || "") : "";
-    var nextQuick = typeof saved.quick === "string" ? saved.quick : "";
+    var nextQuick = normalizeQuickMode(typeof saved.quick === "string" ? saved.quick : "");
     var nextSel = isValidDateKey(saved.ds) ? saved.ds : "";
     var changed = false;
     if (nextQuick !== prevQuick) {
@@ -78,8 +81,7 @@
   };
 
   window.setGlobalSideNavQuickMode = function (mode, keepRefresh) {
-    gsnActiveQuick = mode || "";
-    syncQuickModeState();
+    setQuickModeValue(mode);
     persistState();
     if (!keepRefresh) scheduleRefresh();
   };
@@ -155,6 +157,30 @@
     }).length;
   }
 
+  function hasOverdueTasks() {
+    return countOverdue() > 0;
+  }
+
+  function normalizeQuickMode(mode) {
+    var next = mode || "";
+    if (next === "overdue" && !hasOverdueTasks()) return "";
+    return next;
+  }
+
+  function setQuickModeValue(mode) {
+    var next = normalizeQuickMode(mode);
+    if (next === gsnActiveQuick) return false;
+    gsnActiveQuick = next;
+    syncQuickModeState();
+    return true;
+  }
+
+  function syncQuickModeForCurrentData() {
+    var changed = setQuickModeValue(gsnActiveQuick);
+    if (changed) persistState();
+    return changed;
+  }
+
   function countToday(predicate) {
     return rowsFor(todayKey()).filter(predicate).length;
   }
@@ -184,8 +210,9 @@
     return typeof FMulti !== "undefined" && FMulti.size === 1 && FMulti.has(key);
   }
 
-  function dateActiveKey() {
-    if (gsnActiveQuick === "overdue" || gsnActiveQuick === "week") return gsnActiveQuick;
+  function dateActiveKey(overdueCount) {
+    if (gsnActiveQuick === "overdue") return overdueCount > 0 ? "overdue" : "";
+    if (gsnActiveQuick === "week") return "week";
     if (typeof sel !== "undefined" && sel === offsetKey(1)) {
       return "tomorrow";
     }
@@ -197,7 +224,9 @@
 
   function countBadge(value) {
     if (value == null) return "";
-    if (!value) return '<span class="gsn-count gsn-count--empty" aria-hidden="true"></span>';
+    if (!value) {
+      return '<span class="gsn-count gsn-count--empty" aria-hidden="true"></span>';
+    }
     return '<span class="gsn-count">' + String(value) + "</span>";
   }
 
@@ -228,8 +257,8 @@
     );
   }
 
-  function navButton(kind, icon, label, count, action, arg, active) {
-    var cls = "gsn-" + kind + (active ? " is-active" : "");
+  function navButton(kind, icon, label, count, action, arg, active, extraClass, extraAttrs) {
+    var cls = "gsn-" + kind + (active ? " is-active" : "") + (extraClass || "");
     var dataArg = arg == null ? "" : ' data-gsn-arg="' + escapeHtml(arg) + '"';
     var iconToneClass = icon ? " gsn-nav-date-icon--" + icon : "";
     var iconHtml =
@@ -249,6 +278,7 @@
       action +
       '"' +
       dataArg +
+      (extraAttrs || "") +
       ">" +
       '<span class="gsn-item-main">' +
       iconHtml +
@@ -331,10 +361,26 @@
     );
   }
 
+  function overdueNavButton(count, active) {
+    var hasOverdue = count > 0;
+    return navButton(
+      "item",
+      "overdue-warning",
+      "逾期",
+      hasOverdue ? count : null,
+      "overdue",
+      "",
+      hasOverdue ? active : false,
+      hasOverdue ? "" : " gsn-item--zero",
+      hasOverdue ? "" : ' aria-disabled="true" tabindex="-1" disabled'
+    );
+  }
+
   function renderSideNav() {
     var nav = ensureSideNav();
     if (!nav) return;
-    var activeDate = dateActiveKey();
+    var overdueCount = countOverdue();
+    var activeDate = dateActiveKey(overdueCount);
 
     nav.innerHTML =
       '<div class="gsn-head">' +
@@ -346,7 +392,7 @@
       navButton("item", "today-calendar", "今天", pendingFor(todayKey()).length, "today", "", activeDate === "today") +
       navButton("item", "ph-arrow-fat-lines-right", "明天", null, "tomorrow", "", activeDate === "tomorrow") +
       navButton("item", "ph-calendar-dots", "本周", countWeek(), "week", "", activeDate === "week") +
-      navButton("item", "overdue-warning", "逾期", countOverdue(), "overdue", "", activeDate === "overdue") +
+      overdueNavButton(overdueCount, activeDate === "overdue") +
       "</section>" +
       '<section class="gsn-section" aria-labelledby="gsnFilterTitle">' +
       '<h4 class="gsn-section-title" id="gsnFilterTitle">筛选</h4>' +
@@ -443,8 +489,7 @@
     cM = d.getMonth();
     FMulti = new Set(["pending"]);
     resetTaskOverlays();
-    gsnActiveQuick = quickName || "";
-    syncQuickModeState();
+    setQuickModeValue(quickName || "");
     persistState();
     if (typeof navigate === "function") navigate("/");
     if (typeof rCal === "function") rCal();
@@ -454,8 +499,7 @@
   }
 
   function applyFilter(key) {
-    gsnActiveQuick = "";
-    syncQuickModeState();
+    setQuickModeValue("");
     persistState();
     gsnActiveProject = "";
     if (typeof FTag !== "undefined") FTag = "";
@@ -471,8 +515,7 @@
   function applyProject(index) {
     var project = projects[Number(index)];
     if (!project) return;
-    gsnActiveQuick = "";
-    syncQuickModeState();
+    setQuickModeValue("");
     persistState();
     gsnActiveProject = project.name;
     if (typeof navigate === "function") navigate("/");
@@ -504,13 +547,64 @@
     else if (action === "settings" && typeof navigate === "function") navigate("/settings");
   }
 
+  function rerenderTaskSceneForNavState() {
+    if (!shouldShowSideNav()) return;
+    if (typeof rCal === "function") rCal();
+    if (typeof rAll === "function") rAll();
+    else if (typeof rT === "function") rT();
+  }
+
+  function syncDayBoundaryState() {
+    var currentTodayKey = todayKey();
+    if (!gsnLastTodayKey) {
+      gsnLastTodayKey = currentTodayKey;
+      return false;
+    }
+    if (currentTodayKey === gsnLastTodayKey) return false;
+    gsnLastTodayKey = currentTodayKey;
+    return true;
+  }
+
+  function msUntilNextDayBoundary() {
+    var nowDate = new Date();
+    var next = new Date(nowDate);
+    next.setDate(nowDate.getDate() + 1);
+    next.setHours(0, 0, 0, GSN_DAY_BOUNDARY_BUFFER_MS);
+    return Math.max(100, next.getTime() - nowDate.getTime());
+  }
+
+  function refreshForDayBoundary() {
+    if (!syncDayBoundaryState()) return false;
+    syncQuickModeForCurrentData();
+    rerenderTaskSceneForNavState();
+    scheduleRefresh();
+    return true;
+  }
+
+  function scheduleDayBoundaryRefresh() {
+    if (gsnDayBoundaryTimer) clearTimeout(gsnDayBoundaryTimer);
+    gsnDayBoundaryTimer = setTimeout(function () {
+      gsnDayBoundaryTimer = null;
+      refreshForDayBoundary();
+      scheduleDayBoundaryRefresh();
+    }, msUntilNextDayBoundary());
+  }
+
   function scheduleRefresh() {
     if (gsnRefreshTimer) clearTimeout(gsnRefreshTimer);
     gsnRefreshTimer = setTimeout(function () {
       gsnRefreshTimer = null;
+      if (syncQuickModeForCurrentData()) {
+        rerenderTaskSceneForNavState();
+        return;
+      }
       renderSideNav();
       renderTaskListSupport();
     }, 0);
+  }
+
+  function refreshGlobalSideNav() {
+    if (!refreshForDayBoundary()) scheduleRefresh();
   }
 
   function renderTaskListSummary(list, currentDs, rows, pending, high) {
@@ -645,20 +739,28 @@
     }
   }
 
-  window.refreshGlobalSideNav = scheduleRefresh;
+  window.refreshGlobalSideNav = refreshGlobalSideNav;
   syncQuickModeState();
+  gsnLastTodayKey = todayKey();
   ensureSideNav();
   patchLoginRestore();
   patchRender();
   patchModeSync();
+  scheduleDayBoundaryRefresh();
   scheduleRefresh();
   document.addEventListener("DOMContentLoaded", function () {
+    gsnLastTodayKey = todayKey();
     ensureSideNav();
     patchLoginRestore();
     patchRender();
     patchModeSync();
+    scheduleDayBoundaryRefresh();
     scheduleRefresh();
   });
-  window.addEventListener("popstate", scheduleRefresh);
-  window.addEventListener("hashchange", scheduleRefresh);
+  window.addEventListener("popstate", refreshGlobalSideNav);
+  window.addEventListener("hashchange", refreshGlobalSideNav);
+  window.addEventListener("focus", refreshGlobalSideNav);
+  document.addEventListener("visibilitychange", function () {
+    if (!document.hidden) refreshGlobalSideNav();
+  });
 })();
