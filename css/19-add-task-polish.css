@@ -2261,7 +2261,6 @@
   --week-overdue-copy-line-height: 1.2;
   --week-overdue-copy-icon-wrap-size: 12px;
   --week-overdue-copy-icon-size: 11px;
-  --week-overdue-copy-icon-scale-y: 1;
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -2278,13 +2277,6 @@
   line-height: inherit;
 }
 
-#taskMode .list-panel #tList .week-overdue-copy--meta,
-#taskMode .list-panel #tList .week-task-overdue-meta,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-overdue-copy--meta,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-task-overdue-meta {
-  --week-overdue-copy-icon-scale-y: 1.0909;
-}
-
 #taskMode .list-panel #tList .week-overdue-copy--meta .week-overdue-icon-wrap,
 #taskMode .list-panel #tList .week-task-overdue-meta .week-overdue-icon-wrap,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-overdue-copy--meta .week-overdue-icon-wrap,
@@ -2299,13 +2291,6 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-overdue-meta .week-overdue-icon {
   width: var(--week-overdue-copy-icon-size);
   height: var(--week-overdue-copy-icon-size);
-  transform-origin: 50% 0;
-  transform: scaleY(var(--week-overdue-copy-icon-scale-y));
-}
-
-#taskMode .list-panel #tList .week-overdue-copy--count,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-overdue-copy--count {
-  --week-overdue-copy-icon-scale-y: 1.0909;
 }
 
 #taskMode .list-panel #tList .week-overdue-copy--count .week-overdue-icon-wrap,
@@ -2318,8 +2303,6 @@
 .app.app--with-global-nav #taskMode .list-panel #tList .week-overdue-copy--count .week-overdue-icon {
   width: var(--week-overdue-copy-icon-size);
   height: var(--week-overdue-copy-icon-size);
-  transform-origin: 50% 0;
-  transform: scaleY(var(--week-overdue-copy-icon-scale-y));
 }
 
 #taskMode .list-panel #tList .week-task-sub-meta,
