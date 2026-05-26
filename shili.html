@@ -1,512 +1,125 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<title>子任务展开动画方案演示</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  
-  body {
-    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf3 100%);
-    min-height: 100vh;
-    padding: 40px 20px;
-    color: #2c3e50;
-  }
-  
-  .page-title {
-    text-align: center;
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 8px;
-    color: #1a1a1a;
-  }
-  
-  .page-subtitle {
-    text-align: center;
-    color: #888;
-    margin-bottom: 40px;
-    font-size: 14px;
-  }
-  
-  .container {
-    max-width: 900px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  }
-  
-  .scheme {
-    background: #fff;
-    border-radius: 16px;
-    padding: 24px 28px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-    border: 1px solid #eef0f4;
-  }
-  
-  .scheme-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-  }
-  
-  .scheme-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: #555;
-  }
-  
-  .scheme-tag {
-    font-size: 12px;
-    padding: 3px 10px;
-    border-radius: 10px;
-    background: #f0f3f8;
-    color: #888;
-  }
-  
-  .scheme-tag.recommend {
-    background: linear-gradient(90deg, #ffd86b, #ff9a44);
-    color: #fff;
-  }
-  
-  /* ==== 任务卡片基础样式 ==== */
-  .task-card {
-    border: 1px solid #eef0f4;
-    border-radius: 12px;
-    padding: 18px 22px;
-    transition: box-shadow 0.2s;
-  }
-  .task-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
-  
-  .task-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .task-circle {
-    width: 16px; height: 16px;
-    border: 1.5px solid #f56c6c;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  
-  .task-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: #1a1a1a;
-  }
-  
-  .task-meta {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-left: 26px;
-    margin-top: 6px;
-    font-size: 12px;
-    color: #999;
-  }
-  
-  .meta-divider { color: #ddd; }
-  
-  .subtask-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    cursor: pointer;
-    color: #4a90e2;
-    transition: background 0.2s;
-    user-select: none;
-  }
-  .subtask-toggle:hover { background: #e8f1fc; }
-  
-  .toggle-icon {
-    display: inline-block;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .task-card.open .toggle-icon {
-    transform: rotate(90deg);
-  }
-  
-  .subtask-list {
-    margin-left: 26px;
-    margin-top: 0;
-    padding-left: 12px;
-    border-left: 1.5px solid #eef0f4;
-  }
-  
-  .subtask-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 0;
-    font-size: 14px;
-    color: #555;
-  }
-  
-  .subtask-circle {
-    width: 14px; height: 14px;
-    border: 1.5px solid #c5d3e3;
-    border-radius: 50%;
-  }
-  
-  /* ============================== */
-  /*  方案 1：经典展开 Slide+Fade   */
-  /* ============================== */
-  .scheme-1 .subtask-wrapper {
-    display: grid;
-    grid-template-rows: 0fr;
-    opacity: 0;
-    transition: grid-template-rows 0.3s cubic-bezier(0.4,0,0.2,1),
-                opacity 0.25s ease-out,
-                margin-top 0.3s ease-out;
-  }
-  .scheme-1 .task-card.open .subtask-wrapper {
-    grid-template-rows: 1fr;
-    opacity: 1;
-    margin-top: 8px;
-  }
-  .scheme-1 .subtask-wrapper > div { overflow: hidden; }
-  
-  /* ============================== */
-  /*  方案 2：错落入场 Stagger      */
-  /* ============================== */
-  .scheme-2 .subtask-wrapper {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.25s ease-out, margin-top 0.25s;
-  }
-  .scheme-2 .task-card.open .subtask-wrapper {
-    grid-template-rows: 1fr;
-    margin-top: 8px;
-  }
-  .scheme-2 .subtask-wrapper > div { overflow: hidden; }
-  
-  .scheme-2 .subtask-item {
-    opacity: 0;
-    transform: translateX(-12px);
-    transition: opacity 0.35s ease-out, transform 0.35s cubic-bezier(0.2,0.8,0.4,1);
-  }
-  .scheme-2 .task-card.open .subtask-item {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  .scheme-2 .task-card.open .subtask-item:nth-child(1) { transition-delay: 0.1s; }
-  .scheme-2 .task-card.open .subtask-item:nth-child(2) { transition-delay: 0.18s; }
-  .scheme-2 .task-card.open .subtask-item:nth-child(3) { transition-delay: 0.26s; }
-  
-  /* ============================== */
-  /*  方案 3：弹性展开 Spring       */
-  /* ============================== */
-  .scheme-3 .subtask-wrapper {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
-                margin-top 0.4s;
-  }
-  .scheme-3 .task-card.open .subtask-wrapper {
-    grid-template-rows: 1fr;
-    margin-top: 8px;
-  }
-  .scheme-3 .subtask-wrapper > div { overflow: hidden; }
-  
-  .scheme-3 .subtask-item {
-    opacity: 0;
-    transform: scale(0.92);
-    transition: opacity 0.3s, transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  .scheme-3 .task-card.open .subtask-item {
-    opacity: 1;
-    transform: scale(1);
-  }
-  .scheme-3 .task-card.open .subtask-item:nth-child(1) { transition-delay: 0.05s; }
-  .scheme-3 .task-card.open .subtask-item:nth-child(2) { transition-delay: 0.13s; }
-  .scheme-3 .task-card.open .subtask-item:nth-child(3) { transition-delay: 0.21s; }
-  
-  /* ============================== */
-  /*  方案 4：折叠纸张 3D Flip      */
-  /* ============================== */
-  .scheme-4 .subtask-wrapper {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.35s ease-out, margin-top 0.35s;
-    perspective: 1000px;
-  }
-  .scheme-4 .task-card.open .subtask-wrapper {
-    grid-template-rows: 1fr;
-    margin-top: 8px;
-  }
-  .scheme-4 .subtask-wrapper > div { overflow: hidden; }
-  
-  .scheme-4 .subtask-list {
-    transform-origin: top center;
-    transform: rotateX(-90deg);
-    opacity: 0;
-    transition: transform 0.45s cubic-bezier(0.4,0,0.2,1),
-                opacity 0.3s ease-out;
-  }
-  .scheme-4 .task-card.open .subtask-list {
-    transform: rotateX(0);
-    opacity: 1;
-    transition-delay: 0.05s;
-  }
-  
-  /* ============================== */
-  /*  方案 5：图标联动 + 平滑展开   */
-  /* ============================== */
-  .scheme-5 .subtask-toggle {
-    transition: transform 0.2s, background 0.2s;
-  }
-  .scheme-5 .task-card.open .subtask-toggle {
-    background: #e8f1fc;
-  }
-  .scheme-5 .toggle-icon-5 {
-    display: inline-block;
-    transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
-  }
-  .scheme-5 .task-card.open .toggle-icon-5 {
-    transform: rotate(90deg) scale(1.1);
-  }
-  
-  .scheme-5 .subtask-wrapper {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.35s cubic-bezier(0.4,0,0.2,1),
-                margin-top 0.35s;
-  }
-  .scheme-5 .task-card.open .subtask-wrapper {
-    grid-template-rows: 1fr;
-    margin-top: 10px;
-  }
-  .scheme-5 .subtask-wrapper > div { overflow: hidden; }
-  
-  .scheme-5 .subtask-item {
-    opacity: 0;
-    transform: translateY(8px);
-    transition: opacity 0.3s ease-out, transform 0.4s cubic-bezier(0.2,0.8,0.4,1);
-  }
-  .scheme-5 .task-card.open .subtask-item {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .scheme-5 .task-card.open .subtask-item:nth-child(1) { transition-delay: 0.12s; }
-  .scheme-5 .task-card.open .subtask-item:nth-child(2) { transition-delay: 0.20s; }
-  .scheme-5 .task-card.open .subtask-item:nth-child(3) { transition-delay: 0.28s; }
-  
-  /* 操作提示 */
-  .tip {
-    text-align: center;
-    margin-top: 30px;
-    color: #999;
-    font-size: 13px;
-  }
-  
-  .footer-actions {
-    text-align: center;
-    margin-top: 20px;
-  }
-  .btn-all {
-    padding: 10px 24px;
-    border: none;
-    border-radius: 8px;
-    background: #4a90e2;
-    color: #fff;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 4px 12px rgba(74,144,226,0.3);
-  }
-  .btn-all:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(74,144,226,0.4);
-  }
-</style>
-</head>
-<body>
+import React from 'react';
+import { ChevronLeft, ChevronRight, SlidersHorizontal, ChevronsUpDown, EyeOff, Calendar } from 'lucide-react';
 
-<h1 class="page-title">🎬 子任务展开动画方案演示</h1>
-<p class="page-subtitle">点击任意卡片中的「0/3」标签查看动画效果</p>
-
-<div class="container">
-
-  <!-- 方案 1 -->
-  <div class="scheme scheme-1">
-    <div class="scheme-header">
-      <div class="scheme-title">方案 ① 经典展开（Slide Down + Fade）</div>
-      <div class="scheme-tag">⭐ 8.0 / 稳定</div>
-    </div>
-    <div class="task-card" onclick="toggleCard(this, event)">
-      <div class="task-header">
-        <div class="task-circle"></div>
-        <div class="task-title">学习新概念</div>
+export default function WeeklyHeaderOptimized() {
+  return (
+    <div className="p-8 bg-[#f4f5f7] min-h-screen font-sans flex flex-col items-center gap-8">
+      
+      <div className="text-center max-w-3xl mb-4">
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">本周视图 - 去除冗余按钮后的优化方案</h2>
+        <p className="text-gray-500 text-sm">专注于“长列表浏览”体验，利用排版和列表控制来平衡视觉。</p>
       </div>
-      <div class="task-meta">
-        <span>🕐 12:32</span>
-        <span class="meta-divider">|</span>
-        <span class="subtask-toggle">
-          <span class="toggle-icon">▸</span> 0 / 3
-        </span>
-      </div>
-      <div class="subtask-wrapper">
-        <div>
-          <div class="subtask-list">
-            <div class="subtask-item"><div class="subtask-circle"></div>阅读第一章</div>
-            <div class="subtask-item"><div class="subtask-circle"></div>记录关键术语</div>
-            <div class="subtask-item"><div class="subtask-circle"></div>完成课后练习</div>
+
+      {/* 方案一：左侧标题 + 右侧翻页与列表控制 */}
+      <div className="w-full max-w-4xl">
+        <div className="mb-2 pl-2 border-l-4 border-blue-500">
+          <h3 className="text-md font-bold text-gray-800">方案一：两端对齐 + 列表控制（推荐）</h3>
+          <p className="text-xs text-gray-500">左侧保持信息清晰，右侧放置翻页 `< >` 和长列表必备的控制项（如：折叠全部、隐藏空日期）。</p>
+        </div>
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between border-b border-gray-100 pb-4">
+            
+            {/* 左侧：标题信息 */}
+            <div className="flex items-baseline gap-3">
+              <h1 className="text-2xl font-bold text-gray-900">本周</h1>
+              <div className="flex items-center gap-1.5 text-sm font-medium text-gray-400 hover:text-gray-600 cursor-pointer transition-colors">
+                <Calendar size={14} />
+                <span>5月25日 - 31日</span>
+              </div>
+            </div>
+
+            {/* 右侧：翻页与控制 */}
+            <div className="flex items-center gap-4">
+              {/* 翻页组 */}
+              <div className="flex items-center bg-gray-50 border border-gray-200 rounded-lg p-0.5">
+                <button className="p-1.5 hover:bg-white hover:shadow-sm rounded-md text-gray-500 transition-all"><ChevronLeft size={16}/></button>
+                <div className="w-px h-3 bg-gray-200 mx-1"></div>
+                <button className="p-1.5 hover:bg-white hover:shadow-sm rounded-md text-gray-500 transition-all"><ChevronRight size={16}/></button>
+              </div>
+              
+              <div className="w-px h-4 bg-gray-200"></div>
+              
+              {/* 列表控制组 (长列表非常需要) */}
+              <div className="flex items-center gap-1">
+                <button className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors flex items-center gap-1" title="折叠全部日期">
+                  <ChevronsUpDown size={16} />
+                </button>
+                <button className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors flex items-center gap-1" title="隐藏无任务的日期">
+                  <EyeOff size={16} />
+                </button>
+                <button className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors flex items-center gap-1" title="显示设置">
+                  <SlidersHorizontal size={16} />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- 方案 2 -->
-  <div class="scheme scheme-2">
-    <div class="scheme-header">
-      <div class="scheme-title">方案 ② 错落入场（Stagger Animation）</div>
-      <div class="scheme-tag recommend">⭐ 9.0 / 推荐</div>
-    </div>
-    <div class="task-card" onclick="toggleCard(this, event)">
-      <div class="task-header">
-        <div class="task-circle"></div>
-        <div class="task-title">学习新概念</div>
-      </div>
-      <div class="task-meta">
-        <span>🕐 12:32</span>
-        <span class="meta-divider">|</span>
-        <span class="subtask-toggle">
-          <span class="toggle-icon">▸</span> 0 / 3
-        </span>
-      </div>
-      <div class="subtask-wrapper">
-        <div>
-          <div class="subtask-list">
-            <div class="subtask-item"><div class="subtask-circle"></div>阅读第一章</div>
-            <div class="subtask-item"><div class="subtask-circle"></div>记录关键术语</div>
-            <div class="subtask-item"><div class="subtask-circle"></div>完成课后练习</div>
+      {/* 方案二：绝对居中极简风 */}
+      <div className="w-full max-w-4xl mt-4">
+        <div className="mb-2 pl-2 border-l-4 border-purple-500">
+          <h3 className="text-md font-bold text-gray-800">方案二：绝对居中极简风</h3>
+          <p className="text-xs text-gray-500">既然没有额外操作，就不强求左右对齐。将所有元素组合在正中间，两侧自然留白，非常优雅。</p>
+        </div>
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+          <div className="flex items-center justify-center border-b border-gray-100 pb-4 relative">
+            
+            {/* 居中组合 */}
+            <div className="flex items-center gap-6">
+              <button className="p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-700 transition-all">
+                <ChevronLeft size={20}/>
+              </button>
+              
+              <div className="flex flex-col items-center justify-center">
+                <h1 className="text-xl font-bold text-gray-900 tracking-wide">本周</h1>
+                <span className="text-xs font-medium text-gray-400 mt-1">5月25日 - 31日</span>
+              </div>
+
+              <button className="p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-700 transition-all">
+                <ChevronRight size={20}/>
+              </button>
+            </div>
+
+            {/* 右侧可以放一个极弱的设置入口，不破坏居中平衡 */}
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 pb-4">
+               <button className="p-1.5 text-gray-300 hover:text-gray-600 rounded-md transition-colors">
+                  <SlidersHorizontal size={16} />
+                </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- 方案 3 -->
-  <div class="scheme scheme-3">
-    <div class="scheme-header">
-      <div class="scheme-title">方案 ③ 弹性展开（Spring Bounce）</div>
-      <div class="scheme-tag">⭐ 7.0 / 活泼</div>
-    </div>
-    <div class="task-card" onclick="toggleCard(this, event)">
-      <div class="task-header">
-        <div class="task-circle"></div>
-        <div class="task-title">学习新概念</div>
-      </div>
-      <div class="task-meta">
-        <span>🕐 12:32</span>
-        <span class="meta-divider">|</span>
-        <span class="subtask-toggle">
-          <span class="toggle-icon">▸</span> 0 / 3
-        </span>
-      </div>
-      <div class="subtask-wrapper">
-        <div>
-          <div class="subtask-list">
-            <div class="subtask-item"><div class="subtask-circle"></div>阅读第一章</div>
-            <div class="subtask-item"><div class="subtask-circle"></div>记录关键术语</div>
-            <div class="subtask-item"><div class="subtask-circle"></div>完成课后练习</div>
+      {/* 方案三：大标题 + 右侧纯翻页 */}
+      <div className="w-full max-w-4xl mt-4">
+        <div className="mb-2 pl-2 border-l-4 border-green-500">
+          <h3 className="text-md font-bold text-gray-800">方案三：大标题 + 右侧纯翻页</h3>
+          <p className="text-xs text-gray-500">最克制的设计。左边是大字号强化当前位置，右边仅保留翻页按钮，拉开空间感。</p>
+        </div>
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between border-b border-gray-100 pb-4">
+            
+            {/* 左侧：强化标题 */}
+            <div className="flex items-center gap-3">
+              <h1 className="text-2xl font-bold text-gray-900">本周任务</h1>
+              <div className="h-4 w-px bg-gray-300"></div>
+              <span className="text-sm font-medium text-gray-500">5.25 - 5.31</span>
+            </div>
+
+            {/* 右侧：仅翻页 */}
+            <div className="flex items-center gap-2">
+              <button className="flex items-center justify-center w-8 h-8 rounded-full border border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-gray-800 transition-all">
+                <ChevronLeft size={16}/>
+              </button>
+              <button className="flex items-center justify-center w-8 h-8 rounded-full border border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-gray-800 transition-all">
+                <ChevronRight size={16}/>
+              </button>
+            </div>
           </div>
         </div>
       </div>
+
     </div>
-  </div>
-
-  <!-- 方案 4 -->
-  <div class="scheme scheme-4">
-    <div class="scheme-header">
-      <div class="scheme-title">方案 ④ 折叠纸张（3D Flip）</div>
-      <div class="scheme-tag">⭐ 6.5 / 创意</div>
-    </div>
-    <div class="task-card" onclick="toggleCard(this, event)">
-      <div class="task-header">
-        <div class="task-circle"></div>
-        <div class="task-title">学习新概念</div>
-      </div>
-      <div class="task-meta">
-        <span>🕐 12:32</span>
-        <span class="meta-divider">|</span>
-        <span class="subtask-toggle">
-          <span class="toggle-icon">▸</span> 0 / 3
-        </span>
-      </div>
-      <div class="subtask-wrapper">
-        <div>
-          <div class="subtask-list">
-            <div class="subtask-item"><div class="subtask-circle"></div>阅读第一章</div>
-            <div class="subtask-item"><div class="subtask-circle"></div>记录关键术语</div>
-            <div class="subtask-item"><div class="subtask-circle"></div>完成课后练习</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 方案 5 -->
-  <div class="scheme scheme-5">
-    <div class="scheme-header">
-      <div class="scheme-title">方案 ⑤ 图标联动 + 平滑展开（Combined）</div>
-      <div class="scheme-tag recommend">⭐ 9.5 / 强烈推荐</div>
-    </div>
-    <div class="task-card" onclick="toggleCard(this, event)">
-      <div class="task-header">
-        <div class="task-circle"></div>
-        <div class="task-title">学习新概念</div>
-      </div>
-      <div class="task-meta">
-        <span>🕐 12:32</span>
-        <span class="meta-divider">|</span>
-        <span class="subtask-toggle">
-          <span class="toggle-icon-5">▸</span> 0 / 3
-        </span>
-      </div>
-      <div class="subtask-wrapper">
-        <div>
-          <div class="subtask-list">
-            <div class="subtask-item"><div class="subtask-circle"></div>阅读第一章</div>
-            <div class="subtask-item"><div class="subtask-circle"></div>记录关键术语</div>
-            <div class="subtask-item"><div class="subtask-circle"></div>完成课后练习</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<div class="footer-actions">
-  <button class="btn-all" onclick="toggleAll()">🎯 一键展开 / 收起全部</button>
-</div>
-<p class="tip">💡 提示：依次对比每个方案的展开节奏与视觉感受</p>
-
-<script>
-  function toggleCard(card, event) {
-    event.stopPropagation();
-    card.classList.toggle('open');
-  }
-  
-  function toggleAll() {
-    const cards = document.querySelectorAll('.task-card');
-    const anyClosed = Array.from(cards).some(c => !c.classList.contains('open'));
-    cards.forEach((card, idx) => {
-      setTimeout(() => {
-        if (anyClosed) card.classList.add('open');
-        else card.classList.remove('open');
-      }, idx * 80);
-    });
-  }
-</script>
-
-</body>
-</html>
+  );
+}
