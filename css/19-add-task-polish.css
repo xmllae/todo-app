@@ -7127,7 +7127,7 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 
 #taskMode .list-panel #tList .week-view-day-pills,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pills {
-  min-height: 78px;
+  min-height: 72px;
   padding: 0 4px;
 }
 
@@ -7144,10 +7144,10 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 #taskMode .list-panel #tList .week-view-day-pill.is-today.is-focus,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today.is-focus {
-  width: 56px;
-  height: 78px;
-  min-height: 78px;
-  padding: 0;
+  width: 46px;
+  height: 56px;
+  min-height: 56px;
+  padding: 6px 0 0;
   border-radius: 0;
   background: transparent;
   box-shadow: none;
@@ -7191,17 +7191,20 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 
 #taskMode .list-panel #tList .week-view-day-pill-main,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill-main {
-  gap: 5px;
-}
-
-#taskMode .list-panel #tList .week-view-day-pill.is-today .week-view-day-pill-main,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today .week-view-day-pill-main {
-  gap: 6px;
+  gap: 2px;
+  grid-template-rows: 14px auto;
+  align-content: start;
+  justify-items: center;
 }
 
 #taskMode .list-panel #tList .week-view-day-pill-name,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill-name {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 14px;
   font-size: 11px;
+  line-height: 1;
 }
 
 #taskMode .list-panel #tList .week-view-day-pill.is-today .week-view-day-pill-name,
@@ -7214,6 +7217,7 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 #taskMode .list-panel #tList .week-view-day-pill-date,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill-date {
   font-size: 20px;
+  line-height: 1;
 }
 
 #taskMode .list-panel #tList .week-view-day-pill.is-today .week-view-day-pill-date,
@@ -7221,8 +7225,8 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 34px;
+  height: 34px;
   margin: 0 auto;
   border-radius: 999px;
   background: linear-gradient(
