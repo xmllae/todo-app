@@ -250,9 +250,9 @@
     return (
       '<span class="gsn-nav-date-icon gsn-nav-overdue-icon" aria-hidden="true">' +
       '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">' +
-      '<path d="M12 3.2 22 20.4H2L12 3.2Z" fill="currentColor"></path>' +
-      '<path d="M12 8.4V14" stroke="#fff" stroke-width="2.1" stroke-linecap="round"></path>' +
-      '<circle cx="12" cy="17.2" r="1.2" fill="#fff"></circle>' +
+      '<path d="M12 3 2.8 20h18.4L12 3Z" fill="none" stroke="currentColor" stroke-width="2.05" stroke-linejoin="round"></path>' +
+      '<path d="M12 9v5" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linecap="round"></path>' +
+      '<circle cx="12" cy="17" r="1.2" fill="currentColor"></circle>' +
       "</svg>" +
       "</span>"
     );

@@ -2252,28 +2252,74 @@
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolyline points='12 6 12 12 16 14'/%3E%3C/svg%3E") center / 11px 11px no-repeat;
 }
 
+#taskMode .list-panel #tList .week-overdue-copy,
 #taskMode .list-panel #tList .week-task-overdue-meta,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-overdue-copy,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-overdue-meta {
+  --week-overdue-copy-font-size: 12px;
+  --week-overdue-copy-font-weight: 720;
+  --week-overdue-copy-line-height: 1.2;
+  --week-overdue-copy-icon-wrap-size: 12px;
+  --week-overdue-copy-icon-size: 11px;
+  --week-overdue-copy-icon-scale-y: 1;
   display: inline-flex;
   align-items: center;
   gap: 4px;
   color: #ef4444;
-  font-size: 12px;
-  font-weight: 720;
-  line-height: 1.2;
+  font-size: var(--week-overdue-copy-font-size);
+  font-weight: var(--week-overdue-copy-font-weight);
+  line-height: var(--week-overdue-copy-line-height);
   white-space: nowrap;
 }
 
-#taskMode .list-panel #tList .week-task-overdue-meta .week-overdue-icon-wrap,
-.app.app--with-global-nav #taskMode .list-panel #tList .week-task-overdue-meta .week-overdue-icon-wrap {
-  width: 12px;
-  height: 12px;
+#taskMode .list-panel #tList .week-overdue-copy-text,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-overdue-copy-text {
+  display: block;
+  line-height: inherit;
 }
 
+#taskMode .list-panel #tList .week-overdue-copy--meta,
+#taskMode .list-panel #tList .week-task-overdue-meta,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-overdue-copy--meta,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-overdue-meta {
+  --week-overdue-copy-icon-scale-y: 1;
+}
+
+#taskMode .list-panel #tList .week-overdue-copy--meta .week-overdue-icon-wrap,
+#taskMode .list-panel #tList .week-task-overdue-meta .week-overdue-icon-wrap,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-overdue-copy--meta .week-overdue-icon-wrap,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-task-overdue-meta .week-overdue-icon-wrap {
+  width: var(--week-overdue-copy-icon-wrap-size);
+  height: var(--week-overdue-copy-icon-wrap-size);
+}
+
+#taskMode .list-panel #tList .week-overdue-copy--meta .week-overdue-icon,
 #taskMode .list-panel #tList .week-task-overdue-meta .week-overdue-icon,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-overdue-copy--meta .week-overdue-icon,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-overdue-meta .week-overdue-icon {
-  width: 11px;
-  height: 11px;
+  width: var(--week-overdue-copy-icon-size);
+  height: var(--week-overdue-copy-icon-size);
+  transform-origin: 50% 0;
+  transform: scaleY(var(--week-overdue-copy-icon-scale-y));
+}
+
+#taskMode .list-panel #tList .week-overdue-copy--count,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-overdue-copy--count {
+  --week-overdue-copy-icon-scale-y: 1.0909;
+}
+
+#taskMode .list-panel #tList .week-overdue-copy--count .week-overdue-icon-wrap,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-overdue-copy--count .week-overdue-icon-wrap {
+  width: var(--week-overdue-copy-icon-wrap-size);
+  height: var(--week-overdue-copy-icon-wrap-size);
+}
+
+#taskMode .list-panel #tList .week-overdue-copy--count .week-overdue-icon,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-overdue-copy--count .week-overdue-icon {
+  width: var(--week-overdue-copy-icon-size);
+  height: var(--week-overdue-copy-icon-size);
+  transform-origin: 50% 0;
+  transform: scaleY(var(--week-overdue-copy-icon-scale-y));
 }
 
 #taskMode .list-panel #tList .week-task-sub-meta,
@@ -4305,14 +4351,44 @@
   font-variant-numeric: tabular-nums;
 }
 
+#taskMode .list-panel #tList .week-day-count-chip .week-day-count-label,
+#taskMode .list-panel #tList .week-day-count-chip .week-day-count-value,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip .week-day-count-label,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip .week-day-count-value {
+  line-height: 1;
+}
+
+#taskMode .list-panel #tList .week-day-count-chip .week-day-count-overdue-copy,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip .week-day-count-overdue-copy {
+  transition: transform .2s cubic-bezier(.22, 1, .36, 1), opacity .18s ease;
+}
+
 #taskMode .list-panel #tList .week-day-count-chip .week-day-count-line--overdue,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip .week-day-count-line--overdue {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   width: max-content;
   max-width: none;
   white-space: nowrap;
+}
+
+#taskMode .list-panel #tList button.week-day-count-chip--overdue:hover .week-day-count-overdue-copy,
+.app.app--with-global-nav #taskMode .list-panel #tList button.week-day-count-chip--overdue:hover .week-day-count-overdue-copy {
+  transform: translateX(.5px);
+}
+
+#taskMode .list-panel #tList button.week-day-count-chip--overdue:active .week-day-count-overdue-copy,
+.app.app--with-global-nav #taskMode .list-panel #tList button.week-day-count-chip--overdue:active .week-day-count-overdue-copy {
+  transform: none;
+  opacity: .94;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #taskMode .list-panel #tList .week-day-count-chip .week-day-count-overdue-copy,
+  .app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-chip .week-day-count-overdue-copy {
+    transition: none;
+  }
 }
 
 #taskMode .list-panel #tList .week-day-count-chip--overdue .week-day-count-line,
@@ -7673,6 +7749,36 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   align-items: center !important;
   height: 24px !important;
   line-height: 1 !important;
+}
+
+#taskMode .list-panel #tList .week-day-count-line--overdue .week-day-count-overdue-copy,
+#taskMode .list-panel #tList .week-day-count-line--overdue .week-day-count-overdue-copy .week-overdue-copy-text,
+#taskMode .list-panel #tList .week-day-count-line--overdue .week-day-count-overdue-copy .week-overdue-icon-wrap,
+#taskMode .list-panel #tList .week-day-count-line--overdue .week-day-count-overdue-copy .week-overdue-icon,
+#taskMode .list-panel #tList .week-day-count-line--overdue .week-day-count-value,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-line--overdue .week-day-count-overdue-copy,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-line--overdue .week-day-count-overdue-copy .week-overdue-copy-text,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-line--overdue .week-day-count-overdue-copy .week-overdue-icon-wrap,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-line--overdue .week-day-count-overdue-copy .week-overdue-icon,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-line--overdue .week-day-count-value {
+  height: auto !important;
+  min-height: 0 !important;
+  align-self: center !important;
+}
+
+#taskMode .list-panel #tList .week-day-count-line--overdue .week-day-count-overdue-copy,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-line--overdue .week-day-count-overdue-copy {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  line-height: 1.2 !important;
+  align-self: center !important;
+}
+
+#taskMode .list-panel #tList .week-day-count-line--overdue .week-day-count-overdue-copy .week-overdue-copy-text,
+.app.app--with-global-nav #taskMode .list-panel #tList .week-day-count-line--overdue .week-day-count-overdue-copy .week-overdue-copy-text {
+  display: block !important;
+  line-height: 1.2 !important;
 }
 
 #taskMode .list-panel #tList .week-day-count-caret,
