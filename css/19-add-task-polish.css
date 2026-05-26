@@ -7127,16 +7127,20 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 
 #taskMode .list-panel #tList .week-view-day-pills,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pills {
-  min-height: 72px;
+  --week-day-pill-track-height: 14px;
+  --week-day-pill-circle-size: 32px;
+  --week-day-pill-gap: 4px;
+  --week-day-pill-height: 52px;
+  min-height: 68px;
   padding: 0 4px;
 }
 
 #taskMode .list-panel #tList .week-view-day-pill,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill {
   width: 42px;
-  height: 56px;
-  min-height: 56px;
-  padding: 6px 0 5px;
+  height: var(--week-day-pill-height);
+  min-height: var(--week-day-pill-height);
+  padding: 4px 0 4px;
   border-radius: 12px;
 }
 
@@ -7144,10 +7148,10 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 #taskMode .list-panel #tList .week-view-day-pill.is-today.is-focus,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today.is-focus {
-  width: 46px;
-  height: 56px;
-  min-height: 56px;
-  padding: 6px 0 0;
+  width: 42px;
+  height: var(--week-day-pill-height);
+  min-height: var(--week-day-pill-height);
+  padding: 4px 0 4px;
   border-radius: 0;
   background: transparent;
   box-shadow: none;
@@ -7173,9 +7177,9 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 #taskMode .list-panel #tList .week-view-day-pill.is-focus:not(.is-today),
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-focus:not(.is-today) {
   width: 42px;
-  height: 56px;
-  min-height: 56px;
-  padding: 6px 0 5px;
+  height: var(--week-day-pill-height);
+  min-height: var(--week-day-pill-height);
+  padding: 4px 0 4px;
   border-radius: 12px;
   background: transparent;
   color: color-mix(in srgb, var(--week-ink) 84%, var(--week-muted));
@@ -7191,8 +7195,8 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 
 #taskMode .list-panel #tList .week-view-day-pill-main,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill-main {
-  gap: 2px;
-  grid-template-rows: 14px auto;
+  gap: var(--week-day-pill-gap);
+  grid-template-rows: var(--week-day-pill-track-height) var(--week-day-pill-circle-size);
   align-content: start;
   justify-items: center;
 }
@@ -7202,7 +7206,8 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 14px;
+  height: var(--week-day-pill-track-height);
+  min-height: var(--week-day-pill-track-height);
   font-size: 11px;
   line-height: 1;
 }
@@ -7216,18 +7221,18 @@ body:has(#appMain.show .app.app--with-global-nav > #taskMode:not(.hidden))::-web
 
 #taskMode .list-panel #tList .week-view-day-pill-date,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill-date {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--week-day-pill-circle-size);
+  height: var(--week-day-pill-circle-size);
+  margin: 0 auto;
   font-size: 20px;
   line-height: 1;
 }
 
 #taskMode .list-panel #tList .week-view-day-pill.is-today .week-view-day-pill-date,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-view-day-pill.is-today .week-view-day-pill-date {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  margin: 0 auto;
   border-radius: 999px;
   background: linear-gradient(
     180deg,
