@@ -2282,7 +2282,7 @@
 #taskMode .list-panel #tList .week-task-overdue-meta,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-overdue-copy--meta,
 .app.app--with-global-nav #taskMode .list-panel #tList .week-task-overdue-meta {
-  --week-overdue-copy-icon-scale-y: 1;
+  --week-overdue-copy-icon-scale-y: 1.0909;
 }
 
 #taskMode .list-panel #tList .week-overdue-copy--meta .week-overdue-icon-wrap,
