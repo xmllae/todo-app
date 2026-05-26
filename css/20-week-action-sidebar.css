@@ -75,6 +75,17 @@
   --overdue-overview-heading-weight: 650;
   --overdue-overview-heading-gap: 12px;
   --overdue-overview-section-gap-trim: 3px;
+  --overdue-overview-hero-gap: 18px;
+  --overdue-overview-hero-padding-bottom: 18px;
+  --overdue-overview-count-gap: 18px;
+  --overdue-overview-count-badge-size: 60px;
+  --overdue-overview-count-badge-radius: 20px;
+  --overdue-overview-count-number-size: 2.08rem;
+  --overdue-overview-count-main-scale: 1.16;
+  --overdue-overview-count-main-gap: calc(8px * var(--overdue-overview-count-main-scale));
+  --overdue-overview-count-copy-size: calc(.98rem * var(--overdue-overview-count-main-scale));
+  --overdue-overview-summary-size: calc(.78rem * var(--overdue-overview-count-main-scale));
+  --overdue-overview-summary-line: 1.54;
 }
 
 .overdue-overview-head {
@@ -94,9 +105,9 @@
 .overdue-overview-hero {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--overdue-overview-hero-gap);
   min-height: var(--task-overview-summary-copy-height);
-  padding: 0 0 16px;
+  padding: 0 0 var(--overdue-overview-hero-padding-bottom);
   box-sizing: border-box;
   border-bottom: 1px solid color-mix(in srgb, var(--task-bd) 62%, transparent);
   background: transparent;
@@ -106,7 +117,7 @@
 .overdue-overview-count {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--overdue-overview-count-gap);
   color: var(--text);
   min-width: 0;
 }
@@ -115,10 +126,10 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 54px;
-  min-width: 54px;
-  height: 54px;
-  border-radius: 18px;
+  width: var(--overdue-overview-count-badge-size);
+  min-width: var(--overdue-overview-count-badge-size);
+  height: var(--overdue-overview-count-badge-size);
+  border-radius: var(--overdue-overview-count-badge-radius);
   background: linear-gradient(180deg, color-mix(in srgb, var(--card) 88%, white), color-mix(in srgb, var(--hov) 14%, var(--card)));
   box-shadow:
     inset 0 0 0 1px color-mix(in srgb, var(--task-bd) 34%, transparent),
@@ -127,7 +138,7 @@
 
 .overdue-overview-count-badge strong {
   color: var(--overdue-text-color);
-  font-size: 1.92rem;
+  font-size: var(--overdue-overview-count-number-size);
   line-height: 1;
   font-weight: 800;
   letter-spacing: -.04em;
@@ -138,14 +149,14 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 8px;
+  gap: var(--overdue-overview-count-main-gap);
   min-width: 0;
 }
 
 .overdue-overview-count-copy {
   display: block;
   color: var(--text);
-  font-size: .98rem;
+  font-size: var(--overdue-overview-count-copy-size);
   line-height: 1.2;
   font-weight: 500;
   letter-spacing: -.01em;
@@ -154,8 +165,8 @@
 .overdue-overview-summary-line {
   margin: 0;
   color: var(--text2);
-  font-size: .78rem;
-  line-height: 1.48;
+  font-size: var(--overdue-overview-summary-size);
+  line-height: var(--overdue-overview-summary-line);
   letter-spacing: .01em;
   min-width: 0;
 }
