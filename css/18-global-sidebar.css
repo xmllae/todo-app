@@ -789,7 +789,7 @@
 }
 
 .gsn-filter-ico--high {
-  color: #e11d48;
+  color: var(--prio-high, #ef4444);
 }
 
 .gsn-filter-ico--frozen {
@@ -2275,13 +2275,17 @@
   .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-preview-flag {
     width: 14px;
     height: 14px;
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
+    font-size: 14px;
+    line-height: 1;
     color: #64748b;
   }
 
   .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-btn.is-high .task-ghost-priority-preview-flag {
-    color: #d1453b;
+    color: var(--prio-high, #ef4444);
   }
 
   .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-btn.is-normal .task-ghost-priority-preview-flag {
@@ -2359,12 +2363,16 @@
   .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-flag {
     width: 15px;
     height: 15px;
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
+    font-size: 15px;
+    line-height: 1;
   }
 
   .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-flag--high {
-    color: #d1453b;
+    color: var(--prio-high, #ef4444);
   }
 
   .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-priority-flag--normal {

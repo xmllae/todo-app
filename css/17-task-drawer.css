@@ -875,7 +875,7 @@
 }
 
 .drawer-priority-preview-flag--high {
-    color: #d1453b;
+    color: var(--prio-high, #ef4444);
 }
 
 .drawer-priority-preview-flag--normal {
@@ -1032,7 +1032,7 @@
 }
 
 .drawer-priority-flag--high {
-    color: #d1453b;
+    color: var(--prio-high, #ef4444);
 }
 
 .drawer-priority-flag--normal {
@@ -1044,7 +1044,7 @@
 }
 
 .drawer-priority-option.selected .drawer-priority-flag--high {
-    color: #d1453b;
+    color: var(--prio-high, #ef4444);
 }
 
 .drawer-priority-option:hover {
@@ -1137,7 +1137,7 @@
 .dark .drawer-priority-preview-flag--high,
 .dark .drawer-priority-flag--high,
 .dark .drawer-priority-option.selected .drawer-priority-flag--high {
-    color: #d1453b;
+    color: var(--prio-high, #ef4444);
 }
 
 .dark .drawer-priority-preview-flag--normal,

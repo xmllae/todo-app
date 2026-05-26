@@ -772,8 +772,10 @@ function getDrawerPhosphorIcon(name, extraClass) {
 }
 
 function getDrawerPriorityFlagIcon(extraClass) {
-    const className = extraClass ? ` class="${extraClass}"` : '';
-    return `<svg${className} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path fill-rule="evenodd" d="M3 2.25a.75.75 0 0 1 .75.75v.54l9.78-2.932a1.5 1.5 0 0 1 1.04-.018l3.652 1.536a.75.75 0 0 0 .556.018l4.41-1.764a.75.75 0 0 1 1.052.686v9.273a.75.75 0 0 1-.536.719l-4.41 1.764a.75.75 0 0 0-.556-.018l-3.652-1.536a1.5 1.5 0 0 0-1.04-.018L3.75 14.216V21a.75.75 0 0 1-1.5 0V3A.75.75 0 0 1 3 2.25Z" clip-rule="evenodd"/></svg>`;
+    if (typeof priorityFlagIconHtml === 'function') {
+        return priorityFlagIconHtml(extraClass);
+    }
+    return `<i class="ph-fill ph-flag${extraClass ? ' ' + extraClass : ''}" aria-hidden="true"></i>`;
 }
 
 function getDrawerCheckIconMarkup() {

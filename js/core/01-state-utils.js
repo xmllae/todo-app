@@ -36,6 +36,7 @@ cY=now.getFullYear();
 cM=now.getMonth();
 sel=fd(now);
 function hexToRgba(hex,a){if(!hex||hex.length<7)return"rgba(0,0,0,"+a+")";const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);return"rgba("+r+","+g+","+b+","+a+")"}
+function priorityFlagIconHtml(extraClass){const cls=extraClass?" "+extraClass:"";return'<i class="ph-fill ph-flag'+cls+'" aria-hidden="true"></i>'}
 function prioSubProgressVars(p){const hex=prioColor(p)||"#eab308";if(!hex||hex.length<7)return"--sub-track:rgba(234,179,8,.22);--sub-fill:linear-gradient(90deg,#fbbf24,#f59e0b)";const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);if(isNaN(r)||isNaN(g)||isNaN(b))return"--sub-track:rgba(234,179,8,.22);--sub-fill:linear-gradient(90deg,#fbbf24,#f59e0b)";const dk=document.body.classList.contains("dark");const track=dk?"rgba("+r+","+g+","+b+",.3)":"rgba("+r+","+g+","+b+",.15)";const r2=Math.min(255,r+20),g2=Math.min(255,g+20),b2=Math.min(255,b+20);const light="#"+[r2,g2,b2].map(x=>{const h=x.toString(16);return h.length===1?"0"+h:h}).join("");return"--sub-track:"+track+";--sub-fill:linear-gradient(90deg,"+light+","+hex+")"}
 function prioLabel(p){return{high:"高",medium:"中",low:"低",normal:"中"}[p]||"中"}
 function prioColor(p){return priorityColors[p]||"#94a3b8"}
