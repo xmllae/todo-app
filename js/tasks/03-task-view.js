@@ -1577,7 +1577,9 @@ function rT(){
     const isZero=tot===0&&archDn===0;
     const emptyMainText=isZero?"\u4eca\u5929\u4efb\u52a1\u5df2\u5168\u90e8\u5b8c\u6210":"\u6ca1\u6709\u5339\u914d\u7684\u4efb\u52a1";
     const emptySubText=isZero?"\u4f11\u606f\u4e00\u4e0b\uff0c\u6216\u6dfb\u52a0\u65b0\u4efb\u52a1":"\u8bd5\u8bd5\u5176\u4ed6\u7b5b\u9009\u6761\u4ef6";
-    list.innerHTML=`<div class="empty ${isZero?"empty--complete":"empty--filter"}"><div class="em" aria-hidden="true">${isZero?taskCompleteEmptyIconMarkup():"\u2705"}</div><p class="empty-main">${emptyMainText}</p><p class="empty-sub">${emptySubText}</p></div>`;
+    const emptyMainClass=isZero?'empty-main empty-title':'empty-main';
+    const emptySubClass=isZero?'empty-sub empty-subtitle':'empty-sub';
+    list.innerHTML=`<div class="empty ${isZero?"empty--complete":"empty--filter"}"><div class="em" aria-hidden="true">${isZero?taskCompleteEmptyIconMarkup():"\u2705"}</div><p class="${emptyMainClass}">${emptyMainText}</p><p class="${emptySubClass}">${emptySubText}</p></div>`;
     renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,sel);
     setTaskDashScope("day","");
     focusTimerAfterRender();
