@@ -3,7 +3,7 @@
   --header-tool-btn-size: 38px;
   --header-tool-btn-radius: 14px;
   --header-tool-icon-size: 19px;
-  --site-header-max-width: 1532px;
+  --site-header-max-width: var(--layout-shell-max-width, 1568px);
   --header-tool-bg: transparent;
   --header-tool-bg-hover: rgba(99, 102, 241, 0.07);
   --header-tool-border: transparent;

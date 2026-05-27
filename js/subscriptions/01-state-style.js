@@ -1180,7 +1180,7 @@ body:has(#subscriptionsMode:not(.hidden)) .multi-bar{
 }
 
 #appMain.show .app:has(#subscriptionsMode:not(.hidden)){
-  max-width:1532px;
+  max-width:var(--layout-shell-max-width,1568px);
 }
 
 @media (min-width:1181px){

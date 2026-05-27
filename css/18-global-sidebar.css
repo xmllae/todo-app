@@ -1,22 +1,11 @@
 /* 桌面三栏：统一宽度变量，保证与顶部导航始终对齐。 */
 #appMain.show:has(.app.app--with-global-nav) {
-  --schedule-left-col: 240px;
-  --schedule-right-col: 316px;
-  --schedule-main-col-min: 620px;
-  --schedule-main-col-max: 980px;
-  --schedule-col-gap: 16px;
-  --schedule-shell-max-width: calc(
-    var(--schedule-left-col) +
-    var(--schedule-main-col-max) +
-    var(--schedule-right-col) +
-    var(--schedule-col-gap) * 2
-  );
-}
-
-@media (min-width: 1181px) {
-  #appMain.show:has(.app.app--with-global-nav) .site-header-inner {
-    max-width: var(--schedule-shell-max-width);
-  }
+  --schedule-left-col: var(--layout-shell-left-col);
+  --schedule-right-col: var(--layout-shell-right-col);
+  --schedule-main-col-min: var(--layout-shell-main-min);
+  --schedule-main-col-max: var(--layout-shell-main-max);
+  --schedule-col-gap: var(--layout-shell-gap);
+  --schedule-shell-max-width: var(--layout-shell-max-width);
 }
 
 .app.app--with-global-nav {
@@ -30,8 +19,8 @@
   justify-content: center;
   column-gap: var(--schedule-col-gap, 16px);
   row-gap: 0;
-  max-width: none;
-  margin: 0;
+  max-width: var(--layout-shell-app-max-width, 1604px);
+  margin: 0 auto;
   padding: 8px 18px max(12px, env(safe-area-inset-bottom));
   min-height: 0;
   height: 100%;
