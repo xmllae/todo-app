@@ -8,6 +8,7 @@
   var PRIORITY_SHELL_CLASS = "priority-action-shell";
   var PRIORITY_TABS = ["all", "week", "overdue", "today"];
   var PRIORITY_SORT_MODES = ["date", "time", "title"];
+  var PRIORITY_LATER_TITLE = "\u4e4b\u540e7\u5929\u5185";
   var priorityViewTab = "all";
   var priorityViewSortMode = "date";
 
@@ -74,6 +75,21 @@
     if (!dateNav) return;
     var host = dateNav.querySelector(".priority-header-tools");
     if (host && host.parentNode) host.parentNode.removeChild(host);
+  }
+
+  function syncPriorityHeaderToolsHost(host) {
+    if (!host) return;
+    host.querySelectorAll(".priority-header-tool").forEach(function (button, index) {
+      if (index > 0 && button.parentNode) button.parentNode.removeChild(button);
+    });
+  }
+
+  function syncPriorityLaterGroupTitles(root) {
+    if (!root) return;
+    root.querySelectorAll(".priority-group--later .priority-group__title").forEach(function (title) {
+      var suffixMatch = (title.textContent || "").match(/\s*\(\d+\)\s*$/);
+      title.textContent = PRIORITY_LATER_TITLE + (suffixMatch ? suffixMatch[0] : "");
+    });
   }
 
   function setArrowAvailability(dateNav, disabled) {
@@ -243,7 +259,10 @@
 
     renderPriorityTitle(state);
     var toolsHost = getPriorityHeaderToolsHost();
-    if (toolsHost) toolsHost.innerHTML = getPriorityHeaderToolsMarkup();
+    if (toolsHost) {
+      toolsHost.innerHTML = getPriorityHeaderToolsMarkup();
+      syncPriorityHeaderToolsHost(toolsHost);
+    }
   }
 
   function getWeekMetaForToday() {
@@ -560,6 +579,7 @@
       "</div></div>" +
       priorityGroupsHtml(state) +
       "</section>";
+    syncPriorityLaterGroupTitles(list);
   }
 
   function ensurePriorityOverviewShell(root) {
