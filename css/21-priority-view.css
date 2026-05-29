@@ -316,8 +316,8 @@
 }
 
 .priority-group__header-badge {
-  width: 2.34rem;
-  height: 2.34rem;
+  width: 2.06rem;
+  height: 2.06rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -328,8 +328,8 @@
 }
 
 .priority-group__header-badge svg {
-  width: 1.24rem;
-  height: 1.24rem;
+  width: 1.62rem;
+  height: 1.62rem;
   display: block;
 }
 
@@ -988,13 +988,13 @@
   }
 
   .priority-group__header-badge {
-    width: 2.14rem;
-    height: 2.14rem;
+    width: 1.9rem;
+    height: 1.9rem;
   }
 
   .priority-group__header-badge svg {
-    width: 1.12rem;
-    height: 1.12rem;
+    width: 1.5rem;
+    height: 1.5rem;
   }
 
   .priority-header-tools {
@@ -1069,13 +1069,13 @@
   }
 
   .priority-group__header-badge {
-    width: 1.92rem;
-    height: 1.92rem;
+    width: 1.72rem;
+    height: 1.72rem;
   }
 
   .priority-group__header-badge svg {
-    width: 1.02rem;
-    height: 1.02rem;
+    width: 1.34rem;
+    height: 1.34rem;
   }
 
   #taskMode.task-mode--priority-view .task-main-col > .task-card > .date-nav.date-nav--priority,
