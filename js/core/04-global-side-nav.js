@@ -158,6 +158,10 @@
     }).length;
   }
 
+  function countRepeatRules() {
+    return Array.isArray(recurRules) ? recurRules.length : 0;
+  }
+
   function hasOverdueTasks() {
     return countOverdue() > 0;
   }
@@ -166,6 +170,10 @@
     var next = mode || "";
     if (next === "overdue" && !hasOverdueTasks()) return "";
     return next;
+  }
+
+  function isStandaloneQuickMode(mode) {
+    return mode === "priority-high" || mode === "repeat-view";
   }
 
   function setQuickModeValue(mode) {
@@ -222,7 +230,7 @@
 
   function dateActiveKey(overdueCount) {
     if (gsnActiveQuick === "overdue") return overdueCount > 0 ? "overdue" : "";
-    if (gsnActiveQuick === "priority-high") return "";
+    if (isStandaloneQuickMode(gsnActiveQuick)) return "";
     if (gsnActiveQuick === "week") return "week";
     if (typeof sel !== "undefined" && sel === offsetKey(1)) {
       return "tomorrow";
@@ -421,9 +429,10 @@
       filterButton(
         "重复任务",
         "repeating",
-        null,
+        countRepeatRules(),
         "repeating",
-        hasSingleFilter("repeating")
+        gsnActiveQuick === "repeat-view",
+        "repeat-view"
       ) +
       filterButton(
         "已冻结任务",
@@ -516,6 +525,10 @@
     selectDate(todayKey(), "priority-high");
   }
 
+  function selectRepeatTaskView() {
+    selectDate(todayKey(), "repeat-view");
+  }
+
   function applyFilter(key) {
     setQuickModeValue("");
     persistState();
@@ -561,6 +574,7 @@
     else if (action === "week") selectDate(todayKey(), "week");
     else if (action === "overdue") selectDate(todayKey(), "overdue");
     else if (action === "priority-view") selectHighPriorityView();
+    else if (action === "repeat-view") selectRepeatTaskView();
     else if (action === "filter") applyFilter(arg);
     else if (action === "project") applyProject(arg);
     else if (action === "settings" && typeof navigate === "function") navigate("/settings");
