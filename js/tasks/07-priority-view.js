@@ -8,6 +8,7 @@
   var PRIORITY_SHELL_CLASS = "priority-action-shell";
   var PRIORITY_TABS = ["all", "week", "overdue", "today"];
   var PRIORITY_SORT_MODES = ["title", "time"];
+  var PRIORITY_LATER_WINDOW_DAYS = 7;
   var PRIORITY_LATER_TITLE = "\u4e4b\u540e 7 \u5929\u5185";
   var priorityViewTab = "all";
   var priorityViewSortMode = "title";
@@ -311,6 +312,27 @@
     }
   }
 
+  function isWithinPriorityWindowOffset(dayOffset) {
+    return dayOffset >= 0 && dayOffset <= PRIORITY_LATER_WINDOW_DAYS;
+  }
+
+  function isPriorityLaterWindowDate(ds) {
+    var dayOffset = getDayOffset(ds);
+    return dayOffset > 0 && dayOffset <= PRIORITY_LATER_WINDOW_DAYS;
+  }
+
+  function appendPriorityWindowKeys(keys) {
+    var today = todayKey();
+    if (!today || typeof parseDS !== "function") return;
+    var base = parseDS(today);
+    if (!base || Number.isNaN(base.getTime())) return;
+    for (var offset = 1; offset <= PRIORITY_LATER_WINDOW_DAYS; offset += 1) {
+      var nextDate = new Date(base);
+      nextDate.setDate(base.getDate() + offset);
+      keys[fd(nextDate)] = true;
+    }
+  }
+
   function getWeekdayText(ds) {
     var parsed = parseDS(ds);
     if (!parsed) return "";
@@ -390,6 +412,7 @@
     getWeekMetaForToday().days.forEach(function (ds) {
       keys[ds] = true;
     });
+    appendPriorityWindowKeys(keys);
     Object.keys(T || {}).forEach(function (ds) {
       keys[ds] = true;
     });
@@ -397,7 +420,7 @@
     return Object.keys(keys)
       .sort()
       .reduce(function (items, ds) {
-        if (typeof generateRecurring === "function" && (ds === today || isCurrentWeekDate(ds))) {
+        if (typeof generateRecurring === "function" && (ds === today || isCurrentWeekDate(ds) || isPriorityLaterWindowDate(ds))) {
           generateRecurring(ds);
         }
         var rows = T && T[ds] ? T[ds] : [];
@@ -421,16 +444,48 @@
   }
 
   function getPrioritySectionKey(entry) {
-    if (entry.ds < todayKey()) return "overdue";
-    if (entry.ds === todayKey()) return "today";
+    var dayOffset = entry && typeof entry.dayOffset === "number" ? entry.dayOffset : getDayOffset(entry.ds);
+    if (dayOffset < 0) return "overdue";
+    if (dayOffset === 0) return "today";
     if (isCurrentWeekDate(entry.ds)) return "week";
-    return "later";
+    if (isWithinPriorityWindowOffset(dayOffset)) return "later";
+    return "";
+  }
+
+  function isPrioritySceneEntry(entry) {
+    return !!getPrioritySectionKey(entry);
+  }
+
+  function countPriorityEntriesBySection(entries, sectionKey) {
+    return entries.filter(function (entry) {
+      return getPrioritySectionKey(entry) === sectionKey;
+    }).length;
+  }
+
+  function getPriorityUpcomingEntries(entries) {
+    return entries
+      .filter(function (entry) {
+        return entry.dayOffset >= 0;
+      })
+      .slice(0, 4);
+  }
+
+  function countCurrentWeekPriorityEntries(entries) {
+    return entries.filter(function (entry) {
+      return isCurrentWeekDate(entry.ds);
+    }).length;
+  }
+
+  function buildPrioritySceneEntries() {
+    return collectPriorityEntries().filter(isPrioritySceneEntry);
   }
 
   function buildPriorityGroups(entries, tab) {
     var filteredEntries = entries.filter(function (entry) {
-      if (tab === "overdue") return getPrioritySectionKey(entry) === "overdue";
-      if (tab === "today") return getPrioritySectionKey(entry) === "today";
+      var sectionKey = getPrioritySectionKey(entry);
+      if (!sectionKey) return false;
+      if (tab === "overdue") return sectionKey === "overdue";
+      if (tab === "today") return sectionKey === "today";
       if (tab === "week") return isCurrentWeekDate(entry.ds);
       return true;
     });
@@ -443,7 +498,9 @@
     };
 
     filteredEntries.forEach(function (entry) {
-      grouped[getPrioritySectionKey(entry)].push(entry);
+      var sectionKey = getPrioritySectionKey(entry);
+      if (!sectionKey) return;
+      grouped[sectionKey].push(entry);
     });
 
     var groups = [];
@@ -468,30 +525,18 @@
   }
 
   function getPrioritySceneState() {
-    var entries = collectPriorityEntries();
+    var entries = buildPrioritySceneEntries();
     var activeTab = normalizePriorityTab(priorityViewTab);
     var grouped = buildPriorityGroups(entries, activeTab);
-    var upcomingEntries = entries
-      .filter(function (entry) {
-        return entry.ds >= todayKey();
-      })
-      .slice(0, 4);
+    var upcomingEntries = getPriorityUpcomingEntries(entries);
 
     return {
       activeTab: activeTab,
       totalCount: entries.length,
-      overdueCount: entries.filter(function (entry) {
-        return getPrioritySectionKey(entry) === "overdue";
-      }).length,
-      todayCount: entries.filter(function (entry) {
-        return getPrioritySectionKey(entry) === "today";
-      }).length,
-      weekCount: entries.filter(function (entry) {
-        return isCurrentWeekDate(entry.ds);
-      }).length,
-      upcomingWeekCount: entries.filter(function (entry) {
-        return getPrioritySectionKey(entry) === "week";
-      }).length,
+      overdueCount: countPriorityEntriesBySection(entries, "overdue"),
+      todayCount: countPriorityEntriesBySection(entries, "today"),
+      weekCount: countCurrentWeekPriorityEntries(entries),
+      upcomingWeekCount: countPriorityEntriesBySection(entries, "week"),
       filteredCount: grouped.filteredEntries.length,
       groups: grouped.groups,
       upcomingEntries: upcomingEntries
