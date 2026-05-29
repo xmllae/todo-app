@@ -630,16 +630,16 @@
   function prioritySceneEmptyIllustrationMarkup() {
     return (
       '<svg class="priority-scene__empty-svg" viewBox="0 0 240 180" fill="none" xmlns="http://www.w3.org/2000/svg">' +
-      '<ellipse cx="120" cy="150" rx="66" ry="13" fill="var(--priority-empty-shadow)"/>' +
-      '<circle cx="28" cy="108" r="4.5" fill="var(--priority-empty-dot)" opacity=".7"/>' +
-      '<circle cx="212" cy="104" r="4.5" fill="var(--priority-empty-dot)" opacity=".7"/>' +
-      '<rect x="84" y="24" width="72" height="98" rx="20" stroke="var(--priority-empty-ink)" stroke-width="10"/>' +
-      '<path d="M104 24C104 14.6112 111.611 7 121 7H119C128.389 7 136 14.6112 136 24V30H104V24Z" fill="white" stroke="var(--priority-empty-ink)" stroke-width="10" stroke-linejoin="round"/>' +
-      '<path d="M105 61H135" stroke="var(--priority-empty-ink-strong)" stroke-width="8" stroke-linecap="round"/>' +
-      '<path d="M105 80H135" stroke="var(--priority-empty-ink-strong)" stroke-width="8" stroke-linecap="round"/>' +
-      '<path d="M105 99H128" stroke="var(--priority-empty-ink-strong)" stroke-width="8" stroke-linecap="round"/>' +
-      '<circle cx="151" cy="112" r="20" fill="white" stroke="var(--priority-empty-accent)" stroke-width="6"/>' +
-      '<path d="M141 112.5L148.2 119.5L160.5 105.8" stroke="var(--priority-empty-accent)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '<ellipse cx="120" cy="149" rx="58" ry="10" fill="var(--priority-empty-shadow)"/>' +
+      '<circle cx="30" cy="108" r="4" fill="var(--priority-empty-dot)" opacity=".62"/>' +
+      '<circle cx="210" cy="104" r="4" fill="var(--priority-empty-dot)" opacity=".62"/>' +
+      '<rect x="86" y="30" width="68" height="92" rx="13" stroke="var(--priority-empty-ink)" stroke-width="8.5"/>' +
+      '<rect x="106" y="18" width="28" height="18" rx="5" fill="white" stroke="var(--priority-empty-ink)" stroke-width="8.5"/>' +
+      '<path d="M104 62H136" stroke="var(--priority-empty-ink-strong)" stroke-width="7" stroke-linecap="round"/>' +
+      '<path d="M104 80H136" stroke="var(--priority-empty-ink-strong)" stroke-width="7" stroke-linecap="round"/>' +
+      '<path d="M104 98H128" stroke="var(--priority-empty-ink-strong)" stroke-width="7" stroke-linecap="round"/>' +
+      '<rect x="138" y="98" width="32" height="32" rx="10" fill="white" stroke="var(--priority-empty-accent)" stroke-width="5.5"/>' +
+      '<path d="M146 114L152 120L162 108.5" stroke="var(--priority-empty-accent)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>' +
       "</svg>"
     );
   }
@@ -692,6 +692,9 @@
       "</div></div>" +
       priorityGroupsHtml(state) +
       "</section>";
+    if (!state.filteredCount && list.firstElementChild) {
+      list.firstElementChild.classList.add("priority-scene--empty");
+    }
   }
 
   function ensurePriorityOverviewShell(root) {

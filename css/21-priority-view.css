@@ -197,6 +197,25 @@
   padding-bottom: 1.5rem;
 }
 
+#taskMode.task-mode--priority-view .task-main-col > .task-card,
+.app.app--with-global-nav #taskMode.task-mode--priority-view .task-main-col > .task-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+#taskMode.task-mode--priority-view .task-main-col > .task-card > .list-panel,
+.app.app--with-global-nav #taskMode.task-mode--priority-view .task-main-col > .task-card > .list-panel,
+#taskMode.task-mode--priority-view .list-panel .tasks,
+.app.app--with-global-nav #taskMode.task-mode--priority-view .list-panel .tasks,
+#taskMode.task-mode--priority-view .list-panel #tList,
+.app.app--with-global-nav #taskMode.task-mode--priority-view .list-panel #tList {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
 .priority-scene {
   --priority-overdue: #ef4444;
   --priority-today: #fb923c;
@@ -216,9 +235,19 @@
   --priority-empty-dot: #8f7cf5;
   --priority-empty-shadow: rgba(99, 102, 241, .08);
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   gap: 1.15rem;
+  min-height: 0;
   padding: 0 1.75rem 2rem;
+}
+
+.priority-scene--empty {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 0;
+  height: 100%;
+  min-height: 0;
 }
 
 .priority-scene__toolbar {
@@ -494,6 +523,12 @@
   gap: .2rem;
   padding: 1.4rem 1.5rem 2rem;
   text-align: center;
+}
+
+.priority-scene--empty .priority-scene__empty {
+  min-height: 0;
+  height: 100%;
+  padding-block: 0;
 }
 
 .priority-scene__empty-illustration {
