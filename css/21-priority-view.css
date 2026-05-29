@@ -204,7 +204,7 @@
   --priority-later: #94a3b8;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.15rem;
   padding: 0 1.75rem 2rem;
 }
 
@@ -213,8 +213,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding-bottom: 1.1rem;
-  border-bottom: 1px solid rgba(226, 232, 240, .72);
+  padding-bottom: .72rem;
 }
 
 .priority-tabs {
@@ -264,7 +263,7 @@
 .priority-group {
   display: flex;
   flex-direction: column;
-  gap: .9rem;
+  gap: .78rem;
 }
 
 .priority-group__header {
@@ -272,7 +271,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  min-height: 2.4rem;
+  min-height: 2.08rem;
 }
 
 .priority-group__title {
@@ -280,10 +279,25 @@
   z-index: 1;
   flex: 0 0 auto;
   margin: 0;
-  padding-right: .74rem;
+  padding-right: .58rem;
   background: var(--priority-group-header-surface);
-  box-shadow: 0 0 0 .62rem var(--priority-group-header-surface);
+  box-shadow: 0 0 0 .46rem var(--priority-group-header-surface);
   font-size: 1.12rem;
+  line-height: 1.2;
+  font-weight: 760;
+  letter-spacing: -.01em;
+  white-space: nowrap;
+}
+
+.priority-group__count {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding-left: .58rem;
+  background: var(--priority-group-header-surface);
+  box-shadow: 0 0 0 .46rem var(--priority-group-header-surface);
+  font-size: 1.06rem;
   line-height: 1.2;
   font-weight: 760;
   letter-spacing: -.01em;
@@ -318,12 +332,16 @@
 }
 
 .priority-group__header-badge svg {
-  width: .92rem;
-  height: .92rem;
+  width: 1.24rem;
+  height: 1.24rem;
   display: block;
 }
 
 .priority-group--overdue .priority-group__title {
+  color: var(--priority-overdue);
+}
+
+.priority-group--overdue .priority-group__count {
   color: var(--priority-overdue);
 }
 
@@ -336,6 +354,10 @@
   color: var(--priority-today);
 }
 
+.priority-group--today .priority-group__count {
+  color: var(--priority-today);
+}
+
 .priority-group--today .priority-group__header-badge {
   border-color: rgba(251, 146, 60, .22);
   color: rgba(251, 146, 60, .72);
@@ -345,7 +367,15 @@
   color: var(--priority-week);
 }
 
+.priority-group--week .priority-group__count {
+  color: var(--priority-week);
+}
+
 .priority-group--later .priority-group__title {
+  color: var(--priority-later);
+}
+
+.priority-group--later .priority-group__count {
   color: var(--priority-later);
 }
 
@@ -366,7 +396,7 @@
   align-items: center;
   justify-content: center;
   gap: .45rem;
-  padding: .1rem 0 .8rem;
+  padding: 0 0 .58rem;
   background: transparent;
   color: #94a3b8;
 }
@@ -376,7 +406,7 @@
   color: #94a3b8;
   font-size: .96rem;
   line-height: 1.45;
-  font-weight: 700;
+  font-weight: 500;
   text-align: center;
 }
 
@@ -945,7 +975,6 @@
   color: #cbd5e1;
 }
 
-.dark .priority-scene__toolbar,
 .dark .priority-overview__hero {
   border-bottom-color: rgba(51, 65, 85, .82);
 }
@@ -979,12 +1008,29 @@
   }
 
   .priority-group__header {
-    min-height: 2.18rem;
+    min-height: 1.98rem;
+  }
+
+  .priority-scene__toolbar {
+    padding-bottom: .58rem;
+  }
+
+  .priority-group {
+    gap: .7rem;
+  }
+
+  .priority-group__title,
+  .priority-group__count {
+    box-shadow: 0 0 0 .4rem var(--priority-group-header-surface);
   }
 
   .priority-group__title {
-    padding-right: .66rem;
-    box-shadow: 0 0 0 .52rem var(--priority-group-header-surface);
+    padding-right: .52rem;
+  }
+
+  .priority-group__count {
+    padding-left: .52rem;
+    font-size: 1rem;
   }
 
   .priority-group__header-badge {
@@ -993,8 +1039,8 @@
   }
 
   .priority-group__header-badge svg {
-    width: .84rem;
-    height: .84rem;
+    width: 1.12rem;
+    height: 1.12rem;
   }
 
   .priority-header-tools {
@@ -1045,12 +1091,29 @@
   }
 
   .priority-group__header {
-    min-height: 1.96rem;
+    min-height: 1.82rem;
+  }
+
+  .priority-scene__toolbar {
+    padding-bottom: .48rem;
+  }
+
+  .priority-group {
+    gap: .62rem;
+  }
+
+  .priority-group__title,
+  .priority-group__count {
+    box-shadow: 0 0 0 .32rem var(--priority-group-header-surface);
   }
 
   .priority-group__title {
-    padding-right: .58rem;
-    box-shadow: 0 0 0 .42rem var(--priority-group-header-surface);
+    padding-right: .46rem;
+  }
+
+  .priority-group__count {
+    padding-left: .46rem;
+    font-size: .94rem;
   }
 
   .priority-group__header-badge {
@@ -1059,8 +1122,8 @@
   }
 
   .priority-group__header-badge svg {
-    width: .76rem;
-    height: .76rem;
+    width: 1.02rem;
+    height: 1.02rem;
   }
 
   #taskMode.task-mode--priority-view .task-main-col > .task-card > .date-nav.date-nav--priority,

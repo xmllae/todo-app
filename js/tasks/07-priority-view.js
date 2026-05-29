@@ -8,7 +8,7 @@
   var PRIORITY_SHELL_CLASS = "priority-action-shell";
   var PRIORITY_TABS = ["all", "week", "overdue", "today"];
   var PRIORITY_SORT_MODES = ["title", "time"];
-  var PRIORITY_LATER_TITLE = "\u4e4b\u540e7\u5929\u5185";
+  var PRIORITY_LATER_TITLE = "\u4e4b\u540e 7 \u5929\u5185";
   var priorityViewTab = "all";
   var priorityViewSortMode = "title";
 
@@ -203,10 +203,11 @@
       '<div class="priority-group__header">' +
       '<h4 class="priority-group__title">' +
       esc(group.title) +
-      " (" +
-      group.count +
-      ")</h4>" +
+      "</h4>" +
       priorityGroupHeaderDecorationHtml(group.key) +
+      '<span class="priority-group__count">' +
+      group.count +
+      "</span>" +
       "</div>"
     );
   }
