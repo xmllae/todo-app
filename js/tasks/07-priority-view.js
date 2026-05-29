@@ -471,6 +471,10 @@
     return collectPriorityEntries().filter(isPrioritySceneEntry);
   }
 
+  function getPrioritySceneTotalCount() {
+    return buildPrioritySceneEntries().length;
+  }
+
   function buildPriorityGroups(entries, tab) {
     var filteredEntries = entries.filter(function (entry) {
       var sectionKey = getPrioritySectionKey(entry);
@@ -810,13 +814,17 @@
     if (typeof goToday === "function") goToday();
   };
 
+  window.getPrioritySceneTotalCount = getPrioritySceneTotalCount;
+
   hookRender();
   scheduleApply();
+  if (typeof window.refreshGlobalSideNav === "function") window.refreshGlobalSideNav();
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", function () {
       hookRender();
       scheduleApply();
+      if (typeof window.refreshGlobalSideNav === "function") window.refreshGlobalSideNav();
     });
   }
 

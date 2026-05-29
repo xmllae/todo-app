@@ -187,6 +187,9 @@
   }
 
   function countHighPriority() {
+    if (typeof window.getPrioritySceneTotalCount === "function") {
+      return window.getPrioritySceneTotalCount();
+    }
     return allEntries().filter(function (entry) {
       return entry.task && entry.task.priority === "high" && isPending(entry.task);
     }).length;
