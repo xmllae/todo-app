@@ -186,6 +186,12 @@
     return rowsFor(todayKey()).filter(predicate).length;
   }
 
+  function countHighPriority() {
+    return allEntries().filter(function (entry) {
+      return entry.task && entry.task.priority === "high" && isPending(entry.task);
+    }).length;
+  }
+
   function findProjectTag(project) {
     if (!project || !project.tags || typeof customTags === "undefined") return null;
     return (customTags || []).find(function (tag) {
@@ -213,6 +219,7 @@
 
   function dateActiveKey(overdueCount) {
     if (gsnActiveQuick === "overdue") return overdueCount > 0 ? "overdue" : "";
+    if (gsnActiveQuick === "priority-high") return "";
     if (gsnActiveQuick === "week") return "week";
     if (typeof sel !== "undefined" && sel === offsetKey(1)) {
       return "tomorrow";
@@ -330,12 +337,16 @@
     return '<span class="gsn-filter-ico-fallback"></span>';
   }
 
-  function filterButton(label, iconKey, count, key, active) {
+  function filterButton(label, iconKey, count, key, active, actionName, actionArg) {
+    var action = actionName || "filter";
+    var arg = actionArg == null ? key : actionArg;
     return (
       '<button type="button" class="gsn-filter' +
       (active ? " is-active" : "") +
-      '" data-gsn-action="filter" data-gsn-arg="' +
-      key +
+      '" data-gsn-action="' +
+      action +
+      '" data-gsn-arg="' +
+      escapeHtml(arg) +
       '">' +
       '<span class="gsn-filter-icon" aria-hidden="true">' +
       filterIconMarkup(iconKey) +
@@ -399,11 +410,10 @@
       filterButton(
         "高优先级",
         "high",
-        countToday(function (task) {
-          return task.priority === "high" && isPending(task);
-        }),
-        "high",
-        hasSingleFilter("high")
+        countHighPriority(),
+        "priority-high",
+        gsnActiveQuick === "priority-high",
+        "priority-view"
       ) +
       filterButton(
         "重复任务",
@@ -499,6 +509,10 @@
     scheduleRefresh();
   }
 
+  function selectHighPriorityView() {
+    selectDate(todayKey(), "priority-high");
+  }
+
   function applyFilter(key) {
     setQuickModeValue("");
     persistState();
@@ -543,6 +557,7 @@
     else if (action === "tomorrow") selectDate(offsetKey(1), "tomorrow");
     else if (action === "week") selectDate(todayKey(), "week");
     else if (action === "overdue") selectDate(todayKey(), "overdue");
+    else if (action === "priority-view") selectHighPriorityView();
     else if (action === "filter") applyFilter(arg);
     else if (action === "project") applyProject(arg);
     else if (action === "settings" && typeof navigate === "function") navigate("/settings");
