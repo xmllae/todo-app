@@ -277,6 +277,9 @@
 .priority-group__title {
   position: relative;
   z-index: 1;
+  display: inline-flex;
+  align-items: baseline;
+  gap: .18rem;
   flex: 0 0 auto;
   margin: 0;
   padding-right: .58rem;
@@ -290,16 +293,9 @@
 }
 
 .priority-group__count {
-  position: relative;
-  z-index: 1;
-  flex: 0 0 auto;
-  margin-left: auto;
-  padding-left: .58rem;
-  background: var(--priority-group-header-surface);
-  box-shadow: 0 0 0 .46rem var(--priority-group-header-surface);
-  font-size: 1.06rem;
+  font-size: 1em;
   line-height: 1.2;
-  font-weight: 760;
+  font-weight: 500;
   letter-spacing: -.01em;
   white-space: nowrap;
 }
@@ -496,11 +492,9 @@
 }
 
 .priority-task-card__title-row {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: .56rem;
   min-width: 0;
-  flex-wrap: wrap;
 }
 
 .priority-task-card__title {
@@ -511,57 +505,21 @@
   color: #0f172a;
 }
 
-.priority-task-card__meta {
-  display: inline-flex;
-  align-items: center;
-  padding: .14rem .44rem;
-  border-radius: 999px;
-  background: rgba(241, 245, 249, .92);
-  color: #94a3b8;
-  font-size: .74rem;
-  line-height: 1.2;
-  font-weight: 700;
-  letter-spacing: .01em;
-}
-
 .priority-task-card__tail {
   display: inline-flex;
   align-items: center;
   justify-content: flex-end;
-  gap: .72rem;
   flex: 0 0 auto;
+  text-align: right;
 }
 
 .priority-task-card__when {
   color: #64748b;
-  font-size: .82rem;
-  line-height: 1.25;
-  font-weight: 700;
+  font-size: .84rem;
+  line-height: 1.45;
+  font-weight: 400;
+  letter-spacing: .01em;
   white-space: nowrap;
-}
-
-.priority-task-card--overdue .priority-task-card__when {
-  color: #ef4444;
-}
-
-.priority-task-card--today .priority-task-card__when {
-  color: #fb923c;
-}
-
-.priority-task-card__more {
-  width: .9rem;
-  height: .9rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: #cbd5e1;
-  flex-shrink: 0;
-}
-
-.priority-task-card__more svg {
-  width: .9rem;
-  height: .9rem;
-  display: block;
 }
 
 .priority-scene__empty {
@@ -967,7 +925,6 @@
   color: #cbd5e1;
 }
 
-.dark .priority-task-card__meta,
 .dark .priority-overview__empty,
 .dark .priority-overview__action {
   background: rgba(30, 41, 59, .92);
@@ -995,7 +952,6 @@
   box-shadow: inset 0 0 0 1px rgba(51, 65, 85, .88);
 }
 
-.dark .priority-task-card__more,
 .dark .priority-overview__row-copy span,
 .dark .priority-overview__metric span,
 .dark .priority-overview__ring-center span {
@@ -1019,8 +975,7 @@
     gap: .7rem;
   }
 
-  .priority-group__title,
-  .priority-group__count {
+  .priority-group__title {
     box-shadow: 0 0 0 .4rem var(--priority-group-header-surface);
   }
 
@@ -1029,8 +984,7 @@
   }
 
   .priority-group__count {
-    padding-left: .52rem;
-    font-size: 1rem;
+    font-size: 1em;
   }
 
   .priority-group__header-badge {
@@ -1102,8 +1056,7 @@
     gap: .62rem;
   }
 
-  .priority-group__title,
-  .priority-group__count {
+  .priority-group__title {
     box-shadow: 0 0 0 .32rem var(--priority-group-header-surface);
   }
 
@@ -1112,8 +1065,7 @@
   }
 
   .priority-group__count {
-    padding-left: .46rem;
-    font-size: .94rem;
+    font-size: 1em;
   }
 
   .priority-group__header-badge {
@@ -1196,7 +1148,7 @@
 
   .priority-task-card__tail {
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-end;
   }
 
   .priority-overview__metrics-side {

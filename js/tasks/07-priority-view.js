@@ -162,10 +162,6 @@
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"></path><path d="M7 12h10"></path><path d="M10 17h4"></path></svg>';
   }
 
-  function moreIconMarkup() {
-    return '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.9"></circle><circle cx="12" cy="12" r="1.9"></circle><circle cx="19" cy="12" r="1.9"></circle></svg>';
-  }
-
   function ringMarkerIconMarkup() {
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7.4v5.2"></path><circle cx="12" cy="16.6" r="1"></circle></svg>';
   }
@@ -203,12 +199,12 @@
     return (
       '<div class="priority-group__header">' +
       '<h4 class="priority-group__title">' +
+      '<span class="priority-group__title-label">' +
       esc(group.title) +
-      "</h4>" +
-      priorityGroupHeaderDecorationHtml(group.key) +
-      '<span class="priority-group__count">' +
+      '</span><span class="priority-group__count">（' +
       group.count +
-      "</span>" +
+      "）</span></h4>" +
+      priorityGroupHeaderDecorationHtml(group.key) +
       "</div>"
     );
   }
@@ -349,6 +345,12 @@
     return getWeekdayText(ds) + " " + getMonthDayText(ds);
   }
 
+  function getChineseMonthDayText(ds) {
+    var parsed = parseDS(ds);
+    if (!parsed) return String(ds || "");
+    return parsed.getMonth() + 1 + "月" + parsed.getDate() + "日";
+  }
+
   function getRelativeDateText(ds) {
     var offset = getDayOffset(ds);
     if (offset === 0) return "今天";
@@ -374,6 +376,17 @@
     var timeLabel = getTaskTimeLabel(entry.task);
     var dateLabel = getRelativeDateText(entry.ds);
     return timeLabel ? dateLabel + " " + timeLabel : dateLabel;
+  }
+
+  function getPriorityTaskWhenLabel(entry) {
+    var dateLabel = getChineseMonthDayText(entry.ds);
+    var weekdayLabel = getWeekdayText(entry.ds);
+    var planTimeLabel = "";
+    if (entry && entry.task && entry.task.planTime) {
+      planTimeLabel = typeof formatPlanTimeDisp === "function" ? formatPlanTimeDisp(entry.task.planTime) : entry.task.planTime;
+    }
+    var baseLabel = dateLabel + (weekdayLabel ? " " + weekdayLabel : "");
+    return planTimeLabel ? baseLabel + " · " + planTimeLabel : baseLabel;
   }
 
   function normalizePrioritySortValue(entry) {
@@ -588,14 +601,10 @@
       esc(entry.task.text) +
       '">' +
       esc(entry.task.text) +
-      '</strong><span class="priority-task-card__meta">' +
-      esc(getTitleDateText(entry.ds)) +
-      "</span></span></span>" +
+      "</strong></span></span>" +
       '<span class="priority-task-card__tail">' +
       '<span class="priority-task-card__when">' +
-      esc(getTaskTrailingLabel(entry)) +
-      '</span><span class="priority-task-card__more" aria-hidden="true">' +
-      moreIconMarkup() +
+      esc(getPriorityTaskWhenLabel(entry)) +
       "</span></span></button>"
     );
   }
