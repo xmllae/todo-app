@@ -98,29 +98,33 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
+  gap: 0;
   text-align: center;
 }
 
-.repeat-title__main {
+#taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view h3 #dTitle.is-repeat-scope .repeat-title__main,
+.app.app--with-global-nav #taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view h3 #dTitle.is-repeat-scope .repeat-title__main {
   display: block;
-  margin: 0;
+  margin: 0 0 4px;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.025em;
   color: #0f172a;
-  font-size: 2.15rem;
-  line-height: 1.03;
-  font-weight: 800;
-  letter-spacing: -.05em;
   white-space: nowrap;
 }
 
-.repeat-title__sub {
+#taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view h3 #dTitle.is-repeat-scope .repeat-title__sub,
+.app.app--with-global-nav #taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view h3 #dTitle.is-repeat-scope .repeat-title__sub {
   display: block;
   margin: 0;
-  color: #64748b;
-  font-size: .95rem;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
   line-height: 1.5;
-  font-weight: 600;
-  letter-spacing: .01em;
+  letter-spacing: 0.025em;
+  color: #64748b;
   white-space: nowrap;
 }
 
@@ -957,7 +961,16 @@
   box-shadow: inset 0 0 0 1px rgba(165, 180, 252, .18);
 }
 
-.dark .repeat-title__main,
+.dark #taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view h3 #dTitle.is-repeat-scope .repeat-title__main,
+.dark .app.app--with-global-nav #taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view h3 #dTitle.is-repeat-scope .repeat-title__main {
+  color: #e2e8f0;
+}
+
+.dark #taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view h3 #dTitle.is-repeat-scope .repeat-title__sub,
+.dark .app.app--with-global-nav #taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view h3 #dTitle.is-repeat-scope .repeat-title__sub {
+  color: #9aa9bd;
+}
+
 .dark .repeat-side-card__head,
 .dark .repeat-overview__ring-center strong,
 .dark .repeat-upcoming__copy strong,
@@ -966,7 +979,6 @@
   color: #f8fafc;
 }
 
-.dark .repeat-title__sub,
 .dark .repeat-rule__pattern-text,
 .dark .repeat-rule__hint,
 .dark .repeat-overview__ring-center span,
@@ -1150,10 +1162,6 @@
 }
 
 @media (max-width: 980px) {
-  .repeat-title__main {
-    font-size: 1.8rem;
-  }
-
   .repeat-header-tools {
     max-width: none;
     width: 100%;
@@ -1175,14 +1183,6 @@
 
   .repeat-title__icon {
     border-radius: .9rem;
-  }
-
-  .repeat-title__main {
-    font-size: 1.55rem;
-  }
-
-  .repeat-title__sub {
-    font-size: .86rem;
   }
 
   .repeat-header-tool {
