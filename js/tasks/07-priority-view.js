@@ -70,14 +70,6 @@
     if (host && host.parentNode) host.parentNode.removeChild(host);
   }
 
-  function syncPriorityLaterGroupTitles(root) {
-    if (!root) return;
-    root.querySelectorAll(".priority-group--later .priority-group__title").forEach(function (title) {
-      var suffixMatch = (title.textContent || "").match(/\s*\(\d+\)\s*$/);
-      title.textContent = PRIORITY_LATER_TITLE + (suffixMatch ? suffixMatch[0] : "");
-    });
-  }
-
   function shouldKeepPriorityGroup(grouped, groupKey, tab) {
     if (tab !== "all") return !!grouped[groupKey].length;
     if (groupKey === "today") return true;
@@ -181,18 +173,49 @@
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8h9v3.3a4.7 4.7 0 0 1-4.7 4.7H10.7A4.7 4.7 0 0 1 6 11.3Z"></path><path d="M15 9h1.1a2.4 2.4 0 0 1 0 4.8H15"></path><path d="M8.2 19h7.6"></path></svg>';
   }
 
+  function clockIconMarkup() {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 8.3v4.2l2.7 1.8"></path></svg>';
+  }
+
+  function getPriorityGroupHeaderIconMarkup(groupKey) {
+    if (groupKey === "today") return emptyCupIconMarkup();
+    if (groupKey === "overdue") return ringMarkerIconMarkup();
+    if (groupKey === "later") return clockIconMarkup();
+    return "";
+  }
+
+  function priorityGroupHeaderDecorationHtml(groupKey) {
+    var iconMarkup = getPriorityGroupHeaderIconMarkup(groupKey);
+    if (!iconMarkup) return "";
+    return (
+      '<div class="priority-group__header-decoration" aria-hidden="true">' +
+      '<span class="priority-group__header-line"></span>' +
+      '<span class="priority-group__header-badge">' +
+      iconMarkup +
+      "</span>" +
+      '<span class="priority-group__header-line"></span>' +
+      "</div>"
+    );
+  }
+
+  function priorityGroupHeaderHtml(group) {
+    return (
+      '<div class="priority-group__header">' +
+      '<h4 class="priority-group__title">' +
+      esc(group.title) +
+      " (" +
+      group.count +
+      ")</h4>" +
+      priorityGroupHeaderDecorationHtml(group.key) +
+      "</div>"
+    );
+  }
+
   function priorityGroupEmptyHtml(groupKey) {
     return (
       '<div class="priority-group__empty priority-group__empty--' +
       groupKey +
-      '">' +
-      '<div class="priority-group__empty-divider" aria-hidden="true">' +
-      '<span class="priority-group__empty-line"></span>' +
-      '<span class="priority-group__empty-badge">' +
-      emptyCupIconMarkup() +
-      "</span>" +
-      '<span class="priority-group__empty-line"></span>' +
-      '</div><p class="priority-group__empty-copy">' +
+      '"><p class="priority-group__empty-copy">' +
       esc(getPriorityGroupEmptyText(groupKey)) +
       "</p></div>"
     );
@@ -426,7 +449,7 @@
     if (grouped.overdue.length) groups.push({ key: "overdue", title: "逾期", count: grouped.overdue.length, items: grouped.overdue });
     if (grouped.today.length) groups.push({ key: "today", title: "今天", count: grouped.today.length, items: grouped.today });
     if (grouped.week.length) groups.push({ key: "week", title: "本周", count: grouped.week.length, items: grouped.week });
-    if (grouped.later.length) groups.push({ key: "later", title: "之后", count: grouped.later.length, items: grouped.later });
+    if (grouped.later.length) groups.push({ key: "later", title: PRIORITY_LATER_TITLE, count: grouped.later.length, items: grouped.later });
 
     if (tab === "all" && !groups.some(function (group) { return group.key === "today"; })) {
       var todayGroup = { key: "today", title: "\u4eca\u5929", count: 0, items: [] };
@@ -570,11 +593,7 @@
           '<section class="priority-group priority-group--' +
           group.key +
           '">' +
-          '<div class="priority-group__header"><h4 class="priority-group__title">' +
-          esc(group.title) +
-          " (" +
-          group.count +
-          ")</h4></div>" +
+          priorityGroupHeaderHtml(group) +
           '<div class="priority-group__list">' +
           groupBody +
           "</div></section>"
@@ -592,7 +611,6 @@
       "</div></div>" +
       priorityGroupsHtml(state) +
       "</section>";
-    syncPriorityLaterGroupTitles(list);
   }
 
   function ensurePriorityOverviewShell(root) {
