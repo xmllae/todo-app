@@ -166,34 +166,9 @@
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7.4v5.2"></path><circle cx="12" cy="16.6" r="1"></circle></svg>';
   }
 
-  function headerAlertIconMarkup() {
-    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5.1v8.9"></path><circle cx="12" cy="18.2" r="1.45" fill="currentColor" stroke="none"></circle></svg>';
-  }
-
-  function headerCupIconMarkup() {
-    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.6 7.8h9.4v3.55a4.95 4.95 0 0 1-4.95 4.95h-.1A4.95 4.95 0 0 1 5.6 11.35Z"></path><path d="M15 8.9h1.35a2.35 2.35 0 0 1 0 4.7H15"></path><path d="M7.9 18.95h8.2"></path></svg>';
-  }
-
-  function headerClockIconMarkup() {
-    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5.7h8"></path><path d="M8 18.3h8"></path><path d="M9.35 6.2c0 2.6 1.28 4.16 2.65 5.25 1.37-1.09 2.65-2.65 2.65-5.25"></path><path d="M9.35 17.8c0-2.6 1.28-4.16 2.65-5.25 1.37 1.09 2.65 2.65 2.65 5.25"></path><path d="M10.8 13.25h2.4"></path></svg>';
-  }
-
-  function getPriorityGroupHeaderIconMarkup(groupKey) {
-    if (groupKey === "today") return headerCupIconMarkup();
-    if (groupKey === "overdue") return headerAlertIconMarkup();
-    if (groupKey === "later") return headerClockIconMarkup();
-    return "";
-  }
-
-  function priorityGroupHeaderDecorationHtml(groupKey) {
-    var iconMarkup = getPriorityGroupHeaderIconMarkup(groupKey);
-    if (!iconMarkup) return "";
+  function priorityGroupHeaderDecorationHtml() {
     return (
       '<div class="priority-group__header-decoration" aria-hidden="true">' +
-      '<span class="priority-group__header-line"></span>' +
-      '<span class="priority-group__header-badge">' +
-      iconMarkup +
-      "</span>" +
       '<span class="priority-group__header-line"></span>' +
       "</div>"
     );
