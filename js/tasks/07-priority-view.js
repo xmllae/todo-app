@@ -177,6 +177,27 @@
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7.4v5.2"></path><circle cx="12" cy="16.6" r="1"></circle></svg>';
   }
 
+  function emptyCupIconMarkup() {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8h9v3.3a4.7 4.7 0 0 1-4.7 4.7H10.7A4.7 4.7 0 0 1 6 11.3Z"></path><path d="M15 9h1.1a2.4 2.4 0 0 1 0 4.8H15"></path><path d="M8.2 19h7.6"></path></svg>';
+  }
+
+  function priorityGroupEmptyHtml(groupKey) {
+    return (
+      '<div class="priority-group__empty priority-group__empty--' +
+      groupKey +
+      '">' +
+      '<div class="priority-group__empty-divider" aria-hidden="true">' +
+      '<span class="priority-group__empty-line"></span>' +
+      '<span class="priority-group__empty-badge">' +
+      emptyCupIconMarkup() +
+      "</span>" +
+      '<span class="priority-group__empty-line"></span>' +
+      '</div><p class="priority-group__empty-copy">' +
+      esc(getPriorityGroupEmptyText(groupKey)) +
+      "</p></div>"
+    );
+  }
+
   function getPriorityHeaderToolsMarkup() {
     return (
       '<button type="button" class="priority-header-tool" onclick="cyclePriorityViewSortMode()" title="' +
@@ -543,7 +564,7 @@
                 return priorityTaskCardHtml(entry, group.key);
               })
               .join("")
-          : '<div class="priority-group__empty">' + esc(getPriorityGroupEmptyText(group.key)) + "</div>";
+          : priorityGroupEmptyHtml(group.key);
 
         return (
           '<section class="priority-group priority-group--' +
