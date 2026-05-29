@@ -1,8 +1,8 @@
 #taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view,
 .app.app--with-global-nav #taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view {
-  align-items: flex-start;
+  align-items: center;
   justify-content: flex-start;
-  gap: 12px;
+  gap: 10px;
   margin-bottom: 12px;
 }
 
@@ -10,18 +10,20 @@
 .app.app--with-global-nav #taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view .nav-arrow,
 #taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view .date-nav-return-today,
 .app.app--with-global-nav #taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view .date-nav-return-today {
-  display: none !important;
+  display: inline-flex !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 #taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view h3,
 .app.app--with-global-nav #taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view h3 {
   position: relative;
   display: inline-flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex: 1 1 auto;
-  width: auto;
-  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 var(--date-nav-title-slot-w);
+  width: var(--date-nav-title-slot-w);
+  min-width: var(--date-nav-title-slot-w);
   overflow: visible;
   cursor: default !important;
 }
@@ -39,28 +41,38 @@
 #taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view h3 #dTitle.is-repeat-scope,
 .app.app--with-global-nav #taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view h3 #dTitle.is-repeat-scope {
   position: static;
-  width: auto;
+  width: 100%;
   max-width: none;
   display: inline-flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  min-width: 0;
-  text-align: left;
+  align-items: center;
+  justify-content: center;
+  min-width: 100%;
+  text-align: center;
   overflow: visible;
   pointer-events: none;
 }
 
 .repeat-title {
+  --repeat-title-icon-gap: 16px;
+  --repeat-title-icon-size: 2.9rem;
+  --repeat-title-icon-offset-y: .15rem;
+  --repeat-title-icon-space: calc(var(--repeat-title-icon-size) + var(--repeat-title-icon-gap));
   position: relative;
   display: inline-flex;
   align-items: flex-start;
-  gap: 16px;
-  min-width: 0;
+  justify-content: center;
+  gap: 0;
+  min-width: max-content;
+  padding-left: var(--repeat-title-icon-space);
+  padding-right: var(--repeat-title-icon-space);
 }
 
 .repeat-title__icon {
-  width: 2.9rem;
-  height: 2.9rem;
+  position: absolute;
+  top: var(--repeat-title-icon-offset-y);
+  left: 0;
+  width: var(--repeat-title-icon-size);
+  height: var(--repeat-title-icon-size);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -82,10 +94,12 @@
 }
 
 .repeat-title__copy {
-  min-width: 0;
+  min-width: max-content;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 5px;
+  text-align: center;
 }
 
 .repeat-title__main {
@@ -1155,12 +1169,11 @@
 
 @media (max-width: 640px) {
   .repeat-title {
-    gap: 12px;
+    --repeat-title-icon-gap: 12px;
+    --repeat-title-icon-size: 2.55rem;
   }
 
   .repeat-title__icon {
-    width: 2.55rem;
-    height: 2.55rem;
     border-radius: .9rem;
   }
 

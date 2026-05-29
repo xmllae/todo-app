@@ -4199,7 +4199,9 @@
 
 #taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue .nav-arrow,
 .app.app--with-global-nav #taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue .nav-arrow {
-  display: none !important;
+  display: inline-flex !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 #taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue,
@@ -4214,10 +4216,10 @@
   animation: none !important;
   transition: none !important;
   transform: none !important;
-  justify-content: flex-start !important;
-  flex: 0 1 auto !important;
-  width: auto !important;
-  min-width: 0 !important;
+  justify-content: center !important;
+  flex: 0 0 var(--date-nav-title-slot-w) !important;
+  width: var(--date-nav-title-slot-w) !important;
+  min-width: var(--date-nav-title-slot-w) !important;
   overflow: visible !important;
   cursor: default !important;
 }
@@ -4229,12 +4231,12 @@
 
 #taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue h3 #dTitle.is-overdue-scope,
 .app.app--with-global-nav #taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue h3 #dTitle.is-overdue-scope {
-  width: auto !important;
-  max-width: 100% !important;
-  min-width: 0 !important;
-  align-items: flex-start !important;
-  justify-content: flex-start !important;
-  text-align: left !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 100% !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
   animation: none !important;
   transition: none !important;
   transform: none !important;
