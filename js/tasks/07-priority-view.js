@@ -205,9 +205,12 @@
       '<h4 class="priority-group__title">' +
       '<span class="priority-group__title-label">' +
       esc(group.title) +
-      '</span><span class="priority-group__count">（' +
+      '</span><span class="priority-group__count">' +
+      '<span class="priority-group__count-bracket">\uFF08 </span>' +
+      '<span class="priority-group__count-number">' +
       group.count +
-      "）</span></h4>" +
+      '</span><span class="priority-group__count-bracket"> \uFF09</span>' +
+      "</span></h4>" +
       priorityGroupHeaderDecorationHtml(group.key) +
       "</div>"
     );

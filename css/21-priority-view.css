@@ -202,6 +202,8 @@
   --priority-today: #fb923c;
   --priority-week: #6366f1;
   --priority-later: #94a3b8;
+  --priority-today-count: #eab308;
+  --priority-later-count: #3b82f6;
   display: flex;
   flex-direction: column;
   gap: 1.15rem;
@@ -289,15 +291,21 @@
   line-height: 1.2;
   font-weight: 760;
   letter-spacing: -.01em;
+  color: #000;
   white-space: nowrap;
 }
 
 .priority-group__count {
   font-size: 1em;
   line-height: 1.2;
-  font-weight: 500;
+  font-weight: 760;
   letter-spacing: -.01em;
+  color: #000;
   white-space: nowrap;
+}
+
+.priority-group__count-number {
+  font-weight: inherit;
 }
 
 .priority-group__header-decoration {
@@ -333,11 +341,7 @@
   display: block;
 }
 
-.priority-group--overdue .priority-group__title {
-  color: var(--priority-overdue);
-}
-
-.priority-group--overdue .priority-group__count {
+.priority-group--overdue .priority-group__count-number {
   color: var(--priority-overdue);
 }
 
@@ -346,12 +350,8 @@
   color: rgba(239, 68, 68, .76);
 }
 
-.priority-group--today .priority-group__title {
-  color: var(--priority-today);
-}
-
-.priority-group--today .priority-group__count {
-  color: var(--priority-today);
+.priority-group--today .priority-group__count-number {
+  color: var(--priority-today-count);
 }
 
 .priority-group--today .priority-group__header-badge {
@@ -359,20 +359,12 @@
   color: rgba(251, 146, 60, .72);
 }
 
-.priority-group--week .priority-group__title {
+.priority-group--week .priority-group__count-number {
   color: var(--priority-week);
 }
 
-.priority-group--week .priority-group__count {
-  color: var(--priority-week);
-}
-
-.priority-group--later .priority-group__title {
-  color: var(--priority-later);
-}
-
-.priority-group--later .priority-group__count {
-  color: var(--priority-later);
+.priority-group--later .priority-group__count-number {
+  color: var(--priority-later-count);
 }
 
 .priority-group--later .priority-group__header-badge {
@@ -501,7 +493,7 @@
   min-width: 0;
   font-size: .96rem;
   line-height: 1.3;
-  font-weight: 700;
+  font-weight: 500;
   color: #0f172a;
 }
 
@@ -900,9 +892,18 @@
   --priority-group-header-surface: var(--card, #0f172a);
 }
 
+.dark .priority-group__title,
+.dark .priority-group__count {
+  color: #f8fafc;
+}
+
 .dark .priority-group__header-badge {
   background: rgba(15, 23, 42, .72);
   box-shadow: none;
+}
+
+.dark .priority-group--overdue .priority-group__count-number {
+  color: #fca5a5;
 }
 
 .dark .priority-group--overdue .priority-group__header-badge {
@@ -910,9 +911,21 @@
   color: rgba(248, 113, 113, .88);
 }
 
+.dark .priority-group--today .priority-group__count-number {
+  color: #facc15;
+}
+
 .dark .priority-group--today .priority-group__header-badge {
   border-color: rgba(251, 146, 60, .24);
   color: #fdba74;
+}
+
+.dark .priority-group--week .priority-group__count-number {
+  color: #a5b4fc;
+}
+
+.dark .priority-group--later .priority-group__count-number {
+  color: #93c5fd;
 }
 
 .dark .priority-group--later .priority-group__header-badge {
