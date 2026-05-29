@@ -162,10 +162,6 @@
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"></path><path d="M7 12h10"></path><path d="M10 17h4"></path></svg>';
   }
 
-  function ringMarkerIconMarkup() {
-    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7.4v5.2"></path><circle cx="12" cy="16.6" r="1"></circle></svg>';
-  }
-
   function priorityGroupHeaderDecorationHtml() {
     return (
       '<div class="priority-group__header-decoration" aria-hidden="true">' +
@@ -572,11 +568,7 @@
       entry.ds +
       "')\">" +
       '<span class="priority-task-card__lead" aria-hidden="true">' +
-      '<span class="priority-task-card__marker priority-task-card__marker--' +
-      sectionTone +
-      '">' +
-      ringMarkerIconMarkup() +
-      "</span></span>" +
+      '<span class="priority-task-card__marker priority-task-card__marker--priority-high"></span></span>' +
       '<span class="priority-task-card__copy">' +
       '<span class="priority-task-card__title-row">' +
       '<strong class="priority-task-card__title" title="' +

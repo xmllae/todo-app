@@ -204,6 +204,12 @@
   --priority-later: #94a3b8;
   --priority-today-count: #eab308;
   --priority-later-count: #3b82f6;
+  --priority-task-check-slot-width: 2.125rem;
+  --priority-task-check-slot-height: 1.375rem;
+  --priority-task-check-size: 1.125rem;
+  --priority-task-check-border: 1.75px;
+  --priority-task-check-accent: #d1453b;
+  --priority-task-check-accent-bg: #faeceb;
   display: flex;
   flex-direction: column;
   gap: 1.15rem;
@@ -404,38 +410,29 @@
 
 .priority-task-card__lead {
   flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--priority-task-check-slot-width);
+  min-width: var(--priority-task-check-slot-width);
+  height: var(--priority-task-check-slot-height);
+  margin-top: -.0625rem;
 }
 
 .priority-task-card__marker {
-  width: 1.48rem;
-  height: 1.48rem;
+  width: var(--priority-task-check-size);
+  height: var(--priority-task-check-size);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  border: 1.45px solid currentColor;
+  border: var(--priority-task-check-border) solid var(--priority-task-check-accent);
+  background: var(--priority-task-check-accent-bg);
+  box-sizing: border-box;
 }
 
-.priority-task-card__marker svg {
-  width: .88rem;
-  height: .88rem;
-  display: block;
-}
-
-.priority-task-card__marker--overdue {
-  color: var(--priority-overdue);
-}
-
-.priority-task-card__marker--today {
-  color: var(--priority-today);
-}
-
-.priority-task-card__marker--week {
-  color: var(--priority-week);
-}
-
-.priority-task-card__marker--later {
-  color: var(--priority-later);
+.priority-task-card__marker--priority-high {
+  color: var(--priority-task-check-accent);
 }
 
 .priority-task-card__copy,
