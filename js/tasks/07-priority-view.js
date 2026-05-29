@@ -7,10 +7,10 @@
   var PRIORITY_NAV_CLASS = "date-nav--priority";
   var PRIORITY_SHELL_CLASS = "priority-action-shell";
   var PRIORITY_TABS = ["all", "week", "overdue", "today"];
-  var PRIORITY_SORT_MODES = ["date", "time", "title"];
+  var PRIORITY_SORT_MODES = ["title", "time"];
   var PRIORITY_LATER_TITLE = "\u4e4b\u540e7\u5929\u5185";
   var priorityViewTab = "all";
-  var priorityViewSortMode = "date";
+  var priorityViewSortMode = "title";
 
   function isPriorityMode() {
     return typeof getTaskQuickMode === "function" && getTaskQuickMode() === PRIORITY_MODE;
@@ -42,20 +42,13 @@
   }
 
   function normalizePrioritySortMode(mode) {
-    return PRIORITY_SORT_MODES.indexOf(mode) >= 0 ? mode : "date";
-  }
-
-  function getPriorityTabLabel(tab) {
-    if (tab === "week") return "本周";
-    if (tab === "overdue") return "逾期";
-    if (tab === "today") return "今天";
-    return "全部";
+    return PRIORITY_SORT_MODES.indexOf(mode) >= 0 ? mode : "title";
   }
 
   function getPrioritySortLabel(mode) {
     if (mode === "time") return "按时间排序";
     if (mode === "title") return "按名称排序";
-    return "按日期排序";
+    return "按名称排序";
   }
 
   function getPriorityHeaderToolsHost() {
@@ -77,19 +70,23 @@
     if (host && host.parentNode) host.parentNode.removeChild(host);
   }
 
-  function syncPriorityHeaderToolsHost(host) {
-    if (!host) return;
-    host.querySelectorAll(".priority-header-tool").forEach(function (button, index) {
-      if (index > 0 && button.parentNode) button.parentNode.removeChild(button);
-    });
-  }
-
   function syncPriorityLaterGroupTitles(root) {
     if (!root) return;
     root.querySelectorAll(".priority-group--later .priority-group__title").forEach(function (title) {
       var suffixMatch = (title.textContent || "").match(/\s*\(\d+\)\s*$/);
       title.textContent = PRIORITY_LATER_TITLE + (suffixMatch ? suffixMatch[0] : "");
     });
+  }
+
+  function shouldKeepPriorityGroup(grouped, groupKey, tab) {
+    if (tab !== "all") return !!grouped[groupKey].length;
+    if (groupKey === "today") return true;
+    return !!grouped[groupKey].length;
+  }
+
+  function getPriorityGroupEmptyText(groupKey) {
+    if (groupKey === "today") return "今天暂无高优先级任务";
+    return "";
   }
 
   function setArrowAvailability(dateNav, disabled) {
@@ -172,10 +169,6 @@
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"></path><path d="M7 12h10"></path><path d="M10 17h4"></path></svg>';
   }
 
-  function filterIconMarkup() {
-    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18l-7 8v5l-4 2v-7z"></path></svg>';
-  }
-
   function moreIconMarkup() {
     return '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.9"></circle><circle cx="12" cy="12" r="1.9"></circle><circle cx="19" cy="12" r="1.9"></circle></svg>';
   }
@@ -196,19 +189,6 @@
       "</span>" +
       '<span class="priority-header-tool__label">' +
       esc(getPrioritySortLabel(priorityViewSortMode)) +
-      "</span></button>" +
-      '<button type="button" class="priority-header-tool" onclick="cyclePriorityViewTab()" title="筛选：' +
-      getPriorityTabLabel(priorityViewTab) +
-      '" aria-label="筛选：' +
-      getPriorityTabLabel(priorityViewTab) +
-      '">' +
-      '<span class="priority-header-tool__icon" aria-hidden="true">' +
-      filterIconMarkup() +
-      "</span>" +
-      '<span class="priority-header-tool__label">筛选</span></button>' +
-      '<button type="button" class="priority-header-tool priority-header-tool--icon" onclick="resetPriorityViewOptions()" title="重置视图" aria-label="重置视图">' +
-      '<span class="priority-header-tool__icon" aria-hidden="true">' +
-      moreIconMarkup() +
       "</span></button>"
     );
   }
@@ -261,7 +241,6 @@
     var toolsHost = getPriorityHeaderToolsHost();
     if (toolsHost) {
       toolsHost.innerHTML = getPriorityHeaderToolsMarkup();
-      syncPriorityHeaderToolsHost(toolsHost);
     }
   }
 
@@ -428,6 +407,15 @@
     if (grouped.week.length) groups.push({ key: "week", title: "本周", count: grouped.week.length, items: grouped.week });
     if (grouped.later.length) groups.push({ key: "later", title: "之后", count: grouped.later.length, items: grouped.later });
 
+    if (tab === "all" && !groups.some(function (group) { return group.key === "today"; })) {
+      var todayGroup = { key: "today", title: "\u4eca\u5929", count: 0, items: [] };
+      var todayInsertIndex = groups.findIndex(function (group) {
+        return group.key === "week" || group.key === "later";
+      });
+      if (todayInsertIndex === -1) groups.push(todayGroup);
+      else groups.splice(todayInsertIndex, 0, todayGroup);
+    }
+
     return {
       filteredEntries: filteredEntries,
       groups: groups
@@ -549,6 +537,14 @@
 
     return state.groups
       .map(function (group) {
+        var groupBody = group.items.length
+          ? group.items
+              .map(function (entry) {
+                return priorityTaskCardHtml(entry, group.key);
+              })
+              .join("")
+          : '<div class="priority-group__empty">' + esc(getPriorityGroupEmptyText(group.key)) + "</div>";
+
         return (
           '<section class="priority-group priority-group--' +
           group.key +
@@ -559,11 +555,7 @@
           group.count +
           ")</h4></div>" +
           '<div class="priority-group__list">' +
-          group.items
-            .map(function (entry) {
-              return priorityTaskCardHtml(entry, group.key);
-            })
-            .join("") +
+          groupBody +
           "</div></section>"
         );
       })
@@ -736,21 +728,9 @@
     if (typeof rT === "function") rT();
   };
 
-  window.cyclePriorityViewTab = function () {
-    var currentIndex = PRIORITY_TABS.indexOf(normalizePriorityTab(priorityViewTab));
-    priorityViewTab = PRIORITY_TABS[(currentIndex + 1) % PRIORITY_TABS.length];
-    if (typeof rT === "function") rT();
-  };
-
   window.cyclePriorityViewSortMode = function () {
     var currentIndex = PRIORITY_SORT_MODES.indexOf(normalizePrioritySortMode(priorityViewSortMode));
     priorityViewSortMode = PRIORITY_SORT_MODES[(currentIndex + 1) % PRIORITY_SORT_MODES.length];
-    if (typeof rT === "function") rT();
-  };
-
-  window.resetPriorityViewOptions = function () {
-    priorityViewTab = "all";
-    priorityViewSortMode = "date";
     if (typeof rT === "function") rT();
   };
 
