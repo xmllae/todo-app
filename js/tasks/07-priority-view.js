@@ -596,28 +596,67 @@
     );
   }
 
+  function getPrioritySceneEmptyCopy(state) {
+    if (state.activeTab === "today") {
+      return {
+        title: "今天没有高优先级任务",
+        sub: "好好休息，为明天积蓄能量吧"
+      };
+    }
+    if (state.activeTab === "overdue") {
+      return {
+        title: "没有逾期的高优先级任务",
+        sub: "做得不错，重要的事情都还在节奏内。"
+      };
+    }
+    if (state.activeTab === "week") {
+      return {
+        title: "本周没有高优先级任务",
+        sub: "把注意力留给今天最重要的事，也很好。"
+      };
+    }
+    if (!state.totalCount) {
+      return {
+        title: "还没有高优先级任务",
+        sub: "把真正需要优先推进的事项标记为高优先级，它们会集中展示在这里。"
+      };
+    }
+    return {
+      title: "当前筛选下没有高优先级任务",
+      sub: "切换上面的标签，看看其它时间段的重点任务。"
+    };
+  }
+
+  function prioritySceneEmptyIllustrationMarkup() {
+    return (
+      '<svg class="priority-scene__empty-svg" viewBox="0 0 240 180" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+      '<ellipse cx="120" cy="150" rx="66" ry="13" fill="var(--priority-empty-shadow)"/>' +
+      '<circle cx="28" cy="108" r="4.5" fill="var(--priority-empty-dot)" opacity=".7"/>' +
+      '<circle cx="212" cy="104" r="4.5" fill="var(--priority-empty-dot)" opacity=".7"/>' +
+      '<rect x="84" y="24" width="72" height="98" rx="20" stroke="var(--priority-empty-ink)" stroke-width="10"/>' +
+      '<path d="M104 24C104 14.6112 111.611 7 121 7H119C128.389 7 136 14.6112 136 24V30H104V24Z" fill="white" stroke="var(--priority-empty-ink)" stroke-width="10" stroke-linejoin="round"/>' +
+      '<path d="M105 61H135" stroke="var(--priority-empty-ink-strong)" stroke-width="8" stroke-linecap="round"/>' +
+      '<path d="M105 80H135" stroke="var(--priority-empty-ink-strong)" stroke-width="8" stroke-linecap="round"/>' +
+      '<path d="M105 99H128" stroke="var(--priority-empty-ink-strong)" stroke-width="8" stroke-linecap="round"/>' +
+      '<circle cx="151" cy="112" r="20" fill="white" stroke="var(--priority-empty-accent)" stroke-width="6"/>' +
+      '<path d="M141 112.5L148.2 119.5L160.5 105.8" stroke="var(--priority-empty-accent)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>' +
+      "</svg>"
+    );
+  }
+
   function priorityGroupsHtml(state) {
     if (!state.filteredCount) {
-      var emptyTitle = state.totalCount
-        ? "当前筛选下没有高优先级任务"
-        : "当前还没有高优先级任务";
-      var emptySub = state.totalCount
-        ? "切换上面的标签，看看其它时间段的重点任务。"
-        : "把真正需要优先推进的事项标记成高优先级，它们会集中展示在这里。";
+      var emptyCopy = getPrioritySceneEmptyCopy(state);
       return (
         '<div class="priority-scene__empty">' +
-        '<div class="priority-scene__empty-icon" aria-hidden="true">' +
-        priorityFlagMarkup() +
+        '<div class="priority-scene__empty-illustration" aria-hidden="true">' +
+        prioritySceneEmptyIllustrationMarkup() +
         "</div>" +
         '<p class="priority-scene__empty-title">' +
-        emptyTitle +
+        esc(emptyCopy.title) +
         '</p><p class="priority-scene__empty-sub">' +
-        emptySub +
-        "</p>" +
-        (state.totalCount && state.activeTab !== "all"
-          ? '<button type="button" class="priority-scene__empty-action" onclick="setPriorityViewTab(\'all\')">查看全部</button>'
-          : "") +
-        "</div>"
+        esc(emptyCopy.sub) +
+        "</p></div>"
       );
     }
 
