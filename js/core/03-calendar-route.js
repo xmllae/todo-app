@@ -4,6 +4,43 @@ function cntDot(ds){if(!T[ds]||!T[ds].length)return"";const active=T[ds].filter(
 function chgM(d){cM+=d;if(cM>11){cM=0;cY++}if(cM<0){cM=11;cY--}rCal()}
 function getGlobalQuickMode(){return typeof getGlobalSideNavQuickMode==="function"?getGlobalSideNavQuickMode():""}
 function clearGlobalQuickMode(){if(typeof setGlobalSideNavQuickMode==="function")setGlobalSideNavQuickMode("",true)}
+let _taskTitleNoMotionBudget=0;
+let _taskTitleNoMotionUntil=0;
+let _taskTitleNoMotionClassTimer=null;
+function syncTaskTitleNoMotionClass(){
+  const taskModeEl=document.getElementById("taskMode");
+  if(!taskModeEl)return;
+  taskModeEl.classList.add("task-mode--title-no-motion");
+  if(_taskTitleNoMotionClassTimer){
+    clearTimeout(_taskTitleNoMotionClassTimer);
+    _taskTitleNoMotionClassTimer=null;
+  }
+  _taskTitleNoMotionClassTimer=setTimeout(function(){
+    const el=document.getElementById("taskMode");
+    if(el)el.classList.remove("task-mode--title-no-motion");
+    _taskTitleNoMotionClassTimer=null;
+  },420);
+}
+function markTaskTitleNoMotion(){
+  // Side-nav jumps can trigger a few sync re-renders in a row, so keep
+  // a short-lived budget instead of a single one-shot flag.
+  _taskTitleNoMotionBudget=6;
+  _taskTitleNoMotionUntil=Date.now()+500;
+  syncTaskTitleNoMotionClass();
+}
+function consumeTaskTitleNoMotion(){
+  if(_taskTitleNoMotionBudget<=0)return false;
+  if(Date.now()>_taskTitleNoMotionUntil){
+    _taskTitleNoMotionBudget=0;
+    _taskTitleNoMotionUntil=0;
+    return false;
+  }
+  _taskTitleNoMotionBudget=Math.max(0,_taskTitleNoMotionBudget-1);
+  if(_taskTitleNoMotionBudget===0)_taskTitleNoMotionUntil=0;
+  return true;
+}
+window.markTaskTitleNoMotion=markTaskTitleNoMotion;
+window.consumeTaskTitleNoMotion=consumeTaskTitleNoMotion;
 function goToday(keepWeekMode){flushPendingTogIfAny();const qm=getGlobalQuickMode();if(keepWeekMode&&qm==="week"){if(typeof setGlobalSideNavQuickMode==="function")setGlobalSideNavQuickMode("week",true)}else clearGlobalQuickMode();cY=now.getFullYear();cM=now.getMonth();sel=fd(now);expandedId=null;if(typeof clearSubtaskCollapseOverrides==="function")clearSubtaskCollapseOverrides();closeTaskMoreFloat();taskMoreMenuId=null;rCal();rAll()}
 function pick(ds){flushPendingTogIfAny();clearGlobalQuickMode();sel=ds;const p=ds.split("-");cY=+p[0];cM=+p[1]-1;expandedId=null;if(typeof clearSubtaskCollapseOverrides==="function")clearSubtaskCollapseOverrides();closeTaskMoreFloat();taskMoreMenuId=null;rCal();rAll();if(window.innerWidth<640)closeSidebar()}
 function quickGo(o){if(o===0){goToday(getGlobalQuickMode()==="week");return}flushPendingTogIfAny();const qm=getGlobalQuickMode();const d=parseDS(sel);d.setDate(d.getDate()+(qm==="week"?o*7:o));sel=fd(d);if(qm!=="week")clearGlobalQuickMode();cY=d.getFullYear();cM=d.getMonth();expandedId=null;if(typeof clearSubtaskCollapseOverrides==="function")clearSubtaskCollapseOverrides();closeTaskMoreFloat();taskMoreMenuId=null;rCal();rAll()}

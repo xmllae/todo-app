@@ -1521,7 +1521,124 @@ function renderWeekTaskScene(list,baseDs){
   initWeekViewPressFeedback(list);
   return{allTasks:weekAllTasks,filteredTasks:weekFilteredTasks,totalAll:totalAll,doneAll:doneAll,rangeText:rangeText,expandableDays:expandableDays,allExpanded:expandableDays.length>0&&expandableDays.every(function(ds){return isWeekDayExpanded(ds)})}
 }
-function setTaskDateTitle(ds){const el=document.getElementById("dTitle");if(!el)return;let mainEl=el.querySelector(".date-nav-date-main"),subEl=el.querySelector(".date-nav-date-sub");if(!mainEl||!subEl){el.innerHTML='<span class="date-nav-date-main"></span><span class="date-nav-date-sub"></span>';mainEl=el.querySelector(".date-nav-date-main");subEl=el.querySelector(".date-nav-date-sub")}mainEl.style.display="block";mainEl.style.fontFamily='-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif';mainEl.style.fontSize="24px";mainEl.style.fontWeight="700";mainEl.style.lineHeight="1";mainEl.style.letterSpacing="-0.025em";mainEl.style.color="#0f172a";mainEl.style.margin="0 0 4px 0";subEl.style.display="block";subEl.style.fontFamily='-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif';subEl.style.fontSize="13px";subEl.style.fontWeight="500";subEl.style.lineHeight="1.5";subEl.style.letterSpacing="0.025em";subEl.style.color="#64748b";subEl.style.margin="0";if(!el.dataset.animBound){el.dataset.animBound="1";el.addEventListener("animationend",function(){el.classList.remove("is-animating");el.classList.remove("is-animating-prev");el.classList.remove("is-animating-next")})}const isWeekScope=getTaskQuickMode()==="week";let useRangeOffset=false,useRelative=false,mainText="",subText="",modeKey="d";if(isWeekScope){mainText=getTaskWeekScopeTitle(ds);subText=getTaskWeekRangeText(getTaskWeekMeta(ds));modeKey="week"}else{const text=String(disp(ds)||""),splitIdx=text.lastIndexOf(" "),dateText=splitIdx>0?text.slice(0,splitIdx):text,weekText=splitIdx>0?text.slice(splitIdx+1):"";let dayOffset=99;try{const base=parseDS(fd(now)),target=parseDS(ds);if(base&&target){const baseDate=new Date(base.getFullYear(),base.getMonth(),base.getDate()),targetDate=new Date(target.getFullYear(),target.getMonth(),target.getDate());dayOffset=Math.round((targetDate-baseDate)/86400000)}}catch(e){}const abs=Math.abs(dayOffset);let relativeText="";if(dayOffset===0)relativeText="\u4eca\u5929";else if(dayOffset===1)relativeText="\u660e\u5929";else if(dayOffset===2)relativeText="\u540e\u5929";else if(dayOffset===-1)relativeText="\u6628\u5929";else if(dayOffset===-2)relativeText="\u524d\u5929";useRangeOffset=abs>=3;useRelative=!useRangeOffset&&!!relativeText;const rangeText=dayOffset>0?"\u672a\u6765"+abs+"\u5929":"\u8fc7\u53bb"+abs+"\u5929";mainText=useRangeOffset?rangeText:(useRelative?relativeText:dateText);subText=useRangeOffset?dateText+(weekText?" "+weekText:""):(useRelative?dateText+(weekText?" "+weekText:""):weekText);modeKey=useRangeOffset?"range":(useRelative?"r":"d")}const renderKey=ds+"|"+modeKey+"|"+mainText+"|"+subText,prevKey=el.dataset.renderKey||"",prevDs=el.dataset.lastDs||"",shouldUpdate=prevKey!==renderKey;if(shouldUpdate){mainEl.textContent=mainText;subEl.textContent=subText;el.classList.toggle("is-week-scope",isWeekScope);el.classList.toggle("is-range-offset",!isWeekScope&&useRangeOffset);el.classList.toggle("is-relative",!isWeekScope&&useRelative);el.classList.toggle("is-plain-date",!isWeekScope&&!useRangeOffset&&!useRelative);subEl.classList.toggle("is-empty",!subText);const shouldAnimate=!!prevDs&&prevDs!==ds;el.classList.remove("is-animating");el.classList.remove("is-animating-prev");el.classList.remove("is-animating-next");if(shouldAnimate){let dirCls="";try{const prevDate=parseDS(prevDs),nextDate=parseDS(ds);if(prevDate&&nextDate){const prevTime=new Date(prevDate.getFullYear(),prevDate.getMonth(),prevDate.getDate()).getTime(),nextTime=new Date(nextDate.getFullYear(),nextDate.getMonth(),nextDate.getDate()).getTime();if(nextTime>prevTime)dirCls="is-animating-next";else if(nextTime<prevTime)dirCls="is-animating-prev"}}catch(e){}if(dirCls)el.classList.add(dirCls);void el.offsetWidth;el.classList.add("is-animating")}el.dataset.renderKey=renderKey;el.dataset.lastDs=ds}else{el.classList.remove("is-animating");el.classList.remove("is-animating-prev");el.classList.remove("is-animating-next");el.classList.toggle("is-week-scope",isWeekScope);el.classList.toggle("is-range-offset",!isWeekScope&&useRangeOffset);el.classList.toggle("is-relative",!isWeekScope&&useRelative);el.classList.toggle("is-plain-date",!isWeekScope&&!useRangeOffset&&!useRelative);if(subEl.classList.contains("is-empty")===!!subText)subEl.classList.toggle("is-empty",!subText)}setTaskBackTodayBtn(ds)}
+function isTaskCustomHeaderMode(mode){
+  return mode==="overdue"||mode==="priority-high"||mode==="repeat-view"
+}
+function setTaskDateTitle(ds){
+  const el=document.getElementById("dTitle");
+  if(!el)return;
+  const quickMode=getTaskQuickMode();
+  const suppressMotion=typeof window.consumeTaskTitleNoMotion==="function"&&window.consumeTaskTitleNoMotion();
+  let mainEl=el.querySelector(".date-nav-date-main"),subEl=el.querySelector(".date-nav-date-sub");
+  if(!mainEl||!subEl){
+    el.innerHTML='<span class="date-nav-date-main"></span><span class="date-nav-date-sub"></span>';
+    mainEl=el.querySelector(".date-nav-date-main");
+    subEl=el.querySelector(".date-nav-date-sub")
+  }
+  if(!mainEl||!subEl)return;
+  mainEl.style.display="block";
+  mainEl.style.fontFamily='-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif';
+  mainEl.style.fontSize="24px";
+  mainEl.style.fontWeight="700";
+  mainEl.style.lineHeight="1";
+  mainEl.style.letterSpacing="-0.025em";
+  mainEl.style.color="#0f172a";
+  mainEl.style.margin="0 0 4px 0";
+  subEl.style.display="block";
+  subEl.style.fontFamily='-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif';
+  subEl.style.fontSize="13px";
+  subEl.style.fontWeight="500";
+  subEl.style.lineHeight="1.5";
+  subEl.style.letterSpacing="0.025em";
+  subEl.style.color="#64748b";
+  subEl.style.margin="0";
+  if(!el.dataset.animBound){
+    el.dataset.animBound="1";
+    el.addEventListener("animationend",function(){
+      el.classList.remove("is-animating");
+      el.classList.remove("is-animating-prev");
+      el.classList.remove("is-animating-next")
+    })
+  }
+  el.classList.remove("is-animating");
+  el.classList.remove("is-animating-prev");
+  el.classList.remove("is-animating-next");
+  if(isTaskCustomHeaderMode(quickMode))return;
+  const isWeekScope=quickMode==="week";
+  let useRangeOffset=false,useRelative=false,mainText="",subText="",modeKey="d";
+  if(isWeekScope){
+    mainText=getTaskWeekScopeTitle(ds);
+    subText=getTaskWeekRangeText(getTaskWeekMeta(ds));
+    modeKey="week"
+  }else{
+    const text=String(disp(ds)||"");
+    const splitIdx=text.lastIndexOf(" ");
+    const dateText=splitIdx>0?text.slice(0,splitIdx):text;
+    const weekText=splitIdx>0?text.slice(splitIdx+1):"";
+    let dayOffset=99;
+    try{
+      const base=parseDS(fd(now)),target=parseDS(ds);
+      if(base&&target){
+        const baseDate=new Date(base.getFullYear(),base.getMonth(),base.getDate());
+        const targetDate=new Date(target.getFullYear(),target.getMonth(),target.getDate());
+        dayOffset=Math.round((targetDate-baseDate)/86400000)
+      }
+    }catch(e){}
+    const abs=Math.abs(dayOffset);
+    let relativeText="";
+    if(dayOffset===0)relativeText="\u4eca\u5929";
+    else if(dayOffset===1)relativeText="\u660e\u5929";
+    else if(dayOffset===2)relativeText="\u540e\u5929";
+    else if(dayOffset===-1)relativeText="\u6628\u5929";
+    else if(dayOffset===-2)relativeText="\u524d\u5929";
+    useRangeOffset=abs>=3;
+    useRelative=!useRangeOffset&&!!relativeText;
+    const rangeText=dayOffset>0?"\u672a\u6765"+abs+"\u5929":"\u8fc7\u53bb"+abs+"\u5929";
+    mainText=useRangeOffset?rangeText:(useRelative?relativeText:dateText);
+    subText=useRangeOffset?dateText+(weekText?" "+weekText:""):(useRelative?dateText+(weekText?" "+weekText:""):weekText);
+    modeKey=useRangeOffset?"range":(useRelative?"r":"d")
+  }
+  const renderKey=ds+"|"+modeKey+"|"+mainText+"|"+subText;
+  const prevKey=el.dataset.renderKey||"";
+  const prevDs=el.dataset.lastDs||"";
+  const shouldUpdate=prevKey!==renderKey;
+  if(shouldUpdate){
+    mainEl.textContent=mainText;
+    subEl.textContent=subText;
+    el.classList.remove("is-overdue-scope","is-priority-scope","is-repeat-scope");
+    el.classList.toggle("is-week-scope",isWeekScope);
+    el.classList.toggle("is-range-offset",!isWeekScope&&useRangeOffset);
+    el.classList.toggle("is-relative",!isWeekScope&&useRelative);
+    el.classList.toggle("is-plain-date",!isWeekScope&&!useRangeOffset&&!useRelative);
+    subEl.classList.toggle("is-empty",!subText);
+    const shouldAnimate=!!prevDs&&prevDs!==ds&&!suppressMotion&&!isTaskCustomHeaderMode(prevDs);
+    if(shouldAnimate){
+      let dirCls="";
+      try{
+        const prevDate=parseDS(prevDs),nextDate=parseDS(ds);
+        if(prevDate&&nextDate){
+          const prevTime=new Date(prevDate.getFullYear(),prevDate.getMonth(),prevDate.getDate()).getTime();
+          const nextTime=new Date(nextDate.getFullYear(),nextDate.getMonth(),nextDate.getDate()).getTime();
+          if(nextTime>prevTime)dirCls="is-animating-next";
+          else if(nextTime<prevTime)dirCls="is-animating-prev"
+        }
+      }catch(e){}
+      if(dirCls)el.classList.add(dirCls);
+      void el.offsetWidth;
+      el.classList.add("is-animating")
+    }
+    el.dataset.renderKey=renderKey;
+    el.dataset.lastDs=ds
+  }else{
+    el.classList.remove("is-overdue-scope","is-priority-scope","is-repeat-scope");
+    el.classList.toggle("is-week-scope",isWeekScope);
+    el.classList.toggle("is-range-offset",!isWeekScope&&useRangeOffset);
+    el.classList.toggle("is-relative",!isWeekScope&&useRelative);
+    el.classList.toggle("is-plain-date",!isWeekScope&&!useRangeOffset&&!useRelative);
+    if(subEl.classList.contains("is-empty")===!!subText)subEl.classList.toggle("is-empty",!subText)
+  }
+  setTaskBackTodayBtn(ds)
+}
 function taskCompleteEmptyIconMarkup(){return'<svg class="empty-complete-illustration" width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><circle cx="60" cy="60" r="50" fill="#ECFDF5"/><circle cx="60" cy="60" r="36" fill="#D1FAE5"/><path d="M48 60L56 68L74 50" stroke="#10B981" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M30 36L31.5 31.5L36 30L31.5 28.5L30 24L28.5 28.5L24 30L28.5 31.5L30 36Z" fill="#34D399"/><path d="M88 34L89 31L92 30L89 29L88 26L87 29L84 30L87 31L88 34Z" fill="#6EE7B7"/><path d="M82 86L82.5 84.5L84 84L82.5 83.5L82 82L81.5 83.5L80 84L81.5 84.5L82 86Z" fill="#A7F3D0"/></svg>'}
 function rT(){
   if(_togPendingDoneId!=null){flushPendingTogIfAny();return}

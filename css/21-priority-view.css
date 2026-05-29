@@ -7,19 +7,18 @@
 
 #taskMode.task-mode--priority-view .task-main-col > .task-card > .date-nav.date-nav--priority .nav-arrow,
 .app.app--with-global-nav #taskMode.task-mode--priority-view .task-main-col > .task-card > .date-nav.date-nav--priority .nav-arrow {
-  visibility: hidden !important;
-  pointer-events: none !important;
+  display: none !important;
 }
 
 #taskMode.task-mode--priority-view .task-main-col > .task-card > .date-nav.date-nav--priority h3,
 .app.app--with-global-nav #taskMode.task-mode--priority-view .task-main-col > .task-card > .date-nav.date-nav--priority h3 {
   position: relative;
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 var(--date-nav-title-slot-w);
-  width: var(--date-nav-title-slot-w);
-  min-width: var(--date-nav-title-slot-w);
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex: 0 1 auto;
+  width: auto;
+  min-width: 0;
   overflow: visible;
   cursor: default !important;
 }
@@ -37,32 +36,32 @@
 #taskMode.task-mode--priority-view .task-main-col > .task-card > .date-nav.date-nav--priority h3 #dTitle.is-priority-scope,
 .app.app--with-global-nav #taskMode.task-mode--priority-view .task-main-col > .task-card > .date-nav.date-nav--priority h3 #dTitle.is-priority-scope {
   position: static;
-  width: max-content;
-  max-width: none;
+  width: auto;
+  max-width: 100%;
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: max-content;
-  text-align: center;
+  align-items: flex-start;
+  justify-content: flex-start;
+  min-width: 0;
+  text-align: left;
   overflow: visible;
   pointer-events: none;
 }
 
 .priority-title {
   --priority-title-flag-gap: 14px;
+  --priority-title-flag-offset-y: .25rem;
   position: relative;
   display: inline-flex;
   align-items: flex-start;
-  justify-content: center;
-  width: max-content;
-  min-width: max-content;
+  justify-content: flex-start;
+  gap: var(--priority-title-flag-gap);
+  width: auto;
+  min-width: 0;
   margin: 0;
 }
 
 .priority-title__flag {
-  position: absolute;
-  top: 50%;
-  right: calc(100% + var(--priority-title-flag-gap));
+  position: static;
   width: 2.5rem;
   height: 2.5rem;
   display: inline-flex;
@@ -75,7 +74,7 @@
     inset 0 0 0 1px rgba(239, 68, 68, .12),
     0 10px 18px -16px rgba(239, 68, 68, .38);
   flex-shrink: 0;
-  transform: translateY(-50%);
+  margin-top: var(--priority-title-flag-offset-y);
 }
 
 .priority-title__flag-icon {
@@ -87,7 +86,7 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  min-width: max-content;
+  min-width: 0;
 }
 
 #taskMode.task-mode--priority-view .task-main-col > .task-card > .date-nav.date-nav--priority h3 #dTitle.is-priority-scope .priority-title__main,

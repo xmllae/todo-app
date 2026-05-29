@@ -506,6 +506,7 @@
 
   function selectDate(ds, quickName) {
     if (typeof flushPendingTogIfAny === "function") flushPendingTogIfAny();
+    if (typeof window.markTaskTitleNoMotion === "function") window.markTaskTitleNoMotion();
     var d = parseDS(ds);
     sel = ds;
     cY = d.getFullYear();
@@ -530,6 +531,7 @@
   }
 
   function applyFilter(key) {
+    if (typeof window.markTaskTitleNoMotion === "function") window.markTaskTitleNoMotion();
     setQuickModeValue("");
     persistState();
     gsnActiveProject = "";
@@ -546,6 +548,7 @@
   function applyProject(index) {
     var project = projects[Number(index)];
     if (!project) return;
+    if (typeof window.markTaskTitleNoMotion === "function") window.markTaskTitleNoMotion();
     setQuickModeValue("");
     persistState();
     gsnActiveProject = project.name;
