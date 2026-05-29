@@ -170,18 +170,27 @@
     );
   }
 
+  function priorityGroupCountHtml(count) {
+    if (!(count > 0)) return "";
+    return (
+      '<span class="priority-group__count">' +
+      '<span class="priority-group__count-bracket">\uFF08 </span>' +
+      '<span class="priority-group__count-number">' +
+      count +
+      '</span><span class="priority-group__count-bracket"> \uFF09</span>' +
+      "</span>"
+    );
+  }
+
   function priorityGroupHeaderHtml(group) {
     return (
       '<div class="priority-group__header">' +
       '<h4 class="priority-group__title">' +
       '<span class="priority-group__title-label">' +
       esc(group.title) +
-      '</span><span class="priority-group__count">' +
-      '<span class="priority-group__count-bracket">\uFF08 </span>' +
-      '<span class="priority-group__count-number">' +
-      group.count +
-      '</span><span class="priority-group__count-bracket"> \uFF09</span>' +
-      "</span></h4>" +
+      "</span>" +
+      priorityGroupCountHtml(group.count) +
+      "</h4>" +
       priorityGroupHeaderDecorationHtml(group.key) +
       "</div>"
     );
