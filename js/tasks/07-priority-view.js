@@ -6,12 +6,14 @@
   var PRIORITY_CLASS = "task-mode--priority-view";
   var PRIORITY_NAV_CLASS = "date-nav--priority";
   var PRIORITY_SHELL_CLASS = "priority-action-shell";
+  var PRIORITY_TAB_STORAGE_KEY = "todo_priority_view_tab_v1";
+  var PRIORITY_SORT_STORAGE_KEY = "todo_priority_view_sort_v1";
   var PRIORITY_TABS = ["all", "week", "overdue", "today"];
   var PRIORITY_SORT_MODES = ["title", "time"];
   var PRIORITY_LATER_WINDOW_DAYS = 7;
   var PRIORITY_LATER_TITLE = "\u4e4b\u540e 7 \u5929\u5185";
-  var priorityViewTab = "all";
-  var priorityViewSortMode = "title";
+  var priorityViewTab = readSavedPriorityTab();
+  var priorityViewSortMode = readSavedPrioritySortMode();
 
   function isPriorityMode() {
     return typeof getTaskQuickMode === "function" && getTaskQuickMode() === PRIORITY_MODE;
@@ -42,8 +44,36 @@
     return PRIORITY_TABS.indexOf(tab) >= 0 ? tab : "all";
   }
 
+  function readSavedPriorityTab() {
+    try {
+      return normalizePriorityTab(localStorage.getItem(PRIORITY_TAB_STORAGE_KEY));
+    } catch (e) {
+      return "all";
+    }
+  }
+
+  function persistPriorityTab(tab) {
+    try {
+      localStorage.setItem(PRIORITY_TAB_STORAGE_KEY, normalizePriorityTab(tab));
+    } catch (e) {}
+  }
+
   function normalizePrioritySortMode(mode) {
-    return PRIORITY_SORT_MODES.indexOf(mode) >= 0 ? mode : "title";
+    return PRIORITY_SORT_MODES.indexOf(mode) >= 0 ? mode : "time";
+  }
+
+  function readSavedPrioritySortMode() {
+    try {
+      return normalizePrioritySortMode(localStorage.getItem(PRIORITY_SORT_STORAGE_KEY));
+    } catch (e) {
+      return "time";
+    }
+  }
+
+  function persistPrioritySortMode(mode) {
+    try {
+      localStorage.setItem(PRIORITY_SORT_STORAGE_KEY, normalizePrioritySortMode(mode));
+    } catch (e) {}
   }
 
   function getPrioritySortLabel(mode) {
@@ -564,9 +594,11 @@
           '<span class="priority-tabs__label">' +
           esc(item.label) +
           "</span>" +
-          '<strong class="priority-tabs__count">' +
+          '<span class="priority-tabs__count priority-tabs__count--' +
+          item.key +
+          '">' +
           item.count +
-          "</strong></button>"
+          "</span></button>"
         );
       })
       .join("");
@@ -847,13 +879,17 @@
   }
 
   window.setPriorityViewTab = function (tab) {
-    priorityViewTab = normalizePriorityTab(tab);
+    var nextTab = normalizePriorityTab(tab);
+    if (priorityViewTab === nextTab) return;
+    priorityViewTab = nextTab;
+    persistPriorityTab(priorityViewTab);
     if (typeof rT === "function") rT();
   };
 
   window.cyclePriorityViewSortMode = function () {
     var currentIndex = PRIORITY_SORT_MODES.indexOf(normalizePrioritySortMode(priorityViewSortMode));
     priorityViewSortMode = PRIORITY_SORT_MODES[(currentIndex + 1) % PRIORITY_SORT_MODES.length];
+    persistPrioritySortMode(priorityViewSortMode);
     if (typeof rT === "function") rT();
   };
 

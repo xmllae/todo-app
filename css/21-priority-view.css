@@ -277,7 +277,7 @@
   color: #94a3b8;
   font: inherit;
   font-size: .94rem;
-  font-weight: 650;
+  font-weight: 500;
   line-height: 1;
   cursor: pointer;
   transition: color .2s ease, border-color .2s ease;
@@ -299,7 +299,11 @@
 }
 
 .priority-tabs__count {
-  font-weight: 760;
+  font-weight: 500;
+}
+
+.priority-tabs__count--overdue {
+  color: #ef4444;
 }
 
 .priority-group {
