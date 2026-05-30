@@ -212,22 +212,6 @@
     return '';
   }
 
-  function findPreviousRepeatDate(rule, anchorDs) {
-    if (!rule || !anchorDs || !rule.startDate || anchorDs <= rule.startDate) {
-      return '';
-    }
-    for (let offset = 1; offset <= REPEAT_SEARCH_WINDOW_DAYS; offset += 1) {
-      const currentDs = addDays(anchorDs, -offset);
-      if (!currentDs || currentDs < rule.startDate) {
-        break;
-      }
-      if (matchesRepeatRuleDate(rule, currentDs)) {
-        return currentDs;
-      }
-    }
-    return '';
-  }
-
   function getRepeatRuleCategory(rule) {
     if (!rule) {
       return 'monthly';
@@ -295,7 +279,49 @@
     return '';
   }
 
+  function getRepeatRuleInlineLabel(entry) {
+    if (!entry || !entry.rule) {
+      return '重复';
+    }
+    const rule = entry.rule;
+    const baseLabel = (typeof getRecurDesc === 'function' ? getRecurDesc(rule.id) : '') || entry.detailLabel || '重复';
+    const timeLabel = rule.planTime ? formatPlanTimeDisp(rule.planTime) : '';
+    if (!timeLabel || baseLabel.indexOf(timeLabel) >= 0) {
+      return baseLabel;
+    }
+    return baseLabel + ' ' + timeLabel;
+  }
+
   function getRepeatEntryTone(entry) {
+    if (typeof getRepeatRuleDisplayLabel !== 'function') {
+      function getRepeatRuleDisplayLabel(entry) {
+        if (!entry || !entry.rule) {
+          return '重复';
+        }
+        const rule = entry.rule;
+        const timeLabel = rule.planTime ? formatPlanTimeDisp(rule.planTime) : '';
+        const summary = ((typeof getRecurDesc === 'function' ? getRecurDesc(rule.id) : '') || '').trim();
+        if (summary) {
+          return timeLabel ? summary.split(timeLabel).join('').trim() : summary;
+        }
+        if (entry.category === 'daily') {
+          return entry.typeLabel || '每日';
+        }
+        if (entry.detailLabel) {
+          return entry.typeLabel && entry.typeLabel !== entry.detailLabel
+            ? entry.typeLabel + ' ' + entry.detailLabel
+            : entry.detailLabel;
+        }
+        return entry.typeLabel || '重复';
+      }
+
+      function getRepeatRuleDisplayTime(entry) {
+        if (!entry || !entry.rule || !entry.rule.planTime) {
+          return '';
+        }
+        return formatPlanTimeDisp(entry.rule.planTime);
+      }
+    }
     if (!entry || !entry.rule) {
       return 'normal';
     }
@@ -311,16 +337,45 @@
     return 'normal';
   }
 
+  function getRepeatRuleDisplayLabelTop(entry) {
+    if (!entry || !entry.rule) {
+      return '重复';
+    }
+    const rule = entry.rule;
+    const timeLabel = rule.planTime ? formatPlanTimeDisp(rule.planTime) : '';
+    const summary = ((typeof getRecurDesc === 'function' ? getRecurDesc(rule.id) : '') || '').trim();
+    if (summary) {
+      const cleanedSummary = timeLabel ? summary.split(timeLabel).join('').trim() : summary;
+      return cleanedSummary.replace(/[·•丨|/-]\s*$/, '').trim();
+    }
+    if (entry.category === 'daily') {
+      return entry.typeLabel || '每日';
+    }
+    if (entry.detailLabel) {
+      return entry.typeLabel && entry.typeLabel !== entry.detailLabel
+        ? entry.typeLabel + ' ' + entry.detailLabel
+        : entry.detailLabel;
+    }
+    return entry.typeLabel || '重复';
+  }
+
+  function getRepeatRuleDisplayTimeTop(entry) {
+    if (!entry || !entry.rule || !entry.rule.planTime) {
+      return '';
+    }
+    return formatPlanTimeDisp(entry.rule.planTime);
+  }
+
   function buildRepeatEntry(rule) {
     if (!rule) {
       return null;
     }
     const today = todayKey();
     const nextDs = findNextRepeatDate(rule, today);
-    const lastDs = findPreviousRepeatDate(rule, today);
+    const lastDs = '';
     const category = getRepeatRuleCategory(rule);
     const nextOffset = nextDs ? getDayOffset(nextDs) : Number.POSITIVE_INFINITY;
-    return {
+    const entry = {
       rule: rule,
       category: category,
       typeLabel: getRepeatRuleTypeLabel(rule),
@@ -329,12 +384,14 @@
       nextDs: nextDs,
       nextLabel: buildOccurrenceLabel(nextDs, rule.planTime || '', 'next'),
       nextOffset: nextOffset,
-      lastDs: lastDs,
       lastLabel: lastDs ? buildOccurrenceLabel(lastDs, rule.planTime || '', 'last') : (rule.startDate && rule.startDate > today ? '尚未开始' : '尚未执行'),
       statusKey: rule.active ? 'active' : 'paused',
       statusLabel: rule.active ? '进行中' : '已暂停',
       tone: getRepeatEntryTone({ rule: rule, nextOffset: nextOffset }),
     };
+    entry.ruleLabel = getRepeatRuleDisplayLabelTop(entry);
+    entry.ruleTimeLabel = getRepeatRuleDisplayTimeTop(entry);
+    return entry;
   }
 
   function compareNextDate(a, b) {
@@ -419,6 +476,17 @@
       '<path d="M3 11V9a4 4 0 0 1 4-4h14"></path>' +
       '<path d="M7 23l-4-4 4-4"></path>' +
       '<path d="M21 13v2a4 4 0 0 1-4 4H3"></path>' +
+      '</svg>'
+    );
+  }
+
+  function repeatRuleMetaIconMarkup() {
+    return (
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<path d="M23 4v6h-6"></path>' +
+      '<path d="M1 20v-6h6"></path>' +
+      '<path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"></path>' +
+      '<path d="M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>' +
       '</svg>'
     );
   }
@@ -554,7 +622,7 @@
     );
   }
 
-  function repeatTableRowHtml(entry) {
+  function repeatTableRowHtmlLegacy(entry) {
     return (
       '<article class="repeat-table__row repeat-table__row--' +
       entry.tone +
@@ -574,17 +642,15 @@
       html(entry.tooltip || '点击查看对应任务') +
       '</span></span></button></div>' +
       '<div class="repeat-table__cell repeat-table__cell--pattern" data-label="重复规则">' +
-      '<div class="repeat-rule__pattern" title="' +
+      '<span class="repeat-rule__meta" title="' +
       html(entry.tooltip || entry.detailLabel) +
       '">' +
-      '<span class="repeat-rule__type-pill repeat-rule__type-pill--' +
-      entry.category +
-      '">' +
-      html(entry.typeLabel) +
+      '<span class="repeat-rule__meta-icon" aria-hidden="true">' +
+      repeatRuleMetaIconMarkup() +
       '</span>' +
-      '<span class="repeat-rule__pattern-text">' +
-      html(entry.detailLabel) +
-      '</span></div></div>' +
+      '<span class="repeat-rule__meta-text">' +
+      html(entry.inlineRuleLabel) +
+      '</span></span></div>' +
       '<div class="repeat-table__cell repeat-table__cell--last" data-label="最后执行">' +
       '<span class="repeat-rule__date repeat-rule__date--muted">' +
       html(entry.lastLabel) +
@@ -639,12 +705,136 @@
     );
   }
 
-  function repeatTableHeadHtml() {
+  function repeatTableHeadHtmlLegacy() {
     return (
       '<div class="repeat-table__head" aria-hidden="true">' +
       '<span>任务名称</span>' +
       '<span>重复规则</span>' +
       '<span>最后执行</span>' +
+      '<span>状态</span>' +
+      '<span>操作</span>' +
+      '</div>'
+    );
+  }
+
+  function repeatTableRowHtmlLegacyCompact(entry) {
+    return (
+      '<article class="repeat-table__row repeat-table__row--' +
+      entry.tone +
+      '">' +
+      '<div class="repeat-table__cell repeat-table__cell--name" data-label="任务名称">' +
+      '<button type="button" class="repeat-rule__title-button" title="' +
+      html(entry.rule.text || '') +
+      '" onclick="jumpToRepeatRuleDetail(' +
+      jsArgAttr(entry.rule.id) +
+      ')">' +
+      '<span class="repeat-rule__bullet" aria-hidden="true"></span>' +
+      '<span class="repeat-rule__title-copy">' +
+      '<span class="repeat-rule__title">' +
+      html(entry.rule.text || '') +
+      '</span>' +
+      '<span class="repeat-rule__hint">' +
+      html(entry.tooltip || '点击查看对应任务') +
+      '</span></span></button></div>' +
+      '<div class="repeat-table__cell repeat-table__cell--pattern" data-label="重复规则">' +
+      '<span class="repeat-rule__meta" title="' +
+      html(entry.tooltip || entry.inlineRuleLabel) +
+      '">' +
+      '<span class="repeat-rule__meta-icon" aria-hidden="true">' +
+      repeatRuleMetaIconMarkup() +
+      '</span>' +
+      '<span class="repeat-rule__meta-text">' +
+      html(entry.inlineRuleLabel) +
+      '</span></span></div>' +
+      '<div class="repeat-table__cell repeat-table__cell--status" data-label="状态">' +
+      repeatStatusPillHtml(entry) +
+      '</div>' +
+      '<div class="repeat-table__cell repeat-table__cell--actions" data-label="操作">' +
+      '<div class="repeat-row-actions">' +
+      '<button type="button" class="repeat-row-actions__btn" onclick="jumpToRepeatRuleDetail(' +
+      jsArgAttr(entry.rule.id) +
+      ')" title="打开对应任务" aria-label="打开对应任务">' +
+      '<span class="repeat-row-actions__icon" aria-hidden="true">' +
+      arrowIconMarkup() +
+      '</span></button>' +
+      '<button type="button" class="repeat-row-actions__btn" onclick="toggleRepeatRuleState(' +
+      jsArgAttr(entry.rule.id) +
+      ')" title="' +
+      (entry.rule.active ? '暂停规则' : '恢复规则') +
+      '" aria-label="' +
+      (entry.rule.active ? '暂停规则' : '恢复规则') +
+      '">' +
+      '<span class="repeat-row-actions__icon" aria-hidden="true">' +
+      (entry.rule.active ? pauseIconMarkup() : playIconMarkup()) +
+      '</span></button>' +
+      '</div></div></article>'
+    );
+  }
+
+  function repeatTableRowHtml(entry) {
+    const ruleLabel = entry.ruleLabel || getRepeatRuleDisplayLabelTop(entry);
+    const ruleTimeLabel = entry.ruleTimeLabel || getRepeatRuleDisplayTimeTop(entry);
+
+    return (
+      '<article class="repeat-table__row repeat-table__row--' +
+      entry.tone +
+      '">' +
+      '<div class="repeat-table__cell repeat-table__cell--name" data-label="任务名称">' +
+      '<button type="button" class="repeat-rule__title-button" title="' +
+      html(entry.rule.text || '') +
+      '" onclick="jumpToRepeatRuleDetail(' +
+      jsArgAttr(entry.rule.id) +
+      ')">' +
+      '<span class="repeat-rule__bullet" aria-hidden="true"></span>' +
+      '<span class="repeat-rule__title-copy">' +
+      '<span class="repeat-rule__title">' +
+      html(entry.rule.text || '') +
+      '</span></span></button></div>' +
+      '<div class="repeat-table__cell repeat-table__cell--pattern" data-label="重复规则">' +
+      '<span class="repeat-rule__meta" title="' +
+      html(entry.tooltip || ruleLabel || '') +
+      '">' +
+      '<span class="repeat-rule__meta-main">' +
+      '<span class="repeat-rule__meta-icon" aria-hidden="true">' +
+      repeatRuleMetaIconMarkup() +
+      '</span>' +
+      '<span class="repeat-rule__meta-text">' +
+      html(ruleLabel || '') +
+      '</span></span>' +
+      (ruleTimeLabel
+        ? '<span class="repeat-rule__meta-time">' + html(ruleTimeLabel) + '</span>'
+        : '') +
+      '</span></div>' +
+      '<div class="repeat-table__cell repeat-table__cell--status" data-label="状态">' +
+      repeatStatusPillHtml(entry) +
+      '</div>' +
+      '<div class="repeat-table__cell repeat-table__cell--actions" data-label="操作">' +
+      '<div class="repeat-row-actions">' +
+      '<button type="button" class="repeat-row-actions__btn" onclick="jumpToRepeatRuleDetail(' +
+      jsArgAttr(entry.rule.id) +
+      ')" title="打开对应任务" aria-label="打开对应任务">' +
+      '<span class="repeat-row-actions__icon" aria-hidden="true">' +
+      arrowIconMarkup() +
+      '</span></button>' +
+      '<button type="button" class="repeat-row-actions__btn" onclick="toggleRepeatRuleState(' +
+      jsArgAttr(entry.rule.id) +
+      ')" title="' +
+      (entry.rule.active ? '暂停规则' : '恢复规则') +
+      '" aria-label="' +
+      (entry.rule.active ? '暂停规则' : '恢复规则') +
+      '">' +
+      '<span class="repeat-row-actions__icon" aria-hidden="true">' +
+      (entry.rule.active ? pauseIconMarkup() : playIconMarkup()) +
+      '</span></button>' +
+      '</div></div></article>'
+    );
+  }
+
+  function repeatTableHeadHtml() {
+    return (
+      '<div class="repeat-table__head" aria-hidden="true">' +
+      '<span>任务名称</span>' +
+      '<span>重复规则</span>' +
       '<span>状态</span>' +
       '<span>操作</span>' +
       '</div>'
