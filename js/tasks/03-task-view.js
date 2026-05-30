@@ -1524,18 +1524,39 @@ function renderWeekTaskScene(list,baseDs){
 function isTaskCustomHeaderMode(mode){
   return mode==="overdue"||mode==="priority-high"||mode==="repeat-view"
 }
+function getTaskStandardTitleParts(el){
+  if(!el)return null;
+  const mainEl=el.firstElementChild,subEl=mainEl?mainEl.nextElementSibling:null;
+  if(!mainEl||!subEl||mainEl.parentElement!==el||subEl.parentElement!==el||subEl.nextElementSibling)return null;
+  if(!mainEl.classList.contains("date-nav-date-main")||!subEl.classList.contains("date-nav-date-sub"))return null;
+  return{mainEl:mainEl,subEl:subEl}
+}
+function ensureTaskStandardTitleParts(el){
+  let parts=getTaskStandardTitleParts(el);
+  if(parts)return parts;
+  el.innerHTML='<span class="date-nav-date-main"></span><span class="date-nav-date-sub"></span>';
+  return getTaskStandardTitleParts(el)
+}
 function setTaskDateTitle(ds){
   const el=document.getElementById("dTitle");
   if(!el)return;
   const quickMode=getTaskQuickMode();
   const suppressMotion=typeof window.consumeTaskTitleNoMotion==="function"&&window.consumeTaskTitleNoMotion();
-  let mainEl=el.querySelector(".date-nav-date-main"),subEl=el.querySelector(".date-nav-date-sub");
-  if(!mainEl||!subEl){
-    el.innerHTML='<span class="date-nav-date-main"></span><span class="date-nav-date-sub"></span>';
-    mainEl=el.querySelector(".date-nav-date-main");
-    subEl=el.querySelector(".date-nav-date-sub")
+  if(!el.dataset.animBound){
+    el.dataset.animBound="1";
+    el.addEventListener("animationend",function(){
+      el.classList.remove("is-animating");
+      el.classList.remove("is-animating-prev");
+      el.classList.remove("is-animating-next")
+    })
   }
-  if(!mainEl||!subEl)return;
+  el.classList.remove("is-animating");
+  el.classList.remove("is-animating-prev");
+  el.classList.remove("is-animating-next");
+  if(isTaskCustomHeaderMode(quickMode))return;
+  const titleParts=ensureTaskStandardTitleParts(el);
+  if(!titleParts)return;
+  const mainEl=titleParts.mainEl,subEl=titleParts.subEl;
   mainEl.style.display="block";
   mainEl.style.fontFamily='-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif';
   mainEl.style.fontSize="24px";
@@ -1552,18 +1573,6 @@ function setTaskDateTitle(ds){
   subEl.style.letterSpacing="0.025em";
   subEl.style.color="#64748b";
   subEl.style.margin="0";
-  if(!el.dataset.animBound){
-    el.dataset.animBound="1";
-    el.addEventListener("animationend",function(){
-      el.classList.remove("is-animating");
-      el.classList.remove("is-animating-prev");
-      el.classList.remove("is-animating-next")
-    })
-  }
-  el.classList.remove("is-animating");
-  el.classList.remove("is-animating-prev");
-  el.classList.remove("is-animating-next");
-  if(isTaskCustomHeaderMode(quickMode))return;
   const isWeekScope=quickMode==="week";
   let useRangeOffset=false,useRelative=false,mainText="",subText="",modeKey="d";
   if(isWeekScope){

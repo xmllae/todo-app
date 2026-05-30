@@ -557,8 +557,8 @@
       repeatLoopIconMarkup() +
       '</span>' +
       '<span class="repeat-title__copy">' +
-      '<span class="repeat-title__main date-nav-date-main">重复任务</span>' +
-      '<span class="repeat-title__sub date-nav-date-sub">共 ' +
+      '<span class="repeat-title__main">重复任务</span>' +
+      '<span class="repeat-title__sub">共 ' +
       state.totalCount +
       ' 个重复任务</span>' +
       '</span></span>';
