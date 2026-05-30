@@ -9,13 +9,10 @@
   const REPEAT_NAV_CLASS = 'date-nav--repeat-view';
   const REPEAT_SHELL_CLASS = 'repeat-view-shell';
   const REPEAT_TAB_STORAGE_KEY = 'todo_repeat_view_tab_v1';
-  const REPEAT_SORT_STORAGE_KEY = 'todo_repeat_view_sort_v1';
   const REPEAT_SEARCH_WINDOW_DAYS = 730;
   const REPEAT_TABS = ['all', 'daily', 'weekly', 'monthly'];
-  const REPEAT_SORT_MODES = ['next', 'title'];
 
   let repeatViewTab = readSavedRepeatTab();
-  let repeatViewSortMode = readSavedRepeatSortMode();
 
   function html(value) {
     if (typeof esc === 'function') {
@@ -61,10 +58,6 @@
     return REPEAT_TABS.indexOf(tab) >= 0 ? tab : 'all';
   }
 
-  function normalizeRepeatSortMode(mode) {
-    return REPEAT_SORT_MODES.indexOf(mode) >= 0 ? mode : 'next';
-  }
-
   function readSavedRepeatTab() {
     try {
       return normalizeRepeatTab(localStorage.getItem(REPEAT_TAB_STORAGE_KEY));
@@ -77,34 +70,6 @@
     try {
       localStorage.setItem(REPEAT_TAB_STORAGE_KEY, normalizeRepeatTab(tab));
     } catch (error) {}
-  }
-
-  function readSavedRepeatSortMode() {
-    try {
-      return normalizeRepeatSortMode(localStorage.getItem(REPEAT_SORT_STORAGE_KEY));
-    } catch (error) {
-      return 'next';
-    }
-  }
-
-  function persistRepeatSortMode(mode) {
-    try {
-      localStorage.setItem(REPEAT_SORT_STORAGE_KEY, normalizeRepeatSortMode(mode));
-    } catch (error) {}
-  }
-
-  function getRepeatHeaderToolsHost() {
-    const dateNav = getDateNav();
-    if (!dateNav) {
-      return null;
-    }
-    let host = dateNav.querySelector('.repeat-header-tools');
-    if (!host) {
-      host = document.createElement('div');
-      host.className = 'repeat-header-tools';
-      dateNav.appendChild(host);
-    }
-    return host;
   }
 
   function clearRepeatHeaderToolsHost() {
@@ -396,13 +361,6 @@
     if (a.statusKey !== b.statusKey) {
       return a.statusKey === 'active' ? -1 : 1;
     }
-    if (repeatViewSortMode === 'title') {
-      const titleCompare = String(a.rule.text || '').localeCompare(String(b.rule.text || ''), 'zh-CN');
-      if (titleCompare !== 0) {
-        return titleCompare;
-      }
-      return compareNextDate(a, b);
-    }
     return compareNextDate(a, b);
   }
 
@@ -437,7 +395,6 @@
 
     return {
       activeTab: normalizeRepeatTab(repeatViewTab),
-      sortMode: normalizeRepeatSortMode(repeatViewSortMode),
       totalCount: entries.length,
       dailyCount: entries.filter(function (entry) { return entry.category === 'daily'; }).length,
       weeklyCount: entries.filter(function (entry) { return entry.category === 'weekly'; }).length,
@@ -462,16 +419,6 @@
       '<path d="M3 11V9a4 4 0 0 1 4-4h14"></path>' +
       '<path d="M7 23l-4-4 4-4"></path>' +
       '<path d="M21 13v2a4 4 0 0 1-4 4H3"></path>' +
-      '</svg>'
-    );
-  }
-
-  function filterIconMarkup() {
-    return (
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-      '<path d="M4 5h16"></path>' +
-      '<path d="M7 12h10"></path>' +
-      '<path d="M10 19h4"></path>' +
       '</svg>'
     );
   }
@@ -523,28 +470,6 @@
     );
   }
 
-  function getRepeatSortLabel(mode) {
-    if (mode === 'title') {
-      return '按名称';
-    }
-    return '按下次执行';
-  }
-
-  function getRepeatHeaderToolsMarkup() {
-    return (
-      '<button type="button" class="repeat-header-tool" onclick="cycleRepeatViewSortMode()" title="' +
-      getRepeatSortLabel(repeatViewSortMode) +
-      '" aria-label="' +
-      getRepeatSortLabel(repeatViewSortMode) +
-      '">' +
-      '<span class="repeat-header-tool__icon" aria-hidden="true">' +
-      filterIconMarkup() +
-      '</span><span class="repeat-header-tool__label">' +
-      html(getRepeatSortLabel(repeatViewSortMode)) +
-      '</span></button>'
-    );
-  }
-
   function renderRepeatTitle(state) {
     const title = getTitleHost();
     if (!title || !state) {
@@ -592,10 +517,7 @@
       return;
     }
     renderRepeatTitle(state);
-    const toolsHost = getRepeatHeaderToolsHost();
-    if (toolsHost) {
-      toolsHost.innerHTML = getRepeatHeaderToolsMarkup();
-    }
+    clearRepeatHeaderToolsHost();
   }
 
   function repeatTabsHtml(state) {
@@ -663,12 +585,6 @@
       '<span class="repeat-rule__pattern-text">' +
       html(entry.detailLabel) +
       '</span></div></div>' +
-      '<div class="repeat-table__cell repeat-table__cell--next" data-label="下次执行">' +
-      '<span class="repeat-rule__date repeat-rule__date--' +
-      entry.tone +
-      '">' +
-      html(entry.nextLabel) +
-      '</span></div>' +
       '<div class="repeat-table__cell repeat-table__cell--last" data-label="最后执行">' +
       '<span class="repeat-rule__date repeat-rule__date--muted">' +
       html(entry.lastLabel) +
@@ -728,7 +644,6 @@
       '<div class="repeat-table__head" aria-hidden="true">' +
       '<span>任务名称</span>' +
       '<span>重复规则</span>' +
-      '<span>下次执行</span>' +
       '<span>最后执行</span>' +
       '<span>状态</span>' +
       '<span>操作</span>' +
@@ -745,11 +660,7 @@
       repeatTableHeadHtml() +
       '<div class="repeat-table__body">' +
       state.entries.map(repeatTableRowHtml).join('') +
-      '</div>' +
-      '<div class="repeat-table__foot">共 ' +
-      state.filteredCount +
-      ' 项</div>' +
-      '</section>'
+      '</div></section>'
     );
   }
 
@@ -950,15 +861,6 @@
     }
     repeatViewTab = nextTab;
     persistRepeatTab(nextTab);
-    if (typeof rT === 'function') {
-      rT();
-    }
-  };
-
-  window.cycleRepeatViewSortMode = function () {
-    const currentIndex = REPEAT_SORT_MODES.indexOf(normalizeRepeatSortMode(repeatViewSortMode));
-    repeatViewSortMode = REPEAT_SORT_MODES[(currentIndex + 1) % REPEAT_SORT_MODES.length];
-    persistRepeatSortMode(repeatViewSortMode);
     if (typeof rT === 'function') {
       rT();
     }
