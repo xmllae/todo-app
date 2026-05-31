@@ -1079,8 +1079,17 @@
     if (typeof updateRecurRule === 'function') {
       updateRecurRule(ruleId, 'active', !!isActive);
     } else {
-      rule.active = !!isActive;
+      if (typeof setRecurRuleActiveState === 'function') {
+        if (!setRecurRuleActiveState(ruleId, !!isActive)) {
+          return false;
+        }
+      } else {
+        rule.active = !!isActive;
+      }
       persistRepeatRuleStateChange();
+      if (typeof rCal === 'function') {
+        rCal();
+      }
     }
     refreshSideNavSoon();
     return true;

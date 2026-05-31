@@ -658,6 +658,145 @@ function buildRecurringTaskFromRule(rule) {
   });
 }
 
+function getRecurringSyncStartDate() {
+  return fd(now);
+}
+
+function removePendingRecurringTasksFrom(ruleId, startDs) {
+  let changed = false;
+
+  for (const ds in T) {
+    if (ds < startDs) {
+      continue;
+    }
+
+    const dayTasks = T[ds] || [];
+    const nextTasks = dayTasks.filter(function(task) {
+      return !(task.recurRuleId === ruleId && !task.done && !task.archived);
+    });
+
+    if (nextTasks.length === dayTasks.length) {
+      continue;
+    }
+
+    changed = true;
+
+    if (nextTasks.length) {
+      T[ds] = nextTasks;
+    } else {
+      delete T[ds];
+    }
+  }
+
+  return changed;
+}
+
+function addCurrentCalendarMonthSyncDates(dateSet, startDs) {
+  if (!Number.isFinite(cY) || !Number.isFinite(cM)) {
+    return;
+  }
+
+  const monthLastDay = new Date(cY, cM + 1, 0).getDate();
+
+  for (let day = 1; day <= monthLastDay; day += 1) {
+    const ds = cY + "-" + String(cM + 1).padStart(2, "0") + "-" + String(day).padStart(2, "0");
+
+    if (ds >= startDs) {
+      dateSet.add(ds);
+    }
+  }
+}
+
+function collectRecurringSyncDates(startDs) {
+  const dates = new Set([startDs]);
+
+  if (typeof sel === "string" && sel && sel >= startDs) {
+    dates.add(sel);
+  }
+
+  for (const ds in T) {
+    if (ds >= startDs) {
+      dates.add(ds);
+    }
+  }
+
+  addCurrentCalendarMonthSyncDates(dates, startDs);
+
+  return Array.from(dates).sort();
+}
+
+function ensureRecurringTaskForRuleOnDate(rule, ds) {
+  if (!rule || !rule.active || !ds || ds < rule.startDate) {
+    return false;
+  }
+
+  const date = parseDS(ds);
+
+  if (!date || Number.isNaN(date.getTime())) {
+    return false;
+  }
+
+  const weekday = date.getDay();
+  const dayOfMonth = date.getDate();
+  const lastDayOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+
+  if (!doesRecurringRuleMatchDate(rule, weekday, dayOfMonth, lastDayOfMonth)) {
+    return false;
+  }
+  if (shouldSkipRecurringDate(rule, weekday)) {
+    return false;
+  }
+
+  ensureDayTaskBucket(ds);
+
+  if (T[ds].some(function(task) {
+    return task.recurRuleId === rule.id;
+  })) {
+    return false;
+  }
+
+  T[ds].push(buildRecurringTaskFromRule(rule));
+  return true;
+}
+
+function restoreRecurringTasksFrom(rule, startDs) {
+  let changed = false;
+
+  collectRecurringSyncDates(startDs).forEach(function(ds) {
+    if (ensureRecurringTaskForRuleOnDate(rule, ds)) {
+      changed = true;
+    }
+  });
+
+  return changed;
+}
+
+function setRecurRuleActiveState(ruleId, isActive) {
+  const rule = findRecurRule(ruleId);
+
+  if (!rule) {
+    return false;
+  }
+
+  const nextActive = !!isActive;
+
+  if (!!rule.active === nextActive) {
+    return false;
+  }
+
+  rule.active = nextActive;
+
+  const startDs = getRecurringSyncStartDate();
+
+  if (nextActive) {
+    restoreRecurringTasksFrom(rule, startDs);
+  } else {
+    removePendingRecurringTasksFrom(rule.id, startDs);
+  }
+
+  return true;
+}
+
 function addRecurRule(taskId, ruleType) {
   const type = ruleType || "daily";
   const task = (T[sel] || []).find(function(item) {
@@ -710,10 +849,23 @@ function updateRecurRule(ruleId, field, value) {
     return;
   }
 
-  rule[field] = value;
+  const isActiveField = field === "active";
+
+  if (isActiveField) {
+    if (!setRecurRuleActiveState(ruleId, value)) {
+      return;
+    }
+  } else {
+    rule[field] = value;
+  }
+
   save();
   rT();
   rRecurList();
+
+  if (isActiveField) {
+    rCal();
+  }
 }
 
 function toggleRecurWeekday(ruleId, day) {
