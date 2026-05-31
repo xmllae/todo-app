@@ -1128,21 +1128,40 @@ function formatPlanTimeDisp(planTime) {
   return String(+match[1]).padStart(2, "0") + ":" + match[2];
 }
 
+function joinRecurringMetaParts(parts) {
+  return ([]).concat(parts || []).map(function(part) {
+    return String(part || "").trim();
+  }).filter(Boolean).join(" \u00b7 ");
+}
+
+function joinRecurringSummaryAndTime(summary, timeText) {
+  return joinRecurringMetaParts([summary, timeText]);
+}
+
+function buildRecurringSummaryPrefixText(summary, hasTrailingValue) {
+  const base = String(summary || "").trim();
+
+  if (!base) {
+    return "";
+  }
+
+  return hasTrailingValue ? base + " \u00b7 " : base;
+}
+
 function taskRecurRowBadgeSvg() {
   return '<svg class="task-recur-badge-ico" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>';
 }
 
 function taskRowRecurTimeInnerHtml(task, planTime) {
-  const desc = getRecurDesc(task.recurRuleId) || "重复";
+  const desc = getRecurDesc(task.recurRuleId) || "\u91cd\u590d";
   const timeText = planTime
     ? (typeof taskRowPlainTimeText === "function"
       ? taskRowPlainTimeText(task, formatPlanTimeDisp(planTime))
       : formatPlanTimeDisp(planTime))
     : "";
-  const label = timeText ? desc + " " + timeText : desc;
-  const tip = timeText ? desc + " · " + timeText : desc;
+  const label = joinRecurringSummaryAndTime(desc, timeText);
 
-  return '<span class="task-recur-badge time-disp" onclick="event.stopPropagation();if(window.openTaskDetail)window.openTaskDetail(' + task.id + ')" title="' + esc(tip) + '">' + taskRecurRowBadgeSvg() + '<span class="task-recur-badge-txt">' + esc(label) + "</span></span>";
+  return '<span class="task-recur-badge time-disp" onclick="event.stopPropagation();if(window.openTaskDetail)window.openTaskDetail(' + task.id + ')" title="' + esc(label) + '">' + taskRecurRowBadgeSvg() + '<span class="task-recur-badge-txt">' + esc(label) + "</span></span>";
 }
 
 function checkUnfreeze() {

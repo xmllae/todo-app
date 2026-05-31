@@ -159,20 +159,26 @@
       return kind === 'last' ? '尚未执行' : '未安排';
     }
     const offset = getDayOffset(ds);
-    const timeText = planTime ? ' ' + formatPlanTimeDisp(planTime) : '';
+    const timeText = planTime ? formatPlanTimeDisp(planTime) : '';
+    const withTime = function(baseLabel) {
+      if (typeof joinRecurringSummaryAndTime === 'function') {
+        return joinRecurringSummaryAndTime(baseLabel, timeText);
+      }
+      return timeText ? baseLabel + ' \u00b7 ' + timeText : baseLabel;
+    };
     if (offset === 0) {
-      return '今天' + timeText;
+      return withTime('今天');
     }
     if (offset === 1) {
-      return '明天' + timeText;
+      return withTime('明天');
     }
     if (offset === -1) {
-      return '昨天' + timeText;
+      return withTime('昨天');
     }
     if (Math.abs(offset) <= 6) {
-      return getWeekdayText(ds) + ' ' + getMonthDayText(ds) + timeText;
+      return withTime(getWeekdayText(ds) + ' ' + getMonthDayText(ds));
     }
-    return getChineseDateText(ds) + timeText;
+    return withTime(getChineseDateText(ds));
   }
 
   function matchesRepeatRuleDate(rule, ds) {
@@ -289,39 +295,13 @@
     if (!timeLabel || baseLabel.indexOf(timeLabel) >= 0) {
       return baseLabel;
     }
-    return baseLabel + ' ' + timeLabel;
+    if (typeof joinRecurringSummaryAndTime === 'function') {
+      return joinRecurringSummaryAndTime(baseLabel, timeLabel);
+    }
+    return baseLabel + ' \u00b7 ' + timeLabel;
   }
 
   function getRepeatEntryTone(entry) {
-    if (typeof getRepeatRuleDisplayLabel !== 'function') {
-      function getRepeatRuleDisplayLabel(entry) {
-        if (!entry || !entry.rule) {
-          return '重复';
-        }
-        const rule = entry.rule;
-        const timeLabel = rule.planTime ? formatPlanTimeDisp(rule.planTime) : '';
-        const summary = ((typeof getRecurDesc === 'function' ? getRecurDesc(rule.id) : '') || '').trim();
-        if (summary) {
-          return timeLabel ? summary.split(timeLabel).join('').trim() : summary;
-        }
-        if (entry.category === 'daily') {
-          return entry.typeLabel || '每日';
-        }
-        if (entry.detailLabel) {
-          return entry.typeLabel && entry.typeLabel !== entry.detailLabel
-            ? entry.typeLabel + ' ' + entry.detailLabel
-            : entry.detailLabel;
-        }
-        return entry.typeLabel || '重复';
-      }
-
-      function getRepeatRuleDisplayTime(entry) {
-        if (!entry || !entry.rule || !entry.rule.planTime) {
-          return '';
-        }
-        return formatPlanTimeDisp(entry.rule.planTime);
-      }
-    }
     if (!entry || !entry.rule) {
       return 'normal';
     }
@@ -342,11 +322,9 @@
       return '重复';
     }
     const rule = entry.rule;
-    const timeLabel = rule.planTime ? formatPlanTimeDisp(rule.planTime) : '';
     const summary = ((typeof getRecurDesc === 'function' ? getRecurDesc(rule.id) : '') || '').trim();
     if (summary) {
-      const cleanedSummary = timeLabel ? summary.split(timeLabel).join('').trim() : summary;
-      return cleanedSummary.replace(/[·•丨|/-]\s*$/, '').trim();
+      return summary;
     }
     if (entry.category === 'daily') {
       return entry.typeLabel || '每日';
