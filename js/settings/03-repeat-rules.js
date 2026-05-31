@@ -166,6 +166,134 @@ function crRuleToConfig(rule) {
   return config;
 }
 
+function formatWeeklyRuleSummary(weeklyDays, emptyText) {
+  const labels = crSortWeeklyChars([].concat(weeklyDays || []).filter(Boolean));
+
+  if (!labels.length) {
+    return emptyText || "";
+  }
+
+  return "\u6bcf\u5468" + labels.join("\u3001");
+}
+
+function buildMonthlyRuleLabels(monthDays, monthlyLastDay) {
+  const labels = ([].concat(monthDays || []))
+    .filter(function(day, index, arr) {
+      return day != null && day !== "" && arr.indexOf(day) === index;
+    })
+    .map(function(day) {
+      return String(day) + "\u53f7";
+    });
+
+  if (monthlyLastDay) {
+    labels.push("\u6708\u5e95");
+  }
+
+  return labels;
+}
+
+function formatMonthlyRuleSummary(monthDays, monthlyLastDay, emptyText) {
+  const labels = buildMonthlyRuleLabels(monthDays, monthlyLastDay);
+
+  if (!labels.length) {
+    return emptyText || "";
+  }
+
+  return "\u6bcf\u6708" + labels.join("\u3001");
+}
+
+function appendRecurringSummaryExtras(parts, additions, exceptions) {
+  const safeAdditions = additions || [];
+  const safeExceptions = exceptions || [];
+
+  if (safeAdditions.indexOf("holidays") >= 0) {
+    parts.push("+\u6cd5\u5b9a\u8282\u5047\u65e5");
+  }
+  if (safeAdditions.indexOf("workdays") >= 0) {
+    parts.push("+\u6cd5\u5b9a\u8c03\u4f11\u8865\u73ed");
+  }
+  if (safeExceptions.indexOf("skip_holidays") >= 0) {
+    parts.push("-\u8df3\u8fc7\u8282\u5047\u65e5");
+  }
+  if (safeExceptions.indexOf("skip_weekends") >= 0) {
+    parts.push("-\u8df3\u8fc7\u5468\u672b");
+  }
+}
+
+function buildRecurringSummaryText(options) {
+  const parts = [];
+  const baseType = options && options.baseType;
+
+  if (baseType === "weekly") {
+    const weeklySummary = formatWeeklyRuleSummary(options.weeklyDays, options.emptyText);
+
+    if (weeklySummary) {
+      parts.push(weeklySummary);
+    }
+  } else if (baseType === "monthly") {
+    const monthlySummary = formatMonthlyRuleSummary(
+      options.monthDays,
+      options.monthlyLastDay,
+      options.emptyText
+    );
+
+    if (monthlySummary) {
+      parts.push(monthlySummary);
+    }
+  } else if (baseType === "daily") {
+    parts.push("\u6bcf\u5929");
+  }
+
+  appendRecurringSummaryExtras(parts, options && options.additions, options && options.exceptions);
+  return parts.filter(Boolean).join(" ");
+}
+
+function getRuleWeeklyDays(rule) {
+  if (!rule) {
+    return [];
+  }
+
+  if (Array.isArray(rule.advWeeklyDays) && rule.advWeeklyDays.length) {
+    return rule.advWeeklyDays.slice();
+  }
+
+  return (rule.weekdays || []).map(function(day) {
+    return WD[day];
+  }).filter(Boolean);
+}
+
+function getRuleMonthDays(rule) {
+  if (!rule) {
+    return [];
+  }
+
+  if (Array.isArray(rule.monthDays) && rule.monthDays.length) {
+    return rule.monthDays.slice();
+  }
+
+  return rule.monthDay != null ? [rule.monthDay] : [];
+}
+
+function buildRecurringSummaryTextFromRule(rule, emptyText) {
+  if (!rule) {
+    return "";
+  }
+
+  if (rule.type === "daily") {
+    return "\u6bcf\u5929";
+  }
+
+  return buildRecurringSummaryText({
+    baseType: rule.type === "weekly" ? "weekly" : "monthly",
+    weeklyDays: getRuleWeeklyDays(rule),
+    monthDays: getRuleMonthDays(rule),
+    monthlyLastDay: !!rule.monthlyLastDay,
+    additions: rule.advAdditions || [],
+    exceptions: rule.exceptions || [],
+    emptyText: emptyText
+  });
+}
+
 function crBuildSummaryText(config) {
   const parts = [];
 
@@ -973,15 +1101,7 @@ function renderRecurRuleItem(rule) {
 }
 
 function getRecurListTypeLabel(rule) {
-  if (rule.type === "daily") {
-    return "每天";
-  }
-  if (rule.type === "weekly") {
-    return "每周" + (rule.weekdays || []).map(function(day) {
-      return WD[day];
-    }).join(",");
-  }
-  return "每月" + rule.monthDay + "号";
+  return buildRecurringSummaryTextFromRule(rule, "\u672a\u8bbe\u7f6e");
 }
 
 function getRecurDesc(ruleId) {
@@ -991,17 +1111,7 @@ function getRecurDesc(ruleId) {
     return "";
   }
 
-  if (rule.advSummary) {
-    return rule.advSummary;
-  }
-
-  return rule.type === "daily"
-    ? "每天"
-    : rule.type === "weekly"
-      ? "每周" + (rule.weekdays || []).map(function(day) {
-        return WD[day];
-      }).join("")
-      : "每月" + rule.monthDay + "号";
+  return buildRecurringSummaryTextFromRule(rule, "\u672a\u8bbe\u7f6e");
 }
 
 function formatPlanTimeDisp(planTime) {
