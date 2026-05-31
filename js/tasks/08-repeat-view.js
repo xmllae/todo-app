@@ -491,14 +491,6 @@
     );
   }
 
-  function arrowIconMarkup() {
-    return (
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-      '<polygon points="8 5 19 12 8 19 8 5"></polygon>' +
-      '</svg>'
-    );
-  }
-
   function pauseIconMarkup() {
     return (
       '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
@@ -535,6 +527,56 @@
       '<line x1="16" y1="17" x2="8" y2="17"></line>' +
       '<polyline points="10 9 9 9 8 9"></polyline>' +
       '</svg>'
+    );
+  }
+
+  function trashIconMarkup() {
+    return (
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<path d="M3 6h18"></path>' +
+      '<path d="M8 6V4.8c0-.66.54-1.2 1.2-1.2h5.6c.66 0 1.2.54 1.2 1.2V6"></path>' +
+      '<path d="M6.8 6l.8 13.2c.05.74.66 1.3 1.4 1.3h6c.74 0 1.35-.56 1.4-1.3L17.2 6"></path>' +
+      '<line x1="10" y1="10" x2="10" y2="17"></line>' +
+      '<line x1="14" y1="10" x2="14" y2="17"></line>' +
+      '</svg>'
+    );
+  }
+
+  function repeatRowActionButtonHtml(action, ruleId, label, iconMarkup, modifierClass) {
+    return (
+      '<button type="button" class="repeat-row-actions__btn' +
+      (modifierClass ? ' ' + modifierClass : '') +
+      '" data-repeat-action="' +
+      html(action || '') +
+      '" data-rule-id="' +
+      html(ruleId || '') +
+      '" title="' +
+      html(label || '') +
+      '" aria-label="' +
+      html(label || '') +
+      '">' +
+      '<span class="repeat-row-actions__icon" aria-hidden="true">' +
+      iconMarkup +
+      '</span></button>'
+    );
+  }
+
+  function repeatRowActionsHtml(entry) {
+    const rule = entry && entry.rule ? entry.rule : null;
+    const ruleId = rule ? rule.id : '';
+    const toggleLabel = rule && rule.active ? '暂停重复任务' : '开始重复任务';
+
+    return (
+      '<div class="repeat-row-actions">' +
+      repeatRowActionButtonHtml('open', ruleId, '查看重复任务', docIconMarkup()) +
+      repeatRowActionButtonHtml(
+        'toggle',
+        ruleId,
+        toggleLabel,
+        rule && rule.active ? pauseIconMarkup() : playIconMarkup()
+      ) +
+      repeatRowActionButtonHtml('delete', ruleId, '删除重复任务', trashIconMarkup(), 'repeat-row-actions__btn--danger') +
+      '</div>'
     );
   }
 
@@ -659,24 +701,8 @@
       repeatStatusPillHtml(entry) +
       '</div>' +
       '<div class="repeat-table__cell repeat-table__cell--actions" data-label="操作">' +
-      '<div class="repeat-row-actions">' +
-      '<button type="button" class="repeat-row-actions__btn" onclick="jumpToRepeatRuleDetail(' +
-      jsArgAttr(entry.rule.id) +
-      ')" title="打开对应任务" aria-label="打开对应任务">' +
-      '<span class="repeat-row-actions__icon" aria-hidden="true">' +
-      arrowIconMarkup() +
-      '</span></button>' +
-      '<button type="button" class="repeat-row-actions__btn" onclick="toggleRepeatRuleState(' +
-      jsArgAttr(entry.rule.id) +
-      ')" title="' +
-      (entry.rule.active ? '暂停规则' : '恢复规则') +
-      '" aria-label="' +
-      (entry.rule.active ? '暂停规则' : '恢复规则') +
-      '">' +
-      '<span class="repeat-row-actions__icon" aria-hidden="true">' +
-      (entry.rule.active ? pauseIconMarkup() : playIconMarkup()) +
-      '</span></button>' +
-      '</div></div></article>'
+      repeatRowActionsHtml(entry) +
+      '</div></article>'
     );
   }
 
@@ -750,24 +776,8 @@
       repeatStatusPillHtml(entry) +
       '</div>' +
       '<div class="repeat-table__cell repeat-table__cell--actions" data-label="操作">' +
-      '<div class="repeat-row-actions">' +
-      '<button type="button" class="repeat-row-actions__btn" onclick="jumpToRepeatRuleDetail(' +
-      jsArgAttr(entry.rule.id) +
-      ')" title="打开对应任务" aria-label="打开对应任务">' +
-      '<span class="repeat-row-actions__icon" aria-hidden="true">' +
-      arrowIconMarkup() +
-      '</span></button>' +
-      '<button type="button" class="repeat-row-actions__btn" onclick="toggleRepeatRuleState(' +
-      jsArgAttr(entry.rule.id) +
-      ')" title="' +
-      (entry.rule.active ? '暂停规则' : '恢复规则') +
-      '" aria-label="' +
-      (entry.rule.active ? '暂停规则' : '恢复规则') +
-      '">' +
-      '<span class="repeat-row-actions__icon" aria-hidden="true">' +
-      (entry.rule.active ? pauseIconMarkup() : playIconMarkup()) +
-      '</span></button>' +
-      '</div></div></article>'
+      repeatRowActionsHtml(entry) +
+      '</div></article>'
     );
   }
 
@@ -809,24 +819,8 @@
       repeatStatusPillHtml(entry) +
       '</div>' +
       '<div class="repeat-table__cell repeat-table__cell--actions" data-label="操作">' +
-      '<div class="repeat-row-actions">' +
-      '<button type="button" class="repeat-row-actions__btn" onclick="jumpToRepeatRuleDetail(' +
-      jsArgAttr(entry.rule.id) +
-      ')" title="打开对应任务" aria-label="打开对应任务">' +
-      '<span class="repeat-row-actions__icon" aria-hidden="true">' +
-      arrowIconMarkup() +
-      '</span></button>' +
-      '<button type="button" class="repeat-row-actions__btn" onclick="toggleRepeatRuleState(' +
-      jsArgAttr(entry.rule.id) +
-      ')" title="' +
-      (entry.rule.active ? '暂停规则' : '恢复规则') +
-      '" aria-label="' +
-      (entry.rule.active ? '暂停规则' : '恢复规则') +
-      '">' +
-      '<span class="repeat-row-actions__icon" aria-hidden="true">' +
-      (entry.rule.active ? pauseIconMarkup() : playIconMarkup()) +
-      '</span></button>' +
-      '</div></div></article>'
+      repeatRowActionsHtml(entry) +
+      '</div></article>'
     );
   }
 
@@ -1044,6 +1038,126 @@
     }, 0);
   }
 
+  function getRepeatRuleById(ruleId) {
+    return typeof findRecurRule === 'function' ? findRecurRule(ruleId) : null;
+  }
+
+  function rerenderRepeatViews() {
+    if (typeof rT === 'function') {
+      rT();
+      return;
+    }
+    renderRepeatModeFrame();
+  }
+
+  function persistRepeatRuleStateChange() {
+    if (typeof save === 'function') {
+      save();
+    }
+    rerenderRepeatViews();
+    if (typeof rRecurList === 'function') {
+      rRecurList();
+    }
+  }
+
+  function setRepeatRuleActiveState(ruleId, isActive) {
+    const rule = getRepeatRuleById(ruleId);
+    if (!rule) {
+      return false;
+    }
+    if (typeof updateRecurRule === 'function') {
+      updateRecurRule(ruleId, 'active', !!isActive);
+    } else {
+      rule.active = !!isActive;
+      persistRepeatRuleStateChange();
+    }
+    refreshSideNavSoon();
+    return true;
+  }
+
+  function deleteRepeatRuleEntry(ruleId) {
+    const rule = getRepeatRuleById(ruleId);
+    if (!rule) {
+      return false;
+    }
+    if (typeof deleteRecurRule === 'function') {
+      deleteRecurRule(ruleId);
+      refreshSideNavSoon();
+      return true;
+    }
+
+    if (Array.isArray(recurRules)) {
+      recurRules = recurRules.filter(function (item) {
+        return item && item.id !== ruleId;
+      });
+    }
+
+    const today = todayKey();
+    for (const ds in T) {
+      if (ds > today) {
+        T[ds] = (T[ds] || []).filter(function (task) {
+          return !(task && task.recurRuleId === ruleId && !task.done && !task.archived);
+        });
+        if (T[ds] && !T[ds].length) {
+          delete T[ds];
+        }
+      }
+      (T[ds] || []).forEach(function (task) {
+        if (task && task.recurRuleId === ruleId) {
+          task.recurRuleId = '';
+        }
+      });
+    }
+
+    persistRepeatRuleStateChange();
+    if (typeof rCal === 'function') {
+      rCal();
+    }
+    if (typeof toast === 'function') {
+      toast('🗑️ 已删除重复任务');
+    }
+    refreshSideNavSoon();
+    return true;
+  }
+
+  function handleRepeatRowAction(action, ruleId) {
+    if (!action || !ruleId) {
+      return;
+    }
+    if (action === 'open') {
+      window.jumpToRepeatRuleDetail(ruleId);
+      return;
+    }
+    if (action === 'toggle') {
+      const rule = getRepeatRuleById(ruleId);
+      if (rule) {
+        setRepeatRuleActiveState(ruleId, !rule.active);
+      }
+      return;
+    }
+    if (action === 'delete') {
+      deleteRepeatRuleEntry(ruleId);
+    }
+  }
+
+  function bindRepeatRowActions() {
+    if (window.__repeatRowActionsBound) {
+      return;
+    }
+    window.__repeatRowActionsBound = true;
+    document.addEventListener('click', function (event) {
+      const trigger = event.target && typeof event.target.closest === 'function'
+        ? event.target.closest('.repeat-row-actions__btn[data-repeat-action]')
+        : null;
+      if (!trigger || !trigger.closest('.repeat-view')) {
+        return;
+      }
+      event.preventDefault();
+      event.stopPropagation();
+      handleRepeatRowAction(trigger.dataset.repeatAction, trigger.dataset.ruleId || '');
+    });
+  }
+
   window.setRepeatViewTab = function (tab) {
     const nextTab = normalizeRepeatTab(tab);
     if (repeatViewTab === nextTab) {
@@ -1079,12 +1193,11 @@
   };
 
   window.toggleRepeatRuleState = function (ruleId) {
-    const rule = typeof findRecurRule === 'function' ? findRecurRule(ruleId) : null;
-    if (!rule || typeof updateRecurRule !== 'function') {
+    const rule = getRepeatRuleById(ruleId);
+    if (!rule) {
       return;
     }
-    updateRecurRule(ruleId, 'active', !rule.active);
-    refreshSideNavSoon();
+    setRepeatRuleActiveState(ruleId, !rule.active);
   };
 
   window.openRepeatTaskComposer = function () {
@@ -1121,6 +1234,7 @@
 
   window.getRepeatSceneTotalCount = getRepeatSceneTotalCount;
 
+  bindRepeatRowActions();
   hookRender();
   scheduleApply();
   refreshSideNavSoon();
