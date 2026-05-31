@@ -568,7 +568,6 @@
 
     return (
       '<div class="repeat-row-actions">' +
-      repeatRowActionButtonHtml('open', ruleId, '查看重复任务', docIconMarkup()) +
       repeatRowActionButtonHtml(
         'toggle',
         ruleId,
@@ -1122,10 +1121,6 @@
 
   function handleRepeatRowAction(action, ruleId) {
     if (!action || !ruleId) {
-      return;
-    }
-    if (action === 'open') {
-      window.jumpToRepeatRuleDetail(ruleId);
       return;
     }
     if (action === 'toggle') {
