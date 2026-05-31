@@ -140,10 +140,108 @@
   pointer-events: none !important;
 }
 
-#taskMode .list-panel #tList {
+:root {
   --task-check-accent: #d1453b;
   --task-check-accent-bg: #faeceb;
   --task-check-accent-shadow: rgba(209,69,59,.24);
+  --task-priority-ring-slot-width: 34px;
+  --task-priority-ring-slot-height: 22px;
+  --task-priority-ring-size: 18px;
+  --task-priority-ring-border-width: 1.5px;
+  --task-priority-ring-high-border-width: 1.75px;
+  --task-priority-ring-neutral-border: #94a3b8;
+  --task-priority-ring-neutral-border-dark: #6f7f92;
+  --task-priority-ring-neutral-bg: color-mix(in srgb, #94a3b8 9%, var(--card));
+  --task-priority-ring-neutral-bg-hover: color-mix(in srgb, #94a3b8 13%, var(--card));
+}
+
+.task-priority-ring,
+.task-priority-ring .tc-check {
+  width: var(--task-priority-ring-slot-width);
+  min-width: var(--task-priority-ring-slot-width);
+  height: var(--task-priority-ring-slot-height);
+  min-height: var(--task-priority-ring-slot-height);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.task-priority-ring {
+  position: relative;
+}
+
+.task-priority-ring .chk-ring {
+  width: var(--task-priority-ring-size);
+  min-width: var(--task-priority-ring-size);
+  height: var(--task-priority-ring-size);
+  min-height: var(--task-priority-ring-size);
+  border-style: solid !important;
+  border-width: var(--task-priority-ring-border-width) !important;
+  border-color: var(--task-priority-ring-neutral-border) !important;
+  background: var(--task-priority-ring-neutral-bg) !important;
+  box-shadow: none !important;
+  box-sizing: border-box;
+}
+
+.task-priority-ring .chk-ring-ico {
+  width: 12px;
+  height: 12px;
+}
+
+.task-priority-ring:not(.task-priority-ring--done):not(.task-priority-ring--archived):not(.task-priority-ring--high) .chk-ring:not(.checked):hover,
+.task-priority-ring:not(.task-priority-ring--done):not(.task-priority-ring--archived):not(.task-priority-ring--high) .chk-ring:not(.checked).hover-check {
+  border-color: var(--task-priority-ring-neutral-border) !important;
+  background: var(--task-priority-ring-neutral-bg-hover) !important;
+  box-shadow: none !important;
+}
+
+.task-priority-ring.task-priority-ring--high:not(.task-priority-ring--done):not(.task-priority-ring--archived) .chk-ring:not(.checked) {
+  border-width: var(--task-priority-ring-high-border-width) !important;
+  border-color: var(--task-priority-ring-accent, var(--task-check-accent)) !important;
+  background: var(--task-priority-ring-accent-bg, var(--task-check-accent-bg)) !important;
+}
+
+.task-priority-ring.task-priority-ring--high:not(.task-priority-ring--done):not(.task-priority-ring--archived) .chk-ring:not(.checked):hover,
+.task-priority-ring.task-priority-ring--high:not(.task-priority-ring--done):not(.task-priority-ring--archived) .chk-ring:not(.checked).hover-check {
+  border-color: var(--task-priority-ring-accent, var(--task-check-accent)) !important;
+  background: var(--task-priority-ring-accent-bg, var(--task-check-accent-bg)) !important;
+  box-shadow: none !important;
+}
+
+.task-priority-ring:not(.task-priority-ring--archived):not(.task-priority-ring--high) .chk-ring.checked {
+  background: var(--task-priority-ring-accent, var(--task-priority-ring-neutral-border)) !important;
+  border-color: var(--task-priority-ring-accent, var(--task-priority-ring-neutral-border)) !important;
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--task-priority-ring-accent, var(--task-priority-ring-neutral-border)) 32%, transparent) !important;
+}
+
+.task-priority-ring.task-priority-ring--high:not(.task-priority-ring--archived) .chk-ring.checked {
+  background: var(--task-priority-ring-accent, var(--task-check-accent)) !important;
+  border-color: var(--task-priority-ring-accent, var(--task-check-accent)) !important;
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--task-priority-ring-accent, var(--task-check-accent)) 32%, transparent) !important;
+}
+
+.task-priority-ring:not(.task-priority-ring--archived) .chk-ring.checked .chk-ring-ico {
+  color: #fff !important;
+  opacity: 1 !important;
+}
+
+.dark .task-priority-ring .chk-ring {
+  border-color: var(--task-priority-ring-neutral-border-dark) !important;
+  background: var(--card) !important;
+}
+
+.dark .task-priority-ring:not(.task-priority-ring--done):not(.task-priority-ring--archived):not(.task-priority-ring--high) .chk-ring:not(.checked):hover,
+.dark .task-priority-ring:not(.task-priority-ring--done):not(.task-priority-ring--archived):not(.task-priority-ring--high) .chk-ring:not(.checked).hover-check {
+  border-color: var(--task-priority-ring-neutral-border-dark) !important;
+  background: var(--card) !important;
+}
+
+.dark .task-priority-ring.task-priority-ring--high:not(.task-priority-ring--done):not(.task-priority-ring--archived) .chk-ring:not(.checked),
+.dark .task-priority-ring.task-priority-ring--high:not(.task-priority-ring--done):not(.task-priority-ring--archived) .chk-ring:not(.checked):hover,
+.dark .task-priority-ring.task-priority-ring--high:not(.task-priority-ring--done):not(.task-priority-ring--archived) .chk-ring:not(.checked).hover-check {
+  border-color: var(--task-priority-ring-accent, var(--task-check-accent)) !important;
+  background: color-mix(in srgb, var(--task-priority-ring-accent, var(--task-check-accent)) 10%, var(--card)) !important;
 }
 
 #taskMode .list-panel #tList .task-item > .task-row > .task-ck-slot > .task-ck-ring,
@@ -464,9 +562,6 @@
 
 /* Keep the collapse ghost visually identical to the row before it leaves #tList. */
 .task-item.task-item--collapse-ghost {
-  --task-check-accent: #d1453b;
-  --task-check-accent-bg: #faeceb;
-  --task-check-accent-shadow: rgba(209,69,59,.24);
   background: var(--card) !important;
   border: 1px solid var(--task-bd, #dbe4ef) !important;
   border-radius: 11px !important;

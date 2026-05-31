@@ -663,6 +663,18 @@
     );
   }
 
+  function repeatRuleBulletHtml(rule) {
+    const isHighPriority = !!rule && (rule.priority || 'normal') === 'high';
+    return (
+      '<span class="repeat-rule__bullet task-priority-ring' +
+      (isHighPriority ? ' task-priority-ring--high' : '') +
+      '" aria-hidden="true">' +
+      '<span class="tc-check">' +
+      '<span class="chk-ring"></span>' +
+      '</span></span>'
+    );
+  }
+
   function repeatTableRowHtmlLegacy(entry) {
     return (
       '<article class="repeat-table__row repeat-table__row--' +
@@ -674,7 +686,7 @@
       '" onclick="jumpToRepeatRuleDetail(' +
       jsArgAttr(entry.rule.id) +
       ')">' +
-      '<span class="repeat-rule__bullet" aria-hidden="true"></span>' +
+      repeatRuleBulletHtml(entry.rule) +
       '<span class="repeat-rule__title-copy">' +
       '<strong class="repeat-rule__title">' +
       html(entry.rule.text || '') +
@@ -753,7 +765,7 @@
       '" onclick="jumpToRepeatRuleDetail(' +
       jsArgAttr(entry.rule.id) +
       ')">' +
-      '<span class="repeat-rule__bullet" aria-hidden="true"></span>' +
+      repeatRuleBulletHtml(entry.rule) +
       '<span class="repeat-rule__title-copy">' +
       '<span class="repeat-rule__title">' +
       html(entry.rule.text || '') +
@@ -794,7 +806,7 @@
       '" onclick="jumpToRepeatRuleDetail(' +
       jsArgAttr(entry.rule.id) +
       ')">' +
-      '<span class="repeat-rule__bullet" aria-hidden="true"></span>' +
+      repeatRuleBulletHtml(entry.rule) +
       '<span class="repeat-rule__title-copy">' +
       '<span class="repeat-rule__title">' +
       html(entry.rule.text || '') +
