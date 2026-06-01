@@ -164,7 +164,7 @@
       if (typeof joinRecurringSummaryAndTime === 'function') {
         return joinRecurringSummaryAndTime(baseLabel, timeText);
       }
-      return timeText ? baseLabel + ' \u00b7 ' + timeText : baseLabel;
+      return timeText ? baseLabel + ' (' + timeText + ')' : baseLabel;
     };
     if (offset === 0) {
       return withTime('今天');
@@ -298,7 +298,7 @@
     if (typeof joinRecurringSummaryAndTime === 'function') {
       return joinRecurringSummaryAndTime(baseLabel, timeLabel);
     }
-    return baseLabel + ' \u00b7 ' + timeLabel;
+    return baseLabel + ' (' + timeLabel + ')';
   }
 
   function getRepeatEntryTone(entry) {
@@ -342,6 +342,32 @@
       return '';
     }
     return formatPlanTimeDisp(entry.rule.planTime);
+  }
+
+  function buildRepeatRuleMetaMarkup(ruleLabel, ruleTimeLabel) {
+    const summary = String(ruleLabel || '').trim();
+    const timeText = String(ruleTimeLabel || '').trim();
+    const combinedText = typeof joinRecurringSummaryAndTime === 'function'
+      ? joinRecurringSummaryAndTime(summary, timeText)
+      : (summary && timeText ? summary + ' (' + timeText + ')' : (summary || timeText));
+
+    if (typeof buildRecurringMetaTextHtml === 'function') {
+      return {
+        title: combinedText,
+        html:
+          '<span class="repeat-rule__meta-text task-recur-badge-txt">' +
+          buildRecurringMetaTextHtml(summary, timeText) +
+          '</span>'
+      };
+    }
+
+    return {
+      title: combinedText,
+      html:
+        '<span class="repeat-rule__meta-text">' +
+        html(combinedText) +
+        '</span>'
+    };
   }
 
   function buildRepeatEntry(rule) {
@@ -654,6 +680,8 @@
   }
 
   function repeatTableRowHtmlLegacy(entry) {
+    const ruleMeta = buildRepeatRuleMetaMarkup(entry.inlineRuleLabel, '');
+
     return (
       '<article class="repeat-table__row repeat-table__row--' +
       entry.tone +
@@ -674,14 +702,13 @@
       '</span></span></button></div>' +
       '<div class="repeat-table__cell repeat-table__cell--pattern" data-label="重复规则">' +
       '<span class="repeat-rule__meta" title="' +
-      html(entry.tooltip || entry.detailLabel) +
+      html(entry.tooltip || ruleMeta.title || entry.detailLabel) +
       '">' +
       '<span class="repeat-rule__meta-icon" aria-hidden="true">' +
       repeatRuleMetaIconMarkup() +
       '</span>' +
-      '<span class="repeat-rule__meta-text">' +
-      html(entry.inlineRuleLabel) +
-      '</span></span></div>' +
+      ruleMeta.html +
+      '</span></div>' +
       '<div class="repeat-table__cell repeat-table__cell--last" data-label="最后执行">' +
       '<span class="repeat-rule__date repeat-rule__date--muted">' +
       html(entry.lastLabel) +
@@ -733,6 +760,8 @@
   }
 
   function repeatTableRowHtmlLegacyCompact(entry) {
+    const ruleMeta = buildRepeatRuleMetaMarkup(entry.inlineRuleLabel, '');
+
     return (
       '<article class="repeat-table__row repeat-table__row--' +
       entry.tone +
@@ -753,14 +782,13 @@
       '</span></span></button></div>' +
       '<div class="repeat-table__cell repeat-table__cell--pattern" data-label="重复规则">' +
       '<span class="repeat-rule__meta" title="' +
-      html(entry.tooltip || entry.inlineRuleLabel) +
+      html(entry.tooltip || ruleMeta.title || entry.inlineRuleLabel) +
       '">' +
       '<span class="repeat-rule__meta-icon" aria-hidden="true">' +
       repeatRuleMetaIconMarkup() +
       '</span>' +
-      '<span class="repeat-rule__meta-text">' +
-      html(entry.inlineRuleLabel) +
-      '</span></span></div>' +
+      ruleMeta.html +
+      '</span></div>' +
       '<div class="repeat-table__cell repeat-table__cell--status" data-label="状态">' +
       repeatStatusPillHtml(entry) +
       '</div>' +
@@ -773,6 +801,7 @@
   function repeatTableRowHtml(entry) {
     const ruleLabel = entry.ruleLabel || getRepeatRuleDisplayLabelTop(entry);
     const ruleTimeLabel = entry.ruleTimeLabel || getRepeatRuleDisplayTimeTop(entry);
+    const ruleMeta = buildRepeatRuleMetaMarkup(ruleLabel, ruleTimeLabel);
 
     return (
       '<article class="repeat-table__row repeat-table__row--' +
@@ -791,18 +820,14 @@
       '</span></span></button></div>' +
       '<div class="repeat-table__cell repeat-table__cell--pattern" data-label="重复规则">' +
       '<span class="repeat-rule__meta" title="' +
-      html(entry.tooltip || ruleLabel || '') +
+      html(entry.tooltip || ruleMeta.title || ruleLabel || '') +
       '">' +
       '<span class="repeat-rule__meta-main">' +
       '<span class="repeat-rule__meta-icon" aria-hidden="true">' +
       repeatRuleMetaIconMarkup() +
       '</span>' +
-      '<span class="repeat-rule__meta-text">' +
-      html(ruleLabel || '') +
-      '</span></span>' +
-      (ruleTimeLabel
-        ? '<span class="repeat-rule__meta-time">' + html(ruleTimeLabel) + '</span>'
-        : '') +
+      ruleMeta.html +
+      '</span>' +
       '</span></div>' +
       '<div class="repeat-table__cell repeat-table__cell--status" data-label="状态">' +
       repeatStatusPillHtml(entry) +

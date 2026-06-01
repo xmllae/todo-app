@@ -462,6 +462,47 @@
   letter-spacing: 0 !important;
 }
 
+.task-recur-badge,
+.time-edit.time-edit--pill,
+.repeat-rule__meta {
+  --task-recur-meta-gap: 4px;
+  --task-recur-meta-leading-gap: 5px;
+}
+
+.task-recur-badge-txt,
+.time-edit-pill-prefix {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--task-recur-meta-gap);
+  min-width: 0;
+  max-width: 100%;
+  white-space: nowrap;
+}
+
+.task-recur-badge-summary,
+.task-recur-badge-time,
+.time-edit-pill-prefix-main,
+.time-edit-pill-prefix-open,
+.time-edit-pill-prefix-close {
+  display: inline-flex;
+  align-items: center;
+}
+
+.task-recur-badge-summary,
+.time-edit-pill-prefix-main {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.task-recur-badge-time,
+.time-edit-pill-prefix-open,
+.time-edit-pill-prefix-close {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
 #taskMode .list-panel #tList .task-row-center > .task-time-col.task-time-col--editing,
 #taskMode .list-panel #tList .task-row-center > .task-time-col.task-time-col--pill-edit {
   width: 100% !important;

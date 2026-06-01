@@ -433,7 +433,7 @@
 .repeat-rule__meta-main {
   display: inline-flex;
   align-items: center;
-  gap: .35rem;
+  gap: var(--task-recur-meta-leading-gap);
   min-width: 0;
   flex: 0 1 auto;
   max-width: 100%;
@@ -462,22 +462,13 @@
   text-overflow: ellipsis;
 }
 
-.repeat-rule__meta-time {
-  display: inline-flex;
-  align-items: center;
-  gap: .28rem;
+.repeat-rule__meta-text.task-recur-badge-txt {
+  max-width: 100%;
   color: inherit;
   font-size: inherit;
   line-height: inherit;
   font-weight: inherit;
   letter-spacing: inherit;
-  flex: 0 0 auto;
-  white-space: nowrap;
-}
-
-.repeat-rule__meta-time::before {
-  content: '\00b7';
-  color: inherit;
 }
 
 .repeat-status {
@@ -954,10 +945,6 @@
 
 .dark .repeat-rule__meta {
   color: var(--repeat-rule-meta-color);
-}
-
-.dark .repeat-rule__meta-time {
-  color: inherit;
 }
 
 .dark .repeat-table__row,

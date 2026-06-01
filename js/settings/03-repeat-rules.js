@@ -1129,23 +1129,67 @@ function formatPlanTimeDisp(planTime) {
 }
 
 function joinRecurringMetaParts(parts) {
-  return ([]).concat(parts || []).map(function(part) {
+  const normalized = ([]).concat(parts || []).map(function(part) {
     return String(part || "").trim();
-  }).filter(Boolean).join(" \u00b7 ");
+  }).filter(Boolean);
+
+  if (!normalized.length) {
+    return "";
+  }
+  if (normalized.length === 1) {
+    return normalized[0];
+  }
+
+  return normalized[0] + " (" + normalized.slice(1).join(" ") + ")";
+}
+
+function buildRecurringMetaModel(summary, timeText) {
+  const summaryText = String(summary || "").trim();
+  const timeValue = String(timeText || "").trim();
+
+  return {
+    summary: summaryText,
+    time: timeValue,
+    text: joinRecurringMetaParts([summaryText, timeValue])
+  };
 }
 
 function joinRecurringSummaryAndTime(summary, timeText) {
-  return joinRecurringMetaParts([summary, timeText]);
+  return buildRecurringMetaModel(summary, timeText).text;
 }
 
-function buildRecurringSummaryPrefixText(summary, hasTrailingValue) {
+function buildRecurringMetaTextHtml(summary, timeText) {
+  const meta = buildRecurringMetaModel(summary, timeText);
+
+  if (!meta.summary && !meta.time) {
+    return "";
+  }
+  if (!meta.summary) {
+    return '<span class="task-recur-badge-time">' + esc(meta.time) + "</span>";
+  }
+  if (!meta.time) {
+    return '<span class="task-recur-badge-summary">' + esc(meta.summary) + "</span>";
+  }
+
+  return '<span class="task-recur-badge-summary">' + esc(meta.summary) + '</span><span class="task-recur-badge-time">(' + esc(meta.time) + ")</span>";
+}
+
+function buildRecurringSummaryPrefixHtml(summary, hasTrailingValue) {
   const base = String(summary || "").trim();
 
   if (!base) {
     return "";
   }
 
-  return hasTrailingValue ? base + " \u00b7 " : base;
+  return hasTrailingValue
+    ? '<span class="time-edit-pill-prefix-main">' + esc(base) + '</span><span class="time-edit-pill-prefix-open" aria-hidden="true">(</span>'
+    : '<span class="time-edit-pill-prefix-main">' + esc(base) + "</span>";
+}
+
+function buildRecurringSummarySuffixHtml(hasLeadingValue) {
+  return hasLeadingValue
+    ? '<span class="time-edit-pill-prefix-close" aria-hidden="true">)</span>'
+    : "";
 }
 
 function taskRecurRowBadgeSvg() {
@@ -1159,9 +1203,11 @@ function taskRowRecurTimeInnerHtml(task, planTime) {
       ? taskRowPlainTimeText(task, formatPlanTimeDisp(planTime))
       : formatPlanTimeDisp(planTime))
     : "";
-  const label = joinRecurringSummaryAndTime(desc, timeText);
+  const meta = buildRecurringMetaModel(desc, timeText);
+  const label = meta.text;
+  const textHtml = buildRecurringMetaTextHtml(desc, timeText);
 
-  return '<span class="task-recur-badge time-disp" onclick="event.stopPropagation();if(window.openTaskDetail)window.openTaskDetail(' + task.id + ')" title="' + esc(label) + '">' + taskRecurRowBadgeSvg() + '<span class="task-recur-badge-txt">' + esc(label) + "</span></span>";
+  return '<span class="task-recur-badge time-disp" onclick="event.stopPropagation();if(window.openTaskDetail)window.openTaskDetail(' + task.id + ')" title="' + esc(label) + '">' + taskRecurRowBadgeSvg() + '<span class="task-recur-badge-txt">' + textHtml + "</span></span>";
 }
 
 function checkUnfreeze() {
