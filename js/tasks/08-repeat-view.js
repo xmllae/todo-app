@@ -447,12 +447,7 @@
   function getRepeatSceneState() {
     const entries = collectRepeatEntries();
     const filteredEntries = filterRepeatEntries(entries);
-    const upcomingEntries = entries
-      .filter(function (entry) {
-        return entry.statusKey === 'active' && !!entry.nextDs;
-      })
-      .sort(compareNextDate)
-      .slice(0, 3);
+    const sidebarStats = getRepeatSidebarStats();
 
     return {
       activeTab: normalizeRepeatTab(repeatViewTab),
@@ -465,7 +460,7 @@
       completedCount: 0,
       filteredCount: filteredEntries.length,
       entries: filteredEntries,
-      upcomingEntries: upcomingEntries,
+      sidebarStats: sidebarStats,
     };
   }
 
@@ -543,6 +538,95 @@
       '<line x1="10" y1="10" x2="10" y2="17"></line>' +
       '<line x1="14" y1="10" x2="14" y2="17"></line>' +
       '</svg>'
+    );
+  }
+
+  function chevronsLeftIconMarkup() {
+    return (
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<polyline points="13 17 8 12 13 7"></polyline>' +
+      '<polyline points="18 17 13 12 18 7"></polyline>' +
+      '</svg>'
+    );
+  }
+
+  function calendarClockIconMarkup() {
+    return (
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<rect x="3" y="5" width="18" height="16" rx="3"></rect>' +
+      '<path d="M8 3v4"></path>' +
+      '<path d="M16 3v4"></path>' +
+      '<path d="M3 10h18"></path>' +
+      '<path d="M12 13v3l2 1"></path>' +
+      '<circle cx="12" cy="16" r="3.5"></circle>' +
+      '</svg>'
+    );
+  }
+
+  function trendArcIconMarkup() {
+    return (
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<path d="M4 17l4-4 3 3 6-7"></path>' +
+      '<path d="M17 9h3v3"></path>' +
+      '</svg>'
+    );
+  }
+
+  function streakFlameIconMarkup() {
+    return (
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<path d="M12 3c2 2.3 3.2 4.1 3.2 6.1 0 1.7-.8 3-2.3 4.3-.9.8-1.3 1.6-1.3 2.6 0 1.6 1.2 2.8 2.9 2.8 3.2 0 5.5-2.6 5.5-6.1 0-3.6-2-6.8-6-9.7z"></path>' +
+      '<path d="M9.4 10.8C6.8 12.8 5 15.2 5 18.1 5 20.8 7 23 10.1 23c2.5 0 4.9-1.8 4.9-4.8 0-2.2-1.3-3.8-3.3-5.2"></path>' +
+      '</svg>'
+    );
+  }
+
+  function repeatSideHeadActionHtml() {
+    return (
+      '<button type="button" class="repeat-side-card__head-action" ' +
+      'onclick="leaveRepeatTaskView()" aria-label="返回今日日程" title="返回今日日程">' +
+      '<span class="repeat-side-card__head-action-icon" aria-hidden="true">' +
+      chevronsLeftIconMarkup() +
+      '</span></button>'
+    );
+  }
+
+  function repeatSideActionButtonHtml(iconMarkup, title, sub, onclickCode) {
+    return (
+      '<button type="button" class="repeat-side-actions__btn" onclick="' +
+      html(onclickCode || '') +
+      '">' +
+      '<span class="repeat-side-actions__icon" aria-hidden="true">' +
+      iconMarkup +
+      '</span>' +
+      '<span class="repeat-side-actions__copy">' +
+      '<strong>' +
+      html(title || '') +
+      '</strong>' +
+      '<span>' +
+      html(sub || '') +
+      '</span></span></button>'
+    );
+  }
+
+  function repeatStatItemHtml(kind, iconMarkup, title, sub, value) {
+    return (
+      '<div class="repeat-stats__item repeat-stats__item--' +
+      html(kind || 'neutral') +
+      '">' +
+      '<span class="repeat-stats__icon" aria-hidden="true">' +
+      iconMarkup +
+      '</span>' +
+      '<span class="repeat-stats__copy">' +
+      '<strong>' +
+      html(title || '') +
+      '</strong>' +
+      '<span>' +
+      html(sub || '') +
+      '</span></span>' +
+      '<strong class="repeat-stats__value">' +
+      html(value || '') +
+      '</strong></div>'
     );
   }
 
@@ -886,7 +970,7 @@
       root.appendChild(shell);
     }
     shell.className = REPEAT_SHELL_CLASS;
-    shell.setAttribute('aria-label', '重复任务概览');
+    shell.setAttribute('aria-label', '重复任务侧栏');
     return shell;
   }
 
@@ -924,30 +1008,87 @@
     );
   }
 
-  function repeatUpcomingRowHtml(entry) {
+  function repeatOverviewHeadHtml(title, actionHtml) {
     return (
-      '<button type="button" class="repeat-upcoming__item repeat-upcoming__item--' +
-      entry.tone +
-      '" onclick="jumpToRepeatRuleDetail(' +
-      jsArgAttr(entry.rule.id) +
-      ')">' +
-      '<span class="repeat-upcoming__accent" aria-hidden="true"></span>' +
-      '<span class="repeat-upcoming__copy">' +
-      '<strong title="' +
-      html(entry.rule.text || '') +
-      '">' +
-      html(entry.rule.text || '') +
-      '</strong>' +
-      '<span class="repeat-upcoming__meta">' +
-      '<span class="repeat-rule__type-pill repeat-rule__type-pill--' +
-      entry.category +
-      '">' +
-      html(entry.typeLabel) +
-      '</span></span></span>' +
-      '<em>' +
-      html(entry.nextLabel) +
-      '</em></button>'
+      '<div class="repeat-side-card__head-row">' +
+      '<div class="repeat-side-card__head">' +
+      html(title || '') +
+      '</div>' +
+      (actionHtml || '') +
+      '</div>'
     );
+  }
+
+  function getRepeatListedRecurringTasksForDate(ds) {
+    if (!ds || !T || !Array.isArray(T[ds])) {
+      return [];
+    }
+    return T[ds].filter(function (task) {
+      return isListedTask(task) && !!task.recurRuleId && !task.frozen;
+    });
+  }
+
+  function getRepeatWeekStart(todayDs) {
+    const parsed = typeof parseDS === 'function' ? parseDS(todayDs) : null;
+    if (!parsed || Number.isNaN(parsed.getTime())) {
+      return todayDs || '';
+    }
+    const weekday = parsed.getDay();
+    const offset = weekday === 0 ? -6 : 1 - weekday;
+    parsed.setDate(parsed.getDate() + offset);
+    return fd(parsed);
+  }
+
+  function getRepeatCompletionStreak(todayDs) {
+    if (!todayDs) {
+      return 0;
+    }
+    let streakDays = 0;
+    for (let offset = 0; offset < 366; offset += 1) {
+      const currentDs = addDays(todayDs, -offset);
+      const dayTasks = getRepeatListedRecurringTasksForDate(currentDs);
+      if (!dayTasks.length) {
+        break;
+      }
+      if (!dayTasks.every(function (task) { return !!task.done; })) {
+        break;
+      }
+      streakDays += 1;
+    }
+    return streakDays;
+  }
+
+  function getRepeatSidebarStats() {
+    const todayDs = todayKey();
+    const todayTasks = getRepeatListedRecurringTasksForDate(todayDs);
+    const weekStart = getRepeatWeekStart(todayDs);
+    let weekTotal = 0;
+    let weekDone = 0;
+
+    for (let offset = 0; offset < 7; offset += 1) {
+      const currentDs = addDays(weekStart, offset);
+      const dayTasks = getRepeatListedRecurringTasksForDate(currentDs);
+      weekTotal += dayTasks.length;
+      weekDone += dayTasks.filter(function (task) { return !!task.done; }).length;
+    }
+
+    const completionRate = weekTotal ? Math.round((weekDone / weekTotal) * 100) : 0;
+    const streakDays = getRepeatCompletionStreak(todayDs);
+
+    return {
+      todayCount: todayTasks.length,
+      todaySub: todayTasks.length
+        ? '\u4eca\u65e5\u6709' + todayTasks.length + '\u4e2a\u91cd\u590d\u4efb\u52a1'
+        : '\u4eca\u65e5\u65e0\u91cd\u590d\u4efb\u52a1',
+      weekRate: completionRate,
+      weekSub: weekTotal
+        ? (weekDone ? weekDone + '/' + weekTotal + ' \u5df2\u5b8c\u6210' : '\u6682\u65e0\u5b8c\u6210\u4efb\u52a1')
+        : '\u672c\u5468\u6682\u65e0\u91cd\u590d\u4efb\u52a1',
+      streakDays: streakDays,
+      streakSub: streakDays
+        ? '\u8fde\u7eed' + streakDays + '\u5929\u5168\u90e8\u5b8c\u6210'
+        : '\u7ee7\u7eed\u4fdd\u6301\u5f53\u524d\u8282\u594f'
+    };
   }
 
   function renderRepeatOverviewSidebar(state) {
@@ -961,44 +1102,69 @@
     }
     root.classList.remove('is-week-action', 'is-overdue-action', 'is-priority-action');
     root.classList.add('is-repeat-action');
-    root.setAttribute('aria-label', '重复任务概览');
+    root.setAttribute('aria-label', '\u91cd\u590d\u4efb\u52a1\u4fa7\u8fb9\u680f');
+
+    const stats = state.sidebarStats || getRepeatSidebarStats();
 
     shell.innerHTML =
       '<section class="repeat-side-card repeat-side-card--summary">' +
-      '<div class="repeat-side-card__head">重复任务概览</div>' +
+      repeatOverviewHeadHtml('\u4efb\u52a1\u6982\u89c8', repeatSideHeadActionHtml()) +
       '<div class="repeat-overview__hero">' +
       '<div class="repeat-overview__ring" style="--repeat-ring-bg:' +
       repeatOverviewRingGradient(state) +
       '">' +
       '<div class="repeat-overview__ring-center"><strong>' +
       state.totalCount +
-      '</strong><span>总计</span></div></div>' +
+      '</strong><span>\u603b\u8ba1</span></div></div>' +
       '<div class="repeat-overview__legend">' +
-      repeatOverviewLegendItemHtml(state.activeCount, '进行中', 'active') +
-      repeatOverviewLegendItemHtml(state.pausedCount, '已暂停', 'paused') +
-      repeatOverviewLegendItemHtml(state.completedCount, '已完成', 'completed') +
-      '</div></div></section>' +
-      '<section class="repeat-side-card repeat-side-card--upcoming">' +
-      '<div class="repeat-side-card__head">即将执行</div>' +
-      '<div class="repeat-upcoming__list">' +
-      (state.upcomingEntries.length
-        ? state.upcomingEntries.map(repeatUpcomingRowHtml).join('')
-        : '<div class="repeat-upcoming__empty">目前没有进行中的重复安排。</div>') +
-      '</div>' +
-      '<button type="button" class="repeat-side-card__ghost" onclick="leaveRepeatTaskView()">回到今日日程</button>' +
+      repeatOverviewLegendItemHtml(state.activeCount, '\u8fdb\u884c\u4e2d', 'active') +
+      repeatOverviewLegendItemHtml(state.pausedCount, '\u5df2\u6682\u505c', 'paused') +
+      repeatOverviewLegendItemHtml(state.completedCount, '\u5df2\u5b8c\u6210', 'completed') +
+      '</div></div>' +
       '</section>' +
       '<section class="repeat-side-card repeat-side-card--actions">' +
-      '<div class="repeat-side-card__head">管理快捷操作</div>' +
+      repeatOverviewHeadHtml('\u5feb\u6377\u64cd\u4f5c') +
       '<div class="repeat-side-actions">' +
-      '<button type="button" class="repeat-side-actions__btn" onclick="openRepeatTaskComposer()">' +
-      '<span class="repeat-side-actions__icon" aria-hidden="true">' +
-      plusIconMarkup() +
-      '</span><span>新建重复任务</span></button>' +
-      '<button type="button" class="repeat-side-actions__btn" onclick="openRepeatRuleManager()">' +
-      '<span class="repeat-side-actions__icon" aria-hidden="true">' +
-      docIconMarkup() +
-      '</span><span>管理重复规则</span></button>' +
-      '</div></section>';
+      repeatSideActionButtonHtml(
+        plusIconMarkup(),
+        '\u65b0\u5efa\u91cd\u590d\u4efb\u52a1',
+        '\u521b\u5efa\u65b0\u7684\u91cd\u590d\u4efb\u52a1',
+        'openRepeatTaskComposer()'
+      ) +
+      repeatSideActionButtonHtml(
+        docIconMarkup(),
+        '\u7ba1\u7406\u91cd\u590d\u89c4\u5219',
+        '\u8bbe\u7f6e\u91cd\u590d\u89c4\u5219\u4e0e\u9891\u7387',
+        'openRepeatRuleManager()'
+      ) +
+      '</div>' +
+      '</section>' +
+      '<section class="repeat-side-card repeat-side-card--stats">' +
+      repeatOverviewHeadHtml('\u7edf\u8ba1\u4fe1\u606f') +
+      '<div class="repeat-stats">' +
+      repeatStatItemHtml(
+        'today',
+        calendarClockIconMarkup(),
+        '\u4eca\u65e5\u4efb\u52a1',
+        stats.todaySub,
+        String(stats.todayCount)
+      ) +
+      repeatStatItemHtml(
+        'rate',
+        trendArcIconMarkup(),
+        '\u672c\u5468\u5b8c\u6210\u7387',
+        stats.weekSub,
+        stats.weekRate + '%'
+      ) +
+      repeatStatItemHtml(
+        'streak',
+        streakFlameIconMarkup(),
+        '\u8fde\u7eed\u5b8c\u6210',
+        stats.streakSub,
+        stats.streakDays + ' \u5929'
+      ) +
+      '</div>' +
+      '</section>';
   }
 
   function clearRepeatOverviewSidebar() {
