@@ -467,6 +467,8 @@
 .repeat-rule__meta {
   --task-recur-meta-gap: 4px;
   --task-recur-meta-leading-gap: 5px;
+  --task-recur-meta-time-scale: 1;
+  --task-recur-meta-time-opacity: .88;
 }
 
 .task-recur-badge-txt,
@@ -501,6 +503,13 @@
 .time-edit-pill-prefix-close {
   flex: 0 0 auto;
   white-space: nowrap;
+}
+
+.task-recur-badge-summary + .task-recur-badge-time {
+  font-size: calc(1em * var(--task-recur-meta-time-scale));
+  opacity: var(--task-recur-meta-time-opacity);
+  align-self: flex-end;
+  transform: translateY(.04em);
 }
 
 #taskMode .list-panel #tList .task-row-center > .task-time-col.task-time-col--editing,
