@@ -816,41 +816,18 @@
   display: block;
 }
 
-.repeat-side-actions,
 .repeat-stats {
   display: flex;
   flex-direction: column;
   gap: .72rem;
 }
 
-.repeat-side-actions__btn,
 .repeat-stats__item {
   width: 100%;
   border: 1px solid rgba(226, 232, 240, .82);
   border-radius: 1rem;
   background: rgba(255, 255, 255, .92);
 }
-
-.repeat-side-actions__btn {
-  display: flex;
-  align-items: center;
-  gap: .88rem;
-  padding: .95rem 1rem;
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-  transition: transform .16s ease, border-color .2s ease, color .2s ease, background .2s ease;
-}
-
-.repeat-side-actions__btn:hover {
-  color: var(--repeat-accent);
-  border-color: rgba(165, 180, 252, .78);
-  background: rgba(249, 250, 255, .96);
-  transform: translateY(-1px);
-}
-
-.repeat-side-actions__icon,
 .repeat-stats__icon {
   width: 1.12rem;
   min-width: 1.12rem;
@@ -859,39 +836,24 @@
   align-items: center;
   justify-content: center;
 }
-
-.repeat-side-actions__icon {
-  color: #64748b;
-}
-
-.repeat-side-actions__icon svg,
 .repeat-stats__icon svg {
   width: 100%;
   height: 100%;
   display: block;
 }
 
-.repeat-side-actions__copy,
 .repeat-stats__copy {
   min-width: 0;
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
 }
-
-.repeat-side-actions__copy {
-  gap: .18rem;
-}
-
-.repeat-side-actions__copy strong,
 .repeat-stats__copy strong {
   color: #0f172a;
   font-size: .94rem;
   line-height: 1.28;
-  font-weight: 760;
+  font-weight: 500;
 }
-
-.repeat-side-actions__copy span,
 .repeat-stats__copy span {
   color: #94a3b8;
   font-size: .78rem;
@@ -930,7 +892,7 @@
   color: #334155;
   font-size: 1.15rem;
   line-height: 1;
-  font-weight: 820;
+  font-weight: 500;
   letter-spacing: -.03em;
   white-space: nowrap;
 }
@@ -952,7 +914,6 @@
 
 .dark .repeat-side-card__head,
 .dark .repeat-overview__ring-center strong,
-.dark .repeat-side-actions__copy strong,
 .dark .repeat-stats__copy strong,
 .dark .repeat-stats__value,
 .dark .repeat-rule__title,
@@ -964,7 +925,6 @@
 .dark .repeat-rule__hint,
 .dark .repeat-overview__ring-center span,
 .dark .repeat-overview__legend-label,
-.dark .repeat-side-actions__copy span,
 .dark .repeat-stats__copy span,
 .dark .repeat-empty__sub {
   color: #94a3b8;
@@ -976,7 +936,6 @@
 
 .dark .repeat-table__row,
 .dark .repeat-side-card,
-.dark .repeat-side-actions__btn,
 .dark .repeat-stats__item,
 .dark .repeat-side-card__head-action {
   border-color: rgba(51, 65, 85, .9);

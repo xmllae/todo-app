@@ -507,28 +507,6 @@
     );
   }
 
-  function plusIconMarkup() {
-    return (
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" aria-hidden="true">' +
-      '<circle cx="12" cy="12" r="9"></circle>' +
-      '<line x1="12" y1="8" x2="12" y2="16"></line>' +
-      '<line x1="8" y1="12" x2="16" y2="12"></line>' +
-      '</svg>'
-    );
-  }
-
-  function docIconMarkup() {
-    return (
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-      '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>' +
-      '<polyline points="14 2 14 8 20 8"></polyline>' +
-      '<line x1="16" y1="13" x2="8" y2="13"></line>' +
-      '<line x1="16" y1="17" x2="8" y2="17"></line>' +
-      '<polyline points="10 9 9 9 8 9"></polyline>' +
-      '</svg>'
-    );
-  }
-
   function trashIconMarkup() {
     return (
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
@@ -588,24 +566,6 @@
       '<span class="repeat-side-card__head-action-icon" aria-hidden="true">' +
       chevronsLeftIconMarkup() +
       '</span></button>'
-    );
-  }
-
-  function repeatSideActionButtonHtml(iconMarkup, title, sub, onclickCode) {
-    return (
-      '<button type="button" class="repeat-side-actions__btn" onclick="' +
-      html(onclickCode || '') +
-      '">' +
-      '<span class="repeat-side-actions__icon" aria-hidden="true">' +
-      iconMarkup +
-      '</span>' +
-      '<span class="repeat-side-actions__copy">' +
-      '<strong>' +
-      html(title || '') +
-      '</strong>' +
-      '<span>' +
-      html(sub || '') +
-      '</span></span></button>'
     );
   }
 
@@ -1150,23 +1110,6 @@
       repeatOverviewLegendItemHtml(state.pausedCount, '\u5df2\u6682\u505c', 'paused') +
       '</div></div>' +
       '</section>' +
-      '<section class="repeat-side-card repeat-side-card--actions">' +
-      repeatOverviewHeadHtml('\u5feb\u6377\u64cd\u4f5c') +
-      '<div class="repeat-side-actions">' +
-      repeatSideActionButtonHtml(
-        plusIconMarkup(),
-        '\u65b0\u5efa\u91cd\u590d\u4efb\u52a1',
-        '\u521b\u5efa\u65b0\u7684\u91cd\u590d\u4efb\u52a1',
-        'openRepeatTaskComposer()'
-      ) +
-      repeatSideActionButtonHtml(
-        docIconMarkup(),
-        '\u7ba1\u7406\u91cd\u590d\u89c4\u5219',
-        '\u8bbe\u7f6e\u91cd\u590d\u89c4\u5219\u4e0e\u9891\u7387',
-        'openRepeatRuleManager()'
-      ) +
-      '</div>' +
-      '</section>' +
       '<section class="repeat-side-card repeat-side-card--stats">' +
       repeatOverviewHeadHtml('\u7edf\u8ba1\u4fe1\u606f') +
       '<div class="repeat-stats">' +
@@ -1425,18 +1368,6 @@
         toast('添加任务后，可在任务详情里设置重复规则');
       }
     }, 60);
-  };
-
-  window.openRepeatRuleManager = function () {
-    if (typeof navigate === 'function') {
-      navigate('/settings');
-    }
-    setTimeout(function () {
-      const list = document.getElementById('recurList');
-      if (list && typeof list.scrollIntoView === 'function') {
-        list.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    }, 120);
   };
 
   window.leaveRepeatTaskView = function () {
