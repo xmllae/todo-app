@@ -975,9 +975,32 @@
   }
 
   function repeatOverviewRingGradient(state) {
-    const total = Math.max(1, state.activeCount + state.pausedCount + state.completedCount);
-    const activeEnd = (state.activeCount / total) * 100;
-    const pausedEnd = activeEnd + (state.pausedCount / total) * 100;
+    const activeCount = Math.max(0, Number(state && state.activeCount) || 0);
+    const pausedCount = Math.max(0, Number(state && state.pausedCount) || 0);
+    const completedCount = Math.max(0, Number(state && state.completedCount) || 0);
+    const includeCompleted = !!(state && state.showCompleted);
+    const visibleTotal = activeCount + pausedCount + (includeCompleted ? completedCount : 0);
+
+    if (!visibleTotal) {
+      return 'conic-gradient(#e2e8f0 0 100%)';
+    }
+
+    const total = Math.max(1, visibleTotal);
+    const activeEnd = (activeCount / total) * 100;
+    const pausedEnd = activeEnd + (pausedCount / total) * 100;
+
+    if (!includeCompleted) {
+      return (
+        'conic-gradient(' +
+        '#4ade80 0 ' +
+        activeEnd +
+        '%, ' +
+        '#a5b4fc ' +
+        activeEnd +
+        '% 100%)'
+      );
+    }
+
     return (
       'conic-gradient(' +
       '#4ade80 0 ' +
@@ -997,10 +1020,9 @@
   function repeatOverviewLegendItemHtml(count, label, tone) {
     return (
       '<div class="repeat-overview__legend-item">' +
-      '<span class="repeat-overview__legend-label">' +
-      '<span class="repeat-overview__legend-dot repeat-overview__legend-dot--' +
+      '<span class="repeat-overview__legend-label repeat-overview__legend-label--' +
       tone +
-      '" aria-hidden="true"></span>' +
+      '">' +
       html(label) +
       '</span><strong>' +
       count +
@@ -1105,21 +1127,27 @@
     root.setAttribute('aria-label', '\u91cd\u590d\u4efb\u52a1\u4fa7\u8fb9\u680f');
 
     const stats = state.sidebarStats || getRepeatSidebarStats();
+    const summaryState = {
+      activeCount: state.activeCount,
+      pausedCount: state.pausedCount,
+      completedCount: state.completedCount,
+      showCompleted: false,
+    };
+    const summaryTotal = Math.max(0, summaryState.activeCount + summaryState.pausedCount);
 
     shell.innerHTML =
       '<section class="repeat-side-card repeat-side-card--summary">' +
       repeatOverviewHeadHtml('\u4efb\u52a1\u6982\u89c8', repeatSideHeadActionHtml()) +
       '<div class="repeat-overview__hero">' +
       '<div class="repeat-overview__ring" style="--repeat-ring-bg:' +
-      repeatOverviewRingGradient(state) +
+      repeatOverviewRingGradient(summaryState) +
       '">' +
       '<div class="repeat-overview__ring-center"><strong>' +
-      state.totalCount +
+      summaryTotal +
       '</strong><span>\u603b\u8ba1</span></div></div>' +
       '<div class="repeat-overview__legend">' +
       repeatOverviewLegendItemHtml(state.activeCount, '\u8fdb\u884c\u4e2d', 'active') +
       repeatOverviewLegendItemHtml(state.pausedCount, '\u5df2\u6682\u505c', 'paused') +
-      repeatOverviewLegendItemHtml(state.completedCount, '\u5df2\u5b8c\u6210', 'completed') +
       '</div></div>' +
       '</section>' +
       '<section class="repeat-side-card repeat-side-card--actions">' +
