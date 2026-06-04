@@ -1559,22 +1559,8 @@ function setTaskDateTitle(ds){
   const titleParts=ensureTaskStandardTitleParts(el);
   if(!titleParts)return;
   const mainEl=titleParts.mainEl,subEl=titleParts.subEl;
-  mainEl.style.display="block";
-  mainEl.style.fontFamily='-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif';
-  mainEl.style.fontSize="24px";
-  mainEl.style.fontWeight="700";
-  mainEl.style.lineHeight="1";
-  mainEl.style.letterSpacing="-0.025em";
-  mainEl.style.color="#0f172a";
-  mainEl.style.margin="0 0 4px 0";
-  subEl.style.display="block";
-  subEl.style.fontFamily='-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif';
-  subEl.style.fontSize="13px";
-  subEl.style.fontWeight="500";
-  subEl.style.lineHeight="1.5";
-  subEl.style.letterSpacing="0.025em";
-  subEl.style.color="#64748b";
-  subEl.style.margin="0";
+  mainEl.removeAttribute("style");
+  subEl.removeAttribute("style");
   const isWeekScope=quickMode==="week";
   let useRangeOffset=false,useRelative=false,mainText="",subText="",modeKey="d";
   if(isWeekScope){

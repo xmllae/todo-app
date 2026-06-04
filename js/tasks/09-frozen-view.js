@@ -11,12 +11,16 @@
   const FROZEN_BODY_CLASS = 'body--frozen-view';
   const FROZEN_FILTER_STORAGE_KEY = 'todo_frozen_view_filter_v1';
   const FROZEN_SORT_STORAGE_KEY = 'todo_frozen_view_sort_v1';
+  const FROZEN_PAGE_SIZE_STORAGE_KEY = 'todo_frozen_view_page_size_v1';
   const FROZEN_FILTERS = ['all', 'high', 'repeating'];
   const FROZEN_SORT_MODES = ['latest', 'schedule'];
+  const FROZEN_PAGE_SIZES = [10, 20, 50];
   const DAY_MS = 86400000;
 
   let frozenViewFilter = readSavedFrozenFilter();
   let frozenViewSortMode = readSavedFrozenSortMode();
+  let frozenViewPage = 1;
+  let frozenViewPageSize = readSavedFrozenPageSize();
 
   function html(value) {
     if (typeof esc === 'function') {
@@ -87,6 +91,25 @@
   function persistFrozenSortMode(mode) {
     try {
       localStorage.setItem(FROZEN_SORT_STORAGE_KEY, normalizeFrozenSortMode(mode));
+    } catch (error) {}
+  }
+
+  function normalizeFrozenPageSize(size) {
+    const pageSize = parseInt(size, 10);
+    return FROZEN_PAGE_SIZES.indexOf(pageSize) >= 0 ? pageSize : FROZEN_PAGE_SIZES[0];
+  }
+
+  function readSavedFrozenPageSize() {
+    try {
+      return normalizeFrozenPageSize(localStorage.getItem(FROZEN_PAGE_SIZE_STORAGE_KEY));
+    } catch (error) {
+      return FROZEN_PAGE_SIZES[0];
+    }
+  }
+
+  function persistFrozenPageSize(size) {
+    try {
+      localStorage.setItem(FROZEN_PAGE_SIZE_STORAGE_KEY, String(normalizeFrozenPageSize(size)));
     } catch (error) {}
   }
 
@@ -386,9 +409,48 @@
     }).length;
   }
 
+  function buildFrozenPagerPages(currentPage, totalPages) {
+    const visibleCount = 3;
+    const pages = [];
+    let start = Math.max(1, currentPage - 1);
+    let end = Math.min(totalPages, start + visibleCount - 1);
+    if (end - start < visibleCount - 1) {
+      start = Math.max(1, end - visibleCount + 1);
+    }
+    for (let page = start; page <= end; page += 1) {
+      pages.push(page);
+    }
+    return pages;
+  }
+
+  function buildFrozenPagerState(entries) {
+    const rows = Array.isArray(entries) ? entries : [];
+    const pageSize = normalizeFrozenPageSize(frozenViewPageSize);
+    const totalItems = rows.length;
+    const totalPages = Math.max(1, Math.ceil(Math.max(totalItems, 1) / pageSize));
+    const currentPage = Math.min(Math.max(1, frozenViewPage), totalPages);
+    const startIndex = totalItems ? (currentPage - 1) * pageSize : 0;
+    const endIndex = Math.min(startIndex + pageSize, totalItems);
+
+    frozenViewPage = currentPage;
+    frozenViewPageSize = pageSize;
+
+    return {
+      currentPage: currentPage,
+      totalItems: totalItems,
+      totalPages: totalPages,
+      pageSize: pageSize,
+      hasPrev: currentPage > 1,
+      hasNext: currentPage < totalPages,
+      pages: buildFrozenPagerPages(currentPage, totalPages),
+      entries: rows.slice(startIndex, endIndex)
+    };
+  }
+
   function getFrozenSceneState() {
     const allEntries = collectFrozenEntries().sort(compareFrozenEntries);
     const filteredEntries = allEntries.filter(matchesFrozenFilter);
+    const pager = buildFrozenPagerState(filteredEntries);
     const latestEntries = allEntries.slice(0, 3);
 
     return {
@@ -401,7 +463,8 @@
       weekCount: allEntries.filter(function (entry) { return entry.ageBucket === 'week'; }).length,
       earlierCount: allEntries.filter(function (entry) { return entry.ageBucket === 'earlier'; }).length,
       filteredCount: filteredEntries.length,
-      entries: filteredEntries,
+      entries: pager.entries,
+      pager: pager,
       latestEntries: latestEntries
     };
   }
@@ -560,6 +623,23 @@
     );
   }
 
+  function pagerArrowIconMarkup(direction) {
+    const points = direction === 'left' ? '14.5 6.5 9 12 14.5 17.5' : '9.5 6.5 15 12 9.5 17.5';
+    return (
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<polyline points="' + points + '"></polyline>' +
+      '</svg>'
+    );
+  }
+
+  function pagerChevronDownIconMarkup() {
+    return (
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<polyline points="7 10 12 15 17 10"></polyline>' +
+      '</svg>'
+    );
+  }
+
   function frozenRowActionButtonHtml(action, label, iconMarkup, actionClass) {
     return (
       '<button type="button" class="frozen-row__action' +
@@ -629,6 +709,73 @@
     );
   }
 
+  function frozenPagerPageButtonHtml(pageNumber, currentPage) {
+    return (
+      '<button type="button" class="frozen-pager__btn' +
+      (pageNumber === currentPage ? ' is-active' : '') +
+      '" onclick="setFrozenViewPage(' +
+      pageNumber +
+      ')"' +
+      (pageNumber === currentPage ? ' aria-current="page"' : '') +
+      '>' +
+      pageNumber +
+      '</button>'
+    );
+  }
+
+  function frozenPagerSizeOptionsHtml(pageSize) {
+    return FROZEN_PAGE_SIZES.map(function (size) {
+      return (
+        '<option value="' +
+        size +
+        '"' +
+        (size === pageSize ? ' selected' : '') +
+        '>' +
+        size +
+        '条 / 页</option>'
+      );
+    }).join('');
+  }
+
+  function frozenPagerHtml(state) {
+    const pager = state && state.pager ? state.pager : null;
+    if (!pager || !state.filteredCount) {
+      return '';
+    }
+
+    return (
+      '<footer class="frozen-pager" aria-label="冻结任务分页">' +
+      '<div class="frozen-pager__group">' +
+      '<button type="button" class="frozen-pager__btn frozen-pager__btn--arrow" onclick="setFrozenViewPage(' +
+      (pager.currentPage - 1) +
+      ')" aria-label="上一页"' +
+      (pager.hasPrev ? '' : ' disabled') +
+      '>' +
+      pagerArrowIconMarkup('left') +
+      '</button>' +
+      pager.pages.map(function (pageNumber) {
+        return frozenPagerPageButtonHtml(pageNumber, pager.currentPage);
+      }).join('') +
+      '<button type="button" class="frozen-pager__btn frozen-pager__btn--arrow" onclick="setFrozenViewPage(' +
+      (pager.currentPage + 1) +
+      ')" aria-label="下一页"' +
+      (pager.hasNext ? '' : ' disabled') +
+      '>' +
+      pagerArrowIconMarkup('right') +
+      '</button>' +
+      '</div>' +
+      '<label class="frozen-pager__size" aria-label="每页条数">' +
+      '<select class="frozen-pager__size-select" onchange="setFrozenViewPageSize(this.value)" aria-label="每页条数">' +
+      frozenPagerSizeOptionsHtml(pager.pageSize) +
+      '</select>' +
+      '<span class="frozen-pager__size-icon" aria-hidden="true">' +
+      pagerChevronDownIconMarkup() +
+      '</span>' +
+      '</label>' +
+      '</footer>'
+    );
+  }
+
   function frozenTaskTableHtml(state) {
     if (!state.filteredCount) {
       const emptyCopy = frozenListEmptyCopy(state);
@@ -662,9 +809,6 @@
     }
     list.innerHTML =
       '<section class="frozen-scene" aria-label="已冻结任务列表">' +
-      '<div class="frozen-scene__banner">' +
-      '<p class="frozen-scene__banner-copy">冻结中的任务已暂停执行，不会出现在日程里。你可以随时解冻任务，以恢复到原计划日期继续推进。</p>' +
-      '</div>' +
       '<div class="frozen-scene__toolbar">' +
       '<div class="frozen-tabs" role="tablist" aria-label="冻结任务筛选">' +
       frozenFilterTabsHtml(state) +
@@ -680,7 +824,10 @@
       html(getFrozenSortLabel(state.sortMode)) +
       '</span></button>' +
       '</div>' +
+      '<div class="frozen-scene__content">' +
       frozenTaskTableHtml(state) +
+      frozenPagerHtml(state) +
+      '</div>' +
       '</section>';
   }
 
@@ -981,6 +1128,7 @@
       return;
     }
     frozenViewFilter = nextFilter;
+    frozenViewPage = 1;
     persistFrozenFilter(frozenViewFilter);
     rerenderFrozenViews();
   };
@@ -1081,6 +1229,26 @@
     if (typeof goToday === 'function') {
       goToday();
     }
+  };
+
+  window.setFrozenViewPage = function (page) {
+    const nextPage = parseInt(page, 10);
+    if (!Number.isFinite(nextPage)) {
+      return;
+    }
+    frozenViewPage = Math.max(1, nextPage);
+    rerenderFrozenViews();
+  };
+
+  window.setFrozenViewPageSize = function (size) {
+    const nextSize = normalizeFrozenPageSize(size);
+    if (nextSize === frozenViewPageSize) {
+      return;
+    }
+    frozenViewPageSize = nextSize;
+    frozenViewPage = 1;
+    persistFrozenPageSize(frozenViewPageSize);
+    rerenderFrozenViews();
   };
 
   window.getFrozenSceneTotalCount = getFrozenSceneTotalCount;

@@ -1677,9 +1677,24 @@
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav {
     --date-nav-title-slot-w: 150px;
+    --date-nav-title-frame-h: 3.125rem;
+    --date-nav-title-visible-box-w: 242px;
+    --date-nav-title-copy-box-w: 150px;
+    --date-nav-title-icon-slot-w: 44px;
+    --date-nav-title-icon-gap: 2px;
+    --date-nav-title-tail-space: 36px;
+    --date-nav-title-main-size: 24px;
+    --date-nav-title-main-weight: 700;
+    --date-nav-title-main-line-height: 1;
+    --date-nav-title-main-letter-spacing: -0.025em;
+    --date-nav-title-sub-size: 13px;
+    --date-nav-title-sub-weight: 500;
+    --date-nav-title-sub-line-height: 1.5;
+    --date-nav-title-sub-letter-spacing: 0.025em;
+    --date-nav-title-sub-gap: 4px;
     margin: 0 !important;
     width: 100% !important;
-    padding: 14px 28px 6px !important;
+    padding: 16px 28px 6px !important;
     box-sizing: border-box;
     border-bottom: 0;
     display: flex;
@@ -1709,6 +1724,7 @@
     flex: 0 0 var(--date-nav-title-slot-w);
     width: var(--date-nav-title-slot-w);
     min-width: var(--date-nav-title-slot-w);
+    min-height: var(--date-nav-title-frame-h);
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3,
@@ -1719,8 +1735,13 @@
 
   .app.app--with-global-nav #taskMode.task-mode--title-no-motion .task-main-col > .task-card > .date-nav h3,
   .app.app--with-global-nav #taskMode.task-mode--title-no-motion .task-main-col > .task-card > .date-nav h3 #dTitle,
-  .app.app--with-global-nav #taskMode.task-mode--title-no-motion .task-main-col > .task-card > .date-nav h3 #dTitle * {
+  .app.app--with-global-nav #taskMode.task-mode--title-no-motion .task-main-col > .task-card > .date-nav h3 #dTitle .date-nav-date-main,
+  .app.app--with-global-nav #taskMode.task-mode--title-no-motion .task-main-col > .task-card > .date-nav h3 #dTitle .date-nav-date-sub {
     animation: none !important;
+  }
+
+  .app.app--with-global-nav #taskMode.task-mode--title-no-motion .task-main-col > .task-card > .date-nav h3 #dTitle .date-nav-date-main,
+  .app.app--with-global-nav #taskMode.task-mode--title-no-motion .task-main-col > .task-card > .date-nav h3 #dTitle .date-nav-date-sub {
     transform: none !important;
   }
 
@@ -1773,6 +1794,8 @@
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle {
     display: inline-flex;
+    width: 100%;
+    min-height: var(--date-nav-title-frame-h);
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -1784,27 +1807,130 @@
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle .date-nav-date-main {
-    font-size: 28px;
-    font-weight: 700;
-    line-height: 1.02;
-    letter-spacing: -0.01em;
+    display: block;
+    width: 100%;
+    font-size: var(--date-nav-title-main-size);
+    font-weight: var(--date-nav-title-main-weight);
+    line-height: var(--date-nav-title-main-line-height);
+    letter-spacing: var(--date-nav-title-main-letter-spacing);
     color: #0f172a;
+    margin: 0;
+    text-align: center;
     white-space: nowrap;
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle.is-relative .date-nav-date-main {
-    font-size: 28px;
-    letter-spacing: -0.015em;
+    font-size: var(--date-nav-title-main-size);
+    letter-spacing: var(--date-nav-title-main-letter-spacing);
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle .date-nav-date-sub {
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 1.1;
+    display: block;
+    width: 100%;
+    font-size: var(--date-nav-title-sub-size);
+    font-weight: var(--date-nav-title-sub-weight);
+    line-height: var(--date-nav-title-sub-line-height);
     color: #7f8ea4;
-    letter-spacing: 0;
+    letter-spacing: var(--date-nav-title-sub-letter-spacing);
     white-space: nowrap;
-    margin-top: 6px;
+    margin-top: var(--date-nav-title-sub-gap);
+    text-align: center;
+  }
+
+  .app.app--with-global-nav #taskMode.task-mode--priority-view .task-main-col > .task-card > .date-nav.date-nav--priority h3 #dTitle.is-priority-scope,
+  .app.app--with-global-nav #taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view h3 #dTitle.is-repeat-scope,
+  .app.app--with-global-nav #taskMode.task-mode--frozen-view .task-main-col > .task-card > .date-nav.date-nav--frozen-view h3 #dTitle.is-frozen-scope {
+    width: 100%;
+    max-width: none;
+    min-width: 100%;
+    min-height: var(--date-nav-title-frame-h);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .priority-title,
+  .repeat-title,
+  .frozen-title {
+    position: relative;
+    display: inline-grid;
+    width: var(--date-nav-title-visible-box-w);
+    min-width: var(--date-nav-title-visible-box-w);
+    grid-template-columns:
+      var(--date-nav-title-icon-slot-w)
+      var(--date-nav-title-icon-gap)
+      var(--date-nav-title-copy-box-w)
+      10px
+      var(--date-nav-title-tail-space);
+    align-items: center;
+    justify-content: center;
+    column-gap: 0;
+    min-height: var(--date-nav-title-frame-h);
+    margin: 0;
+  }
+
+  .priority-title__flag,
+  .repeat-title__icon,
+  .frozen-title__icon {
+    position: relative;
+    top: var(--date-nav-title-icon-offset-y, 0);
+    grid-column: 1;
+    justify-self: center;
+    align-self: center;
+    flex-shrink: 0;
+    margin: 0;
+  }
+
+  .priority-title__copy,
+  .repeat-title__copy,
+  .frozen-title__copy {
+    grid-column: 3;
+    width: 100%;
+    min-width: 0;
+    min-height: var(--date-nav-title-frame-h);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    text-align: center;
+  }
+
+  .priority-title__main,
+  .repeat-title__main,
+  .frozen-title__main,
+  .priority-title__copy .date-nav-date-main {
+    display: block;
+    width: 100%;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    font-size: var(--date-nav-title-main-size);
+    font-weight: var(--date-nav-title-main-weight);
+    line-height: var(--date-nav-title-main-line-height);
+    letter-spacing: var(--date-nav-title-main-letter-spacing);
+    color: #0f172a;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .priority-title__sub,
+  .repeat-title__sub,
+  .frozen-title__sub,
+  .priority-title__copy .date-nav-date-sub {
+    display: block;
+    width: 100%;
+    margin: var(--date-nav-title-sub-gap) 0 0;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    font-size: var(--date-nav-title-sub-size);
+    font-weight: var(--date-nav-title-sub-weight);
+    line-height: var(--date-nav-title-sub-line-height);
+    letter-spacing: var(--date-nav-title-sub-letter-spacing);
+    color: #64748b;
+    text-align: center;
+    white-space: nowrap;
   }
 
 
@@ -4311,13 +4437,6 @@
 }
 
 /* #region 待办行与上方间隔-对齐 shili.html */
-.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav,
-#taskMode .task-main-col > .task-card > .date-nav {
-  padding-top: 24px !important;
-  margin-bottom: 24px !important;
-  padding-bottom: 0 !important;
-}
-
 .app.app--with-global-nav #taskMode .list-panel .batch-bar,
 #taskMode .list-panel .batch-bar {
   padding-top: 0 !important;

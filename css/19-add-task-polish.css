@@ -6107,8 +6107,8 @@
 }
 
 /* 周视图视觉校准：降低框感和噪音，保留轻量层级。 */
-.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav,
-#taskMode .task-main-col > .task-card > .date-nav {
+.app.app--with-global-nav #taskMode:not(.task-mode--overdue-view):not(.task-mode--priority-view):not(.task-mode--repeat-view):not(.task-mode--frozen-view) .task-main-col > .task-card > .date-nav,
+#taskMode:not(.task-mode--overdue-view):not(.task-mode--priority-view):not(.task-mode--repeat-view):not(.task-mode--frozen-view) .task-main-col > .task-card > .date-nav {
   padding-top: 16px !important;
   margin-bottom: 12px !important;
 }

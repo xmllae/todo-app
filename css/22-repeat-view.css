@@ -38,39 +38,12 @@
   display: none !important;
 }
 
-#taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view h3 #dTitle.is-repeat-scope,
-.app.app--with-global-nav #taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view h3 #dTitle.is-repeat-scope {
-  position: static;
-  width: 100%;
-  max-width: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 100%;
-  text-align: center;
-  overflow: visible;
-  pointer-events: none;
-}
-
 .repeat-title {
-  --repeat-title-icon-gap: 16px;
+  --date-nav-title-icon-offset-y: .15rem;
   --repeat-title-icon-size: 2.9rem;
-  --repeat-title-icon-offset-y: .15rem;
-  --repeat-title-icon-space: calc(var(--repeat-title-icon-size) + var(--repeat-title-icon-gap));
-  position: relative;
-  display: inline-flex;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 0;
-  min-width: max-content;
-  padding-left: var(--repeat-title-icon-space);
-  padding-right: var(--repeat-title-icon-space);
 }
 
 .repeat-title__icon {
-  position: absolute;
-  top: var(--repeat-title-icon-offset-y);
-  left: 0;
   width: var(--repeat-title-icon-size);
   height: var(--repeat-title-icon-size);
   display: inline-flex;
@@ -91,41 +64,6 @@
   width: 1.35rem;
   height: 1.35rem;
   display: block;
-}
-
-.repeat-title__copy {
-  min-width: max-content;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
-  text-align: center;
-}
-
-#taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view h3 #dTitle.is-repeat-scope .repeat-title__main,
-.app.app--with-global-nav #taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view h3 #dTitle.is-repeat-scope .repeat-title__main {
-  display: block;
-  margin: 0 0 4px;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.025em;
-  color: #0f172a;
-  white-space: nowrap;
-}
-
-#taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view h3 #dTitle.is-repeat-scope .repeat-title__sub,
-.app.app--with-global-nav #taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view h3 #dTitle.is-repeat-scope .repeat-title__sub {
-  display: block;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1.5;
-  letter-spacing: 0.025em;
-  color: #64748b;
-  white-space: nowrap;
 }
 
 #taskMode.task-mode--repeat-view .list-panel #batchBar,
@@ -1094,7 +1032,6 @@
 
 @media (max-width: 640px) {
   .repeat-title {
-    --repeat-title-icon-gap: 12px;
     --repeat-title-icon-size: 2.55rem;
   }
 

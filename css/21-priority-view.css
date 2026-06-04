@@ -35,41 +35,12 @@
   display: none !important;
 }
 
-#taskMode.task-mode--priority-view .task-main-col > .task-card > .date-nav.date-nav--priority h3 #dTitle.is-priority-scope,
-.app.app--with-global-nav #taskMode.task-mode--priority-view .task-main-col > .task-card > .date-nav.date-nav--priority h3 #dTitle.is-priority-scope {
-  position: static;
-  width: 100%;
-  max-width: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 100%;
-  text-align: center;
-  overflow: visible;
-  pointer-events: none;
-}
-
 .priority-title {
-  --priority-title-flag-gap: 14px;
+  --date-nav-title-icon-offset-y: .25rem;
   --priority-title-flag-size: 2.5rem;
-  --priority-title-flag-offset-y: .25rem;
-  --priority-title-flag-space: calc(var(--priority-title-flag-size) + var(--priority-title-flag-gap));
-  position: relative;
-  display: inline-flex;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 0;
-  width: auto;
-  min-width: max-content;
-  padding-left: var(--priority-title-flag-space);
-  padding-right: var(--priority-title-flag-space);
-  margin: 0;
 }
 
 .priority-title__flag {
-  position: absolute;
-  top: var(--priority-title-flag-offset-y);
-  left: 0;
   width: var(--priority-title-flag-size);
   height: var(--priority-title-flag-size);
   display: inline-flex;
@@ -82,51 +53,11 @@
     inset 0 0 0 1px rgba(239, 68, 68, .12),
     0 10px 18px -16px rgba(239, 68, 68, .38);
   flex-shrink: 0;
-  margin-top: 0;
 }
 
 .priority-title__flag-icon {
   font-size: 1.3rem;
   line-height: 1;
-}
-
-.priority-title__copy {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
-  min-width: max-content;
-  text-align: center;
-}
-
-#taskMode.task-mode--priority-view .task-main-col > .task-card > .date-nav.date-nav--priority h3 #dTitle.is-priority-scope .priority-title__main,
-#taskMode.task-mode--priority-view .task-main-col > .task-card > .date-nav.date-nav--priority h3 #dTitle.is-priority-scope .priority-title__copy .date-nav-date-main,
-.app.app--with-global-nav #taskMode.task-mode--priority-view .task-main-col > .task-card > .date-nav.date-nav--priority h3 #dTitle.is-priority-scope .priority-title__main,
-.app.app--with-global-nav #taskMode.task-mode--priority-view .task-main-col > .task-card > .date-nav.date-nav--priority h3 #dTitle.is-priority-scope .priority-title__copy .date-nav-date-main {
-  display: block;
-  margin: 0 0 4px;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.025em;
-  color: #0f172a;
-  white-space: nowrap;
-}
-
-#taskMode.task-mode--priority-view .task-main-col > .task-card > .date-nav.date-nav--priority h3 #dTitle.is-priority-scope .priority-title__sub,
-#taskMode.task-mode--priority-view .task-main-col > .task-card > .date-nav.date-nav--priority h3 #dTitle.is-priority-scope .priority-title__copy .date-nav-date-sub,
-.app.app--with-global-nav #taskMode.task-mode--priority-view .task-main-col > .task-card > .date-nav.date-nav--priority h3 #dTitle.is-priority-scope .priority-title__sub,
-.app.app--with-global-nav #taskMode.task-mode--priority-view .task-main-col > .task-card > .date-nav.date-nav--priority h3 #dTitle.is-priority-scope .priority-title__copy .date-nav-date-sub {
-  display: block;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1.5;
-  letter-spacing: 0.025em;
-  color: #64748b;
-  white-space: nowrap;
 }
 
 .priority-header-tools {
@@ -1072,15 +1003,6 @@
     min-width: 100%;
     justify-content: center;
     text-align: center;
-  }
-
-  .priority-title {
-    min-width: max-content;
-    justify-content: center;
-  }
-
-  .priority-title__copy {
-    min-width: max-content;
   }
 
   .priority-header-tools {
