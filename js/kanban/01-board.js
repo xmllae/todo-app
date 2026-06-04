@@ -355,20 +355,24 @@ function kbDrop(columnId) {
     task.priority = columnId;
     task.done = false;
     task.status = "todo";
-    task.frozen = false;
+    if (typeof setTaskFrozenState === "function") setTaskFrozenState(task,false,sel);
+    else task.frozen = false;
     task.archived = false;
   } else if (columnId === "done") {
     task.status = "done";
     task.done = true;
-    task.frozen = false;
+    if (typeof setTaskFrozenState === "function") setTaskFrozenState(task,false,sel);
+    else task.frozen = false;
   } else if (columnId === "frozen") {
-    task.frozen = true;
+    if (typeof setTaskFrozenState === "function") setTaskFrozenState(task,true,sel);
+    else task.frozen = true;
   }
 
   kbDragId = null;
   rKanban();
   rCal();
   save();
+  if (typeof refreshGlobalSideNav === "function") refreshGlobalSideNav();
 }
 
 function kbCreateTouchGhost(sourceCard) {

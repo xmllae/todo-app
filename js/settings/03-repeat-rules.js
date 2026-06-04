@@ -1216,8 +1216,11 @@ function checkUnfreeze() {
   for (const ds in T) {
     T[ds].forEach(function(task) {
       if (task.frozen && task.frozenUntil && task.frozenUntil <= today) {
-        task.frozen = false;
-        task.frozenUntil = "";
+        if (typeof setTaskFrozenState === "function") setTaskFrozenState(task,false,ds);
+        else {
+          task.frozen = false;
+          task.frozenUntil = "";
+        }
       }
     });
   }

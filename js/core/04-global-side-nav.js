@@ -162,6 +162,15 @@
     return Array.isArray(recurRules) ? recurRules.length : 0;
   }
 
+  function countFrozenTasks() {
+    if (typeof window.getFrozenSceneTotalCount === "function") {
+      return window.getFrozenSceneTotalCount();
+    }
+    return allEntries().filter(function (entry) {
+      return entry.task && entry.task.frozen;
+    }).length;
+  }
+
   function hasOverdueTasks() {
     return countOverdue() > 0;
   }
@@ -173,7 +182,7 @@
   }
 
   function isStandaloneQuickMode(mode) {
-    return mode === "priority-high" || mode === "repeat-view";
+    return mode === "priority-high" || mode === "repeat-view" || mode === "frozen-view";
   }
 
   function setQuickModeValue(mode) {
@@ -437,11 +446,10 @@
       filterButton(
         "已冻结任务",
         "frozen",
-        countToday(function (task) {
-          return !!task.frozen;
-        }),
-        "frozen",
-        hasSingleFilter("frozen")
+        countFrozenTasks(),
+        "frozen-view",
+        gsnActiveQuick === "frozen-view",
+        "frozen-view"
       ) +
       "</section>";
     gsnPrevOverdueCount = overdueCount;
@@ -530,6 +538,10 @@
     selectDate(todayKey(), "repeat-view");
   }
 
+  function selectFrozenTaskView() {
+    selectDate(todayKey(), "frozen-view");
+  }
+
   function applyFilter(key) {
     if (typeof window.markTaskTitleNoMotion === "function") window.markTaskTitleNoMotion();
     setQuickModeValue("");
@@ -578,6 +590,7 @@
     else if (action === "overdue") selectDate(todayKey(), "overdue");
     else if (action === "priority-view") selectHighPriorityView();
     else if (action === "repeat-view") selectRepeatTaskView();
+    else if (action === "frozen-view") selectFrozenTaskView();
     else if (action === "filter") applyFilter(arg);
     else if (action === "project") applyProject(arg);
     else if (action === "settings" && typeof navigate === "function") navigate("/settings");

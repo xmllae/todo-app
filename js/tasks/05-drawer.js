@@ -2423,9 +2423,20 @@ function toggleFreezeInDrawer(taskId) {
     const task = findTaskById(taskId);
     if (!task) return;
 
-    task.frozen = !task.frozen;
-    persistTaskDetailChanges(task, { kanban: true });
-    toast(task.frozen ? '\u4efb\u52a1\u5df2\u51bb\u7ed3' : '\u4efb\u52a1\u5df2\u89e3\u51bb');
+    const nextFrozen = !task.frozen;
+    if (typeof setTaskFrozenState === 'function') {
+        setTaskFrozenState(task, nextFrozen, typeof findTaskDateById === 'function' ? findTaskDateById(taskId) : '');
+    } else {
+        task.frozen = nextFrozen;
+        if (task.frozen) {
+            task.frozenUntil = '';
+        }
+    }
+    persistTaskDetailChanges(task, { calendar: true, kanban: true });
+    if (typeof refreshGlobalSideNav === 'function') {
+        refreshGlobalSideNav();
+    }
+    toast(nextFrozen ? '\u4efb\u52a1\u5df2\u51bb\u7ed3' : '\u4efb\u52a1\u5df2\u89e3\u51bb');
 }
 
 function deleteTaskInDrawer(taskId) {
