@@ -1524,7 +1524,7 @@ function renderWeekTaskScene(list,baseDs){
   return{allTasks:weekAllTasks,filteredTasks:weekFilteredTasks,totalAll:totalAll,doneAll:doneAll,rangeText:rangeText,expandableDays:expandableDays,allExpanded:expandableDays.length>0&&expandableDays.every(function(ds){return isWeekDayExpanded(ds)})}
 }
 function isTaskCustomHeaderMode(mode){
-  return mode==="overdue"||mode==="priority-high"||mode==="repeat-view"||mode==="frozen-view"
+  return mode==="overdue"||mode==="priority-high"||mode==="repeat-view"||mode==="frozen-view"||mode==="goal-view"
 }
 function getTaskStandardTitleParts(el){
   if(!el)return null;
@@ -1602,7 +1602,7 @@ function setTaskDateTitle(ds){
   if(shouldUpdate){
     mainEl.textContent=mainText;
     subEl.textContent=subText;
-    el.classList.remove("is-overdue-scope","is-priority-scope","is-repeat-scope","is-frozen-scope");
+    el.classList.remove("is-overdue-scope","is-priority-scope","is-repeat-scope","is-frozen-scope","is-goal-scope");
     el.classList.toggle("is-week-scope",isWeekScope);
     el.classList.toggle("is-range-offset",!isWeekScope&&useRangeOffset);
     el.classList.toggle("is-relative",!isWeekScope&&useRelative);
@@ -1627,7 +1627,7 @@ function setTaskDateTitle(ds){
     el.dataset.renderKey=renderKey;
     el.dataset.lastDs=ds
   }else{
-    el.classList.remove("is-overdue-scope","is-priority-scope","is-repeat-scope","is-frozen-scope");
+    el.classList.remove("is-overdue-scope","is-priority-scope","is-repeat-scope","is-frozen-scope","is-goal-scope");
     el.classList.toggle("is-week-scope",isWeekScope);
     el.classList.toggle("is-range-offset",!isWeekScope&&useRangeOffset);
     el.classList.toggle("is-relative",!isWeekScope&&useRelative);

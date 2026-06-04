@@ -171,6 +171,20 @@
     }).length;
   }
 
+  function countLongTermGoals() {
+    if (typeof window.getLongTermGoalSceneTotalCount === "function") {
+      return window.getLongTermGoalSceneTotalCount();
+    }
+    try {
+      var raw = localStorage.getItem("tuole_long_term_goals_v1");
+      if (!raw) return 0;
+      var parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed.length : 0;
+    } catch (e) {
+      return 0;
+    }
+  }
+
   function hasOverdueTasks() {
     return countOverdue() > 0;
   }
@@ -182,7 +196,7 @@
   }
 
   function isStandaloneQuickMode(mode) {
-    return mode === "priority-high" || mode === "repeat-view" || mode === "frozen-view";
+    return mode === "priority-high" || mode === "repeat-view" || mode === "frozen-view" || mode === "goal-view";
   }
 
   function setQuickModeValue(mode) {
@@ -354,6 +368,9 @@
     if (iconKey === "frozen") {
       return '<i class="ph ph-snowflake gsn-filter-ico-ph gsn-filter-ico--frozen" aria-hidden="true"></i>';
     }
+    if (iconKey === "goal") {
+      return '<i class="ph ph-target gsn-filter-ico-ph gsn-filter-ico--goal" aria-hidden="true"></i>';
+    }
     return '<span class="gsn-filter-ico-fallback"></span>';
   }
 
@@ -451,6 +468,17 @@
         gsnActiveQuick === "frozen-view",
         "frozen-view"
       ) +
+      "</section>" +
+      '<section class="gsn-section" aria-labelledby="gsnGoalTitle">' +
+      '<h4 class="gsn-section-title" id="gsnGoalTitle">规划</h4>' +
+      filterButton(
+        "长期目标",
+        "goal",
+        countLongTermGoals(),
+        "goal-view",
+        gsnActiveQuick === "goal-view",
+        "goal-view"
+      ) +
       "</section>";
     gsnPrevOverdueCount = overdueCount;
   }
@@ -542,6 +570,10 @@
     selectDate(todayKey(), "frozen-view");
   }
 
+  function selectGoalView() {
+    selectDate(todayKey(), "goal-view");
+  }
+
   function applyFilter(key) {
     if (typeof window.markTaskTitleNoMotion === "function") window.markTaskTitleNoMotion();
     setQuickModeValue("");
@@ -591,6 +623,7 @@
     else if (action === "priority-view") selectHighPriorityView();
     else if (action === "repeat-view") selectRepeatTaskView();
     else if (action === "frozen-view") selectFrozenTaskView();
+    else if (action === "goal-view") selectGoalView();
     else if (action === "filter") applyFilter(arg);
     else if (action === "project") applyProject(arg);
     else if (action === "settings" && typeof navigate === "function") navigate("/settings");
