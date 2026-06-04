@@ -140,12 +140,14 @@
   --task-view-pager-bg: rgba(255, 255, 255, .98);
   --task-view-pager-text: var(--repeat-text-muted);
   --task-view-pager-text-strong: var(--repeat-text-strong);
-  --task-view-pager-hover-border: rgba(191, 219, 254, .96);
-  --task-view-pager-hover-bg: rgba(248, 250, 252, .98);
-  --task-view-pager-active-bg: linear-gradient(135deg, #7c67ff, #6d4dff);
-  --task-view-pager-active-text: #fff;
-  --task-view-pager-shadow: 0 12px 24px -26px rgba(15, 23, 42, .3);
-  --task-view-pager-hover-shadow: 0 16px 28px -28px rgba(85, 102, 246, .24);
+  --task-view-pager-hover-border: rgba(203, 213, 225, .96);
+  --task-view-pager-hover-bg: rgba(248, 250, 252, .94);
+  --task-view-pager-active-bg: rgba(238, 242, 255, .96);
+  --task-view-pager-active-border: rgba(199, 210, 254, .96);
+  --task-view-pager-active-text: #5b4ce0;
+  --task-view-pager-shadow: 0 8px 18px -24px rgba(15, 23, 42, .18);
+  --task-view-pager-hover-shadow: 0 10px 18px -24px rgba(85, 102, 246, .12);
+  --task-view-pager-active-shadow: 0 10px 18px -24px rgba(79, 70, 229, .16);
   --task-view-pager-focus-ring: 0 0 0 3px rgba(191, 219, 254, .22);
   --task-view-pager-size-icon: var(--repeat-text-faint);
   display: flex;
@@ -926,8 +928,14 @@
   --task-view-pager-bg: rgba(15, 23, 42, .9);
   --task-view-pager-text: #cbd5e1;
   --task-view-pager-text-strong: #f8fafc;
-  --task-view-pager-hover-bg: rgba(49, 46, 129, .24);
-  --task-view-pager-hover-bg-dark: rgba(49, 46, 129, .24);
+  --task-view-pager-hover-bg: rgba(255, 255, 255, .05);
+  --task-view-pager-hover-bg-dark: rgba(255, 255, 255, .06);
+  --task-view-pager-active-bg: rgba(99, 102, 241, .18);
+  --task-view-pager-active-border: rgba(167, 139, 250, .3);
+  --task-view-pager-active-text: #ddd6fe;
+  --task-view-pager-shadow: 0 12px 24px -30px rgba(0, 0, 0, .4);
+  --task-view-pager-hover-shadow: 0 12px 24px -30px rgba(99, 102, 241, .14);
+  --task-view-pager-active-shadow: 0 12px 24px -30px rgba(99, 102, 241, .18);
   --task-view-pager-size-icon: #94a3b8;
   --task-view-pager-focus-ring: 0 0 0 3px rgba(99, 102, 241, .18);
 }

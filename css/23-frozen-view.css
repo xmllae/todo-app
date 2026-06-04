@@ -114,12 +114,14 @@ body.body--frozen-view #multiBar {
   --task-view-pager-bg: rgba(255, 255, 255, .98);
   --task-view-pager-text: var(--frozen-muted-text);
   --task-view-pager-text-strong: var(--frozen-strong-text);
-  --task-view-pager-hover-border: rgba(191, 219, 254, .96);
-  --task-view-pager-hover-bg: rgba(248, 250, 252, .98);
-  --task-view-pager-active-bg: linear-gradient(135deg, #7c67ff, #6d4dff);
-  --task-view-pager-active-text: #fff;
-  --task-view-pager-shadow: 0 12px 24px -26px rgba(15, 23, 42, .3);
-  --task-view-pager-hover-shadow: 0 16px 28px -28px rgba(79, 70, 229, .24);
+  --task-view-pager-hover-border: rgba(203, 213, 225, .96);
+  --task-view-pager-hover-bg: rgba(248, 250, 252, .94);
+  --task-view-pager-active-bg: rgba(238, 242, 255, .96);
+  --task-view-pager-active-border: rgba(199, 210, 254, .96);
+  --task-view-pager-active-text: #5b4ce0;
+  --task-view-pager-shadow: 0 8px 18px -24px rgba(15, 23, 42, .18);
+  --task-view-pager-hover-shadow: 0 10px 18px -24px rgba(79, 70, 229, .12);
+  --task-view-pager-active-shadow: 0 10px 18px -24px rgba(79, 70, 229, .16);
   --task-view-pager-focus-ring: 0 0 0 3px rgba(191, 219, 254, .22);
   --task-view-pager-size-icon: var(--frozen-soft-text);
   display: flex;
@@ -297,6 +299,12 @@ body.body--frozen-view #multiBar {
   min-width: 0;
 }
 
+.frozen-row__cell--task {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
 .frozen-row__cell--status,
 .frozen-row__cell--actions {
   display: flex;
@@ -326,8 +334,9 @@ body.body--frozen-view #multiBar {
 .frozen-task {
   width: 100%;
   display: flex;
-  align-items: flex-start;
-  gap: .82rem;
+  align-items: center;
+  justify-content: flex-start;
+  gap: .38rem;
   padding: 0;
   border: 0;
   background: transparent;
@@ -337,58 +346,23 @@ body.body--frozen-view #multiBar {
   cursor: pointer;
 }
 
-.frozen-task__lead {
-  width: 2.5rem;
-  height: 2.5rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+.frozen-task__bullet {
+  --task-priority-ring-slot-width: 1.5rem;
+  --task-priority-ring-slot-height: 1.3rem;
+  --task-priority-ring-size: 1.08rem;
   flex-shrink: 0;
-  border-radius: .95rem;
-  color: #4f46e5;
-  background: linear-gradient(180deg, rgba(243, 244, 255, .96), rgba(255, 255, 255, .92));
-  box-shadow:
-    inset 0 0 0 1px rgba(199, 210, 254, .56),
-    0 14px 28px -26px rgba(79, 70, 229, .48);
+  pointer-events: none;
 }
 
-.frozen-task__lead svg,
-.frozen-task__lead i {
-  width: 1.1rem;
-  height: 1.1rem;
-  font-size: 1.1rem;
-  line-height: 1;
-  display: block;
-}
-
-.frozen-task__lead--high {
-  color: #ef4444;
-  background: linear-gradient(180deg, rgba(254, 242, 242, .96), rgba(255, 255, 255, .92));
-  box-shadow:
-    inset 0 0 0 1px rgba(252, 165, 165, .48),
-    0 14px 28px -26px rgba(239, 68, 68, .34);
-}
-
-.frozen-task__lead--repeating {
-  color: #7c3aed;
-  background: linear-gradient(180deg, rgba(245, 243, 255, .96), rgba(255, 255, 255, .92));
-  box-shadow:
-    inset 0 0 0 1px rgba(221, 214, 254, .74),
-    0 14px 28px -26px rgba(124, 58, 237, .38);
-}
-
-.frozen-task__lead--scheduled {
-  color: #2563eb;
-  background: linear-gradient(180deg, rgba(239, 246, 255, .96), rgba(255, 255, 255, .92));
-  box-shadow:
-    inset 0 0 0 1px rgba(191, 219, 254, .74),
-    0 14px 28px -26px rgba(37, 99, 235, .38);
+.frozen-task__bullet .chk-ring {
+  pointer-events: none !important;
 }
 
 .frozen-task__copy {
   min-width: 0;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: .45rem;
 }
 
@@ -399,11 +373,13 @@ body.body--frozen-view #multiBar {
   line-height: 1.4;
   font-weight: 700;
   letter-spacing: -.01em;
+  text-align: left;
 }
 
 .frozen-task__meta {
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-start;
   gap: .42rem;
 }
 
@@ -812,6 +788,23 @@ body.body--frozen-view #multiBar {
   background: rgba(99, 102, 241, .16);
 }
 
+.dark .frozen-scene {
+  --task-view-pager-border: rgba(51, 65, 85, .9);
+  --task-view-pager-bg: rgba(15, 23, 42, .9);
+  --task-view-pager-text: #cbd5e1;
+  --task-view-pager-text-strong: #f8fafc;
+  --task-view-pager-hover-bg: rgba(255, 255, 255, .05);
+  --task-view-pager-hover-bg-dark: rgba(255, 255, 255, .06);
+  --task-view-pager-active-bg: rgba(99, 102, 241, .18);
+  --task-view-pager-active-border: rgba(167, 139, 250, .3);
+  --task-view-pager-active-text: #ddd6fe;
+  --task-view-pager-shadow: 0 12px 24px -30px rgba(0, 0, 0, .4);
+  --task-view-pager-hover-shadow: 0 12px 24px -30px rgba(99, 102, 241, .14);
+  --task-view-pager-active-shadow: 0 12px 24px -30px rgba(99, 102, 241, .18);
+  --task-view-pager-size-icon: #94a3b8;
+  --task-view-pager-focus-ring: 0 0 0 3px rgba(99, 102, 241, .18);
+}
+
 .dark .frozen-toolbar__sort,
 .dark .frozen-row,
 .dark .frozen-pager__btn,
@@ -860,7 +853,6 @@ body.body--frozen-view #multiBar {
 }
 
 .dark .frozen-title__icon,
-.dark .frozen-task__lead,
 .dark .frozen-overview__ring-center {
   background: color-mix(in srgb, var(--card) 84%, rgba(15, 23, 42, .36));
 }

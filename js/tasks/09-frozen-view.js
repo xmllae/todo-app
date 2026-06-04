@@ -208,15 +208,6 @@
     );
   }
 
-  function locateIconMarkup() {
-    return (
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-      '<path d="M12 21s6-4.35 6-10a6 6 0 1 0-12 0c0 5.65 6 10 6 10Z"></path>' +
-      '<circle cx="12" cy="11" r="2.5"></circle>' +
-      '</svg>'
-    );
-  }
-
   function exportIconMarkup() {
     return (
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
@@ -483,19 +474,6 @@
     return 'base';
   }
 
-  function frozenTaskLeadHtml(entry) {
-    const tone = getFrozenTaskTone(entry);
-    let iconMarkup = sparkIconMarkup();
-    if (tone === 'repeating') {
-      iconMarkup = loopIconMarkup();
-    } else if (tone === 'high') {
-      iconMarkup = flagIconMarkup();
-    } else if (tone === 'scheduled') {
-      iconMarkup = calendarIconMarkup();
-    }
-    return '<span class="frozen-task__lead frozen-task__lead--' + tone + '" aria-hidden="true">' + iconMarkup + '</span>';
-  }
-
   function formatFrozenDateTime(stamp) {
     if (!(stamp > 0)) {
       return {
@@ -638,6 +616,18 @@
     return '<span class="frozen-status-pill">冻结中</span>';
   }
 
+  function frozenTaskBulletHtml(entry) {
+    const isHighPriority = !!entry && !!entry.task && (entry.task.priority || 'normal') === 'high';
+    return (
+      '<span class="frozen-task__bullet task-priority-ring' +
+      (isHighPriority ? ' task-priority-ring--high' : '') +
+      '" aria-hidden="true">' +
+      '<span class="tc-check">' +
+      '<span class="chk-ring"></span>' +
+      '</span></span>'
+    );
+  }
+
   function frozenTaskRowHtml(entry) {
     const frozenTime = formatFrozenDateTime(entry.frozenStamp);
     const planSummary = buildPlanSummary(entry);
@@ -653,7 +643,7 @@
       '\',' +
       entry.task.id +
       ')">' +
-      frozenTaskLeadHtml(entry) +
+      frozenTaskBulletHtml(entry) +
       '<span class="frozen-task__copy">' +
       '<strong class="frozen-task__title" title="' +
       html(entry.task.text || '') +
@@ -681,7 +671,6 @@
       '</div>' +
       '<div class="frozen-row__cell frozen-row__cell--actions" data-label="操作">' +
       frozenRowActionButtonHtml('resumeFrozenTask(' + entry.task.id + ')', '解冻任务', playIconMarkup(), 'frozen-row__action--primary') +
-      frozenRowActionButtonHtml('jumpFrozenTaskDate(\'' + entry.ds + '\',' + entry.task.id + ')', '定位到任务日期', locateIconMarkup(), '') +
       '</div></article>'
     );
   }

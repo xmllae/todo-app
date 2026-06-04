@@ -30,7 +30,7 @@
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   cursor: pointer;
-  box-shadow: var(--task-view-pager-shadow, 0 12px 24px -26px rgba(15, 23, 42, .3));
+  box-shadow: var(--task-view-pager-shadow, 0 8px 18px -24px rgba(15, 23, 42, .18));
   transition:
     border-color .2s ease,
     color .2s ease,
@@ -43,15 +43,15 @@
   color: var(--task-view-pager-text-strong, #0f172a);
   border-color: var(--task-view-pager-hover-border, rgba(191, 219, 254, .96));
   background: var(--task-view-pager-hover-bg, rgba(248, 250, 252, .98));
-  transform: translateY(-1px);
-  box-shadow: var(--task-view-pager-hover-shadow, 0 16px 28px -28px rgba(79, 70, 229, .24));
+  transform: none;
+  box-shadow: var(--task-view-pager-hover-shadow, 0 10px 18px -24px rgba(79, 70, 229, .14));
 }
 
 .task-view-pager__btn.is-active {
-  border-color: transparent;
-  background: var(--task-view-pager-active-bg, linear-gradient(135deg, #7c67ff, #6d4dff));
-  color: var(--task-view-pager-active-text, #fff);
-  box-shadow: var(--task-view-pager-active-shadow, 0 18px 30px -26px rgba(109, 77, 255, .56));
+  border-color: var(--task-view-pager-active-border, rgba(199, 210, 254, .96));
+  background: var(--task-view-pager-active-bg, rgba(238, 242, 255, .96));
+  color: var(--task-view-pager-active-text, #5b4ce0);
+  box-shadow: var(--task-view-pager-active-shadow, 0 10px 18px -24px rgba(79, 70, 229, .16));
 }
 
 .task-view-pager__btn:disabled {
@@ -93,7 +93,7 @@
   line-height: 1;
   appearance: none;
   cursor: pointer;
-  box-shadow: var(--task-view-pager-shadow, 0 12px 24px -26px rgba(15, 23, 42, .3));
+  box-shadow: var(--task-view-pager-shadow, 0 8px 18px -24px rgba(15, 23, 42, .18));
   transition:
     border-color .2s ease,
     color .2s ease,
