@@ -1,0 +1,149 @@
+.task-view-pager {
+  margin-top: auto;
+  padding-top: .35rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.task-view-pager__group {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .55rem;
+}
+
+.task-view-pager__btn {
+  min-width: var(--task-view-pager-btn-size, 2.5rem);
+  height: var(--task-view-pager-btn-size, 2.5rem);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 .82rem;
+  border: 1px solid var(--task-view-pager-border, rgba(226, 232, 240, .94));
+  border-radius: 999px;
+  background: var(--task-view-pager-bg, rgba(255, 255, 255, .98));
+  color: var(--task-view-pager-text, #64748b);
+  font: inherit;
+  font-size: .95rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  box-shadow: var(--task-view-pager-shadow, 0 12px 24px -26px rgba(15, 23, 42, .3));
+  transition:
+    border-color .2s ease,
+    color .2s ease,
+    background .2s ease,
+    transform .2s ease,
+    box-shadow .2s ease;
+}
+
+.task-view-pager__btn:hover {
+  color: var(--task-view-pager-text-strong, #0f172a);
+  border-color: var(--task-view-pager-hover-border, rgba(191, 219, 254, .96));
+  background: var(--task-view-pager-hover-bg, rgba(248, 250, 252, .98));
+  transform: translateY(-1px);
+  box-shadow: var(--task-view-pager-hover-shadow, 0 16px 28px -28px rgba(79, 70, 229, .24));
+}
+
+.task-view-pager__btn.is-active {
+  border-color: transparent;
+  background: var(--task-view-pager-active-bg, linear-gradient(135deg, #7c67ff, #6d4dff));
+  color: var(--task-view-pager-active-text, #fff);
+  box-shadow: var(--task-view-pager-active-shadow, 0 18px 30px -26px rgba(109, 77, 255, .56));
+}
+
+.task-view-pager__btn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.task-view-pager__btn--arrow {
+  padding: 0;
+}
+
+.task-view-pager__btn svg,
+.task-view-pager__size-icon svg {
+  width: 1rem;
+  height: 1rem;
+  display: block;
+}
+
+.task-view-pager__size {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.task-view-pager__size-select {
+  min-width: 8rem;
+  min-height: 2.625rem;
+  padding: 0 2.4rem 0 1rem;
+  border: 1px solid var(--task-view-pager-border, rgba(226, 232, 240, .94));
+  border-radius: 1rem;
+  background: var(--task-view-pager-bg, rgba(255, 255, 255, .98));
+  color: var(--task-view-pager-text, #64748b);
+  font: inherit;
+  font-size: .94rem;
+  font-weight: 400;
+  line-height: 1;
+  appearance: none;
+  cursor: pointer;
+  box-shadow: var(--task-view-pager-shadow, 0 12px 24px -26px rgba(15, 23, 42, .3));
+  transition:
+    border-color .2s ease,
+    color .2s ease,
+    background .2s ease,
+    box-shadow .2s ease;
+}
+
+.task-view-pager__size-select:hover,
+.task-view-pager__size-select:focus {
+  color: var(--task-view-pager-text-strong, #0f172a);
+  border-color: var(--task-view-pager-hover-border, rgba(191, 219, 254, .96));
+  background: var(--task-view-pager-hover-bg, rgba(248, 250, 252, .98));
+  box-shadow: var(--task-view-pager-focus-ring, 0 0 0 3px rgba(191, 219, 254, .22));
+  outline: none;
+}
+
+.task-view-pager__size-icon {
+  position: absolute;
+  right: .9rem;
+  width: 1rem;
+  height: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--task-view-pager-size-icon, #94a3b8);
+  pointer-events: none;
+}
+
+.dark .task-view-pager__btn,
+.dark .task-view-pager__size-select {
+  background: color-mix(in srgb, var(--task-view-pager-bg, var(--card)) 92%, rgba(15, 23, 42, .18));
+}
+
+.dark .task-view-pager__btn:hover,
+.dark .task-view-pager__size-select:hover,
+.dark .task-view-pager__size-select:focus {
+  background: var(--task-view-pager-hover-bg-dark, rgba(255, 255, 255, .08));
+}
+
+@media (max-width: 680px) {
+  .task-view-pager {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .task-view-pager__group {
+    justify-content: center;
+  }
+
+  .task-view-pager__size {
+    align-self: center;
+  }
+}

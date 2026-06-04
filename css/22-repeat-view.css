@@ -135,6 +135,19 @@
 }
 
 .repeat-view {
+  --task-view-pager-btn-size: 2.5rem;
+  --task-view-pager-border: rgba(226, 232, 240, .94);
+  --task-view-pager-bg: rgba(255, 255, 255, .98);
+  --task-view-pager-text: var(--repeat-text-muted);
+  --task-view-pager-text-strong: var(--repeat-text-strong);
+  --task-view-pager-hover-border: rgba(191, 219, 254, .96);
+  --task-view-pager-hover-bg: rgba(248, 250, 252, .98);
+  --task-view-pager-active-bg: linear-gradient(135deg, #7c67ff, #6d4dff);
+  --task-view-pager-active-text: #fff;
+  --task-view-pager-shadow: 0 12px 24px -26px rgba(15, 23, 42, .3);
+  --task-view-pager-hover-shadow: 0 16px 28px -28px rgba(85, 102, 246, .24);
+  --task-view-pager-focus-ring: 0 0 0 3px rgba(191, 219, 254, .22);
+  --task-view-pager-size-icon: var(--repeat-text-faint);
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
@@ -150,6 +163,14 @@
   justify-content: space-between;
   gap: 1rem;
   padding-bottom: .55rem;
+}
+
+.repeat-view__content {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  gap: 1rem;
 }
 
 .repeat-tabs {
@@ -898,6 +919,17 @@
 .dark .repeat-tabs__button.is-active {
   color: #c7d2fe;
   border-bottom-color: #a5b4fc;
+}
+
+.dark .repeat-view {
+  --task-view-pager-border: rgba(51, 65, 85, .9);
+  --task-view-pager-bg: rgba(15, 23, 42, .9);
+  --task-view-pager-text: #cbd5e1;
+  --task-view-pager-text-strong: #f8fafc;
+  --task-view-pager-hover-bg: rgba(49, 46, 129, .24);
+  --task-view-pager-hover-bg-dark: rgba(49, 46, 129, .24);
+  --task-view-pager-size-icon: #94a3b8;
+  --task-view-pager-focus-ring: 0 0 0 3px rgba(99, 102, 241, .18);
 }
 
 .dark .repeat-table__head {

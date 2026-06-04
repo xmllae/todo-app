@@ -95,19 +95,25 @@
   }
 
   function normalizeFrozenPageSize(size) {
+    if (window.taskViewPager && typeof window.taskViewPager.normalizePageSize === 'function') {
+      return window.taskViewPager.normalizePageSize(size, FROZEN_PAGE_SIZES);
+    }
     const pageSize = parseInt(size, 10);
     return FROZEN_PAGE_SIZES.indexOf(pageSize) >= 0 ? pageSize : FROZEN_PAGE_SIZES[0];
   }
 
   function readSavedFrozenPageSize() {
-    try {
-      return normalizeFrozenPageSize(localStorage.getItem(FROZEN_PAGE_SIZE_STORAGE_KEY));
-    } catch (error) {
-      return FROZEN_PAGE_SIZES[0];
+    if (window.taskViewPager && typeof window.taskViewPager.readStoredPageSize === 'function') {
+      return window.taskViewPager.readStoredPageSize(FROZEN_PAGE_SIZE_STORAGE_KEY, FROZEN_PAGE_SIZES);
     }
+    return FROZEN_PAGE_SIZES[0];
   }
 
   function persistFrozenPageSize(size) {
+    if (window.taskViewPager && typeof window.taskViewPager.persistPageSize === 'function') {
+      window.taskViewPager.persistPageSize(FROZEN_PAGE_SIZE_STORAGE_KEY, size, FROZEN_PAGE_SIZES);
+      return;
+    }
     try {
       localStorage.setItem(FROZEN_PAGE_SIZE_STORAGE_KEY, String(normalizeFrozenPageSize(size)));
     } catch (error) {}
@@ -409,42 +415,30 @@
     }).length;
   }
 
-  function buildFrozenPagerPages(currentPage, totalPages) {
-    const visibleCount = 3;
-    const pages = [];
-    let start = Math.max(1, currentPage - 1);
-    let end = Math.min(totalPages, start + visibleCount - 1);
-    if (end - start < visibleCount - 1) {
-      start = Math.max(1, end - visibleCount + 1);
-    }
-    for (let page = start; page <= end; page += 1) {
-      pages.push(page);
-    }
-    return pages;
-  }
-
   function buildFrozenPagerState(entries) {
-    const rows = Array.isArray(entries) ? entries : [];
-    const pageSize = normalizeFrozenPageSize(frozenViewPageSize);
-    const totalItems = rows.length;
-    const totalPages = Math.max(1, Math.ceil(Math.max(totalItems, 1) / pageSize));
-    const currentPage = Math.min(Math.max(1, frozenViewPage), totalPages);
-    const startIndex = totalItems ? (currentPage - 1) * pageSize : 0;
-    const endIndex = Math.min(startIndex + pageSize, totalItems);
+    const pagerHelper = window.taskViewPager;
+    const pager = pagerHelper && typeof pagerHelper.createState === 'function'
+      ? pagerHelper.createState({
+          items: entries,
+          currentPage: frozenViewPage,
+          pageSize: frozenViewPageSize,
+          pageSizes: FROZEN_PAGE_SIZES,
+        })
+      : {
+          currentPage: 1,
+          totalItems: Array.isArray(entries) ? entries.length : 0,
+          totalPages: 1,
+          pageSize: FROZEN_PAGE_SIZES[0],
+          pageSizes: FROZEN_PAGE_SIZES.slice(),
+          hasPrev: false,
+          hasNext: false,
+          pages: [1],
+          items: Array.isArray(entries) ? entries.slice(0, FROZEN_PAGE_SIZES[0]) : [],
+        };
 
-    frozenViewPage = currentPage;
-    frozenViewPageSize = pageSize;
-
-    return {
-      currentPage: currentPage,
-      totalItems: totalItems,
-      totalPages: totalPages,
-      pageSize: pageSize,
-      hasPrev: currentPage > 1,
-      hasNext: currentPage < totalPages,
-      pages: buildFrozenPagerPages(currentPage, totalPages),
-      entries: rows.slice(startIndex, endIndex)
-    };
+    frozenViewPage = pager.currentPage;
+    frozenViewPageSize = pager.pageSize;
+    return pager;
   }
 
   function getFrozenSceneState() {
@@ -463,7 +457,7 @@
       weekCount: allEntries.filter(function (entry) { return entry.ageBucket === 'week'; }).length,
       earlierCount: allEntries.filter(function (entry) { return entry.ageBucket === 'earlier'; }).length,
       filteredCount: filteredEntries.length,
-      entries: pager.entries,
+      entries: pager.items,
       pager: pager,
       latestEntries: latestEntries
     };
@@ -623,23 +617,6 @@
     );
   }
 
-  function pagerArrowIconMarkup(direction) {
-    const points = direction === 'left' ? '14.5 6.5 9 12 14.5 17.5' : '9.5 6.5 15 12 9.5 17.5';
-    return (
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-      '<polyline points="' + points + '"></polyline>' +
-      '</svg>'
-    );
-  }
-
-  function pagerChevronDownIconMarkup() {
-    return (
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-      '<polyline points="7 10 12 15 17 10"></polyline>' +
-      '</svg>'
-    );
-  }
-
   function frozenRowActionButtonHtml(action, label, iconMarkup, actionClass) {
     return (
       '<button type="button" class="frozen-row__action' +
@@ -738,6 +715,17 @@
   }
 
   function frozenPagerHtml(state) {
+    const pagerHelper = window.taskViewPager;
+    if (pagerHelper && typeof pagerHelper.buildHtml === 'function') {
+      return pagerHelper.buildHtml({
+        pager: state && state.pager ? state.pager : null,
+        pageAction: 'setFrozenViewPage',
+        pageSizeAction: 'setFrozenViewPageSize',
+        ariaLabel: '冻结任务分页',
+        pageSizeLabel: '每页条数',
+        escapeHtml: html,
+      });
+    }
     const pager = state && state.pager ? state.pager : null;
     if (!pager || !state.filteredCount) {
       return '';

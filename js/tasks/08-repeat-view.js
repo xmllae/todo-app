@@ -9,10 +9,14 @@
   const REPEAT_NAV_CLASS = 'date-nav--repeat-view';
   const REPEAT_SHELL_CLASS = 'repeat-view-shell';
   const REPEAT_TAB_STORAGE_KEY = 'todo_repeat_view_tab_v1';
+  const REPEAT_PAGE_SIZE_STORAGE_KEY = 'todo_repeat_view_page_size_v1';
   const REPEAT_SEARCH_WINDOW_DAYS = 730;
   const REPEAT_TABS = ['all', 'daily', 'weekly', 'monthly'];
+  const REPEAT_PAGE_SIZES = [10, 20, 50];
 
   let repeatViewTab = readSavedRepeatTab();
+  let repeatViewPage = 1;
+  let repeatViewPageSize = readSavedRepeatPageSize();
 
   function html(value) {
     if (typeof esc === 'function') {
@@ -25,6 +29,195 @@
 
   function jsArgAttr(value) {
     return html(JSON.stringify(value == null ? '' : String(value)));
+  }
+
+  function createTaskViewPagerHelper() {
+    function normalizePageSize(size, pageSizes) {
+      const allowedSizes = Array.isArray(pageSizes) && pageSizes.length ? pageSizes : [10, 20, 50];
+      const pageSize = parseInt(size, 10);
+      return allowedSizes.indexOf(pageSize) >= 0 ? pageSize : allowedSizes[0];
+    }
+
+    function readStoredPageSize(storageKey, pageSizes) {
+      try {
+        return normalizePageSize(localStorage.getItem(storageKey), pageSizes);
+      } catch (error) {
+        return normalizePageSize('', pageSizes);
+      }
+    }
+
+    function persistPageSize(storageKey, size, pageSizes) {
+      try {
+        localStorage.setItem(storageKey, String(normalizePageSize(size, pageSizes)));
+      } catch (error) {}
+    }
+
+    function buildVisiblePages(currentPage, totalPages) {
+      const visibleCount = 3;
+      const pages = [];
+      let start = Math.max(1, currentPage - 1);
+      let end = Math.min(totalPages, start + visibleCount - 1);
+      if (end - start < visibleCount - 1) {
+        start = Math.max(1, end - visibleCount + 1);
+      }
+      for (let page = start; page <= end; page += 1) {
+        pages.push(page);
+      }
+      return pages;
+    }
+
+    function createState(options) {
+      const config = options || {};
+      const items = Array.isArray(config.items) ? config.items : [];
+      const pageSizes = Array.isArray(config.pageSizes) && config.pageSizes.length ? config.pageSizes.slice() : [10, 20, 50];
+      const pageSize = normalizePageSize(config.pageSize, pageSizes);
+      const totalItems = items.length;
+      const totalPages = Math.max(1, Math.ceil(Math.max(totalItems, 1) / pageSize));
+      const currentPage = Math.min(Math.max(1, parseInt(config.currentPage, 10) || 1), totalPages);
+      const startIndex = totalItems ? (currentPage - 1) * pageSize : 0;
+      const endIndex = Math.min(startIndex + pageSize, totalItems);
+
+      return {
+        currentPage: currentPage,
+        totalItems: totalItems,
+        totalPages: totalPages,
+        pageSize: pageSize,
+        pageSizes: pageSizes,
+        hasPrev: currentPage > 1,
+        hasNext: currentPage < totalPages,
+        pages: buildVisiblePages(currentPage, totalPages),
+        items: items.slice(startIndex, endIndex),
+      };
+    }
+
+    function pagerArrowIconMarkup(direction) {
+      const points = direction === 'left' ? '14.5 6.5 9 12 14.5 17.5' : '9.5 6.5 15 12 9.5 17.5';
+      return (
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+        '<polyline points="' + points + '"></polyline>' +
+        '</svg>'
+      );
+    }
+
+    function pagerChevronDownIconMarkup() {
+      return (
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+        '<polyline points="7 10 12 15 17 10"></polyline>' +
+        '</svg>'
+      );
+    }
+
+    function escapePagerText(value, escapeFn) {
+      return typeof escapeFn === 'function' ? escapeFn(value) : html(value);
+    }
+
+    function buildHtml(options) {
+      const config = options || {};
+      const pager = config.pager;
+      const pageAction = String(config.pageAction || '');
+      const pageSizeAction = String(config.pageSizeAction || '');
+      const ariaLabel = config.ariaLabel || '分页';
+      const pageSizeLabel = config.pageSizeLabel || '每页条数';
+
+      if (!pager || !pager.totalItems) {
+        return '';
+      }
+
+      const pageButtons = pager.pages
+        .map(function (pageNumber) {
+          return (
+            '<button type="button" class="task-view-pager__btn' +
+            (pageNumber === pager.currentPage ? ' is-active' : '') +
+            '" onclick="' +
+            pageAction +
+            '(' +
+            pageNumber +
+            ')"' +
+            (pageNumber === pager.currentPage ? ' aria-current="page"' : '') +
+            '>' +
+            pageNumber +
+            '</button>'
+          );
+        })
+        .join('');
+
+      const pageSizeOptions = pager.pageSizes
+        .map(function (size) {
+          return (
+            '<option value="' +
+            size +
+            '"' +
+            (size === pager.pageSize ? ' selected' : '') +
+            '>' +
+            size +
+            '条 / 页</option>'
+          );
+        })
+        .join('');
+
+      return (
+        '<footer class="task-view-pager" aria-label="' +
+        escapePagerText(ariaLabel, config.escapeHtml) +
+        '">' +
+        '<div class="task-view-pager__group">' +
+        '<button type="button" class="task-view-pager__btn task-view-pager__btn--arrow" onclick="' +
+        pageAction +
+        '(' +
+        (pager.currentPage - 1) +
+        ')" aria-label="上一页"' +
+        (pager.hasPrev ? '' : ' disabled') +
+        '>' +
+        pagerArrowIconMarkup('left') +
+        '</button>' +
+        pageButtons +
+        '<button type="button" class="task-view-pager__btn task-view-pager__btn--arrow" onclick="' +
+        pageAction +
+        '(' +
+        (pager.currentPage + 1) +
+        ')" aria-label="下一页"' +
+        (pager.hasNext ? '' : ' disabled') +
+        '>' +
+        pagerArrowIconMarkup('right') +
+        '</button>' +
+        '</div>' +
+        '<label class="task-view-pager__size" aria-label="' +
+        escapePagerText(pageSizeLabel, config.escapeHtml) +
+        '">' +
+        '<select class="task-view-pager__size-select" onchange="' +
+        pageSizeAction +
+        '(this.value)" aria-label="' +
+        escapePagerText(pageSizeLabel, config.escapeHtml) +
+        '">' +
+        pageSizeOptions +
+        '</select>' +
+        '<span class="task-view-pager__size-icon" aria-hidden="true">' +
+        pagerChevronDownIconMarkup() +
+        '</span>' +
+        '</label>' +
+        '</footer>'
+      );
+    }
+
+    return {
+      buildHtml: buildHtml,
+      createState: createState,
+      normalizePageSize: normalizePageSize,
+      persistPageSize: persistPageSize,
+      readStoredPageSize: readStoredPageSize,
+    };
+  }
+
+  // Repeat view always loads before frozen view, so we bootstrap the shared pager
+  // here to keep both task modes on one implementation without another runtime hop.
+  function getTaskViewPager() {
+    if (
+      !window.taskViewPager ||
+      typeof window.taskViewPager.buildHtml !== 'function' ||
+      typeof window.taskViewPager.createState !== 'function'
+    ) {
+      window.taskViewPager = createTaskViewPagerHelper();
+    }
+    return window.taskViewPager;
   }
 
   function isRepeatMode() {
@@ -70,6 +263,18 @@
     try {
       localStorage.setItem(REPEAT_TAB_STORAGE_KEY, normalizeRepeatTab(tab));
     } catch (error) {}
+  }
+
+  function normalizeRepeatPageSize(size) {
+    return getTaskViewPager().normalizePageSize(size, REPEAT_PAGE_SIZES);
+  }
+
+  function readSavedRepeatPageSize() {
+    return getTaskViewPager().readStoredPageSize(REPEAT_PAGE_SIZE_STORAGE_KEY, REPEAT_PAGE_SIZES);
+  }
+
+  function persistRepeatPageSize(size) {
+    getTaskViewPager().persistPageSize(REPEAT_PAGE_SIZE_STORAGE_KEY, size, REPEAT_PAGE_SIZES);
   }
 
   function clearRepeatHeaderToolsHost() {
@@ -447,6 +652,7 @@
   function getRepeatSceneState() {
     const entries = collectRepeatEntries();
     const filteredEntries = filterRepeatEntries(entries);
+    const pager = buildRepeatPagerState(filteredEntries);
     const sidebarStats = getRepeatSidebarStats();
 
     return {
@@ -459,13 +665,27 @@
       pausedCount: entries.filter(function (entry) { return entry.statusKey === 'paused'; }).length,
       completedCount: 0,
       filteredCount: filteredEntries.length,
-      entries: filteredEntries,
+      entries: pager.items,
+      pager: pager,
       sidebarStats: sidebarStats,
     };
   }
 
   function getRepeatSceneTotalCount() {
     return collectRepeatEntries().length;
+  }
+
+  function buildRepeatPagerState(entries) {
+    const pager = getTaskViewPager().createState({
+      items: entries,
+      currentPage: repeatViewPage,
+      pageSize: repeatViewPageSize,
+      pageSizes: REPEAT_PAGE_SIZES,
+    });
+
+    repeatViewPage = pager.currentPage;
+    repeatViewPageSize = pager.pageSize;
+    return pager;
   }
 
   function repeatLoopIconMarkup() {
@@ -893,6 +1113,17 @@
     );
   }
 
+  function repeatPagerHtml(state) {
+    return getTaskViewPager().buildHtml({
+      pager: state && state.pager ? state.pager : null,
+      pageAction: 'setRepeatViewPage',
+      pageSizeAction: 'setRepeatViewPageSize',
+      ariaLabel: '重复任务分页',
+      pageSizeLabel: '每页条数',
+      escapeHtml: html,
+    });
+  }
+
   function repeatTableHtml(state) {
     if (!state.filteredCount) {
       return repeatEmptyStateHtml(state);
@@ -916,7 +1147,10 @@
       '<div class="repeat-tabs" role="tablist" aria-label="重复任务分类">' +
       repeatTabsHtml(state) +
       '</div></div>' +
+      '<div class="repeat-view__content">' +
       repeatTableHtml(state) +
+      repeatPagerHtml(state) +
+      '</div>' +
       '</section>';
   }
 
@@ -1320,10 +1554,31 @@
       return;
     }
     repeatViewTab = nextTab;
+    repeatViewPage = 1;
     persistRepeatTab(nextTab);
     if (typeof rT === 'function') {
       rT();
     }
+  };
+
+  window.setRepeatViewPage = function (page) {
+    const nextPage = parseInt(page, 10);
+    if (!Number.isFinite(nextPage)) {
+      return;
+    }
+    repeatViewPage = Math.max(1, nextPage);
+    rerenderRepeatViews();
+  };
+
+  window.setRepeatViewPageSize = function (size) {
+    const nextSize = normalizeRepeatPageSize(size);
+    if (nextSize === repeatViewPageSize) {
+      return;
+    }
+    repeatViewPageSize = nextSize;
+    repeatViewPage = 1;
+    persistRepeatPageSize(nextSize);
+    rerenderRepeatViews();
   };
 
   window.jumpToRepeatRuleDetail = function (ruleId) {
