@@ -465,10 +465,10 @@
 .task-recur-badge,
 .time-edit.time-edit--pill,
 .repeat-rule__meta {
-  --task-recur-meta-gap: 4px;
+  --task-recur-meta-gap: 0;
   --task-recur-meta-leading-gap: 5px;
   --task-recur-meta-time-scale: 1;
-  --task-recur-meta-time-opacity: .88;
+  --task-recur-meta-time-opacity: 1;
 }
 
 .task-recur-badge-txt,
@@ -483,9 +483,11 @@
 
 .task-recur-badge-summary,
 .task-recur-badge-time,
+.task-recur-badge-sep,
 .time-edit-pill-prefix-main,
 .time-edit-pill-prefix-open,
-.time-edit-pill-prefix-close {
+.time-edit-pill-prefix-close,
+.time-edit-pill-prefix-sep {
   display: inline-flex;
   align-items: center;
 }
@@ -499,17 +501,28 @@
 }
 
 .task-recur-badge-time,
+.task-recur-badge-sep,
 .time-edit-pill-prefix-open,
-.time-edit-pill-prefix-close {
+.time-edit-pill-prefix-close,
+.time-edit-pill-prefix-sep {
   flex: 0 0 auto;
   white-space: nowrap;
 }
 
+.task-recur-badge-time {
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  opacity: 1;
+  align-self: center;
+  transform: none;
+}
+
 .task-recur-badge-summary + .task-recur-badge-time {
-  font-size: calc(1em * var(--task-recur-meta-time-scale));
-  opacity: var(--task-recur-meta-time-opacity);
-  align-self: flex-end;
-  transform: translateY(.04em);
+  font-size: inherit;
+  opacity: 1;
+  align-self: center;
+  transform: none;
 }
 
 #taskMode .list-panel #tList .task-row-center > .task-time-col.task-time-col--editing,

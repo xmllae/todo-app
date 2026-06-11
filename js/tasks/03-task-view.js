@@ -358,8 +358,8 @@ let acc=taskTimeAccent("",sel);
 if(editingTimeId===t.id){
 const _teInp=`<input type="time" class="te-input te-input--pill" id="te_${t.id}" value="${pt}" onclick="event.stopPropagation()" onkeydown="if(event.key==='Enter'){event.preventDefault();saveTimeEdit(${t.id})}else if(event.key==='Escape'){event.preventDefault();cancelTimeEdit()}" title="Enter 婵烇絽娲︾换鍌炴偤?閻?婵犮垺鍎兼禍顒勫礉瀹ュ棛鈹嶆繝闈涙閹?閻?Esc 闂佸憡鐟﹂悧妤冪矓? onblur="setTimeout(function(){if(editingTimeId===${t.id})saveTimeEdit(${t.id})},100)">`;
 const _recurDesc=hasRecur?(getRecurDesc(t.recurRuleId)||"\u91cd\u590d"):"";
-const _tePfx=hasRecur?`<span class="time-edit-pill-prefix">${typeof buildRecurringSummaryPrefixHtml==="function"?buildRecurringSummaryPrefixHtml(_recurDesc,!!pt):esc(_recurDesc+(pt?" (":""))}</span>`:"";
-const _teSfx=hasRecur&&pt?(typeof buildRecurringSummarySuffixHtml==="function"?buildRecurringSummarySuffixHtml(true):'<span class="time-edit-pill-prefix-close" aria-hidden="true">)</span>'):"";
+const _tePfx=hasRecur?`<span class="time-edit-pill-prefix">${typeof buildRecurringSummaryPrefixHtml==="function"?buildRecurringSummaryPrefixHtml(_recurDesc,!!pt):esc(_recurDesc+(pt?" ":""))}</span>`:"";
+const _teSfx=hasRecur&&pt?(typeof buildRecurringSummarySuffixHtml==="function"?buildRecurringSummarySuffixHtml(true):""):"";
 const _teMid=hasRecur?`<span class="te-pill-time-core">${_tePfx}${_teInp}${_teSfx}</span>`:_teInp;
 timeH=`<div class="time-edit time-edit--inline time-edit--pill" onclick="event.stopPropagation()">${hasRecur?taskRecurRowBadgeSvg():""}${_teMid}<button type="button" class="te-pill-clock-btn" aria-label="\u9009\u62e9\u65f6\u95f4" title="\u9009\u62e9\u65f6\u95f4" onmousedown="event.preventDefault()" onclick="event.stopPropagation();openTimePillPicker(${t.id})"><svg class="te-pill-clock-ico" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></button></div>`;
 acc=pt?taskTimeAccent(pt,sel):taskTimeAccent("",sel)

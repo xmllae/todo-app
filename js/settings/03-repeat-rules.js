@@ -1140,7 +1140,7 @@ function joinRecurringMetaParts(parts) {
     return normalized[0];
   }
 
-  return normalized[0] + " (" + normalized.slice(1).join(" ") + ")";
+  return normalized.join(" ");
 }
 
 function buildRecurringMetaModel(summary, timeText) {
@@ -1171,7 +1171,7 @@ function buildRecurringMetaTextHtml(summary, timeText) {
     return '<span class="task-recur-badge-summary">' + esc(meta.summary) + "</span>";
   }
 
-  return '<span class="task-recur-badge-summary">' + esc(meta.summary) + '</span><span class="task-recur-badge-time">(' + esc(meta.time) + ")</span>";
+  return '<span class="task-recur-badge-summary">' + esc(meta.summary) + '</span><span class="task-recur-badge-sep" aria-hidden="true">&nbsp;</span><span class="task-recur-badge-time">' + esc(meta.time) + "</span>";
 }
 
 function buildRecurringSummaryPrefixHtml(summary, hasTrailingValue) {
@@ -1182,14 +1182,12 @@ function buildRecurringSummaryPrefixHtml(summary, hasTrailingValue) {
   }
 
   return hasTrailingValue
-    ? '<span class="time-edit-pill-prefix-main">' + esc(base) + '</span><span class="time-edit-pill-prefix-open" aria-hidden="true">(</span>'
+    ? '<span class="time-edit-pill-prefix-main">' + esc(base) + '</span><span class="time-edit-pill-prefix-sep" aria-hidden="true">&nbsp;</span>'
     : '<span class="time-edit-pill-prefix-main">' + esc(base) + "</span>";
 }
 
-function buildRecurringSummarySuffixHtml(hasLeadingValue) {
-  return hasLeadingValue
-    ? '<span class="time-edit-pill-prefix-close" aria-hidden="true">)</span>'
-    : "";
+function buildRecurringSummarySuffixHtml() {
+  return "";
 }
 
 function taskRecurRowBadgeSvg() {
