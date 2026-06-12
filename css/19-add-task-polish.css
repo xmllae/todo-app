@@ -26,6 +26,10 @@
   background: #ffffff !important;
 }
 
+.app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-input {
+  font-weight: 400 !important;
+}
+
 .app.app--with-global-nav #taskMode .list-panel #addTaskInlineHold .task-ghost-footer {
   border-top: 1px solid #d9e4f0 !important;
   border-radius: 0 !important;
