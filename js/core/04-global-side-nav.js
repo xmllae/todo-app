@@ -4,6 +4,7 @@
   var gsnActiveQuick = "";
   var gsnActiveProject = "";
   var missingProjectPrefix = "__gsn_missing_project__";
+  var INBOX_MODE = "inbox-view";
   var gsnStateKey = "tuole_gsn_state_v1";
   var gsnLastTodayKey = "";
   var gsnPrevOverdueCount = null;
@@ -151,6 +152,15 @@
     }, 0);
   }
 
+  function countInboxTasks() {
+    return rowsFor(todayKey()).filter(function (task) {
+      if (typeof taskMatchesFilterKey === "function") {
+        return taskMatchesFilterKey(task, "unscheduled");
+      }
+      return !task.done && !task.frozen && !task.planTime;
+    }).length;
+  }
+
   function countOverdue() {
     var today = todayKey();
     return allEntries().filter(function (entry) {
@@ -196,7 +206,7 @@
   }
 
   function isStandaloneQuickMode(mode) {
-    return mode === "priority-high" || mode === "repeat-view" || mode === "frozen-view" || mode === "goal-view";
+    return mode === INBOX_MODE || mode === "priority-high" || mode === "repeat-view" || mode === "frozen-view" || mode === "goal-view";
   }
 
   function setQuickModeValue(mode) {
@@ -251,7 +261,18 @@
     return typeof FMulti !== "undefined" && FMulti.size === 1 && FMulti.has(key);
   }
 
+  function isInboxSelectionActive() {
+    if (gsnActiveQuick === INBOX_MODE) return true;
+    return (
+      hasSingleFilter("unscheduled") &&
+      (typeof FTag === "undefined" || !FTag) &&
+      typeof sel !== "undefined" &&
+      sel === todayKey()
+    );
+  }
+
   function dateActiveKey(overdueCount) {
+    if (isInboxSelectionActive()) return "inbox";
     if (gsnActiveQuick === "overdue") return overdueCount > 0 ? "overdue" : "";
     if (isStandaloneQuickMode(gsnActiveQuick)) return "";
     if (gsnActiveQuick === "week") return "week";
@@ -298,6 +319,18 @@
     );
   }
 
+  function inboxTrayIcon() {
+    return (
+      '<span class="gsn-nav-date-icon gsn-nav-date-icon--inbox" aria-hidden="true">' +
+      '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" focusable="false">' +
+      '<path d="M3.75 8.75C3.75 7.64543 4.64543 6.75 5.75 6.75H18.25C19.3546 6.75 20.25 7.64543 20.25 8.75V17.25C20.25 18.3546 19.3546 19.25 18.25 19.25H5.75C4.64543 19.25 3.75 18.3546 3.75 17.25V8.75Z" stroke="currentColor" stroke-width="1.8"/>' +
+      '<path d="M4.25 13.25H8.4L9.9 15.25H14.1L15.6 13.25H19.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '<path d="M8.5 10.25H15.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>' +
+      "</svg>" +
+      "</span>"
+    );
+  }
+
   function navButton(kind, icon, label, count, action, arg, active, extraClass, extraAttrs) {
     var cls = "gsn-" + kind + (active ? " is-active" : "") + (extraClass || "");
     var dataArg = arg == null ? "" : ' data-gsn-arg="' + escapeHtml(arg) + '"';
@@ -307,6 +340,8 @@
         ? todayCalendarIcon()
         : icon === "overdue-warning"
           ? overdueWarningIcon()
+          : icon === "inbox-tray"
+            ? inboxTrayIcon()
           : '<i class="ph ' +
             icon +
             " gsn-nav-date-icon gsn-nav-date-icon--ph" +
@@ -437,6 +472,7 @@
       "</div>" +
       '<section class="gsn-section" aria-labelledby="gsnDateTitle">' +
       '<h4 class="gsn-section-title" id="gsnDateTitle">日期</h4>' +
+      navButton("item", "inbox-tray", "收件箱", countInboxTasks(), "inbox", "", activeDate === "inbox") +
       navButton("item", "today-calendar", "今天", pendingFor(todayKey()).length, "today", "", activeDate === "today") +
       navButton("item", "ph-arrow-fat-lines-right", "明天", null, "tomorrow", "", activeDate === "tomorrow") +
       navButton("item", "ph-calendar-dots", "本周", countWeek(), "week", "", activeDate === "week") +
@@ -562,6 +598,25 @@
     selectDate(todayKey(), "priority-high");
   }
 
+  function selectInboxView() {
+    if (typeof flushPendingTogIfAny === "function") flushPendingTogIfAny();
+    if (typeof window.markTaskTitleNoMotion === "function") window.markTaskTitleNoMotion();
+    var ds = todayKey();
+    var d = parseDS(ds);
+    sel = ds;
+    cY = d.getFullYear();
+    cM = d.getMonth();
+    FMulti = new Set(["unscheduled"]);
+    resetTaskOverlays();
+    setQuickModeValue(INBOX_MODE);
+    persistState();
+    if (typeof navigate === "function") navigate("/");
+    if (typeof rCal === "function") rCal();
+    if (typeof rAll === "function") rAll();
+    else if (typeof rT === "function") rT();
+    scheduleRefresh();
+  }
+
   function selectRepeatTaskView() {
     selectDate(todayKey(), "repeat-view");
   }
@@ -617,6 +672,7 @@
     var action = btn.getAttribute("data-gsn-action");
     var arg = btn.getAttribute("data-gsn-arg") || "";
     if (action === "today") selectDate(todayKey(), "today");
+    else if (action === "inbox") selectInboxView();
     else if (action === "tomorrow") selectDate(offsetKey(1), "tomorrow");
     else if (action === "week") selectDate(todayKey(), "week");
     else if (action === "overdue") selectDate(todayKey(), "overdue");

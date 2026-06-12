@@ -893,7 +893,7 @@ function getTaskWeekRangeText(meta){
 function getTaskWeekOffset(ds){const targetStart=getTaskWeekMeta(ds).start,baseStart=getTaskWeekMeta(fd(now)).start,targetDate=new Date(targetStart.getFullYear(),targetStart.getMonth(),targetStart.getDate()),baseDate=new Date(baseStart.getFullYear(),baseStart.getMonth(),baseStart.getDate());return Math.round((targetDate-baseDate)/604800000)}
 function getCnWeekNum(n){const d=["\u96f6","\u4e00","\u4e8c","\u4e09","\u56db","\u4e94","\u516d","\u4e03","\u516b","\u4e5d"],v=Math.max(0,Math.floor(Number(n)||0));if(v<10)return d[v];if(v===10)return"\u5341";if(v<20)return"\u5341"+d[v%10];const t=Math.floor(v/10),u=v%10;return d[t]+"\u5341"+(u?d[u]:"")}
 function getTaskWeekScopeTitle(ds){const off=getTaskWeekOffset(ds);if(off===0)return"\u672c\u5468";if(off===1)return"\u4e0b\u5468";if(off===-1)return"\u4e0a\u5468";if(off>1)return"\u7b2c"+getCnWeekNum(off+1)+"\u5468";return"\u524d"+getCnWeekNum(-off+1)+"\u5468"}
-function setTaskDashScope(scope,metaText){const titleEl=document.querySelector(".dash-overview .dash-hd-tit"),subEl=document.querySelector(".dash-overview .dash-ov-count-sub"),shortEl=document.getElementById("dashShortDate"),root=document.getElementById("taskDashCol");if(scope==="week"){if(titleEl)titleEl.textContent="\u672c\u5468\u603b\u89c8";if(subEl)subEl.textContent="\u5468\u4efb\u52a1\u5df2\u5b8c\u6210";if(shortEl&&metaText)shortEl.textContent=metaText;if(root)root.setAttribute("aria-label","\u672c\u5468\u6982\u89c8");return}if(scope==="overdue"){if(titleEl)titleEl.textContent="\u903e\u671f\u603b\u89c8";if(subEl)subEl.textContent="\u5386\u53f2\u672a\u5b8c\u6210\u4efb\u52a1";if(shortEl)shortEl.textContent=metaText||"\u5386\u53f2";if(root)root.setAttribute("aria-label","\u903e\u671f\u6982\u89c8");return}if(titleEl)titleEl.textContent="\u4eca\u65e5\u603b\u89c8";if(subEl)subEl.textContent="\u4efb\u52a1\u5df2\u5b8c\u6210";if(root)root.setAttribute("aria-label","\u4eca\u65e5\u6982\u89c8")}
+function setTaskDashScope(scope,metaText){const titleEl=document.querySelector(".dash-overview .dash-hd-tit"),subEl=document.querySelector(".dash-overview .dash-ov-count-sub"),shortEl=document.getElementById("dashShortDate"),root=document.getElementById("taskDashCol");if(scope==="week"){if(titleEl)titleEl.textContent="\u672c\u5468\u603b\u89c8";if(subEl)subEl.textContent="\u5468\u4efb\u52a1\u5df2\u5b8c\u6210";if(shortEl&&metaText)shortEl.textContent=metaText;if(root)root.setAttribute("aria-label","\u672c\u5468\u6982\u89c8");return}if(scope==="overdue"){if(titleEl)titleEl.textContent="\u903e\u671f\u603b\u89c8";if(subEl)subEl.textContent="\u5386\u53f2\u672a\u5b8c\u6210\u4efb\u52a1";if(shortEl)shortEl.textContent=metaText||"\u5386\u53f2";if(root)root.setAttribute("aria-label","\u903e\u671f\u6982\u89c8");return}if(scope==="inbox"){if(titleEl)titleEl.textContent="\u6536\u4ef6\u7bb1\u6982\u89c8";if(subEl)subEl.textContent="\u4eca\u65e5\u672a\u5b89\u6392\u4efb\u52a1";if(shortEl)shortEl.textContent=metaText||"\u672a\u5b89\u6392";if(root)root.setAttribute("aria-label","\u6536\u4ef6\u7bb1\u6982\u89c8");return}if(titleEl)titleEl.textContent="\u4eca\u65e5\u603b\u89c8";if(subEl)subEl.textContent="\u4efb\u52a1\u5df2\u5b8c\u6210";if(root)root.setAttribute("aria-label","\u4eca\u65e5\u6982\u89c8")}
 const weekDayExpandState=new Set();
 const weekDoneDayRevealState=new Set();
 const weekTaskTogglePendingIds=new Set();
@@ -1524,7 +1524,7 @@ function renderWeekTaskScene(list,baseDs){
   return{allTasks:weekAllTasks,filteredTasks:weekFilteredTasks,totalAll:totalAll,doneAll:doneAll,rangeText:rangeText,expandableDays:expandableDays,allExpanded:expandableDays.length>0&&expandableDays.every(function(ds){return isWeekDayExpanded(ds)})}
 }
 function isTaskCustomHeaderMode(mode){
-  return mode==="overdue"||mode==="priority-high"||mode==="repeat-view"||mode==="frozen-view"||mode==="goal-view"
+  return mode==="overdue"||mode==="inbox-view"||mode==="priority-high"||mode==="repeat-view"||mode==="frozen-view"||mode==="goal-view"
 }
 function getTaskStandardTitleParts(el){
   if(!el)return null;
@@ -1602,7 +1602,7 @@ function setTaskDateTitle(ds){
   if(shouldUpdate){
     mainEl.textContent=mainText;
     subEl.textContent=subText;
-    el.classList.remove("is-overdue-scope","is-priority-scope","is-repeat-scope","is-frozen-scope","is-goal-scope");
+    el.classList.remove("is-overdue-scope","is-inbox-scope","is-priority-scope","is-repeat-scope","is-frozen-scope","is-goal-scope");
     el.classList.toggle("is-week-scope",isWeekScope);
     el.classList.toggle("is-range-offset",!isWeekScope&&useRangeOffset);
     el.classList.toggle("is-relative",!isWeekScope&&useRelative);
@@ -1627,7 +1627,7 @@ function setTaskDateTitle(ds){
     el.dataset.renderKey=renderKey;
     el.dataset.lastDs=ds
   }else{
-    el.classList.remove("is-overdue-scope","is-priority-scope","is-repeat-scope","is-frozen-scope","is-goal-scope");
+    el.classList.remove("is-overdue-scope","is-inbox-scope","is-priority-scope","is-repeat-scope","is-frozen-scope","is-goal-scope");
     el.classList.toggle("is-week-scope",isWeekScope);
     el.classList.toggle("is-range-offset",!isWeekScope&&useRangeOffset);
     el.classList.toggle("is-relative",!isWeekScope&&useRelative);
@@ -1644,7 +1644,7 @@ function rT(){
   hydrateSortModes();
   const list=document.getElementById("tList");
   if(!list)return;
-  const quickMode=getTaskQuickMode(),weekMode=quickMode==="week",overdueMode=quickMode==="overdue";
+  const quickMode=getTaskQuickMode(),weekMode=quickMode==="week",overdueMode=quickMode==="overdue",inboxMode=quickMode==="inbox-view";
   if(weekMode){
     const wm=getTaskWeekMeta(sel);
     wm.days.forEach(function(ds){generateRecurring(ds)})
@@ -1653,7 +1653,7 @@ function rT(){
   setTaskDateTitle(sel);
   updateHeaderContext();
   const batchBar=document.getElementById("batchBar");
-  if(batchBar)batchBar.style.display=weekMode||overdueMode?"none":"flex";
+  if(batchBar)batchBar.style.display=weekMode||overdueMode||inboxMode?"none":"flex";
   updateSortUI();
   if(weekMode){
     const wk=renderWeekTaskScene(list,sel),pct=wk.totalAll>0?Math.round(wk.doneAll/wk.totalAll*100):0;
@@ -1670,6 +1670,16 @@ function rT(){
     const overdueState=renderOverdueTaskScene(list);
     renderOverdueTaskOverviewSidebar(overdueState);
     setTaskDashScope("overdue","");
+    focusTimerAfterRender();
+    return
+  }
+  if(inboxMode&&typeof renderInboxTaskScene==="function"){
+    const inboxState=renderInboxTaskScene(list,sel);
+    const dtInbox=T[sel]||[],listedInbox=dtInbox.filter(function(t){return isListedTask(t)}),visibleInbox=inboxState&&Array.isArray(inboxState.filteredTasks)?inboxState.filteredTasks:listedInbox.filter(function(t){return passesFMulti(t)});
+    const doneInbox=listedInbox.filter(function(t){return t.done}).length;
+    const pctInbox=listedInbox.length>0?Math.round(doneInbox/listedInbox.length*100):0;
+    renderTaskDash(pctInbox,listedInbox.length,doneInbox,listedInbox,visibleInbox,sel);
+    setTaskDashScope("day","");
     focusTimerAfterRender();
     return
   }
