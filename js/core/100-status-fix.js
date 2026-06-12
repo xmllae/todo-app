@@ -24,11 +24,4 @@
     };
   }
 
-  if (typeof loginAs === 'function') {
-    const originalLoginAs = loginAs;
-    loginAs = function loginAsWithStatus(user, userData) {
-      updateSyncStatus(typeof isGuest !== 'undefined' && isGuest ? 'offline' : 'saved');
-      return originalLoginAs(user, userData);
-    };
-  }
 })();

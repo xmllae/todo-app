@@ -1,6 +1,79 @@
-// ??????????????
-const SVG_MOON='<i class="header-utility-ico ph ph-moon" aria-hidden="true"></i>';
-const SVG_SUN='<i class="header-utility-ico ph ph-sun" aria-hidden="true"></i>';
-function setDarkBtnIcon(animated){const w=document.querySelector("#darkBtn .dark-btn-ico");if(!w)return;const html=isDark?SVG_SUN:SVG_MOON;const reduced=typeof matchMedia!=="undefined"&&matchMedia("(prefers-reduced-motion: reduce)").matches;if(!animated||reduced){w.innerHTML=html;w.classList.remove("dark-ico-exit","dark-ico-enter");return}w.classList.remove("dark-ico-exit","dark-ico-enter");let swapped=false;const swap=()=>{if(swapped)return;swapped=true;w.innerHTML=html;w.classList.remove("dark-ico-exit");void w.offsetWidth;w.classList.add("dark-ico-enter");const fin=()=>{w.classList.remove("dark-ico-enter");w.removeEventListener("animationend",fin)};w.addEventListener("animationend",fin,{once:true});setTimeout(fin,400)};const onExit=()=>{clearTimeout(fallback);swap()};w.classList.add("dark-ico-exit");w.addEventListener("animationend",onExit,{once:true});const fallback=setTimeout(()=>{w.removeEventListener("animationend",onExit);swap()},280)}
-async function init(){renderAvatarPicker();initTaskDashReorder();try{const dk=localStorage.getItem("tuole_dark");if(dk==="1"){isDark=true;document.body.classList.add("dark");setDarkBtnIcon()}}catch(e){}const isLocal=location.protocol==="file:";let token=null;try{token=localStorage.getItem("tuole_token")}catch(e){}if(token&&!isLocal){authToken=token;try{const r=await fetch("/api/load",{headers:{Authorization:"Bearer "+token}});if(r.ok){const j=await r.json();document.getElementById("loadingScreen").style.display="none";loginAs(j.user,j.data||{});return}else if(r.status===401){try{localStorage.removeItem("tuole_token")}catch(e){}authToken=null}}catch(e){authToken=null}}let isGuestMode=false;try{isGuestMode=localStorage.getItem("tuole_guest_mode")==="1"}catch(e){}if(isGuestMode){document.getElementById("loadingScreen").style.display="none";guestLogin(true);return}document.getElementById("loadingScreen").style.display="none";document.getElementById("authScreen").style.display="flex"}
+// App bootstrap: restore theme first, then recover cloud/guest session.
+
+const SVG_MOON = '<i class="header-utility-ico ph ph-moon" aria-hidden="true"></i>';
+const SVG_SUN = '<i class="header-utility-ico ph ph-sun" aria-hidden="true"></i>';
+
+function setDarkBtnIcon(animated) {
+  const wrapper = document.querySelector("#darkBtn .dark-btn-ico");
+
+  if (!wrapper) {
+    return;
+  }
+
+  const iconHtml = isDark ? SVG_SUN : SVG_MOON;
+  const reducedMotion =
+    typeof matchMedia !== "undefined" &&
+    matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (!animated || reducedMotion) {
+    wrapper.innerHTML = iconHtml;
+    wrapper.classList.remove("dark-ico-exit", "dark-ico-enter");
+    return;
+  }
+
+  wrapper.classList.remove("dark-ico-exit", "dark-ico-enter");
+
+  let swapped = false;
+
+  const swapIcon = function swapIcon() {
+    if (swapped) {
+      return;
+    }
+
+    swapped = true;
+    wrapper.innerHTML = iconHtml;
+    wrapper.classList.remove("dark-ico-exit");
+    void wrapper.offsetWidth;
+    wrapper.classList.add("dark-ico-enter");
+
+    const finishEnter = function finishEnter() {
+      wrapper.classList.remove("dark-ico-enter");
+      wrapper.removeEventListener("animationend", finishEnter);
+    };
+
+    wrapper.addEventListener("animationend", finishEnter, { once: true });
+    setTimeout(finishEnter, 400);
+  };
+
+  const handleExit = function handleExit() {
+    clearTimeout(fallbackTimer);
+    swapIcon();
+  };
+
+  wrapper.classList.add("dark-ico-exit");
+  wrapper.addEventListener("animationend", handleExit, { once: true });
+
+  const fallbackTimer = setTimeout(function runDarkIconFallback() {
+    wrapper.removeEventListener("animationend", handleExit);
+    swapIcon();
+  }, 280);
+}
+
+function restoreThemePreference() {
+  const darkFlag = readStoredValue("tuole_dark");
+
+  if (darkFlag === "1") {
+    isDark = true;
+    document.body.classList.add("dark");
+    setDarkBtnIcon(false);
+  }
+}
+
+async function init() {
+  renderAvatarPicker();
+  initTaskDashReorder();
+  restoreThemePreference();
+  await restoreSessionOnStartup();
+}
+
 init();

@@ -1,25 +1,1038 @@
-// ???????????????
-function renderAvatarPicker(){document.getElementById("avatarPick").innerHTML=AVATARS.map(a=>`<div class="avatar-opt${a===selAvatar?" sel":""}" onclick="pickAvatar('${a}',this)">${a}</div>`).join("")}
-function pickAvatar(a,el){selAvatar=a;document.querySelectorAll("#avatarPick .avatar-opt").forEach(e=>e.classList.remove("sel"));el.classList.add("sel")}
-function switchAuth(m,btn){document.querySelectorAll(".auth-tab").forEach(b=>b.classList.remove("active"));btn.classList.add("active");document.getElementById("loginForm").style.display=m==="login"?"flex":"none";document.getElementById("registerForm").style.display=m==="register"?"flex":"none";document.getElementById("authError").textContent=""}
-function togglePw(id,btn){const inp=document.getElementById(id);inp.type=inp.type==="password"?"text":"password";const eyeSvg='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';const eyeOffSvg='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';btn.innerHTML=inp.type==="password"?eyeSvg:eyeOffSvg}
-function showAuthError(m,isInfo){const el=document.getElementById("authError");el.textContent=m;el.className="auth-error"+(isInfo?" info":"")}
-async function doLogin(){const email=document.getElementById("loginEmail").value.trim(),pw=document.getElementById("loginPw").value;if(!email){showAuthError("⚠️ 请输入邮箱");return}if(!pw){showAuthError("⚠️ 请输入密码");return}showAuthError("⏳ 登录中…",true);document.getElementById("loginBtn").disabled=true;try{const r=await fetch("/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email,password:pw})});const j=await r.json();if(!r.ok){showAuthError("❌ "+(j.error||"登录失败"));document.getElementById("loginBtn").disabled=false;return}authToken=j.token;localStorage.setItem("tuole_token",authToken);try{localStorage.removeItem("tuole_guest_mode")}catch(e){}showAuthError("⏳ 加载数据…",true);const lr=await fetch("/api/load",{headers:{Authorization:"Bearer "+authToken}});const ld=await lr.json();loginAs(j.user,ld.data||{});toast("👋 欢迎回来，"+j.user.name)}catch(e){showAuthError("❌ 网络错误")}finally{document.getElementById("loginBtn").disabled=false}}
-async function doRegister(){const name=document.getElementById("regName").value.trim(),email=document.getElementById("regEmail").value.trim(),pw=document.getElementById("regPw").value;if(!name){showAuthError("⚠️ 请输入昵称");return}if(!email||!/\S+@\S+\.\S+/.test(email)){showAuthError("⚠️ 请输入有效邮箱");return}if(pw.length<4){showAuthError("⚠️ 密码至少4位");return}showAuthError("⏳ 注册中…",true);document.getElementById("regBtn").disabled=true;try{const r=await fetch("/api/register",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email,password:pw,name:name,avatar:selAvatar})});const j=await r.json();if(!r.ok){showAuthError("❌ "+(j.error||"注册失败"));document.getElementById("regBtn").disabled=false;return}authToken=j.token;localStorage.setItem("tuole_token",authToken);try{localStorage.removeItem("tuole_guest_mode")}catch(e){}loginAs(j.user,{});toast("🎉 注册成功！")}catch(e){showAuthError("❌ 网络错误")}finally{document.getElementById("regBtn").disabled=false}}
-function guestLogin(silent){let gd={};try{const d=localStorage.getItem("tuole_guest");if(d)gd=JSON.parse(d)}catch(e){}isGuest=true;try{localStorage.setItem("tuole_guest_mode","1")}catch(e){}loginAs({id:0,email:"guest",name:"游客",avatar:"👤"},gd);if(!silent)toast("📴 离线模式")}
-function loginAs(user,userData){currentUser=user;if(!isGuest)isGuest=false;T=userData.tasks||{};templates=userData.templates||[];sortStates=userData.sortStates||{};recurRules=userData.recurRules||[];customTags=userData.customTags&&userData.customTags.length?userData.customTags:[...DEFAULT_TAGS];autoArchive=userData.autoArchive||false;showArchivedInList=userData.showArchivedInList||false;priorityColors=userData.priorityColors?{...DEFAULT_PRIO_COLORS,...userData.priorityColors}:{...DEFAULT_PRIO_COLORS};priorityTemplateIds=userData.priorityTemplateIds?{...DEFAULT_PRIO_TEMPLATE_IDS,...userData.priorityTemplateIds}:{...DEFAULT_PRIO_TEMPLATE_IDS};if(userData.priorityTemplateIds===undefined)inferPrioTemplatesFromColors();syncPriorityColorsFromTemplates();showDeadline=userData.showDeadline||false;defaultSortMode=userData.defaultSortMode||"high-first";autoSortEnabled=userData.autoSortEnabled||false;customImportTemplates=userData.customImportTemplates||[{id:1,name:"模板1",content:""},{id:2,name:"模板2",content:""},{id:3,name:"模板3",content:""}];if(userData.subscriptions&&Array.isArray(userData.subscriptions)){localStorage.setItem("tuole_subs",JSON.stringify(userData.subscriptions))}if(typeof window.clearLongTermGoalsStorage==="function"){window.clearLongTermGoalsStorage()}if(Array.isArray(userData.longTermGoals)&&typeof window.writeLongTermGoalsToStorage==="function"){window.writeLongTermGoalsToStorage(userData.longTermGoals)}lastSort=userData.lastSort!==undefined&&userData.lastSort!==null&&userData.lastSort!==""?normalizeSortMode(userData.lastSort):normalizeSortMode(userData.defaultSortMode||"created");updatePrioVars();setHeaderAvatar(user.avatar);setUdAvatar(user.avatar);document.getElementById("udName").textContent=user.name;document.getElementById("udEmail").textContent=isGuest?"📴 离线模式":user.email;document.getElementById("authScreen").style.display="none";document.getElementById("loadingScreen").style.display="none";document.getElementById("appMain").classList.add("show");var _navState=null;try{_navState=JSON.parse(localStorage.getItem("tuole_gsn_state_v1")||"null")}catch(e){_navState=null}var _navDs=_navState&&typeof _navState.ds==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(_navState.ds)?_navState.ds:fd(now);var _navQuick=_navState&&typeof _navState.quick==="string"?_navState.quick:"";var _navDate=parseDS(_navDs);cY=_navDate.getFullYear();cM=_navDate.getMonth();sel=_navDs;if(typeof setGlobalSideNavQuickMode==="function")setGlobalSideNavQuickMode(_navQuick,true);F="all";FTag="";editingId=null;expandedId=null;multiSelect=false;selectedIds.clear();undoStack=[];archQYear="";archQMonth="";archQDay="";archSearch="";kbHideDone=true;kbTimeFilter="all";window._archCollapsed={};window._archPages={};checkAutoArchive();const _initPath=getCurrentPath();try{if(location.protocol!=="file:")history.replaceState({path:_initPath},"",_initPath)}catch(e){}syncNavHighlight(_initPath);applyMode(getPathMode(_initPath));
-    // 初始化导航高亮背景块：使用 noAnim=true + reflow 技巧消除首屏"飞入"
-    const _initActiveBtn=document.querySelector("#modeToggle .mode-btn.active");
-    if(_initActiveBtn)moveModeToggleIndicator(_initActiveBtn,true);
-    rCal();document.getElementById("archToggle").classList.toggle("on",autoArchive);document.getElementById("showArchToggle").classList.toggle("on",showArchivedInList);document.getElementById("deadlineToggle").classList.toggle("on",showDeadline);document.getElementById("defaultSortSel").value=defaultSortMode;document.getElementById("autoSortToggle").classList.toggle("on",autoSortEnabled);rPrioColorSettings();updateSyncStatus(isGuest?"offline":"saved")}
-async function doLogout(){if(authToken&&!isGuest){try{await fetch("/api/logout",{method:"POST",headers:{Authorization:"Bearer "+authToken}})}catch(e){}}currentUser=null;authToken=null;isGuest=false;pendingSave=false;try{localStorage.removeItem("tuole_token");localStorage.removeItem("tuole_guest_mode")}catch(e){}if(typeof window.clearLongTermGoalsStorage==="function"){window.clearLongTermGoalsStorage()}document.getElementById("appMain").classList.remove("show");document.getElementById("authScreen").style.display="flex";closeUserMenu();document.getElementById("loginEmail").value="";document.getElementById("loginPw").value="";document.getElementById("authError").textContent="";updateSyncStatus("")}
-function switchAccount(){closeUserMenu();doLogout()}
-function setUserMenuState(isOpen){const d=document.getElementById("userDropdown"),m=document.getElementById("udMask"),b=document.body,btn=document.querySelector("#userMenu .user-btn");if(!d||!m||!b)return;d.classList.toggle("show",isOpen);m.classList.toggle("show",isOpen);b.classList.toggle("user-menu-open",isOpen);if(btn)btn.setAttribute("aria-expanded",isOpen?"true":"false");b.style.overflow=isOpen?"hidden":"";if(isOpen)updateUserStats()}
-function toggleUserMenu(){const d=document.getElementById("userDropdown");if(!d)return;setUserMenuState(!d.classList.contains("show"))}
-function closeUserMenu(){setUserMenuState(false)}
-document.addEventListener("click",e=>{if(window.innerWidth>640){const m=document.getElementById("userMenu");if(m&&!m.contains(e.target))closeUserMenu()}const sw=document.getElementById("sortWrap");if(sw&&!sw.contains(e.target))document.getElementById("sortDropdown").classList.remove("show");const tw=document.getElementById("tagFilterWrap");if(tw&&!tw.contains(e.target))document.getElementById("tagDropdown").classList.remove("show");if(ppOpenId!==null&&!e.target.closest(".pp-drop")&&!e.target.closest(".act-btn-pp")){ppOpenId=null;rT()}if(prioTplPickerOpen!==null&&!e.target.closest(".prio2-picker")&&!e.target.closest(".prio2-btn-pick")){prioTplPickerOpen=null;rPrioColorSettings()}});
-document.addEventListener("keydown",e=>{if(e.key==="Escape")closeUserMenu()});
-function updateUserStats(){let t=0,d=0;for(const ds in T)T[ds].forEach(x=>{t++;if(x.done)d++});document.getElementById("udTotal").textContent=t;document.getElementById("udDone").textContent=d}
-function showProfile(){closeUserMenu();document.getElementById("mBody").innerHTML=`<p style="font-weight:600;font-size:1.05rem;margin-bottom:10px">✏️ 修改资料</p><div class="copy-field"><label>昵称</label><input type="text" id="editName" value="${esc(currentUser.name)}" maxlength="12"></div><div class="copy-field"><label>头像</label><div class="avatar-pick" id="editAP" style="margin-top:3px"></div></div><div class="copy-field"><label>新密码（留空不改）</label><input type="password" id="editPw" placeholder="新密码"></div><div class="modal-actions"><button class="mbtn-c" onclick="clM()">取消</button><button class="mbtn-a" onclick="saveProfile()">保存</button></div>`;document.getElementById("mBg").classList.add("show");document.getElementById("editAP").innerHTML=AVATARS.map(x=>`<div class="avatar-opt${x===currentUser.avatar?" sel":""}" onclick="window._eA='${x}';this.parentNode.querySelectorAll('.avatar-opt').forEach(e=>e.classList.remove('sel'));this.classList.add('sel')">${x}</div>`).join("");window._eA=currentUser.avatar}
-async function saveProfile(){const n=document.getElementById("editName").value.trim(),pw=document.getElementById("editPw").value,av=window._eA||currentUser.avatar;if(!n){toast("⚠️ 昵称不能为空");return}if(pw&&pw.length<4){toast("⚠️ 密码至少4位");return}if(isGuest){currentUser.name=n;currentUser.avatar=av;setHeaderAvatar(av);setUdAvatar(av);document.getElementById("udName").textContent=n;clM();toast("✅ 已更新");return}try{const r=await fetch("/api/profile",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+authToken},body:JSON.stringify({name:n,avatar:av,newPassword:pw||undefined})});const j=await r.json();if(!r.ok){toast("❌ "+(j.error||"更新失败"));return}currentUser=j.user;if(j.newToken){authToken=j.newToken;localStorage.setItem("tuole_token",authToken)}setHeaderAvatar(currentUser.avatar);setUdAvatar(currentUser.avatar);document.getElementById("udName").textContent=currentUser.name;clM();toast("✅ 已更新")}catch(e){toast("❌ 网络错误")}}
+// Authentication flow, session bootstrap, and account shell helpers.
 
+const AUTH_STORAGE_KEYS = {
+  token: "tuole_token",
+  guestMode: "tuole_guest_mode",
+  guestData: "tuole_guest",
+  sideNavState: "tuole_gsn_state_v1",
+  subscriptions: "tuole_subs"
+};
+
+const AUTH_EVENTS = {
+  sessionReady: "tuole:session-ready",
+  sessionCleared: "tuole:session-cleared"
+};
+
+const AUTH_API_BASE = (function resolveAuthApiBase() {
+  const raw =
+    typeof window.__TUOLE_API_BASE === "string" ? window.__TUOLE_API_BASE.trim() : "";
+  const normalized = raw.replace(/\/+$/, "");
+  return normalized || "/api";
+})();
+
+const AUTH_EYE_SVG =
+  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+
+const AUTH_EYE_OFF_SVG =
+  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+
+function getAuthElement(id) {
+  return document.getElementById(id);
+}
+
+function readStoredValue(key) {
+  try {
+    return localStorage.getItem(key);
+  } catch (error) {
+    return null;
+  }
+}
+
+function writeStoredValue(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch (error) {}
+}
+
+function removeStoredValue(key) {
+  try {
+    localStorage.removeItem(key);
+  } catch (error) {}
+}
+
+function readStoredJson(key, fallbackValue) {
+  const raw = readStoredValue(key);
+
+  if (!raw) {
+    return fallbackValue;
+  }
+
+  try {
+    return JSON.parse(raw);
+  } catch (error) {
+    return fallbackValue;
+  }
+}
+
+function writeStoredJson(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (error) {}
+}
+
+function buildApiUrl(path) {
+  const cleanPath = String(path || "").replace(/^\/+/, "");
+  return `${AUTH_API_BASE}/${cleanPath}`;
+}
+
+function createAuthFlowError(message, meta) {
+  const error = new Error(message);
+  error.userMessage = message;
+
+  if (meta && typeof meta === "object") {
+    Object.assign(error, meta);
+  }
+
+  return error;
+}
+
+async function readApiPayload(response) {
+  const rawText = await response.text();
+
+  if (!rawText) {
+    return {
+      data: {},
+      isJson: true,
+      rawText: ""
+    };
+  }
+
+  try {
+    return {
+      data: JSON.parse(rawText),
+      isJson: true,
+      rawText: rawText
+    };
+  } catch (error) {
+    return {
+      data: null,
+      isJson: false,
+      rawText: rawText
+    };
+  }
+}
+
+function resolveResponseErrorMessage(actionLabel, response, payloadMeta) {
+  const payload = payloadMeta && payloadMeta.data ? payloadMeta.data : null;
+  const status = response && response.status ? `（${response.status}）` : "";
+
+  if (payload && typeof payload.error === "string" && payload.error.trim()) {
+    return payload.error.trim();
+  }
+
+  if (payload && typeof payload.message === "string" && payload.message.trim()) {
+    return payload.message.trim();
+  }
+
+  if (response && response.status === 401) {
+    return actionLabel === "加载数据" ? "登录状态已过期，请重新登录" : "账号或密码不正确";
+  }
+
+  if (!payloadMeta || !payloadMeta.isJson) {
+    return `${actionLabel}接口返回了异常响应${status}`;
+  }
+
+  return `${actionLabel}失败${status}`;
+}
+
+function resolveNetworkErrorMessage(actionLabel, path) {
+  return `${actionLabel}服务不可用，请检查 ${buildApiUrl(path)} 是否已部署`;
+}
+
+async function requestApi(path, options, actionLabel) {
+  let response;
+
+  try {
+    response = await fetch(buildApiUrl(path), options);
+  } catch (error) {
+    throw createAuthFlowError(resolveNetworkErrorMessage(actionLabel, path), {
+      cause: error,
+      route: path
+    });
+  }
+
+  const payloadMeta = await readApiPayload(response);
+
+  if (!response.ok) {
+    throw createAuthFlowError(
+      resolveResponseErrorMessage(actionLabel, response, payloadMeta),
+      {
+        status: response.status,
+        route: path,
+        responseBody: payloadMeta.rawText,
+        payload: payloadMeta.data
+      }
+    );
+  }
+
+  if (!payloadMeta.isJson) {
+    throw createAuthFlowError(`${actionLabel}接口返回了非 JSON 响应（${response.status}）`, {
+      status: response.status,
+      route: path,
+      responseBody: payloadMeta.rawText
+    });
+  }
+
+  return payloadMeta.data || {};
+}
+
+function getAuthHeader(token) {
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
+function getUserFacingMessage(error, fallbackMessage) {
+  if (error && typeof error.userMessage === "string" && error.userMessage.trim()) {
+    return error.userMessage.trim();
+  }
+
+  return fallbackMessage;
+}
+
+function emitAuthEvent(name, detail) {
+  document.dispatchEvent(
+    new CustomEvent(name, {
+      detail: detail || {}
+    })
+  );
+}
+
+function cloneDefaultImportTemplates() {
+  return [
+    { id: 1, name: "模板1", content: "" },
+    { id: 2, name: "模板2", content: "" },
+    { id: 3, name: "模板3", content: "" }
+  ];
+}
+
+function normalizeSessionUser(user) {
+  const source = user && typeof user === "object" ? user : {};
+  return {
+    id: source.id != null ? source.id : 0,
+    email: typeof source.email === "string" ? source.email : "",
+    name: typeof source.name === "string" && source.name.trim() ? source.name : "用户",
+    avatar:
+      typeof source.avatar === "string" && source.avatar.trim() ? source.avatar : "👤"
+  };
+}
+
+function syncSupplementalUserStores(data) {
+  if (Array.isArray(data.subscriptions)) {
+    writeStoredJson(AUTH_STORAGE_KEYS.subscriptions, data.subscriptions);
+  }
+
+  if (typeof window.clearLongTermGoalsStorage === "function") {
+    window.clearLongTermGoalsStorage();
+  }
+
+  if (
+    Array.isArray(data.longTermGoals) &&
+    typeof window.writeLongTermGoalsToStorage === "function"
+  ) {
+    window.writeLongTermGoalsToStorage(data.longTermGoals);
+  }
+}
+
+function applySessionData(userData) {
+  const data = userData && typeof userData === "object" ? userData : {};
+
+  T = data.tasks || {};
+  templates = Array.isArray(data.templates) ? data.templates : [];
+  sortStates = data.sortStates || {};
+  recurRules = Array.isArray(data.recurRules) ? data.recurRules : [];
+  customTags =
+    Array.isArray(data.customTags) && data.customTags.length
+      ? data.customTags
+      : [...DEFAULT_TAGS];
+  autoArchive = !!data.autoArchive;
+  showArchivedInList = !!data.showArchivedInList;
+  priorityColors = data.priorityColors
+    ? { ...DEFAULT_PRIO_COLORS, ...data.priorityColors }
+    : { ...DEFAULT_PRIO_COLORS };
+  priorityTemplateIds = data.priorityTemplateIds
+    ? { ...DEFAULT_PRIO_TEMPLATE_IDS, ...data.priorityTemplateIds }
+    : { ...DEFAULT_PRIO_TEMPLATE_IDS };
+
+  if (data.priorityTemplateIds === undefined) {
+    inferPrioTemplatesFromColors();
+  }
+
+  syncPriorityColorsFromTemplates();
+
+  showDeadline = !!data.showDeadline;
+  defaultSortMode = data.defaultSortMode || "high-first";
+  autoSortEnabled = !!data.autoSortEnabled;
+  customImportTemplates =
+    Array.isArray(data.customImportTemplates) && data.customImportTemplates.length
+      ? data.customImportTemplates
+      : cloneDefaultImportTemplates();
+  lastSort =
+    data.lastSort !== undefined && data.lastSort !== null && data.lastSort !== ""
+      ? normalizeSortMode(data.lastSort)
+      : normalizeSortMode(data.defaultSortMode || "created");
+
+  syncSupplementalUserStores(data);
+  updatePrioVars();
+}
+
+function syncAccountShell(user) {
+  setHeaderAvatar(user.avatar);
+  setUdAvatar(user.avatar);
+
+  const nameElement = getAuthElement("udName");
+  const emailElement = getAuthElement("udEmail");
+
+  if (nameElement) {
+    nameElement.textContent = user.name;
+  }
+
+  if (emailElement) {
+    emailElement.textContent = isGuest ? "📴 离线模式" : user.email;
+  }
+}
+
+function syncSessionPreferenceUi() {
+  if (typeof syncImportedSettingsUI === "function") {
+    syncImportedSettingsUI();
+  } else {
+    const archToggle = getAuthElement("archToggle");
+    const showArchToggle = getAuthElement("showArchToggle");
+    const deadlineToggle = getAuthElement("deadlineToggle");
+    const defaultSortSelect = getAuthElement("defaultSortSel");
+    const autoSortToggle = getAuthElement("autoSortToggle");
+
+    if (archToggle) {
+      archToggle.classList.toggle("on", autoArchive);
+    }
+
+    if (showArchToggle) {
+      showArchToggle.classList.toggle("on", showArchivedInList);
+    }
+
+    if (deadlineToggle) {
+      deadlineToggle.classList.toggle("on", showDeadline);
+    }
+
+    if (defaultSortSelect) {
+      defaultSortSelect.value = defaultSortMode;
+    }
+
+    if (autoSortToggle) {
+      autoSortToggle.classList.toggle("on", autoSortEnabled);
+    }
+  }
+
+  if (typeof rPrioColorSettings === "function") {
+    rPrioColorSettings();
+  }
+}
+
+function readStartupNavState() {
+  const savedState = readStoredJson(AUTH_STORAGE_KEYS.sideNavState, null);
+  const ds =
+    savedState &&
+    typeof savedState.ds === "string" &&
+    /^\d{4}-\d{2}-\d{2}$/.test(savedState.ds)
+      ? savedState.ds
+      : fd(now);
+  const quick = savedState && typeof savedState.quick === "string" ? savedState.quick : "";
+  return {
+    ds: ds,
+    quick: quick
+  };
+}
+
+function resetTransientViewState(navState) {
+  const startupNav = navState || readStartupNavState();
+  const startupDate = parseDS(startupNav.ds);
+
+  cY = startupDate.getFullYear();
+  cM = startupDate.getMonth();
+  sel = startupNav.ds;
+
+  if (typeof setGlobalSideNavQuickMode === "function") {
+    setGlobalSideNavQuickMode(startupNav.quick, true);
+  }
+
+  F = "all";
+  FTag = "";
+  editingId = null;
+  expandedId = null;
+  multiSelect = false;
+  selectedIds.clear();
+  undoStack = [];
+  archQYear = "";
+  archQMonth = "";
+  archQDay = "";
+  archSearch = "";
+  kbHideDone = true;
+  kbTimeFilter = "all";
+  window._archCollapsed = {};
+  window._archPages = {};
+
+  checkAutoArchive();
+}
+
+function showAuthenticatedShell() {
+  const authScreen = getAuthElement("authScreen");
+  const loadingScreen = getAuthElement("loadingScreen");
+  const appMain = getAuthElement("appMain");
+
+  if (authScreen) {
+    authScreen.style.display = "none";
+  }
+
+  if (loadingScreen) {
+    loadingScreen.style.display = "none";
+  }
+
+  if (appMain) {
+    appMain.classList.add("show");
+  }
+}
+
+function showUnauthenticatedShell() {
+  const authScreen = getAuthElement("authScreen");
+  const loadingScreen = getAuthElement("loadingScreen");
+  const appMain = getAuthElement("appMain");
+
+  if (appMain) {
+    appMain.classList.remove("show");
+  }
+
+  if (loadingScreen) {
+    loadingScreen.style.display = "none";
+  }
+
+  if (authScreen) {
+    authScreen.style.display = "flex";
+  }
+
+  clearAuthError();
+}
+
+function setSessionToken(token, persist) {
+  authToken = token || null;
+
+  if (persist && token) {
+    writeStoredValue(AUTH_STORAGE_KEYS.token, token);
+  }
+}
+
+function clearStoredSession() {
+  removeStoredValue(AUTH_STORAGE_KEYS.token);
+  removeStoredValue(AUTH_STORAGE_KEYS.guestMode);
+}
+
+function resolveLoadedSessionUser(payload, fallbackUser) {
+  const candidate = payload && payload.user ? payload.user : fallbackUser;
+
+  if (!candidate) {
+    throw createAuthFlowError("加载数据成功，但缺少用户信息");
+  }
+
+  return normalizeSessionUser(candidate);
+}
+
+async function loadCloudSession(token, fallbackUser) {
+  const payload = await requestApi(
+    "load",
+    {
+      headers: getAuthHeader(token)
+    },
+    "加载数据"
+  );
+
+  return {
+    user: resolveLoadedSessionUser(payload, fallbackUser),
+    data: payload && payload.data ? payload.data : {}
+  };
+}
+
+async function restoreCloudSession() {
+  const token = readStoredValue(AUTH_STORAGE_KEYS.token);
+
+  if (!token || location.protocol === "file:") {
+    return false;
+  }
+
+  setSessionToken(token, false);
+
+  try {
+    const session = await loadCloudSession(token);
+    loginAs(session.user, session.data);
+    return true;
+  } catch (error) {
+    authToken = null;
+
+    if (error && error.status === 401) {
+      clearStoredSession();
+    }
+
+    return false;
+  }
+}
+
+function restoreGuestSession() {
+  const isGuestMode = readStoredValue(AUTH_STORAGE_KEYS.guestMode) === "1";
+
+  if (!isGuestMode) {
+    return false;
+  }
+
+  guestLogin(true);
+  return true;
+}
+
+async function restoreSessionOnStartup() {
+  if (await restoreCloudSession()) {
+    return true;
+  }
+
+  if (restoreGuestSession()) {
+    return true;
+  }
+
+  showUnauthenticatedShell();
+  return false;
+}
+
+function renderAvatarPicker() {
+  const avatarPick = getAuthElement("avatarPick");
+
+  if (!avatarPick) {
+    return;
+  }
+
+  avatarPick.innerHTML = AVATARS.map(function renderAvatarOption(avatar) {
+    const isSelected = avatar === selAvatar ? " sel" : "";
+    return `<div class="avatar-opt${isSelected}" onclick="pickAvatar('${avatar}',this)">${avatar}</div>`;
+  }).join("");
+}
+
+function pickAvatar(avatar, element) {
+  selAvatar = avatar;
+  document.querySelectorAll("#avatarPick .avatar-opt").forEach(function clearAvatarState(node) {
+    node.classList.remove("sel");
+  });
+
+  if (element) {
+    element.classList.add("sel");
+  }
+}
+
+function switchAuth(mode, button) {
+  document.querySelectorAll(".auth-tab").forEach(function toggleAuthTab(tab) {
+    tab.classList.remove("active");
+  });
+
+  if (button && button.classList) {
+    button.classList.add("active");
+  } else {
+    const fallbackSelector = mode === "register" ? ".auth-tab:nth-child(2)" : ".auth-tab:nth-child(1)";
+    const fallbackButton = document.querySelector(fallbackSelector);
+    if (fallbackButton) {
+      fallbackButton.classList.add("active");
+    }
+  }
+
+  const loginForm = getAuthElement("loginForm");
+  const registerForm = getAuthElement("registerForm");
+
+  if (loginForm) {
+    loginForm.style.display = mode === "login" ? "flex" : "none";
+  }
+
+  if (registerForm) {
+    registerForm.style.display = mode === "register" ? "flex" : "none";
+  }
+
+  clearAuthError();
+}
+
+function togglePw(id, button) {
+  const input = getAuthElement(id);
+
+  if (!input) {
+    return;
+  }
+
+  input.type = input.type === "password" ? "text" : "password";
+
+  if (button) {
+    button.innerHTML = input.type === "password" ? AUTH_EYE_SVG : AUTH_EYE_OFF_SVG;
+  }
+}
+
+function showAuthError(message, isInfo) {
+  const errorElement = getAuthElement("authError");
+
+  if (!errorElement) {
+    return;
+  }
+
+  errorElement.textContent = message || "";
+  errorElement.className = `auth-error${isInfo ? " info" : ""}`;
+}
+
+function clearAuthError() {
+  showAuthError("", false);
+}
+
+function setAuthButtonBusy(buttonId, isBusy) {
+  const button = getAuthElement(buttonId);
+
+  if (button) {
+    button.disabled = !!isBusy;
+  }
+}
+
+function readTrimmedInput(id) {
+  const input = getAuthElement(id);
+  return input ? input.value.trim() : "";
+}
+
+function readRawInput(id) {
+  const input = getAuthElement(id);
+  return input ? input.value : "";
+}
+
+function clearAuthForms() {
+  const fields = ["loginEmail", "loginPw", "regName", "regEmail", "regPw"];
+
+  fields.forEach(function resetAuthField(id) {
+    const field = getAuthElement(id);
+    if (field) {
+      field.value = "";
+    }
+  });
+
+  selAvatar = AVATARS[0];
+  renderAvatarPicker();
+  switchAuth("login", document.querySelector(".auth-tab"));
+}
+
+function createGuestUser() {
+  return {
+    id: 0,
+    email: "guest",
+    name: "游客",
+    avatar: "👤"
+  };
+}
+
+function loginAs(user, userData) {
+  currentUser = normalizeSessionUser(user);
+  isGuest = !!(isGuest && currentUser.id === 0);
+
+  applySessionData(userData);
+  syncAccountShell(currentUser);
+  showAuthenticatedShell();
+  resetTransientViewState();
+
+  const initPath = getCurrentPath();
+
+  try {
+    if (location.protocol !== "file:") {
+      history.replaceState({ path: initPath }, "", initPath);
+    }
+  } catch (error) {}
+
+  syncNavHighlight(initPath);
+  applyMode(getPathMode(initPath));
+
+  const activeModeButton = document.querySelector("#modeToggle .mode-btn.active");
+  if (activeModeButton) {
+    moveModeToggleIndicator(activeModeButton, true);
+  }
+
+  rCal();
+  syncSessionPreferenceUi();
+  updateSyncStatus(isGuest ? "offline" : "saved");
+
+  emitAuthEvent(AUTH_EVENTS.sessionReady, {
+    user: currentUser,
+    userData: userData || {},
+    isGuest: isGuest
+  });
+}
+
+async function doLogin() {
+  const email = readTrimmedInput("loginEmail");
+  const password = readRawInput("loginPw");
+
+  if (!email) {
+    showAuthError("⚠️ 请输入邮箱");
+    return;
+  }
+
+  if (!password) {
+    showAuthError("⚠️ 请输入密码");
+    return;
+  }
+
+  showAuthError("⏳ 登录中…", true);
+  setAuthButtonBusy("loginBtn", true);
+
+  try {
+    const loginPayload = await requestApi(
+      "login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password
+        })
+      },
+      "登录"
+    );
+
+    const token =
+      typeof loginPayload.token === "string" && loginPayload.token.trim()
+        ? loginPayload.token.trim()
+        : "";
+
+    if (!token) {
+      throw createAuthFlowError("登录成功，但服务器未返回 token");
+    }
+
+    const loginUser = normalizeSessionUser(loginPayload.user);
+
+    setSessionToken(token, true);
+    removeStoredValue(AUTH_STORAGE_KEYS.guestMode);
+
+    showAuthError("⏳ 加载数据…", true);
+
+    const loadedSession = await loadCloudSession(token, loginUser);
+    loginAs(loadedSession.user, loadedSession.data);
+    toast("👋 欢迎回来，" + loadedSession.user.name);
+  } catch (error) {
+    showAuthError("❌ " + getUserFacingMessage(error, "登录失败"));
+  } finally {
+    setAuthButtonBusy("loginBtn", false);
+  }
+}
+
+async function doRegister() {
+  const name = readTrimmedInput("regName");
+  const email = readTrimmedInput("regEmail");
+  const password = readRawInput("regPw");
+
+  if (!name) {
+    showAuthError("⚠️ 请输入昵称");
+    return;
+  }
+
+  if (!email || !/\S+@\S+\.\S+/.test(email)) {
+    showAuthError("⚠️ 请输入有效邮箱");
+    return;
+  }
+
+  if (password.length < 4) {
+    showAuthError("⚠️ 密码至少4位");
+    return;
+  }
+
+  showAuthError("⏳ 注册中…", true);
+  setAuthButtonBusy("regBtn", true);
+
+  try {
+    const registerPayload = await requestApi(
+      "register",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+          name: name,
+          avatar: selAvatar
+        })
+      },
+      "注册"
+    );
+
+    const token =
+      typeof registerPayload.token === "string" && registerPayload.token.trim()
+        ? registerPayload.token.trim()
+        : "";
+
+    if (!token) {
+      throw createAuthFlowError("注册成功，但服务器未返回 token");
+    }
+
+    if (!registerPayload.user) {
+      throw createAuthFlowError("注册成功，但服务器未返回用户信息");
+    }
+
+    setSessionToken(token, true);
+    removeStoredValue(AUTH_STORAGE_KEYS.guestMode);
+
+    loginAs(registerPayload.user, {});
+    toast("🎉 注册成功！");
+  } catch (error) {
+    showAuthError("❌ " + getUserFacingMessage(error, "注册失败"));
+  } finally {
+    setAuthButtonBusy("regBtn", false);
+  }
+}
+
+function guestLogin(silent) {
+  const guestData = readStoredJson(AUTH_STORAGE_KEYS.guestData, {}) || {};
+
+  isGuest = true;
+  writeStoredValue(AUTH_STORAGE_KEYS.guestMode, "1");
+  loginAs(createGuestUser(), guestData);
+
+  if (!silent) {
+    toast("📴 离线模式");
+  }
+}
+
+async function doLogout() {
+  if (authToken && !isGuest) {
+    try {
+      await fetch(buildApiUrl("logout"), {
+        method: "POST",
+        headers: getAuthHeader(authToken)
+      });
+    } catch (error) {}
+  }
+
+  currentUser = null;
+  authToken = null;
+  isGuest = false;
+  pendingSave = false;
+
+  clearStoredSession();
+
+  if (typeof window.clearLongTermGoalsStorage === "function") {
+    window.clearLongTermGoalsStorage();
+  }
+
+  closeUserMenu();
+  clearAuthForms();
+  showUnauthenticatedShell();
+  updateSyncStatus("");
+
+  emitAuthEvent(AUTH_EVENTS.sessionCleared, {});
+}
+
+function switchAccount() {
+  closeUserMenu();
+  doLogout();
+}
+
+function setUserMenuState(isOpen) {
+  const dropdown = getAuthElement("userDropdown");
+  const mask = getAuthElement("udMask");
+  const triggerButton = document.querySelector("#userMenu .user-btn");
+
+  if (!dropdown || !mask || !document.body) {
+    return;
+  }
+
+  dropdown.classList.toggle("show", isOpen);
+  mask.classList.toggle("show", isOpen);
+  document.body.classList.toggle("user-menu-open", isOpen);
+
+  if (triggerButton) {
+    triggerButton.setAttribute("aria-expanded", isOpen ? "true" : "false");
+  }
+
+  document.body.style.overflow = isOpen ? "hidden" : "";
+
+  if (isOpen) {
+    updateUserStats();
+  }
+}
+
+function toggleUserMenu() {
+  const dropdown = getAuthElement("userDropdown");
+
+  if (!dropdown) {
+    return;
+  }
+
+  setUserMenuState(!dropdown.classList.contains("show"));
+}
+
+function closeUserMenu() {
+  setUserMenuState(false);
+}
+
+document.addEventListener("click", function handleGlobalUiClick(event) {
+  if (window.innerWidth > 640) {
+    const userMenu = getAuthElement("userMenu");
+    if (userMenu && !userMenu.contains(event.target)) {
+      closeUserMenu();
+    }
+  }
+
+  const sortWrap = getAuthElement("sortWrap");
+  if (sortWrap && !sortWrap.contains(event.target)) {
+    const sortDropdown = getAuthElement("sortDropdown");
+    if (sortDropdown) {
+      sortDropdown.classList.remove("show");
+    }
+  }
+
+  const tagFilterWrap = getAuthElement("tagFilterWrap");
+  if (tagFilterWrap && !tagFilterWrap.contains(event.target)) {
+    const tagDropdown = getAuthElement("tagDropdown");
+    if (tagDropdown) {
+      tagDropdown.classList.remove("show");
+    }
+  }
+
+  if (ppOpenId !== null && !event.target.closest(".pp-drop") && !event.target.closest(".act-btn-pp")) {
+    ppOpenId = null;
+    rT();
+  }
+
+  if (
+    prioTplPickerOpen !== null &&
+    !event.target.closest(".prio2-picker") &&
+    !event.target.closest(".prio2-btn-pick")
+  ) {
+    prioTplPickerOpen = null;
+    rPrioColorSettings();
+  }
+});
+
+document.addEventListener("keydown", function handleAuthEscape(event) {
+  if (event.key === "Escape") {
+    closeUserMenu();
+  }
+});
+
+function updateUserStats() {
+  let total = 0;
+  let done = 0;
+
+  for (const ds in T) {
+    (T[ds] || []).forEach(function countTask(task) {
+      total += 1;
+      if (task.done) {
+        done += 1;
+      }
+    });
+  }
+
+  const totalElement = getAuthElement("udTotal");
+  const doneElement = getAuthElement("udDone");
+
+  if (totalElement) {
+    totalElement.textContent = total;
+  }
+
+  if (doneElement) {
+    doneElement.textContent = done;
+  }
+}
+
+function showProfile() {
+  closeUserMenu();
+
+  const modalBody = getAuthElement("mBody");
+  const modalBackground = getAuthElement("mBg");
+
+  if (!modalBody || !modalBackground || !currentUser) {
+    return;
+  }
+
+  modalBody.innerHTML =
+    `<p style="font-weight:600;font-size:1.05rem;margin-bottom:10px">✏️ 修改资料</p>` +
+    `<div class="copy-field"><label>昵称</label><input type="text" id="editName" value="${esc(
+      currentUser.name
+    )}" maxlength="12"></div>` +
+    `<div class="copy-field"><label>头像</label><div class="avatar-pick" id="editAP" style="margin-top:3px"></div></div>` +
+    `<div class="copy-field"><label>新密码（留空不改）</label><input type="password" id="editPw" placeholder="新密码"></div>` +
+    `<div class="modal-actions"><button class="mbtn-c" onclick="clM()">取消</button><button class="mbtn-a" onclick="saveProfile()">保存</button></div>`;
+
+  modalBackground.classList.add("show");
+
+  const avatarPicker = getAuthElement("editAP");
+  if (avatarPicker) {
+    avatarPicker.innerHTML = AVATARS.map(function renderProfileAvatar(avatar) {
+      const selectedClass = avatar === currentUser.avatar ? " sel" : "";
+      return `<div class="avatar-opt${selectedClass}" onclick="window._eA='${avatar}';this.parentNode.querySelectorAll('.avatar-opt').forEach(e=>e.classList.remove('sel'));this.classList.add('sel')">${avatar}</div>`;
+    }).join("");
+  }
+
+  window._eA = currentUser.avatar;
+}
+
+async function saveProfile() {
+  const name = readTrimmedInput("editName");
+  const password = readRawInput("editPw");
+  const avatar = window._eA || (currentUser && currentUser.avatar) || "👤";
+
+  if (!name) {
+    toast("⚠️ 昵称不能为空");
+    return;
+  }
+
+  if (password && password.length < 4) {
+    toast("⚠️ 密码至少4位");
+    return;
+  }
+
+  if (isGuest) {
+    currentUser.name = name;
+    currentUser.avatar = avatar;
+    setHeaderAvatar(avatar);
+    setUdAvatar(avatar);
+
+    const nameElement = getAuthElement("udName");
+    if (nameElement) {
+      nameElement.textContent = name;
+    }
+
+    clM();
+    toast("✅ 已更新");
+    return;
+  }
+
+  try {
+    const profilePayload = await requestApi(
+      "profile",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...getAuthHeader(authToken)
+        },
+        body: JSON.stringify({
+          name: name,
+          avatar: avatar,
+          newPassword: password || undefined
+        })
+      },
+      "更新资料"
+    );
+
+    currentUser = normalizeSessionUser(profilePayload.user || currentUser);
+
+    if (profilePayload.newToken) {
+      setSessionToken(profilePayload.newToken, true);
+    }
+
+    setHeaderAvatar(currentUser.avatar);
+    setUdAvatar(currentUser.avatar);
+
+    const nameElement = getAuthElement("udName");
+    if (nameElement) {
+      nameElement.textContent = currentUser.name;
+    }
+
+    clM();
+    toast("✅ 已更新");
+  } catch (error) {
+    toast("❌ " + getUserFacingMessage(error, "更新失败"));
+  }
+}

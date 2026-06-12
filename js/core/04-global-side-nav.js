@@ -841,24 +841,21 @@
     }
   }
 
-  function patchLoginRestore() {
-    if (typeof loginAs === "function" && !window._globalSideNavLoginRestore) {
-      window._globalSideNavLoginRestore = true;
-      var originalLoginAs = loginAs;
-      loginAs = function () {
-        var savedBefore = readSavedState();
-        var result = originalLoginAs.apply(this, arguments);
-        if (applySavedState(savedBefore)) {
-          if (typeof rCal === "function") rCal();
-          if (typeof rAll === "function") rAll();
-          else if (typeof rT === "function") rT();
-        } else {
-          persistState();
-        }
-        scheduleRefresh();
-        return result;
-      };
-    }
+  function bindLoginRestore() {
+    if (window._globalSideNavLoginRestore) return;
+
+    window._globalSideNavLoginRestore = true;
+    document.addEventListener("tuole:session-ready", function () {
+      var savedBefore = readSavedState();
+      if (applySavedState(savedBefore)) {
+        if (typeof rCal === "function") rCal();
+        if (typeof rAll === "function") rAll();
+        else if (typeof rT === "function") rT();
+      } else {
+        persistState();
+      }
+      scheduleRefresh();
+    });
   }
 
   function patchModeSync() {
@@ -881,7 +878,7 @@
   syncQuickModeState();
   gsnLastTodayKey = todayKey();
   ensureSideNav();
-  patchLoginRestore();
+  bindLoginRestore();
   patchRender();
   patchModeSync();
   scheduleDayBoundaryRefresh();
@@ -889,7 +886,7 @@
   document.addEventListener("DOMContentLoaded", function () {
     gsnLastTodayKey = todayKey();
     ensureSideNav();
-    patchLoginRestore();
+    bindLoginRestore();
     patchRender();
     patchModeSync();
     scheduleDayBoundaryRefresh();
