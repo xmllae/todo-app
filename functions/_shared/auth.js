@@ -1,7 +1,7 @@
 import { createHttpError } from './http.js';
 
 const TOKEN_TTL_MS = 30 * 24 * 60 * 60 * 1000;
-const PASSWORD_HASH_ITERATIONS = 150000;
+const PASSWORD_HASH_ITERATIONS = 100000;
 const PASSWORD_HASH_ALGORITHM = 'SHA-256';
 const PASSWORD_HASH_SALT_BYTES = 16;
 
