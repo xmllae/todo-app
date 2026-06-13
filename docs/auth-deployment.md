@@ -44,8 +44,8 @@ npx wrangler login
 npx wrangler d1 create tuole-db
 ```
 
-如果已在 Cloudflare Pages 后台绑定 D1，就不要在 `wrangler.jsonc` 保留
-`database_id` 占位符。后台绑定名必须是 `DB`，数据库选择 `tuole-db`。
+当前项目依赖 Cloudflare Pages 后台绑定 D1，不提交 `wrangler.jsonc`。
+后台绑定名必须是 `DB`，数据库选择 `tuole-db`。
 
 ## 第四步：配置登录密钥
 
@@ -129,7 +129,7 @@ npm run db:migrate:remote
 
 ### 3. 返回缺少 D1 绑定
 
-说明 `wrangler.jsonc` 的 `d1_databases` 没配好，或 Cloudflare 项目里没绑定 `DB`。
+说明当前部署环境没有绑定 `DB`，请在 Cloudflare Pages 后台确认 D1 绑定并重新部署。
 
 ### 4. 返回缺少 TUOLE_TOKEN_SECRET
 
