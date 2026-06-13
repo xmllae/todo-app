@@ -1,10 +1,18 @@
 {
   "name": "tuole",
   "private": true,
+  "type": "module",
   "version": "1.0.0",
-  "description": "Tuole task manager with clean auth API",
+  "description": "Tuole task manager for Cloudflare Pages Functions and D1",
   "scripts": {
-    "dev": "node server.js",
-    "start": "node server.js"
+    "dev": "wrangler pages dev .",
+    "deploy": "wrangler pages deploy .",
+    "db:create": "wrangler d1 create tuole-db --binding DB",
+    "db:migrate:local": "wrangler d1 migrations apply DB --local",
+    "db:migrate:remote": "wrangler d1 migrations apply DB --remote",
+    "check": "node --check functions/_shared/http.js && node --check functions/_shared/auth.js && node --check functions/_shared/storage.js && node --check functions/api/health.js && node --check functions/api/login.js && node --check functions/api/register.js && node --check functions/api/load.js && node --check functions/api/save.js && node --check functions/api/profile.js && node --check functions/api/logout.js && node --check functions/[[path]].js"
+  },
+  "devDependencies": {
+    "wrangler": "^4.100.0"
   }
 }

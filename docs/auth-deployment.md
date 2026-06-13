@@ -1,81 +1,150 @@
-# 登录与部署说明
+# Cloudflare 部署说明
 
-## 405 的根因
+## 为什么之前会 405
 
-之前前端已经在请求 `POST /api/login`，但仓库里没有真正的后端接口实现，部署到纯静态托管后：
+之前前端已经在请求 `POST /api/login`，但仓库里实际跑的是纯静态 Pages 部署，没有 Cloudflare Pages Functions 来处理该接口。
 
-- 页面资源可以正常返回
-- `/api/login` 这类接口路径没有后端处理器
-- 平台会把它当作静态路径或只读资源处理
-- `POST` 请求因此直接返回 `405 Method Not Allowed`
+结果就是：
 
-这不是账号密码问题，也不是前端表单问题，而是部署形态和代码结构不匹配。
+- 页面静态资源能打开
+- `/api/login` 没有真正的服务端处理器
+- `POST` 请求落到静态站点路径
+- Cloudflare 返回 `405 Method Not Allowed`
 
-## 现在的方案
+## 现在的实现
 
-当前仓库已经补成了方案 A：
+当前仓库已经改成 Cloudflare Pages + D1 结构：
 
-- 前端统一走 `/api/*`
-- 后端提供 `login / register / load / save / profile / logout / health`
-- 使用 Node 内置能力实现认证、密码散列、文件存储和静态资源服务
-- 本地和自托管部署都走同一套逻辑，不再保留旧补丁式分支
+- `functions/api/*.js`
+  - 处理登录、注册、加载、保存、更新资料、退出登录、健康检查
+- `functions/_shared/*.js`
+  - 共享 HTTP、认证、D1 数据访问逻辑
+- `migrations/0001_init.sql`
+  - 初始化 `users` 表
+- `wrangler.jsonc`
+  - Pages 与 D1 绑定配置
 
-## 推荐部署方式
+前端仍然请求 `/api/*`，所以不用改页面调用方式。
 
-推荐部署到支持 Node 长驻进程或服务端函数且可持久化数据的环境，例如：
-
-- Railway
-- Render
-- Fly.io
-- 自有 Linux / Windows 服务器
-
-启动命令：
+## 第一步：安装 Wrangler
 
 ```bash
 npm install
-npm start
 ```
 
-默认端口读取 `PORT`，默认数据目录是 `./data`。
-
-## 必配环境变量
-
-- `TUOLE_TOKEN_SECRET`
-  - 用于签发登录令牌
-  - 生产环境必须配置
-
-建议示例：
+## 第二步：登录 Cloudflare
 
 ```bash
-TUOLE_TOKEN_SECRET=replace-with-a-long-random-secret
+npx wrangler login
 ```
 
-## 可选环境变量
+## 第三步：创建 D1 数据库
 
-- `PORT`
-  - 服务监听端口
-- `TUOLE_DATA_DIR`
-  - 数据库存储目录，默认是项目下的 `data`
-- `TUOLE_CORS_ORIGIN`
-  - 当前后端分域部署时可配置允许的来源
+```bash
+npx wrangler d1 create tuole-db
+```
 
-## 持久化说明
+执行后你会拿到：
 
-当前后端默认使用本地 JSON 文件存储，适合：
+- `database_name`
+- `database_id`
 
-- 单实例
-- 轻量自用
-- 带持久磁盘的 Node 部署
+把 `wrangler.jsonc` 里的：
 
-如果继续部署到“只读 / 无状态”的纯静态或临时函数环境，虽然 405 不会再出现，但注册、保存数据时会收到明确的持久化错误提示。这时需要：
+```json
+"database_id": "REPLACE_WITH_TUOLE_DB_D1_DATABASE_ID"
+```
 
-1. 改为带持久磁盘的 Node 部署
-2. 或把存储层替换成数据库
+替换成真实的 `database_id`。
 
-## 健康检查
+## 第四步：配置登录密钥
 
-可访问：
+本地开发可复制 `.dev.vars.example` 为 `.dev.vars`，并填入：
+
+```bash
+TUOLE_TOKEN_SECRET=your-local-secret
+```
+
+线上部署请执行：
+
+```bash
+npx wrangler pages secret put TUOLE_TOKEN_SECRET
+```
+
+## 第五步：执行 D1 迁移
+
+本地：
+
+```bash
+npm run db:migrate:local
+```
+
+线上：
+
+```bash
+npm run db:migrate:remote
+```
+
+## 第六步：本地联调
+
+```bash
+npm run dev
+```
+
+## 第七步：部署到 Cloudflare Pages
+
+GitHub 连接部署时，请确认：
+
+- Pages 项目名和 `wrangler.jsonc` 的 `name` 一致
+- Build output directory 使用仓库根目录
+- 已绑定 D1 数据库
+- 已配置 `TUOLE_TOKEN_SECRET`
+
+如果你用命令行直接发布，也可以执行：
+
+```bash
+npm run deploy
+```
+
+## 上线后自检
+
+先打开：
 
 - `/api/health`
 
-用于确认 API 是否已经真正上线，而不是只有静态页面上线。
+如果正常，应返回 JSON，且包含：
+
+- `runtime: "cloudflare-pages-functions"`
+- `storage.driver: "d1"`
+
+再检查登录、注册、保存数据是否正常。
+
+## 常见问题
+
+### 1. 还是 405
+
+说明 `/api/*` 仍然没有进入 Pages Functions。重点检查：
+
+- 仓库里是否已经有 `/functions/api/*`
+- Pages 是否重新部署成功
+- 部署的是当前分支最新提交
+
+### 2. 返回数据库未初始化
+
+说明 D1 已绑定，但还没有执行迁移。运行：
+
+```bash
+npm run db:migrate:remote
+```
+
+### 3. 返回缺少 D1 绑定
+
+说明 `wrangler.jsonc` 的 `d1_databases` 没配好，或 Cloudflare 项目里没绑定 `DB`。
+
+### 4. 返回缺少 TUOLE_TOKEN_SECRET
+
+说明线上密钥还没配置。执行：
+
+```bash
+npx wrangler pages secret put TUOLE_TOKEN_SECRET
+```
