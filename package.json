@@ -1,0 +1,10 @@
+{
+  "name": "tuole",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Tuole task manager with clean auth API",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  }
+}

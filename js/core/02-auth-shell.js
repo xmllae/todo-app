@@ -1,24 +1,16 @@
 // Authentication flow, session bootstrap, and account shell helpers.
 
-const AUTH_STORAGE_KEYS = {
-  token: "tuole_token",
-  guestMode: "tuole_guest_mode",
-  guestData: "tuole_guest",
-  sideNavState: "tuole_gsn_state_v1",
-  subscriptions: "tuole_subs"
-};
-
-const AUTH_EVENTS = {
-  sessionReady: "tuole:session-ready",
-  sessionCleared: "tuole:session-cleared"
-};
-
-const AUTH_API_BASE = (function resolveAuthApiBase() {
-  const raw =
-    typeof window.__TUOLE_API_BASE === "string" ? window.__TUOLE_API_BASE.trim() : "";
-  const normalized = raw.replace(/\/+$/, "");
-  return normalized || "/api";
-})();
+const AUTH_STORAGE_KEYS = window.TuoleApi.STORAGE_KEYS;
+const AUTH_EVENTS = window.TuoleApi.EVENTS;
+const readStoredValue = window.TuoleApi.storage.readValue;
+const writeStoredValue = window.TuoleApi.storage.writeValue;
+const removeStoredValue = window.TuoleApi.storage.removeValue;
+const readStoredJson = window.TuoleApi.storage.readJson;
+const writeStoredJson = window.TuoleApi.storage.writeJson;
+const createAuthFlowError = window.TuoleApi.createError;
+const requestApi = window.TuoleApi.request;
+const getAuthHeader = window.TuoleApi.getAuthHeader;
+const getUserFacingMessage = window.TuoleApi.getUserMessage;
 
 const AUTH_EYE_SVG =
   '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
@@ -28,164 +20,6 @@ const AUTH_EYE_OFF_SVG =
 
 function getAuthElement(id) {
   return document.getElementById(id);
-}
-
-function readStoredValue(key) {
-  try {
-    return localStorage.getItem(key);
-  } catch (error) {
-    return null;
-  }
-}
-
-function writeStoredValue(key, value) {
-  try {
-    localStorage.setItem(key, value);
-  } catch (error) {}
-}
-
-function removeStoredValue(key) {
-  try {
-    localStorage.removeItem(key);
-  } catch (error) {}
-}
-
-function readStoredJson(key, fallbackValue) {
-  const raw = readStoredValue(key);
-
-  if (!raw) {
-    return fallbackValue;
-  }
-
-  try {
-    return JSON.parse(raw);
-  } catch (error) {
-    return fallbackValue;
-  }
-}
-
-function writeStoredJson(key, value) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch (error) {}
-}
-
-function buildApiUrl(path) {
-  const cleanPath = String(path || "").replace(/^\/+/, "");
-  return `${AUTH_API_BASE}/${cleanPath}`;
-}
-
-function createAuthFlowError(message, meta) {
-  const error = new Error(message);
-  error.userMessage = message;
-
-  if (meta && typeof meta === "object") {
-    Object.assign(error, meta);
-  }
-
-  return error;
-}
-
-async function readApiPayload(response) {
-  const rawText = await response.text();
-
-  if (!rawText) {
-    return {
-      data: {},
-      isJson: true,
-      rawText: ""
-    };
-  }
-
-  try {
-    return {
-      data: JSON.parse(rawText),
-      isJson: true,
-      rawText: rawText
-    };
-  } catch (error) {
-    return {
-      data: null,
-      isJson: false,
-      rawText: rawText
-    };
-  }
-}
-
-function resolveResponseErrorMessage(actionLabel, response, payloadMeta) {
-  const payload = payloadMeta && payloadMeta.data ? payloadMeta.data : null;
-  const status = response && response.status ? `（${response.status}）` : "";
-
-  if (payload && typeof payload.error === "string" && payload.error.trim()) {
-    return payload.error.trim();
-  }
-
-  if (payload && typeof payload.message === "string" && payload.message.trim()) {
-    return payload.message.trim();
-  }
-
-  if (response && response.status === 401) {
-    return actionLabel === "加载数据" ? "登录状态已过期，请重新登录" : "账号或密码不正确";
-  }
-
-  if (!payloadMeta || !payloadMeta.isJson) {
-    return `${actionLabel}接口返回了异常响应${status}`;
-  }
-
-  return `${actionLabel}失败${status}`;
-}
-
-function resolveNetworkErrorMessage(actionLabel, path) {
-  return `${actionLabel}服务不可用，请检查 ${buildApiUrl(path)} 是否已部署`;
-}
-
-async function requestApi(path, options, actionLabel) {
-  let response;
-
-  try {
-    response = await fetch(buildApiUrl(path), options);
-  } catch (error) {
-    throw createAuthFlowError(resolveNetworkErrorMessage(actionLabel, path), {
-      cause: error,
-      route: path
-    });
-  }
-
-  const payloadMeta = await readApiPayload(response);
-
-  if (!response.ok) {
-    throw createAuthFlowError(
-      resolveResponseErrorMessage(actionLabel, response, payloadMeta),
-      {
-        status: response.status,
-        route: path,
-        responseBody: payloadMeta.rawText,
-        payload: payloadMeta.data
-      }
-    );
-  }
-
-  if (!payloadMeta.isJson) {
-    throw createAuthFlowError(`${actionLabel}接口返回了非 JSON 响应（${response.status}）`, {
-      status: response.status,
-      route: path,
-      responseBody: payloadMeta.rawText
-    });
-  }
-
-  return payloadMeta.data || {};
-}
-
-function getAuthHeader(token) {
-  return token ? { Authorization: `Bearer ${token}` } : {};
-}
-
-function getUserFacingMessage(error, fallbackMessage) {
-  if (error && typeof error.userMessage === "string" && error.userMessage.trim()) {
-    return error.userMessage.trim();
-  }
-
-  return fallbackMessage;
 }
 
 function emitAuthEvent(name, detail) {
@@ -796,10 +630,14 @@ function guestLogin(silent) {
 async function doLogout() {
   if (authToken && !isGuest) {
     try {
-      await fetch(buildApiUrl("logout"), {
-        method: "POST",
-        headers: getAuthHeader(authToken)
-      });
+      await requestApi(
+        "logout",
+        {
+          method: "POST",
+          headers: getAuthHeader(authToken)
+        },
+        "退出登录"
+      );
     } catch (error) {}
   }
 

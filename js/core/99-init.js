@@ -60,7 +60,7 @@ function setDarkBtnIcon(animated) {
 }
 
 function restoreThemePreference() {
-  const darkFlag = readStoredValue("tuole_dark");
+  const darkFlag = window.TuoleApi.storage.readValue("tuole_dark");
 
   if (darkFlag === "1") {
     isDark = true;
