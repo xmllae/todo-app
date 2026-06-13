@@ -857,7 +857,7 @@ btn=document.createElement("button");
 btn.type="button";
 btn.className="date-nav-return-today";
 btn.setAttribute("aria-label","\u56de\u5230\u4eca\u5929");
-btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg><span class="date-nav-return-today-main"></span><span class="date-nav-return-today-divider" aria-hidden="true"></span><span class="date-nav-return-today-meta" aria-hidden="true"></span>';
+btn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg><span class="date-nav-return-today-main"></span><span class="date-nav-return-today-divider" aria-hidden="true"></span><span class="date-nav-return-today-meta" aria-hidden="true"></span>';
 btn.onclick=function(e){e.stopPropagation();const weekMode=getTaskQuickMode()==="week";if(typeof goToday==="function")goToday(weekMode);else if(typeof quickGo==="function")quickGo(0)}
 }
 const arrows=nav.querySelectorAll(".nav-arrow");

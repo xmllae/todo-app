@@ -57,7 +57,8 @@ function jumpTo(ds){sel=ds;const p=ds.split("-");cY=+p[0];cM=+p[1]-1;document.ge
 function toggleDark(){isDark=!isDark;document.body.classList.toggle("dark",isDark);setDarkBtnIcon(false);try{localStorage.setItem("tuole_dark",isDark?"1":"0")}catch(e){}try{refreshAddEmbedPrioArc()}catch(e){}}
 const ROUTE_MAP={"/":"task","/kanban":"kanban","/settings":"settings","/statistics":"stats","/subscriptions":"subscriptions"};
 const MODE_PATH={task:"/",kanban:"/kanban",settings:"/settings",stats:"/statistics",subscriptions:"/subscriptions"};
-function getPathMode(path){const normalized=path.replace(/\/+$/,"");return ROUTE_MAP[normalized]||ROUTE_MAP[path]||"task"}
+function normalizeRoutePath(path){const raw=path||"/",normalized=raw.replace(/\/+$/,"");return normalized||"/"}
+function getPathMode(path){const normalized=normalizeRoutePath(path);return ROUTE_MAP[normalized]||"task"}
 let _lastAppliedMode=null;
 let _taskEnterNoMotionTimer=null;
 function markTaskModeRouteEnter(){
@@ -98,7 +99,7 @@ function moveModeToggleIndicator(btn, noAnim){
 /**
  * 同步导航栏高亮状态（不处理动画，由调用方决定是否动画）
  */
-function syncNavHighlight(path){const normalized=path.replace(/\/+$/,"");document.querySelectorAll("#modeToggle .mode-btn").forEach(b=>{const btnPath=b.dataset.path.replace(/\/+$/,"");const isAct=btnPath===normalized;b.classList.toggle("active",isAct);const ico=b.querySelector(".nav-ph-ico");if(ico){ico.classList.toggle("ph",!isAct);ico.classList.toggle("ph-fill",isAct)}});const activeBtn=document.querySelector("#modeToggle .mode-btn.active");requestAnimationFrame(()=>moveModeToggleIndicator(activeBtn))}
+function syncNavHighlight(path){const normalized=normalizeRoutePath(path);document.querySelectorAll("#modeToggle .mode-btn").forEach(b=>{const btnPath=normalizeRoutePath(b.dataset.path);const isAct=btnPath===normalized;b.classList.toggle("active",isAct);const ico=b.querySelector(".nav-ph-ico");if(ico){ico.classList.toggle("ph",!isAct);ico.classList.toggle("ph-fill",isAct)}});const activeBtn=document.querySelector("#modeToggle .mode-btn.active");requestAnimationFrame(()=>moveModeToggleIndicator(activeBtn))}
 function applyMode(mode){
   const prevMode=_lastAppliedMode;
   ["taskMode","kanbanMode","settingsMode","statsMode","subscriptionsMode"].forEach(id=>{
@@ -129,7 +130,7 @@ function applyMode(mode){
   _lastAppliedMode=mode;
 }
 function getCurrentPath(){if(location.protocol==="file:"){const h=location.hash.replace(/^#/,"");return h||"/"}return location.pathname}
-function navigate(path){const normalized=path.replace(/\/+$/,"");try{if(location.protocol==="file:"){location.hash=normalized}else{const current=location.pathname.replace(/\/+$/,"");if(current!==normalized)history.pushState({path:normalized},"",normalized)}}catch(e){}syncNavHighlight(normalized);applyMode(getPathMode(normalized))}
+function navigate(path){const normalized=normalizeRoutePath(path);try{if(location.protocol==="file:"){location.hash=normalized}else{const current=normalizeRoutePath(location.pathname);if(current!==normalized)history.pushState({path:normalized},"",normalized)}}catch(e){}syncNavHighlight(normalized);applyMode(getPathMode(normalized))}
 window.addEventListener("popstate",e=>{const path=e.state&&e.state.path||getCurrentPath();syncNavHighlight(path);applyMode(getPathMode(path))});
 window.addEventListener("hashchange",()=>{const path=getCurrentPath();syncNavHighlight(path);applyMode(getPathMode(path))});
 
