@@ -1,0 +1,18 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "tuole",
+  "compatibility_date": "2026-06-13",
+  "pages_build_output_dir": ".",
+  "vars": {
+    "TUOLE_CORS_ORIGIN": "*",
+    "TUOLE_TOKEN_TTL_MS": "2592000000"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "tuole-db",
+      "database_id": "636f51a3-897f-4c60-90b2-85fad6410ac9",
+      "migrations_dir": "migrations"
+    }
+  ]
+}

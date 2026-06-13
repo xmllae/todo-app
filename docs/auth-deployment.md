@@ -44,21 +44,16 @@ npx wrangler login
 npx wrangler d1 create tuole-db
 ```
 
-当前项目依赖 Cloudflare Pages 后台绑定 D1，不提交 `wrangler.jsonc`。
-后台绑定名必须是 `DB`，数据库选择 `tuole-db`。
+当前项目使用 `wrangler.jsonc` 作为 Cloudflare Pages 配置来源。D1 绑定名是
+`DB`，数据库是 `tuole-db`，`database_id` 已写入配置文件。
 
 ## 第四步：配置登录密钥
 
-本地开发可复制 `.dev.vars.example` 为 `.dev.vars`，并填入：
+本地开发可复制 `.dev.vars.example` 为 `.dev.vars`。当前登录令牌使用 D1 会话表，
+不再需要配置 `TUOLE_TOKEN_SECRET`。
 
 ```bash
-TUOLE_TOKEN_SECRET=your-local-secret
-```
-
-线上部署请执行：
-
-```bash
-npx wrangler pages secret put TUOLE_TOKEN_SECRET
+cp .dev.vars.example .dev.vars
 ```
 
 ## 第五步：执行 D1 迁移
@@ -88,7 +83,7 @@ GitHub 连接部署时，请确认：
 - Pages 项目名和 `wrangler.jsonc` 的 `name` 一致
 - Build output directory 使用仓库根目录
 - 已绑定 D1 数据库
-- 已配置 `TUOLE_TOKEN_SECRET`
+- 已执行 D1 SQL/migrations，包含 `users` 和 `auth_sessions` 表
 
 如果你用命令行直接发布，也可以执行：
 
@@ -129,12 +124,9 @@ npm run db:migrate:remote
 
 ### 3. 返回缺少 D1 绑定
 
-说明当前部署环境没有绑定 `DB`，请在 Cloudflare Pages 后台确认 D1 绑定并重新部署。
+说明当前部署没有读取到 `wrangler.jsonc` 中的 D1 绑定。请确认部署的是最新
+GitHub commit，并且部署日志读取到了当前配置文件。
 
-### 4. 返回缺少 TUOLE_TOKEN_SECRET
+### 4. 返回缺少 auth_sessions 表
 
-说明线上密钥还没配置。执行：
-
-```bash
-npx wrangler pages secret put TUOLE_TOKEN_SECRET
-```
+说明 D1 会话表尚未初始化。请执行 `migrations/0002_auth_sessions.sql`。

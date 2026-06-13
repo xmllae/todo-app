@@ -4,11 +4,32 @@ const TOKEN_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 const PASSWORD_HASH_ITERATIONS = 100000;
 const PASSWORD_HASH_ALGORITHM = 'SHA-256';
 const PASSWORD_HASH_SALT_BYTES = 16;
+const SESSION_TOKEN_BYTES = 32;
 
 const encoder = new TextEncoder();
 
-let cachedSecretKeyPromise = null;
-let cachedSecretValue = '';
+function getDatabase(env) {
+  if (!env || !env.DB) {
+    throw createHttpError(500, 'Missing D1 binding: DB.', 'D1_BINDING_MISSING');
+  }
+
+  return env.DB;
+}
+
+function normalizeDatabaseError(error) {
+  const message = String((error && error.message) || '');
+
+  if (/no such table/i.test(message)) {
+    throw createHttpError(
+      500,
+      'D1 session table is missing. Run the auth session migration first.',
+      'DB_NOT_INITIALIZED',
+      { cause: error }
+    );
+  }
+
+  throw error;
+}
 
 function base64UrlEncodeBytes(bytes) {
   let binary = '';
@@ -35,14 +56,6 @@ function base64UrlDecodeBytes(value) {
   return bytes;
 }
 
-function base64UrlEncodeText(value) {
-  return base64UrlEncodeBytes(encoder.encode(String(value)));
-}
-
-function base64UrlDecodeText(value) {
-  return new TextDecoder().decode(base64UrlDecodeBytes(value));
-}
-
 function secureEqualBytes(left, right) {
   const a = left instanceof Uint8Array ? left : new Uint8Array(left);
   const b = right instanceof Uint8Array ? right : new Uint8Array(right);
@@ -65,32 +78,21 @@ function getTokenTtlMs(env) {
   return Number.isFinite(rawValue) && rawValue > 0 ? rawValue : TOKEN_TTL_MS;
 }
 
-async function getTokenSecretKey(env) {
-  const secret = String((env && env.TUOLE_TOKEN_SECRET) || '').trim();
+function createSessionToken() {
+  const tokenBytes = crypto.getRandomValues(new Uint8Array(SESSION_TOKEN_BYTES));
+  return `tuole_${base64UrlEncodeBytes(tokenBytes)}`;
+}
 
-  if (!secret) {
-    throw createHttpError(
-      500,
-      '服务端缺少 TUOLE_TOKEN_SECRET 配置，无法签发登录令牌',
-      'MISSING_TOKEN_SECRET'
-    );
-  }
+async function hashSessionToken(token) {
+  const digest = await crypto.subtle.digest('SHA-256', encoder.encode(String(token)));
+  return base64UrlEncodeBytes(new Uint8Array(digest));
+}
 
-  if (!cachedSecretKeyPromise || cachedSecretValue !== secret) {
-    cachedSecretValue = secret;
-    cachedSecretKeyPromise = crypto.subtle.importKey(
-      'raw',
-      encoder.encode(secret),
-      {
-        name: 'HMAC',
-        hash: 'SHA-256'
-      },
-      false,
-      ['sign', 'verify']
-    );
-  }
+function readBearerToken(request) {
+  const headerValue = request.headers.get('Authorization') || '';
+  const matched = String(headerValue).match(/^Bearer\s+(.+)$/i);
 
-  return cachedSecretKeyPromise;
+  return matched && matched[1] ? matched[1].trim() : '';
 }
 
 export async function hashPassword(password, saltBase64Url) {
@@ -129,79 +131,125 @@ export async function verifyPassword(password, user) {
   );
 }
 
-async function signPayload(env, encodedPayload) {
-  const secretKey = await getTokenSecretKey(env);
-  const signatureBuffer = await crypto.subtle.sign(
-    'HMAC',
-    secretKey,
-    encoder.encode(encodedPayload)
-  );
-
-  return base64UrlEncodeBytes(new Uint8Array(signatureBuffer));
-}
-
 export async function issueToken(env, user) {
-  const payload = {
-    sub: Number(user.id),
-    ver: Number.isInteger(user.tokenVersion) ? user.tokenVersion : 0,
-    iat: Date.now(),
-    exp: Date.now() + getTokenTtlMs(env)
-  };
-  const encodedPayload = base64UrlEncodeText(JSON.stringify(payload));
-  const signature = await signPayload(env, encodedPayload);
+  const database = getDatabase(env);
+  const token = createSessionToken();
+  const tokenHash = await hashSessionToken(token);
+  const timestamp = new Date().toISOString();
+  const expiresAt = new Date(Date.now() + getTokenTtlMs(env)).toISOString();
 
-  return `tuole.${encodedPayload}.${signature}`;
+  try {
+    await database
+      .prepare(
+        `INSERT INTO auth_sessions (
+          user_id,
+          token_hash,
+          token_version,
+          created_at,
+          expires_at,
+          last_seen_at
+        ) VALUES (?, ?, ?, ?, ?, ?)`
+      )
+      .bind(
+        Number(user.id),
+        tokenHash,
+        Number.isInteger(user.tokenVersion) ? user.tokenVersion : 0,
+        timestamp,
+        expiresAt,
+        timestamp
+      )
+      .run();
+  } catch (error) {
+    normalizeDatabaseError(error);
+  }
+
+  return token;
 }
 
 export async function verifyToken(env, token) {
-  const parts = String(token || '').split('.');
+  const tokenValue = String(token || '').trim();
 
-  if (parts.length !== 3 || parts[0] !== 'tuole') {
-    throw createHttpError(401, '登录凭证无效，请重新登录', 'INVALID_TOKEN');
+  if (!tokenValue) {
+    throw createHttpError(401, 'Login token is missing.', 'AUTH_REQUIRED');
   }
 
-  const encodedPayload = parts[1];
-  const providedSignature = parts[2];
-  const expectedSignature = await signPayload(env, encodedPayload);
-
-  if (
-    !secureEqualBytes(
-      base64UrlDecodeBytes(providedSignature),
-      base64UrlDecodeBytes(expectedSignature)
-    )
-  ) {
-    throw createHttpError(401, '登录凭证无效，请重新登录', 'INVALID_TOKEN');
-  }
-
-  let payload;
+  const database = getDatabase(env);
+  const tokenHash = await hashSessionToken(tokenValue);
+  let session;
 
   try {
-    payload = JSON.parse(base64UrlDecodeText(encodedPayload));
+    session = await database
+      .prepare(
+        `SELECT user_id, token_version, expires_at
+        FROM auth_sessions
+        WHERE token_hash = ?
+        LIMIT 1`
+      )
+      .bind(tokenHash)
+      .first();
   } catch (error) {
-    throw createHttpError(401, '登录凭证无效，请重新登录', 'INVALID_TOKEN');
+    normalizeDatabaseError(error);
   }
 
-  if (!Number.isInteger(payload.sub) || !Number.isInteger(payload.ver)) {
-    throw createHttpError(401, '登录凭证无效，请重新登录', 'INVALID_TOKEN');
+  if (!session) {
+    throw createHttpError(401, 'Login token is invalid. Please sign in again.', 'INVALID_TOKEN');
   }
 
-  if (!Number.isFinite(payload.exp) || Date.now() >= payload.exp) {
-    throw createHttpError(401, '登录状态已过期，请重新登录', 'TOKEN_EXPIRED');
+  if (!session.expires_at || Date.now() >= Date.parse(session.expires_at)) {
+    try {
+      await database
+        .prepare('DELETE FROM auth_sessions WHERE token_hash = ?')
+        .bind(tokenHash)
+        .run();
+    } catch (error) {
+      normalizeDatabaseError(error);
+    }
+
+    throw createHttpError(401, 'Login token has expired. Please sign in again.', 'TOKEN_EXPIRED');
+  }
+
+  try {
+    await database
+      .prepare('UPDATE auth_sessions SET last_seen_at = ? WHERE token_hash = ?')
+      .bind(new Date().toISOString(), tokenHash)
+      .run();
+  } catch (error) {
+    normalizeDatabaseError(error);
   }
 
   return {
-    userId: payload.sub,
-    tokenVersion: payload.ver
+    userId: Number(session.user_id),
+    tokenVersion: Number(session.token_version || 0)
   };
 }
 
-export async function requireAuthSession(context) {
-  const headerValue = context.request.headers.get('Authorization') || '';
-  const matched = String(headerValue).match(/^Bearer\s+(.+)$/i);
+export async function revokeToken(env, token) {
+  const tokenValue = String(token || '').trim();
 
-  if (!matched || !matched[1]) {
-    throw createHttpError(401, '缺少登录凭证，请重新登录', 'AUTH_REQUIRED');
+  if (!tokenValue) {
+    return;
   }
 
-  return verifyToken(context.env, matched[1].trim());
+  try {
+    await getDatabase(env)
+      .prepare('DELETE FROM auth_sessions WHERE token_hash = ?')
+      .bind(await hashSessionToken(tokenValue))
+      .run();
+  } catch (error) {
+    normalizeDatabaseError(error);
+  }
+}
+
+export async function requireAuthSession(context) {
+  const token = readBearerToken(context.request);
+
+  if (!token) {
+    throw createHttpError(401, 'Login token is missing.', 'AUTH_REQUIRED');
+  }
+
+  return verifyToken(context.env, token);
+}
+
+export async function revokeAuthSession(context) {
+  await revokeToken(context.env, readBearerToken(context.request));
 }
