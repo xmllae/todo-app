@@ -44,18 +44,8 @@ npx wrangler login
 npx wrangler d1 create tuole-db
 ```
 
-执行后你会拿到：
-
-- `database_name`
-- `database_id`
-
-把 `wrangler.jsonc` 里的：
-
-```json
-"database_id": "REPLACE_WITH_TUOLE_DB_D1_DATABASE_ID"
-```
-
-替换成真实的 `database_id`。
+如果已在 Cloudflare Pages 后台绑定 D1，就不要在 `wrangler.jsonc` 保留
+`database_id` 占位符。后台绑定名必须是 `DB`，数据库选择 `tuole-db`。
 
 ## 第四步：配置登录密钥
 
