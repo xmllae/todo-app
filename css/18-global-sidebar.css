@@ -112,6 +112,7 @@
   --gsn-title-color: #1f2f43;
   --gsn-kicker-color: #9aabbe;
   --gsn-heading-indent: 0px;
+  --gsn-section-gap: 8px;
   --gsn-section-divider: rgba(128, 148, 174, 0.34);
   --gsn-section-divider-highlight: rgba(255, 255, 255, 0.72);
   --gsn-item-fg: #586a83;
@@ -175,7 +176,7 @@
   max-height: none;
   overflow: auto;
   scrollbar-width: none;
-  padding: 8px 9px 12px;
+  padding: var(--gsn-section-gap) 9px 12px;
   border: 1px solid var(--gsn-shell-border);
   border-radius: 16px;
   background: var(--gsn-shell-bg);
@@ -218,8 +219,8 @@
 }
 
 .gsn-section + .gsn-section {
-  margin-top: 12px;
-  padding-top: 12px;
+  margin-top: 0;
+  padding-top: var(--gsn-section-gap);
 }
 
 .gsn-section:last-child {
