@@ -466,10 +466,6 @@
     var shouldRevealOverdue = gsnPrevOverdueCount === 0 && overdueCount > 0;
 
     nav.innerHTML =
-      '<div class="gsn-head">' +
-      '<div class="gsn-heading">快速入口</div>' +
-      '<button type="button" class="gsn-head-action" data-gsn-action="today" title="回到今天" aria-label="回到今天"><i class="ph ph-arrow-clockwise" aria-hidden="true"></i></button>' +
-      "</div>" +
       '<section class="gsn-section" aria-labelledby="gsnDateTitle">' +
       '<h4 class="gsn-section-title" id="gsnDateTitle">日期</h4>' +
       navButton("item", "inbox-tray", "收件箱", countInboxTasks(), "inbox", "", activeDate === "inbox") +
