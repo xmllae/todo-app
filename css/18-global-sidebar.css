@@ -112,6 +112,8 @@
   --gsn-title-color: #1f2f43;
   --gsn-kicker-color: #9aabbe;
   --gsn-heading-indent: 0px;
+  --gsn-section-divider: rgba(128, 148, 174, 0.34);
+  --gsn-section-divider-highlight: rgba(255, 255, 255, 0.72);
   --gsn-item-fg: #586a83;
   --gsn-item-fg-hover: #25364c;
   --gsn-item-hover-bg: rgba(108, 130, 158, 0.07);
@@ -211,7 +213,8 @@
 .gsn-section {
   margin: 0;
   padding: 0 0 12px;
-  border-bottom: 1px solid color-mix(in srgb, var(--task-bd) 42%, transparent);
+  border-bottom: 1px solid var(--gsn-section-divider);
+  box-shadow: 0 1px 0 var(--gsn-section-divider-highlight);
 }
 
 .gsn-section + .gsn-section {
@@ -222,6 +225,7 @@
 .gsn-section:last-child {
   padding-bottom: 0;
   border-bottom: 0;
+  box-shadow: none;
 }
 
 .gsn-section-title {
@@ -737,6 +741,8 @@
   --gsn-shell-shadow: 0 16px 32px -28px rgba(2, 6, 23, 0.72);
   --gsn-title-color: #ecf3fb;
   --gsn-kicker-color: #8fa4bc;
+  --gsn-section-divider: rgba(148, 163, 184, 0.28);
+  --gsn-section-divider-highlight: rgba(255, 255, 255, 0.06);
   --gsn-item-fg: #c2cedd;
   --gsn-item-fg-hover: #f2f7fd;
   --gsn-item-hover-bg: rgba(148, 163, 184, 0.12);
