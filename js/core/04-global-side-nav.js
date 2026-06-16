@@ -466,16 +466,11 @@
     var shouldRevealOverdue = gsnPrevOverdueCount === 0 && overdueCount > 0;
 
     nav.innerHTML =
-      '<section class="gsn-section" aria-labelledby="gsnDateTitle">' +
-      '<h4 class="gsn-section-title" id="gsnDateTitle">日期</h4>' +
+      '<section class="gsn-section" aria-labelledby="gsnCurrentTitle">' +
+      '<h4 class="gsn-section-title" id="gsnCurrentTitle">当前</h4>' +
       navButton("item", "inbox-tray", "收件箱", countInboxTasks(), "inbox", "", activeDate === "inbox") +
       navButton("item", "today-calendar", "今天", pendingFor(todayKey()).length, "today", "", activeDate === "today") +
-      navButton("item", "ph-arrow-fat-lines-right", "明天", null, "tomorrow", "", activeDate === "tomorrow") +
-      navButton("item", "ph-calendar-dots", "本周", countWeek(), "week", "", activeDate === "week") +
       overdueNavButton(overdueCount, activeDate === "overdue", shouldRevealOverdue) +
-      "</section>" +
-      '<section class="gsn-section" aria-labelledby="gsnFilterTitle">' +
-      '<h4 class="gsn-section-title" id="gsnFilterTitle">筛选</h4>' +
       filterButton(
         "高优先级",
         "high",
@@ -484,6 +479,22 @@
         gsnActiveQuick === "priority-high",
         "priority-view"
       ) +
+      "</section>" +
+      '<section class="gsn-section" aria-labelledby="gsnPlanTitle">' +
+      '<h4 class="gsn-section-title" id="gsnPlanTitle">计划</h4>' +
+      navButton("item", "ph-arrow-fat-lines-right", "明天", null, "tomorrow", "", activeDate === "tomorrow") +
+      navButton("item", "ph-calendar-dots", "本周", countWeek(), "week", "", activeDate === "week") +
+      filterButton(
+        "长期目标",
+        "goal",
+        countLongTermGoals(),
+        "goal-view",
+        gsnActiveQuick === "goal-view",
+        "goal-view"
+      ) +
+      "</section>" +
+      '<section class="gsn-section" aria-labelledby="gsnMaintainTitle">' +
+      '<h4 class="gsn-section-title" id="gsnMaintainTitle">维护</h4>' +
       filterButton(
         "重复任务",
         "repeating",
@@ -499,17 +510,6 @@
         "frozen-view",
         gsnActiveQuick === "frozen-view",
         "frozen-view"
-      ) +
-      "</section>" +
-      '<section class="gsn-section" aria-labelledby="gsnGoalTitle">' +
-      '<h4 class="gsn-section-title" id="gsnGoalTitle">规划</h4>' +
-      filterButton(
-        "长期目标",
-        "goal",
-        countLongTermGoals(),
-        "goal-view",
-        gsnActiveQuick === "goal-view",
-        "goal-view"
       ) +
       "</section>";
     gsnPrevOverdueCount = overdueCount;
