@@ -468,8 +468,8 @@
     nav.innerHTML =
       '<section class="gsn-section" aria-labelledby="gsnCurrentTitle">' +
       '<h4 class="gsn-section-title" id="gsnCurrentTitle">当前</h4>' +
-      navButton("item", "inbox-tray", "收件箱", countInboxTasks(), "inbox", "", activeDate === "inbox") +
       navButton("item", "today-calendar", "今天", pendingFor(todayKey()).length, "today", "", activeDate === "today") +
+      navButton("item", "inbox-tray", "收件箱", countInboxTasks(), "inbox", "", activeDate === "inbox") +
       overdueNavButton(overdueCount, activeDate === "overdue", shouldRevealOverdue) +
       filterButton(
         "高优先级",
