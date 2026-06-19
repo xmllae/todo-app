@@ -466,8 +466,7 @@
     var shouldRevealOverdue = gsnPrevOverdueCount === 0 && overdueCount > 0;
 
     nav.innerHTML =
-      '<section class="gsn-section" aria-labelledby="gsnCurrentTitle">' +
-      '<h4 class="gsn-section-title" id="gsnCurrentTitle">当前</h4>' +
+      '<section class="gsn-section" aria-label="当前任务入口">' +
       navButton("item", "today-calendar", "今天", pendingFor(todayKey()).length, "today", "", activeDate === "today") +
       navButton("item", "inbox-tray", "收件箱", countInboxTasks(), "inbox", "", activeDate === "inbox") +
       overdueNavButton(overdueCount, activeDate === "overdue", shouldRevealOverdue) +
@@ -480,8 +479,7 @@
         "priority-view"
       ) +
       "</section>" +
-      '<section class="gsn-section" aria-labelledby="gsnPlanTitle">' +
-      '<h4 class="gsn-section-title" id="gsnPlanTitle">计划</h4>' +
+      '<section class="gsn-section" aria-label="计划任务入口">' +
       navButton("item", "ph-arrow-fat-lines-right", "明天", null, "tomorrow", "", activeDate === "tomorrow") +
       navButton("item", "ph-calendar-dots", "本周", countWeek(), "week", "", activeDate === "week") +
       filterButton(
@@ -493,8 +491,7 @@
         "goal-view"
       ) +
       "</section>" +
-      '<section class="gsn-section" aria-labelledby="gsnMaintainTitle">' +
-      '<h4 class="gsn-section-title" id="gsnMaintainTitle">维护</h4>' +
+      '<section class="gsn-section" aria-label="维护任务入口">' +
       filterButton(
         "重复任务",
         "repeating",

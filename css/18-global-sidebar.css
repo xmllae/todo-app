@@ -109,7 +109,6 @@
   --gsn-shell-bg: rgba(255, 255, 255, 0.56);
   --gsn-shell-border: rgba(163, 176, 196, 0.24);
   --gsn-shell-shadow: 0 14px 30px -28px rgba(15, 23, 42, 0.28);
-  --gsn-kicker-color: #7e8fa8;
   --gsn-section-gap: 8px;
   --gsn-section-divider: rgba(128, 148, 174, 0.34);
   --gsn-section-divider-highlight: rgba(255, 255, 255, 0.72);
@@ -130,7 +129,6 @@
   --gsn-count-active-shadow:
     0 1px 2px rgba(15, 23, 42, 0.12),
     0 0 0 1px rgba(142, 158, 179, 0.26);
-  --gsn-section-title-size: 0.73rem;
   --gsn-entry-min-height: 38px;
   --gsn-entry-font-size: 0.92rem;
   --gsn-entry-gap: 11px;
@@ -218,15 +216,6 @@
   padding-bottom: 0;
   border-bottom: 0;
   box-shadow: none;
-}
-
-.gsn-section-title {
-  margin: 0 0 7px;
-  color: var(--gsn-kicker-color);
-  font-size: var(--gsn-section-title-size);
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: 0;
 }
 
 .gsn-item,
@@ -729,7 +718,6 @@
   --gsn-shell-bg: rgba(15, 23, 42, 0.52);
   --gsn-shell-border: rgba(148, 163, 184, 0.16);
   --gsn-shell-shadow: 0 16px 32px -28px rgba(2, 6, 23, 0.72);
-  --gsn-kicker-color: #a5b4c8;
   --gsn-section-divider: rgba(148, 163, 184, 0.28);
   --gsn-section-divider-highlight: rgba(255, 255, 255, 0.06);
   --gsn-item-fg: #c2cedd;

@@ -1,0 +1,408 @@
+/* Unifies the secondary task right rail across focused task views. */
+#taskMode .task-dash-col.is-week-action,
+#taskMode .task-dash-col.is-overdue-action,
+#taskMode .task-dash-col.is-priority-action,
+#taskMode .task-dash-col.is-repeat-action,
+#taskMode .task-dash-col.is-frozen-action {
+  --rail-bg: var(--card);
+  --rail-inner-bg: color-mix(in srgb, var(--card) 94%, var(--hov));
+  --rail-border: color-mix(in srgb, var(--task-bd) 82%, transparent);
+  --rail-divider: color-mix(in srgb, var(--task-bd) 62%, transparent);
+  --rail-text: var(--text);
+  --rail-muted: var(--text2);
+  --rail-soft: var(--text3);
+  --rail-radius: 16px;
+  --rail-control-radius: 12px;
+  --rail-padding: 18px;
+  --rail-gap: 16px;
+  --rail-section-gap: 16px;
+  --rail-title-size: 15px;
+  --rail-title-weight: 760;
+  --rail-ring-size: 86px;
+  --rail-ring-stroke: 9px;
+  --rail-ring-label-size: 11px;
+  --rail-ring-number-size: 1.72rem;
+  --rail-shadow: 0 12px 32px rgba(15, 23, 42, .055);
+  --rail-card-shadow: 0 18px 34px -34px rgba(15, 23, 42, .24);
+}
+
+#taskMode .task-dash-col.is-week-action .week-action-shell,
+#taskMode .task-dash-col.is-overdue-action .week-action-shell,
+#taskMode .task-dash-col.is-priority-action .priority-action-shell,
+#taskMode .task-dash-col.is-repeat-action .repeat-view-shell,
+#taskMode .task-dash-col.is-frozen-action .frozen-view-shell {
+  flex: 1 1 auto;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--rail-gap);
+  padding: var(--rail-padding);
+  overflow: auto;
+  border: 1px solid var(--rail-border);
+  border-radius: var(--rail-radius);
+  background: var(--rail-bg);
+  box-shadow: var(--rail-shadow);
+}
+
+#taskMode .task-dash-col.is-week-action .week-action-shell,
+#taskMode .task-dash-col.is-overdue-action .week-action-shell,
+#taskMode .task-dash-col.is-priority-action .priority-action-shell {
+  gap: 0;
+}
+
+#taskMode .task-dash-col.is-repeat-action .repeat-side-card,
+#taskMode .task-dash-col.is-frozen-action .frozen-side-card {
+  gap: var(--rail-section-gap);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+#taskMode .task-dash-col.is-repeat-action .repeat-side-card + .repeat-side-card,
+#taskMode .task-dash-col.is-frozen-action .frozen-side-card + .frozen-side-card {
+  padding-top: var(--rail-section-gap);
+  border-top: 1px solid var(--rail-divider);
+}
+
+#taskMode .task-dash-col.is-week-action .week-overview-head,
+#taskMode .task-dash-col.is-overdue-action .week-overview-head,
+#taskMode .task-dash-col.is-priority-action .priority-overview__head,
+#taskMode .task-dash-col.is-repeat-action .repeat-side-card__head-row,
+#taskMode .task-dash-col.is-frozen-action .frozen-side-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 22px;
+  margin: 0;
+  padding: 0 0 14px;
+}
+
+#taskMode .task-dash-col.is-week-action .week-overview-kicker,
+#taskMode .task-dash-col.is-overdue-action .week-overview-kicker,
+#taskMode .task-dash-col.is-overdue-action .overdue-overview-section-title,
+#taskMode .task-dash-col.is-week-action .week-overview-section-title span,
+#taskMode .task-dash-col.is-priority-action .priority-overview__kicker,
+#taskMode .task-dash-col.is-priority-action .priority-overview__section-title,
+#taskMode .task-dash-col.is-repeat-action .repeat-side-card__head,
+#taskMode .task-dash-col.is-frozen-action .frozen-side-card__title {
+  min-height: 0;
+  margin: 0;
+  color: var(--rail-text);
+  font-size: var(--rail-title-size);
+  line-height: 1.2;
+  font-weight: var(--rail-title-weight);
+  letter-spacing: 0;
+}
+
+#taskMode .task-dash-col.is-week-action .week-overview-score,
+#taskMode .task-dash-col.is-overdue-action .overdue-overview-hero,
+#taskMode .task-dash-col.is-priority-action .priority-overview__hero {
+  min-height: 0;
+  padding: 0 0 var(--rail-section-gap);
+  border-bottom: 1px solid var(--rail-divider);
+  background: transparent;
+  box-shadow: none;
+}
+
+#taskMode .task-dash-col.is-week-action .week-overview-score,
+#taskMode .task-dash-col.is-overdue-action .overdue-overview-count,
+#taskMode .task-dash-col.is-priority-action .priority-overview__ring-wrap,
+#taskMode .task-dash-col.is-repeat-action .repeat-overview__hero,
+#taskMode .task-dash-col.is-frozen-action .frozen-overview__hero {
+  display: grid;
+  grid-template-columns: var(--rail-ring-size) minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+#taskMode .task-dash-col.is-week-action .week-overview-ring,
+#taskMode .task-dash-col.is-priority-action .priority-overview__ring,
+#taskMode .task-dash-col.is-repeat-action .repeat-overview__ring,
+#taskMode .task-dash-col.is-frozen-action .frozen-overview__ring,
+#taskMode .task-dash-col.is-overdue-action .overdue-overview-count-badge {
+  width: var(--rail-ring-size);
+  min-width: var(--rail-ring-size);
+  height: var(--rail-ring-size);
+  flex: 0 0 var(--rail-ring-size);
+  box-sizing: border-box;
+  border-radius: 50%;
+}
+
+#taskMode .task-dash-col.is-week-action .week-overview-ring::after,
+#taskMode .task-dash-col.is-priority-action .priority-overview__ring::after,
+#taskMode .task-dash-col.is-repeat-action .repeat-overview__ring::after {
+  inset: var(--rail-ring-stroke);
+  background: var(--rail-bg);
+}
+
+#taskMode .task-dash-col.is-frozen-action .frozen-overview__ring {
+  padding: var(--rail-ring-stroke);
+}
+
+#taskMode .task-dash-col.is-overdue-action .overdue-overview-count-badge {
+  background: var(--rail-bg);
+  box-shadow:
+    inset 0 0 0 var(--rail-ring-stroke) color-mix(in srgb, var(--overdue-text-color) 22%, var(--task-bd)),
+    var(--rail-card-shadow);
+}
+
+#taskMode .task-dash-col.is-week-action .week-overview-ring span {
+  font-size: 15px;
+  letter-spacing: 0;
+}
+
+#taskMode .task-dash-col.is-priority-action .priority-overview__ring-center strong,
+#taskMode .task-dash-col.is-repeat-action .repeat-overview__ring-center strong,
+#taskMode .task-dash-col.is-frozen-action .frozen-overview__ring-center strong,
+#taskMode .task-dash-col.is-overdue-action .overdue-overview-count-badge strong {
+  color: var(--rail-text);
+  font-size: var(--rail-ring-number-size);
+  line-height: 1;
+  font-weight: 820;
+  letter-spacing: 0;
+}
+
+#taskMode .task-dash-col.is-week-action .week-overview-ring em,
+#taskMode .task-dash-col.is-priority-action .priority-overview__ring-center span,
+#taskMode .task-dash-col.is-repeat-action .repeat-overview__ring-center span,
+#taskMode .task-dash-col.is-frozen-action .frozen-overview__ring-center span {
+  color: var(--rail-soft);
+  font-size: var(--rail-ring-label-size);
+  line-height: 1.1;
+  font-weight: 650;
+  letter-spacing: 0;
+}
+
+#taskMode .task-dash-col.is-week-action .week-overview-score-main p,
+#taskMode .task-dash-col.is-overdue-action .overdue-overview-summary-line {
+  margin: 8px 0 0;
+  color: var(--rail-muted);
+  font-size: 12px;
+  line-height: 1.48;
+  letter-spacing: 0;
+}
+
+#taskMode .task-dash-col.is-overdue-action .overdue-overview-count-main {
+  gap: 7px;
+}
+
+#taskMode .task-dash-col.is-overdue-action .overdue-overview-count-copy {
+  color: var(--rail-text);
+  font-size: 14px;
+  line-height: 1.25;
+  font-weight: 720;
+}
+
+#taskMode .task-dash-col.is-week-action .week-overview-count,
+#taskMode .task-dash-col.is-week-action .week-overview-count-done {
+  font-size: 22px;
+  letter-spacing: 0;
+}
+
+#taskMode .task-dash-col.is-week-action .task-overview-metrics,
+#taskMode .task-dash-col.is-overdue-action .task-overview-metrics {
+  height: auto;
+  min-height: 64px;
+  padding: 14px 0;
+  border-top: 0;
+  border-bottom: 1px solid var(--rail-divider);
+}
+
+#taskMode .task-dash-col.is-week-action .task-overview-metric b,
+#taskMode .task-dash-col.is-overdue-action .task-overview-metric b {
+  color: var(--rail-text);
+  font-size: 18px;
+  font-weight: 820;
+  letter-spacing: 0;
+}
+
+#taskMode .task-dash-col.is-week-action .task-overview-metric span,
+#taskMode .task-dash-col.is-overdue-action .task-overview-metric span {
+  margin-top: 7px;
+  color: var(--rail-soft);
+  font-size: 11px;
+  font-weight: 520;
+}
+
+#taskMode .task-dash-col.is-priority-action .priority-overview__metrics-side,
+#taskMode .task-dash-col.is-repeat-action .repeat-overview__legend,
+#taskMode .task-dash-col.is-frozen-action .frozen-overview__legend {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+#taskMode .task-dash-col.is-priority-action .priority-overview__metric,
+#taskMode .task-dash-col.is-repeat-action .repeat-overview__legend-item,
+#taskMode .task-dash-col.is-frozen-action .frozen-overview__legend-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 24px;
+  text-align: left;
+  color: var(--rail-muted);
+}
+
+#taskMode .task-dash-col.is-priority-action .priority-overview__metric::before {
+  content: "";
+  grid-column: 1;
+  grid-row: 1;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #cbd5e1;
+}
+
+#taskMode .task-dash-col.is-priority-action .priority-overview__metric--overdue::before {
+  background: #ef4444;
+}
+
+#taskMode .task-dash-col.is-priority-action .priority-overview__metric--today::before {
+  background: #fb923c;
+}
+
+#taskMode .task-dash-col.is-priority-action .priority-overview__metric--week::before {
+  background: #6366f1;
+}
+
+#taskMode .task-dash-col.is-priority-action .priority-overview__metric b {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  width: auto;
+  color: var(--rail-text);
+  font-size: 14px;
+  line-height: 1;
+  font-weight: 820;
+  letter-spacing: 0;
+}
+
+#taskMode .task-dash-col.is-priority-action .priority-overview__metric span {
+  grid-column: 2;
+  grid-row: 1;
+  width: auto;
+  margin: 0;
+  color: var(--rail-muted);
+  font-size: 13px;
+  line-height: 1.2;
+  font-weight: 620;
+}
+
+#taskMode .task-dash-col.is-repeat-action .repeat-overview__legend-label,
+#taskMode .task-dash-col.is-frozen-action .frozen-overview__legend-label {
+  min-width: 0;
+  color: var(--rail-muted);
+  font-size: 13px;
+  line-height: 1.2;
+  font-weight: 620;
+}
+
+#taskMode .task-dash-col.is-repeat-action .repeat-overview__legend-item strong,
+#taskMode .task-dash-col.is-frozen-action .frozen-overview__legend-count {
+  justify-self: end;
+  color: var(--rail-text);
+  font-size: 14px;
+  line-height: 1;
+  font-weight: 820;
+  letter-spacing: 0;
+}
+
+#taskMode .task-dash-col.is-overdue-action .overdue-overview-section,
+#taskMode .task-dash-col.is-week-action .week-overview-section,
+#taskMode .task-dash-col.is-priority-action .priority-overview__section {
+  gap: 12px;
+  padding-top: var(--rail-section-gap);
+}
+
+#taskMode .task-dash-col.is-priority-action .priority-overview__row,
+#taskMode .task-dash-col.is-priority-action .priority-overview__action,
+#taskMode .task-dash-col.is-repeat-action .repeat-stats__item,
+#taskMode .task-dash-col.is-frozen-action .frozen-side-action {
+  border: 1px solid var(--rail-border);
+  border-radius: var(--rail-control-radius);
+  background: var(--rail-inner-bg);
+  box-shadow: none;
+}
+
+#taskMode .task-dash-col.is-repeat-action .repeat-stats__item,
+#taskMode .task-dash-col.is-frozen-action .frozen-side-action {
+  min-height: 44px;
+  padding: 10px 12px;
+}
+
+#taskMode .task-dash-col.is-priority-action .priority-overview__empty,
+#taskMode .task-dash-col.is-overdue-action .overdue-overview-empty {
+  border-radius: var(--rail-control-radius);
+  background: var(--rail-inner-bg);
+}
+
+#taskMode .task-dash-col.is-frozen-action .frozen-side-tip__copy {
+  color: var(--rail-muted);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.dark #taskMode .task-dash-col.is-week-action,
+.dark #taskMode .task-dash-col.is-overdue-action,
+.dark #taskMode .task-dash-col.is-priority-action,
+.dark #taskMode .task-dash-col.is-repeat-action,
+.dark #taskMode .task-dash-col.is-frozen-action {
+  --rail-bg: rgba(15, 23, 42, .9);
+  --rail-inner-bg: rgba(30, 41, 59, .72);
+  --rail-border: rgba(51, 65, 85, .86);
+  --rail-divider: rgba(51, 65, 85, .72);
+  --rail-text: #f8fafc;
+  --rail-muted: #cbd5e1;
+  --rail-soft: #94a3b8;
+  --rail-shadow: none;
+  --rail-card-shadow: none;
+}
+
+.dark #taskMode .task-dash-col.is-frozen-action .frozen-overview__ring-center,
+.dark #taskMode .task-dash-col.is-overdue-action .overdue-overview-count-badge {
+  background: var(--rail-bg);
+}
+
+@media (max-width: 1280px) {
+  #taskMode .task-dash-col.is-week-action .week-action-shell,
+  #taskMode .task-dash-col.is-overdue-action .week-action-shell,
+  #taskMode .task-dash-col.is-priority-action .priority-action-shell,
+  #taskMode .task-dash-col.is-repeat-action .repeat-view-shell,
+  #taskMode .task-dash-col.is-frozen-action .frozen-view-shell {
+    height: auto;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 760px) {
+  #taskMode .task-dash-col.is-week-action,
+  #taskMode .task-dash-col.is-overdue-action,
+  #taskMode .task-dash-col.is-priority-action,
+  #taskMode .task-dash-col.is-repeat-action,
+  #taskMode .task-dash-col.is-frozen-action {
+    --rail-ring-size: 78px;
+    --rail-ring-stroke: 8px;
+  }
+
+  #taskMode .task-dash-col.is-priority-action .priority-overview__ring-wrap,
+  #taskMode .task-dash-col.is-repeat-action .repeat-overview__hero,
+  #taskMode .task-dash-col.is-frozen-action .frozen-overview__hero {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+
+  #taskMode .task-dash-col.is-priority-action .priority-overview__metrics-side,
+  #taskMode .task-dash-col.is-repeat-action .repeat-overview__legend,
+  #taskMode .task-dash-col.is-frozen-action .frozen-overview__legend {
+    width: 100%;
+  }
+}
