@@ -109,6 +109,7 @@
   --gsn-shell-bg: rgba(255, 255, 255, 0.56);
   --gsn-shell-border: rgba(163, 176, 196, 0.24);
   --gsn-shell-shadow: 0 14px 30px -28px rgba(15, 23, 42, 0.28);
+  --gsn-section-title-color: #616676;
   --gsn-section-gap: 8px;
   --gsn-section-divider: rgba(128, 148, 174, 0.34);
   --gsn-section-divider-highlight: rgba(255, 255, 255, 0.72);
@@ -116,11 +117,9 @@
   --gsn-item-fg-hover: #25364c;
   --gsn-item-hover-bg: rgba(108, 130, 158, 0.07);
   --gsn-item-active-bg: rgba(108, 130, 158, 0.09);
-  --gsn-item-active-border: rgba(88, 108, 134, 0.54);
+  --gsn-item-active-border: transparent;
   --gsn-item-active-fg: #1f334d;
-  --gsn-item-active-shadow:
-    0 0 0 1px rgba(145, 162, 184, 0.2),
-    0 6px 14px -16px rgba(32, 53, 79, 0.22);
+  --gsn-item-active-shadow: none;
   --gsn-count-bg: transparent;
   --gsn-count-fg: #556b86;
   --gsn-count-shadow: none;
@@ -139,19 +138,19 @@
   --gsn-count-size: 20px;
   --gsn-count-font-size: 0.78rem;
   --gsn-overdue-fg: #e64b5d;
-  --gsn-overdue-bg: color-mix(in srgb, #ef4444 12%, #ffffff);
-  --gsn-overdue-bg-hover: color-mix(in srgb, #ef4444 9%, #ffffff);
-  --gsn-overdue-border-hover: color-mix(in srgb, #ef4444 18%, rgba(255, 255, 255, 0));
-  --gsn-overdue-border: color-mix(in srgb, #ef4444 24%, rgba(255, 255, 255, 0));
-  --gsn-overdue-shadow:
-    0 0 0 1px color-mix(in srgb, #ef4444 9%, transparent),
-    0 8px 18px -18px rgba(239, 68, 68, 0.36);
+  --gsn-overdue-bg: #fbf0f0;
+  --gsn-overdue-bg-hover: #fbf0f0;
+  --gsn-overdue-border-hover: transparent;
+  --gsn-overdue-border: transparent;
+  --gsn-overdue-shadow: none;
   --gsn-overdue-count-bg: transparent;
   --gsn-overdue-count-fg: #d43b4f;
   --gsn-overdue-count-shadow: none;
-  --gsn-overdue-count-hover-bg: transparent;
+  --gsn-overdue-count-hover-bg: #ffffff;
   --gsn-overdue-count-hover-fg: #cf3850;
-  --gsn-overdue-count-hover-shadow: none;
+  --gsn-overdue-count-hover-shadow:
+    0 1px 2px rgba(239, 68, 68, 0.12),
+    0 0 0 1px color-mix(in srgb, #ef4444 14%, transparent);
   --gsn-overdue-count-active-bg: #ffffff;
   --gsn-overdue-count-active-fg: #cf3850;
   --gsn-focus-ring: color-mix(in srgb, var(--acc) 30%, transparent);
@@ -218,6 +217,17 @@
   box-shadow: none;
 }
 
+.gsn-section-title {
+  margin: 10px 0 13px;
+  padding-left: var(--gsn-entry-pad-x);
+  color: var(--gsn-section-title-color);
+  font-family: "Source Han Sans SC", "Noto Sans CJK SC", "Noto Sans SC", sans-serif;
+  font-size: 0.86rem;
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+
 .gsn-item,
 .gsn-project,
 .gsn-filter {
@@ -263,7 +273,7 @@
 .gsn-filter:hover {
   background: var(--gsn-item-hover-bg);
   color: var(--gsn-item-fg-hover);
-  border-color: color-mix(in srgb, var(--gsn-item-active-border) 56%, transparent);
+  border-color: transparent;
 }
 
 .gsn-item:hover .gsn-count:not(.gsn-count--empty),
@@ -288,15 +298,16 @@
 .gsn-project:focus-visible,
 .gsn-filter:focus-visible {
   outline: none;
-  border-color: color-mix(in srgb, var(--acc) 42%, #9fb2ca);
-  box-shadow: 0 0 0 3px var(--gsn-focus-ring);
+  background: var(--gsn-item-hover-bg);
+  border-color: transparent;
+  box-shadow: none;
 }
 
 .gsn-item.is-active,
 .gsn-project.is-active,
 .gsn-filter.is-active {
   color: var(--gsn-item-active-fg);
-  border-color: var(--gsn-item-active-border);
+  border-color: transparent;
   background: var(--gsn-item-active-bg);
   font-weight: 650;
   box-shadow: var(--gsn-item-active-shadow);
@@ -306,7 +317,7 @@
 .gsn-project.is-active:hover,
 .gsn-filter.is-active:hover {
   background: var(--gsn-item-active-bg);
-  border-color: color-mix(in srgb, var(--gsn-item-active-border) 90%, #91a5c0);
+  border-color: transparent;
   transform: none;
 }
 
@@ -534,7 +545,7 @@
 
 .global-side-nav [data-gsn-action="overdue"]:not(.gsn-item--zero):hover {
   background: var(--gsn-overdue-bg-hover);
-  border-color: var(--gsn-overdue-border-hover);
+  border-color: transparent;
 }
 
 .global-side-nav [data-gsn-action="overdue"]:not(.gsn-item--zero):hover .gsn-count:not(.gsn-count--empty) {
@@ -543,10 +554,15 @@
   box-shadow: var(--gsn-overdue-count-hover-shadow);
 }
 
-.global-side-nav [data-gsn-action="overdue"].is-active,
-.global-side-nav [data-gsn-action="overdue"].is-active:hover {
+.global-side-nav [data-gsn-action="overdue"].is-active {
   background: var(--gsn-overdue-bg);
-  border-color: var(--gsn-overdue-border);
+  border-color: transparent;
+  box-shadow: var(--gsn-overdue-shadow);
+}
+
+.global-side-nav [data-gsn-action="overdue"].is-active:hover {
+  background: var(--gsn-overdue-bg-hover);
+  border-color: transparent;
   box-shadow: var(--gsn-overdue-shadow);
 }
 
@@ -718,17 +734,16 @@
   --gsn-shell-bg: rgba(15, 23, 42, 0.52);
   --gsn-shell-border: rgba(148, 163, 184, 0.16);
   --gsn-shell-shadow: 0 16px 32px -28px rgba(2, 6, 23, 0.72);
+  --gsn-section-title-color: #a5b4c8;
   --gsn-section-divider: rgba(148, 163, 184, 0.28);
   --gsn-section-divider-highlight: rgba(255, 255, 255, 0.06);
   --gsn-item-fg: #c2cedd;
   --gsn-item-fg-hover: #f2f7fd;
   --gsn-item-hover-bg: rgba(148, 163, 184, 0.12);
   --gsn-item-active-bg: rgba(148, 163, 184, 0.14);
-  --gsn-item-active-border: rgba(165, 190, 215, 0.58);
+  --gsn-item-active-border: transparent;
   --gsn-item-active-fg: #eef6ff;
-  --gsn-item-active-shadow:
-    0 0 0 1px rgba(203, 221, 240, 0.16),
-    0 8px 16px -16px rgba(149, 183, 206, 0.36);
+  --gsn-item-active-shadow: none;
   --gsn-count-bg: transparent;
   --gsn-count-fg: #e6eef8;
   --gsn-count-shadow: none;
@@ -740,17 +755,17 @@
   --gsn-overdue-fg: #ff6b7c;
   --gsn-overdue-bg: color-mix(in srgb, #ef4444 18%, rgba(255, 255, 255, 0));
   --gsn-overdue-bg-hover: color-mix(in srgb, #ef4444 14%, rgba(255, 255, 255, 0));
-  --gsn-overdue-border-hover: color-mix(in srgb, #fb7185 24%, transparent);
-  --gsn-overdue-border: color-mix(in srgb, #fb7185 34%, transparent);
-  --gsn-overdue-shadow:
-    0 0 0 1px color-mix(in srgb, #fb7185 16%, transparent),
-    0 10px 18px -18px rgba(251, 113, 133, 0.5);
+  --gsn-overdue-border-hover: transparent;
+  --gsn-overdue-border: transparent;
+  --gsn-overdue-shadow: none;
   --gsn-overdue-count-bg: transparent;
   --gsn-overdue-count-fg: #ffe1e7;
   --gsn-overdue-count-shadow: none;
-  --gsn-overdue-count-hover-bg: transparent;
+  --gsn-overdue-count-hover-bg: rgba(255, 255, 255, 0.92);
   --gsn-overdue-count-hover-fg: #cf3850;
-  --gsn-overdue-count-hover-shadow: none;
+  --gsn-overdue-count-hover-shadow:
+    0 1px 2px rgba(2, 6, 23, 0.34),
+    0 0 0 1px color-mix(in srgb, #fb7185 18%, transparent);
   --gsn-overdue-count-active-bg: rgba(255, 255, 255, 0.92);
   --gsn-overdue-count-active-fg: #cf3850;
   --gsn-focus-ring: rgba(149, 183, 206, 0.34);
