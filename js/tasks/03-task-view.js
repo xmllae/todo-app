@@ -521,29 +521,26 @@ function getWeekTaskStatSummary(data){
   });
   return stat
 }
-function weekOverviewDonutGradient(stat){
+function weekOverviewRingSegments(stat){
+  const circumference=326.73,gap=stat.total>0?12:0;
   const segments=[
-    {value:stat.done,color:"var(--week-stat-done)"},
-    {value:stat.overdue,color:"var(--week-stat-overdue)"},
-    {value:stat.todo,color:"var(--week-stat-todo)"}
+    {value:stat.done,tone:"done"},
+    {value:stat.overdue,tone:"overdue"},
+    {value:stat.todo,tone:"todo"}
   ].filter(function(segment){return segment.value>0});
-  if(!stat.total||!segments.length)return"color-mix(in srgb, var(--rail-border) 54%, transparent)";
-  if(segments.length===1)return"conic-gradient("+segments[0].color+" 0deg 360deg)";
-  const degrees=segments.map(function(segment){return segment.value/stat.total*360});
-  const minDegree=Math.min.apply(null,degrees);
-  const gapDegree=Math.min(2.2,Math.max(.6,minDegree*.22),minDegree*.48);
-  const gapHalf=gapDegree/2,separator="var(--rail-bg)",stops=[separator+" 0deg "+gapHalf.toFixed(2)+"deg"];
+  if(!stat.total||!segments.length)return[];
   let cursor=0;
-  segments.forEach(function(segment,index){
-    const span=degrees[index],start=cursor+gapHalf,end=cursor+span-gapHalf;
-    stops.push(segment.color+" "+start.toFixed(2)+"deg "+end.toFixed(2)+"deg");
-    cursor+=span;
-    if(index<segments.length-1){
-      stops.push(separator+" "+end.toFixed(2)+"deg "+(cursor+gapHalf).toFixed(2)+"deg")
-    }
+  return segments.map(function(segment){
+    const raw=segment.value/stat.total*circumference,start=cursor+(segments.length>1?gap/2:0);
+    cursor+=raw;
+    return {tone:segment.tone,length:Math.max(3,raw-(segments.length>1?gap:0)),offset:-start}
   });
-  stops.push(separator+" "+(360-gapHalf).toFixed(2)+"deg 360deg");
-  return"conic-gradient("+stops.join(",")+")"
+}
+function renderWeekTaskStatRing(stat){
+  const arcs=weekOverviewRingSegments(stat).map(function(segment){
+    return '<circle class="week-stat-ring-arc week-stat-ring-arc--'+segment.tone+'" cx="60" cy="60" r="52" pathLength="326.73" stroke-dasharray="'+segment.length.toFixed(2)+' 326.73" stroke-dashoffset="'+segment.offset.toFixed(2)+'"></circle>'
+  }).join("");
+  return '<div class="week-stat-ring'+(stat.total?"":" is-empty")+'"><svg class="week-stat-ring-svg" viewBox="0 0 120 120" aria-hidden="true"><circle class="week-stat-ring-track" cx="60" cy="60" r="52"></circle>'+arcs+'</svg><div class="week-stat-donut-center"><strong>'+stat.total+'</strong><span>\u603b\u4efb\u52a1</span></div></div>'
 }
 function weekOverviewShiftDay(ds,offset){
   const d=parseDS(ds);
@@ -599,11 +596,9 @@ function renderWeekFocusBars(focus){
   }).join("")
 }
 function renderWeekTaskStatCard(stat){
-  const emptyClass=stat.total?"":" is-empty";
-  const style="--week-stat-fill:"+weekOverviewDonutGradient(stat);
   return '<section class="week-overview-card week-stat-card" aria-label="\u4efb\u52a1\u7edf\u8ba1">'+
-    '<div class="week-overview-card-head"><h3>\u4efb\u52a1\u7edf\u8ba1</h3><span class="week-overview-period">\u672c\u5468<span aria-hidden="true">\u2304</span></span></div>'+
-    '<div class="week-stat-body"><div class="week-stat-donut'+emptyClass+'" style="'+style+'"><div class="week-stat-donut-center"><strong>'+stat.total+'</strong><span>\u603b\u4efb\u52a1</span></div></div><div class="week-stat-legend">'+renderWeekTaskStatLegend(stat)+'</div></div>'+
+    '<div class="week-overview-card-head"><h3>\u4efb\u52a1\u7edf\u8ba1</h3></div>'+
+    '<div class="week-stat-body">'+renderWeekTaskStatRing(stat)+'<div class="week-stat-legend">'+renderWeekTaskStatLegend(stat)+'</div></div>'+
     '</section>'
 }
 function renderWeekFocusCard(focus){
@@ -626,7 +621,7 @@ function renderWeekTaskOverviewSidebar(selStr){
     const status=weekOverviewRhythmStatus(day),tone=weekOverviewRhythmTone(day),cls="week-rhythm-day"+(day.isToday?" is-today":"")+(day.isFocus?" is-focus":"")+(day.isOverdue?" is-overdue":"")+(day.pending?" has-pending":day.total?" is-clear":" is-empty");
     return '<button type="button" class="'+cls+'" onclick="jumpWeekDay(\''+day.ds+'\')" aria-label="\u5207\u6362\u5230 '+day.label+' '+day.dateText+' '+status+'"><span class="week-rhythm-rail" aria-hidden="true"><span class="week-rhythm-node week-rhythm-node--'+tone+'">'+weekOverviewRhythmIcon(day)+'</span></span><span class="week-rhythm-main"><span class="week-rhythm-copy"><span class="week-rhythm-week">'+day.label+'</span><span class="week-rhythm-date">'+day.dateText+'</span></span>'+weekOverviewRhythmStateHtml(day)+'</span></button>'
   }).join("");
-  shell.innerHTML=renderWeekTaskStatCard(stat)+renderWeekFocusCard(focus)+'<div class="week-overview-section week-overview-section--rhythm"><div class="week-overview-section-title"><span>\u672c\u5468\u8282\u594f</span></div><div class="week-rhythm-list">'+rhythmRows+'</div></div>'
+  shell.innerHTML=renderWeekTaskStatCard(stat)+renderWeekFocusCard(focus)+'<section class="week-overview-card week-rhythm-card week-overview-section week-overview-section--rhythm" aria-label="\u672c\u5468\u8282\u594f"><div class="week-overview-section-title"><span>\u672c\u5468\u8282\u594f</span></div><div class="week-rhythm-list">'+rhythmRows+'</div></section>'
 }
 function ensureOverdueTaskOverviewShell(root){
   return ensureTaskOverviewShell(root,"overdue")

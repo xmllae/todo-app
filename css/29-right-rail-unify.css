@@ -410,7 +410,12 @@
 /* Week rail summary cards */
 #taskMode .task-dash-col.is-week-action .week-action-shell.week-task-overview {
   gap: 14px;
+  padding: 0;
   overflow: auto;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 #taskMode .task-dash-col.is-week-action .week-overview-card {
@@ -462,34 +467,53 @@
 
 #taskMode .task-dash-col.is-week-action .week-stat-body {
   display: grid;
-  grid-template-columns: 86px minmax(0, 1fr);
+  grid-template-columns: 100px minmax(0, 1fr);
   align-items: center;
-  gap: 16px;
+  gap: 14px;
 }
 
-#taskMode .task-dash-col.is-week-action .week-stat-donut {
+#taskMode .task-dash-col.is-week-action .week-stat-ring {
   --week-stat-done: #48d486;
   --week-stat-overdue: #ff626d;
   --week-stat-todo: #619cff;
   position: relative;
-  width: 86px;
-  height: 86px;
+  width: 96px;
+  height: 96px;
   border-radius: 50%;
-  background: var(--week-stat-fill);
-  box-shadow: 0 12px 24px -24px rgba(15, 23, 42, .45);
 }
 
-#taskMode .task-dash-col.is-week-action .week-stat-donut.is-empty {
-  background: color-mix(in srgb, var(--rail-border) 54%, transparent);
+#taskMode .task-dash-col.is-week-action .week-stat-ring-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transform: rotate(-90deg);
 }
 
-#taskMode .task-dash-col.is-week-action .week-stat-donut::after {
-  content: "";
-  position: absolute;
-  inset: 8px;
-  border-radius: 50%;
-  background: var(--rail-bg);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--rail-border) 48%, transparent);
+#taskMode .task-dash-col.is-week-action .week-stat-ring-track,
+#taskMode .task-dash-col.is-week-action .week-stat-ring-arc {
+  fill: none;
+  stroke-width: 6;
+}
+
+#taskMode .task-dash-col.is-week-action .week-stat-ring-track {
+  stroke: #e9edf3;
+}
+
+#taskMode .task-dash-col.is-week-action .week-stat-ring-arc {
+  stroke-linecap: round;
+}
+
+#taskMode .task-dash-col.is-week-action .week-stat-ring-arc--done {
+  stroke: var(--week-stat-done);
+}
+
+#taskMode .task-dash-col.is-week-action .week-stat-ring-arc--overdue {
+  stroke: var(--week-stat-overdue);
+}
+
+#taskMode .task-dash-col.is-week-action .week-stat-ring-arc--todo {
+  stroke: var(--week-stat-todo);
 }
 
 #taskMode .task-dash-col.is-week-action .week-stat-donut-center {
@@ -506,7 +530,7 @@
 
 #taskMode .task-dash-col.is-week-action .week-stat-donut-center strong {
   color: var(--rail-text);
-  font-size: 24px;
+  font-size: 22px;
   line-height: 1;
   font-weight: 520;
   letter-spacing: 0;
@@ -514,9 +538,9 @@
 }
 
 #taskMode .task-dash-col.is-week-action .week-stat-donut-center span {
-  margin-top: 5px;
+  margin-top: 4px;
   color: var(--rail-soft);
-  font-size: 10px;
+  font-size: 9px;
   line-height: 1;
   font-weight: 560;
   letter-spacing: 0;
@@ -524,7 +548,9 @@
 
 #taskMode .task-dash-col.is-week-action .week-stat-legend {
   display: flex;
+  box-sizing: border-box;
   min-width: 0;
+  padding-left: 8px;
   flex-direction: column;
   gap: 12px;
 }
@@ -532,9 +558,9 @@
 #taskMode .task-dash-col.is-week-action .week-stat-legend-row {
   --week-stat-row-color: #94a3b8;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: 7px minmax(0, 1fr) minmax(1.5em, auto);
   align-items: center;
-  gap: 10px;
+  column-gap: 10px;
   min-height: 20px;
   color: var(--rail-muted);
   font-size: 12px;
@@ -697,8 +723,8 @@
 
 #taskMode .task-dash-col.is-week-action .week-overview-section--rhythm {
   flex: 0 0 auto;
-  margin-top: 2px;
-  padding-top: 4px;
+  margin-top: 0;
+  padding: 16px;
 }
 
 #taskMode .task-dash-col.is-week-action .week-overview-section--rhythm .week-overview-section-title {
@@ -714,8 +740,8 @@
     );
 }
 
-.dark #taskMode .task-dash-col.is-week-action .week-stat-donut::after {
-  background: var(--rail-bg);
+.dark #taskMode .task-dash-col.is-week-action .week-stat-ring-track {
+  stroke: rgba(148, 163, 184, .22);
 }
 
 .dark #taskMode .task-dash-col.is-week-action .week-focus-trend span {
