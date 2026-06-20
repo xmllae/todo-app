@@ -612,6 +612,9 @@ function renderWeekFocusCard(focus){
     '<div class="week-focus-bars">'+renderWeekFocusBars(focus)+'</div>'+
     '</section>'
 }
+function renderWeekRailDecoration(){
+  return '<div class="week-rail-decoration" aria-hidden="true"><svg class="week-rail-decoration__leaf" viewBox="0 0 120 120" fill="none" focusable="false"><path d="M99 20C67 22 40 36 27 59c-8 14-7 28 0 39 12 2 26-1 38-10 22-16 31-43 34-68Z"></path><path d="M19 105c17-32 40-55 71-70"></path><path d="M48 72c1-12-1-22-7-30"></path><path d="M63 56c10 1 19 5 27 12"></path></svg></div>'
+}
 function renderWeekTaskOverviewSidebar(selStr){
   const root=document.getElementById("taskDashCol"),shell=ensureWeekTaskOverviewShell(root);
   if(!root||!shell)return;
@@ -621,7 +624,7 @@ function renderWeekTaskOverviewSidebar(selStr){
     const status=weekOverviewRhythmStatus(day),tone=weekOverviewRhythmTone(day),cls="week-rhythm-day"+(day.isToday?" is-today":"")+(day.isFocus?" is-focus":"")+(day.isOverdue?" is-overdue":"")+(day.pending?" has-pending":day.total?" is-clear":" is-empty");
     return '<button type="button" class="'+cls+'" onclick="jumpWeekDay(\''+day.ds+'\')" aria-label="\u5207\u6362\u5230 '+day.label+' '+day.dateText+' '+status+'"><span class="week-rhythm-rail" aria-hidden="true"><span class="week-rhythm-node week-rhythm-node--'+tone+'">'+weekOverviewRhythmIcon(day)+'</span></span><span class="week-rhythm-main"><span class="week-rhythm-copy"><span class="week-rhythm-week">'+day.label+'</span><span class="week-rhythm-date">'+day.dateText+'</span></span>'+weekOverviewRhythmStateHtml(day)+'</span></button>'
   }).join("");
-  shell.innerHTML=renderWeekTaskStatCard(stat)+renderWeekFocusCard(focus)+'<section class="week-overview-card week-rhythm-card week-overview-section week-overview-section--rhythm" aria-label="\u672c\u5468\u8282\u594f"><div class="week-overview-section-title"><span>\u672c\u5468\u8282\u594f</span></div><div class="week-rhythm-list">'+rhythmRows+'</div></section>'
+  shell.innerHTML=renderWeekTaskStatCard(stat)+renderWeekFocusCard(focus)+'<section class="week-overview-card week-rhythm-card week-overview-section week-overview-section--rhythm" aria-label="\u672c\u5468\u8282\u594f"><div class="week-overview-section-title"><span>\u672c\u5468\u8282\u594f</span></div><div class="week-rhythm-list">'+rhythmRows+'</div></section>'+renderWeekRailDecoration()
 }
 function ensureOverdueTaskOverviewShell(root){
   return ensureTaskOverviewShell(root,"overdue")

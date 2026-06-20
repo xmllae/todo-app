@@ -409,6 +409,9 @@
 
 /* Week rail summary cards */
 #taskMode .task-dash-col.is-week-action .week-action-shell.week-task-overview {
+  --week-rail-decoration-opacity: .1;
+  --week-rail-decoration-size: 6.5rem;
+  position: relative;
   gap: 14px;
   padding: 0;
   overflow: auto;
@@ -418,7 +421,36 @@
   box-shadow: none;
 }
 
+#taskMode .task-dash-col.is-week-action .week-rail-decoration {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  width: 100%;
+  height: 7rem;
+  box-sizing: border-box;
+  padding: 0 1rem .25rem;
+  overflow: hidden;
+  color: var(--acc);
+  pointer-events: none;
+}
+
+#taskMode .task-dash-col.is-week-action .week-rail-decoration__leaf {
+  width: var(--week-rail-decoration-size);
+  height: auto;
+  opacity: var(--week-rail-decoration-opacity);
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 #taskMode .task-dash-col.is-week-action .week-overview-card {
+  position: relative;
+  z-index: 1;
   flex: 0 0 auto;
   padding: 16px;
   border: 1px solid var(--rail-border);
@@ -752,6 +784,12 @@
 .dark #taskMode .task-dash-col.is-week-action .week-focus-trend.is-down span {
   background: rgba(239, 68, 68, .16);
   color: #fda4af;
+}
+
+@media (max-width: 1280px) {
+  #taskMode .task-dash-col.is-week-action .week-rail-decoration {
+    display: none;
+  }
 }
 
 @media (max-width: 760px) {
