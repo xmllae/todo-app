@@ -279,7 +279,9 @@
 .gsn-item:hover .gsn-count:not(.gsn-count--empty),
 .gsn-project:hover .gsn-count:not(.gsn-count--empty),
 .gsn-filter:hover .gsn-count:not(.gsn-count--empty) {
+  background: var(--gsn-count-active-bg);
   color: var(--gsn-count-active-fg);
+  box-shadow: var(--gsn-count-active-shadow);
 }
 
 .gsn-item:not(.is-active):hover,
