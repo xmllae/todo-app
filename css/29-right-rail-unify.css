@@ -656,6 +656,7 @@
 }
 
 #taskMode .task-dash-col.is-week-action .week-focus-day {
+  position: relative;
   display: flex;
   min-width: 0;
   flex-direction: column;
@@ -664,7 +665,27 @@
   gap: 8px;
 }
 
+#taskMode .task-dash-col.is-week-action .week-focus-day::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 18px;
+  left: 50%;
+  z-index: 0;
+  border-left: 1px dashed color-mix(in srgb, var(--acc) 44%, transparent);
+  opacity: 0;
+  transform: translateX(-50%);
+  transition: opacity .16s ease;
+  pointer-events: none;
+}
+
+#taskMode .task-dash-col.is-week-action .week-focus-day:hover::before {
+  opacity: 1;
+}
+
 #taskMode .task-dash-col.is-week-action .week-focus-bar-track {
+  position: relative;
+  z-index: 1;
   width: 15px;
   height: 72px;
   display: flex;
@@ -692,10 +713,17 @@
 }
 
 #taskMode .task-dash-col.is-week-action .week-focus-day-label {
+  position: relative;
+  z-index: 1;
   color: var(--rail-soft);
   font-size: 12px;
   line-height: 1;
   font-weight: 620;
+  transition: color .16s ease;
+}
+
+#taskMode .task-dash-col.is-week-action .week-focus-day:hover .week-focus-day-label {
+  color: var(--acc);
 }
 
 #taskMode .task-dash-col.is-week-action .week-overview-section--rhythm {
