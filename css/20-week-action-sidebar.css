@@ -992,7 +992,7 @@
 }
 
 /* #region 顶部当天胶囊与右侧节奏当天行视觉同步 */
-.week-rhythm-day:is(.is-today, .is-focus) .week-rhythm-copy {
+.week-rhythm-day.is-today .week-rhythm-copy {
   margin-left: -10px;
   padding: 5px 12px;
   background: linear-gradient(
@@ -1009,8 +1009,8 @@
    1. 只有当天保留浅胶囊背景；
    2. 非当天状态只保留文字层级；
    3. 当天样式统一在这一段收口，避免前后两套规则互相覆盖。 */
-.week-rhythm-day:is(.is-today, .is-focus) .week-rhythm-week,
-.week-rhythm-day:is(.is-today, .is-focus) .week-rhythm-date,
+.week-rhythm-day.is-today .week-rhythm-week,
+.week-rhythm-day.is-today .week-rhythm-date,
 .week-rhythm-day.is-today .week-rhythm-state--pending {
   color: #000000;
 }
@@ -1019,7 +1019,7 @@
   color: color-mix(in srgb, var(--acc) 88%, #4f46e5);
 }
 
-.week-rhythm-day:is(.is-today, .is-focus):hover .week-rhythm-copy {
+.week-rhythm-day.is-today:hover .week-rhythm-copy {
   background: linear-gradient(
     180deg,
     color-mix(in srgb, var(--acc) 10%, #ffffff) 0%,
@@ -1030,7 +1030,7 @@
     0 12px 22px -20px color-mix(in srgb, var(--acc) 28%, rgba(15, 23, 42, .16));
 }
 
-.week-rhythm-day:is(.is-today, .is-focus):active .week-rhythm-copy {
+.week-rhythm-day.is-today:active .week-rhythm-copy {
   transform: scale(.992);
 }
 
