@@ -481,22 +481,6 @@
   letter-spacing: 0;
 }
 
-#taskMode .task-dash-col.is-week-action .week-overview-period {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  color: var(--rail-soft);
-  font-size: 12px;
-  line-height: 1;
-  font-weight: 400;
-  white-space: nowrap;
-}
-
-#taskMode .task-dash-col.is-week-action .week-overview-period span {
-  font-size: 11px;
-  transform: translateY(-1px);
-}
-
 #taskMode .task-dash-col.is-week-action .week-stat-body {
   display: grid;
   grid-template-columns: 100px minmax(0, 1fr);
@@ -635,20 +619,15 @@
   font-variant-numeric: tabular-nums;
 }
 
-#taskMode .task-dash-col.is-week-action .week-focus-summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin: 0 0 16px;
-}
-
 #taskMode .task-dash-col.is-week-action .week-focus-total {
   display: flex;
   align-items: baseline;
+  justify-content: flex-end;
   gap: 4px;
+  margin-left: auto;
   min-width: 0;
   color: var(--rail-text);
+  white-space: nowrap;
 }
 
 #taskMode .task-dash-col.is-week-action .week-focus-total strong {
@@ -664,40 +643,6 @@
   color: var(--rail-muted);
   font-size: 12px;
   line-height: 1;
-  font-weight: 560;
-}
-
-#taskMode .task-dash-col.is-week-action .week-focus-trend {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
-  color: var(--rail-soft);
-  font-size: 12px;
-  line-height: 1.2;
-  white-space: nowrap;
-}
-
-#taskMode .task-dash-col.is-week-action .week-focus-trend span {
-  display: inline-flex;
-  align-items: center;
-  min-height: 22px;
-  padding: 0 8px;
-  border-radius: 999px;
-  background: color-mix(in srgb, #22c55e 12%, transparent);
-  color: #22a663;
-  font-size: 12px;
-  font-weight: 720;
-}
-
-#taskMode .task-dash-col.is-week-action .week-focus-trend.is-down span {
-  background: color-mix(in srgb, #ef4444 10%, transparent);
-  color: #e05263;
-}
-
-#taskMode .task-dash-col.is-week-action .week-focus-trend em {
-  color: var(--rail-soft);
-  font-style: normal;
   font-weight: 560;
 }
 
@@ -776,16 +721,6 @@
   stroke: rgba(148, 163, 184, .22);
 }
 
-.dark #taskMode .task-dash-col.is-week-action .week-focus-trend span {
-  background: rgba(34, 197, 94, .16);
-  color: #86efac;
-}
-
-.dark #taskMode .task-dash-col.is-week-action .week-focus-trend.is-down span {
-  background: rgba(239, 68, 68, .16);
-  color: #fda4af;
-}
-
 @media (max-width: 1280px) {
   #taskMode .task-dash-col.is-week-action .week-rail-decoration {
     display: none;
@@ -802,8 +737,4 @@
     width: 100%;
   }
 
-  #taskMode .task-dash-col.is-week-action .week-focus-summary {
-    align-items: flex-start;
-    flex-direction: column;
-  }
 }

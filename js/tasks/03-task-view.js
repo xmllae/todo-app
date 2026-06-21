@@ -542,12 +542,6 @@ function renderWeekTaskStatRing(stat){
   }).join("");
   return '<div class="week-stat-ring'+(stat.total?"":" is-empty")+'"><svg class="week-stat-ring-svg" viewBox="0 0 120 120" aria-hidden="true"><circle class="week-stat-ring-track" cx="60" cy="60" r="52"></circle>'+arcs+'</svg><div class="week-stat-donut-center"><strong>'+stat.total+'</strong><span>\u603b\u4efb\u52a1</span></div></div>'
 }
-function weekOverviewShiftDay(ds,offset){
-  const d=parseDS(ds);
-  if(!d)return"";
-  d.setDate(d.getDate()+offset);
-  return fd(d)
-}
 function weekOverviewFocusRecords(){
   try{
     const raw=localStorage.getItem("tuole_focus_v2");
@@ -569,9 +563,7 @@ function getWeekFocusSummary(dayStats){
     return {label:day.label.replace("\u5468",""),ds:day.ds,minutes:weekOverviewFocusMinutes(byDay,day.ds),isToday:day.isToday,isFocus:day.isFocus}
   });
   const total=days.reduce(function(sum,day){return sum+day.minutes},0);
-  const previous=dayStats.reduce(function(sum,day){return sum+weekOverviewFocusMinutes(byDay,weekOverviewShiftDay(day.ds,-7))},0);
-  const delta=previous>0?Math.round((total-previous)/previous*100):(total>0?100:0);
-  return {days:days,total:total,previous:previous,delta:delta}
+  return {days:days,total:total}
 }
 function weekOverviewDurationParts(minutes){
   const safe=Math.max(0,parseInt(minutes,10)||0);
@@ -603,12 +595,8 @@ function renderWeekTaskStatCard(stat){
 }
 function renderWeekFocusCard(focus){
   const parts=weekOverviewDurationParts(focus.total);
-  const trendClass=focus.delta>=0?"is-up":"is-down";
-  const trendText=focus.previous>0?(focus.delta>=0?"\u2191 ":"\u2193 ")+Math.abs(focus.delta)+"%":(focus.total>0?"\u65b0\u589e":"0%");
-  const trendNote=focus.previous>0?(focus.delta>=0?"\u8f83\u4e0a\u5468\u63d0\u5347":"\u8f83\u4e0a\u5468\u4e0b\u964d"):(focus.total>0?"\u672c\u5468\u5f00\u59cb":"\u6682\u65e0\u8bb0\u5f55");
   return '<section class="week-overview-card week-focus-card" aria-label="\u4e13\u6ce8\u65f6\u957f">'+
-    '<div class="week-overview-card-head"><h3>\u4e13\u6ce8\u65f6\u957f</h3><span class="week-overview-period">\u672c\u5468<span aria-hidden="true">\u2304</span></span></div>'+
-    '<div class="week-focus-summary"><div class="week-focus-total"><strong>'+parts.hours+'</strong><span>h</span><strong>'+parts.minutes+'</strong><span>m</span></div><div class="week-focus-trend '+trendClass+'"><span>'+trendText+'</span><em>'+trendNote+'</em></div></div>'+
+    '<div class="week-overview-card-head"><h3>\u4e13\u6ce8\u65f6\u957f</h3><div class="week-focus-total" aria-label="'+parts.hours+' \u5c0f\u65f6 '+parts.minutes+' \u5206\u949f"><strong>'+parts.hours+'</strong><span>h</span><strong>'+parts.minutes+'</strong><span>m</span></div></div>'+
     '<div class="week-focus-bars">'+renderWeekFocusBars(focus)+'</div>'+
     '</section>'
 }
