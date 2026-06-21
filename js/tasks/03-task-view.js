@@ -496,8 +496,10 @@ function weekOverviewRhythmIcon(day){
   return WEEK_RHYTHM_ICON_EMPTY
 }
 function weekOverviewRhythmStateHtml(day){
-  const tone=weekOverviewRhythmTone(day),status=weekOverviewRhythmStatus(day),chip=day.isToday&&(tone==="overdue"||tone==="pending");
-  return '<span class="week-rhythm-state week-rhythm-state--'+tone+(chip?' week-rhythm-state--chip':'')+'">'+status+'</span>'
+  const tone=weekOverviewRhythmTone(day);
+  if(tone==="empty")return"";
+  const status=weekOverviewRhythmStatus(day);
+  return '<span class="week-rhythm-state week-rhythm-state--'+tone+'">'+status+'</span>'
 }
 function getWeekOverviewData(selStr){
   const meta=getTaskWeekMeta(selStr),weekNames=["\u5468\u4e00","\u5468\u4e8c","\u5468\u4e09","\u5468\u56db","\u5468\u4e94","\u5468\u516d","\u5468\u65e5"],allRows=[];
@@ -1028,7 +1030,7 @@ const WEEK_HEADER_READY_ICON='<svg width="14" height="14" viewBox="0 0 24 24" fi
 const WEEK_RHYTHM_ICON_OVERDUE=typeof overdueCircleIconSvgHtml==="function"?overdueCircleIconSvgHtml("week-rhythm-node-svg"):'<svg class="week-rhythm-node-svg" viewBox="0 0 24 24" focusable="false" aria-hidden="true"><circle cx="12" cy="12" r="9.38" fill="none" stroke="currentColor" stroke-width="1.5"></circle><path d="M12 7.58v4.57" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round"></path><circle cx="12" cy="16.28" r="1.23" fill="currentColor"></circle></svg>';
 const WEEK_RHYTHM_ICON_PENDING='<svg class="week-rhythm-node-svg" viewBox="0 0 16 16" focusable="false" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1"></circle><path d="M8 4.95v3.15l2.1 1.25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
 const WEEK_RHYTHM_ICON_CLEAR='<svg class="week-rhythm-node-svg" viewBox="0 0 16 16" focusable="false" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1"></circle><path d="M5.55 8.2 7.15 9.75 10.45 6.55" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
-const WEEK_RHYTHM_ICON_EMPTY='<svg class="week-rhythm-node-svg" viewBox="0 0 16 16" focusable="false" aria-hidden="true"><circle cx="4.4" cy="8" r="0.82" fill="currentColor"></circle><circle cx="8" cy="8" r="0.82" fill="currentColor"></circle><circle cx="11.6" cy="8" r="0.82" fill="currentColor"></circle></svg>';
+const WEEK_RHYTHM_ICON_EMPTY='<svg class="week-rhythm-node-svg" viewBox="0 0 16 16" focusable="false" aria-hidden="true"><circle cx="8" cy="8" r="1.6" fill="currentColor"></circle></svg>';
 const WEEK_OVERDUE_ICON=weekOverdueIconHtml();
 let weekDoneCollapsed=true;
 let weekQuietDaysExpanded=false;

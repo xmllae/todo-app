@@ -411,6 +411,9 @@
 #taskMode .task-dash-col.is-week-action .week-action-shell.week-task-overview {
   --week-rail-decoration-opacity: .1;
   --week-rail-decoration-size: 6.5rem;
+  --week-rhythm-hover-bg: #f9fafb;
+  --week-rhythm-empty-text: #c4c8cf;
+  --week-rhythm-row-edge-space: 10px;
   --week-stat-label-size: 12px;
   position: relative;
   gap: 14px;
@@ -734,6 +737,42 @@
 
 #taskMode .task-dash-col.is-week-action .week-overview-section--rhythm .week-overview-section-title {
   margin-bottom: 10px;
+}
+
+#taskMode .task-dash-col.is-week-action .week-rhythm-day:hover {
+  border-radius: 10px;
+  background: var(--week-rhythm-hover-bg);
+}
+
+#taskMode .task-dash-col.is-week-action .week-rhythm-main {
+  padding-right: var(--week-rhythm-row-edge-space);
+}
+
+#taskMode .task-dash-col.is-week-action .week-rhythm-day:not(.is-today):not(.is-focus):hover .week-rhythm-copy {
+  background: transparent;
+  box-shadow: none;
+}
+
+#taskMode .task-dash-col.is-week-action .week-rhythm-day.is-empty,
+#taskMode .task-dash-col.is-week-action .week-rhythm-day.is-empty:hover,
+#taskMode .task-dash-col.is-week-action .week-rhythm-day.is-empty:active {
+  transform: none;
+}
+
+#taskMode .task-dash-col.is-week-action .week-rhythm-day.is-empty:not(.is-today):not(.is-focus) .week-rhythm-copy,
+#taskMode .task-dash-col.is-week-action .week-rhythm-day.is-empty:not(.is-today):not(.is-focus):hover .week-rhythm-copy,
+#taskMode .task-dash-col.is-week-action .week-rhythm-day.is-empty:not(.is-today):not(.is-focus):active .week-rhythm-copy {
+  margin-left: 0;
+  padding: 2px 0;
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+}
+
+#taskMode .task-dash-col.is-week-action .week-rhythm-day.is-empty:not(.is-today):not(.is-focus) .week-rhythm-week,
+#taskMode .task-dash-col.is-week-action .week-rhythm-day.is-empty:not(.is-today):not(.is-focus) .week-rhythm-date {
+  color: var(--week-rhythm-empty-text);
+  font-weight: 400;
 }
 
 .dark #taskMode .task-dash-col.is-week-action .week-overview-card {
