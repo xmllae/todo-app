@@ -411,6 +411,7 @@
 #taskMode .task-dash-col.is-week-action .week-action-shell.week-task-overview {
   --week-rail-decoration-opacity: .1;
   --week-rail-decoration-size: 6.5rem;
+  --week-stat-label-size: 12px;
   position: relative;
   gap: 14px;
   padding: 0;
@@ -555,10 +556,10 @@
 
 #taskMode .task-dash-col.is-week-action .week-stat-donut-center span {
   margin-top: 4px;
-  color: var(--rail-soft);
-  font-size: 9px;
+  color: var(--rail-muted);
+  font-size: var(--week-stat-label-size);
   line-height: 1;
-  font-weight: 560;
+  font-weight: 400;
   letter-spacing: 0;
 }
 
@@ -579,7 +580,7 @@
   column-gap: 10px;
   min-height: 20px;
   color: var(--rail-muted);
-  font-size: 12px;
+  font-size: var(--week-stat-label-size);
   line-height: 1.2;
   font-weight: 400;
 }
@@ -639,7 +640,6 @@
 }
 
 #taskMode .task-dash-col.is-week-action .week-focus-total span {
-  margin-right: 5px;
   color: var(--rail-muted);
   font-size: 12px;
   line-height: 1;

@@ -569,6 +569,15 @@ function weekOverviewDurationParts(minutes){
   const safe=Math.max(0,parseInt(minutes,10)||0);
   return {hours:Math.floor(safe/60),minutes:safe%60}
 }
+function weekOverviewDurationHtml(minutes){
+  const parts=weekOverviewDurationParts(minutes);
+  const hours=parts.hours?'<strong>'+parts.hours+'</strong><span>h</span>':"";
+  return hours+'<strong>'+parts.minutes+'</strong><span>m</span>'
+}
+function weekOverviewDurationLabel(minutes){
+  const parts=weekOverviewDurationParts(minutes);
+  return(parts.hours?parts.hours+' \u5c0f\u65f6 ':"")+parts.minutes+' \u5206\u949f'
+}
 function renderWeekTaskStatLegend(stat){
   const rows=[
     {label:"\u5df2\u5b8c\u6210",value:stat.done,tone:"done"},
@@ -584,7 +593,7 @@ function renderWeekFocusBars(focus){
   return focus.days.map(function(day){
     const height=day.minutes>0?Math.max(18,Math.round(day.minutes/max*100)):8;
     const cls="week-focus-day"+(day.minutes>0?" has-focus":"")+(day.isToday?" is-today":"")+(day.isFocus?" is-focus":"");
-    return '<div class="'+cls+'" title="'+day.minutes+' \u5206\u949f"><span class="week-focus-bar-track" aria-hidden="true"><span class="week-focus-bar" style="height:'+height+'%"></span></span><span class="week-focus-day-label">'+day.label+'</span></div>'
+    return '<div class="'+cls+'" data-focus-minutes="'+day.minutes+'" title="'+day.minutes+' \u5206\u949f"><span class="week-focus-bar-track" aria-hidden="true"><span class="week-focus-bar" style="height:'+height+'%"></span></span><span class="week-focus-day-label">'+day.label+'</span></div>'
   }).join("")
 }
 function renderWeekTaskStatCard(stat){
@@ -594,11 +603,28 @@ function renderWeekTaskStatCard(stat){
     '</section>'
 }
 function renderWeekFocusCard(focus){
-  const parts=weekOverviewDurationParts(focus.total);
   return '<section class="week-overview-card week-focus-card" aria-label="\u4e13\u6ce8\u65f6\u957f">'+
-    '<div class="week-overview-card-head"><h3>\u4e13\u6ce8\u65f6\u957f</h3><div class="week-focus-total" aria-label="'+parts.hours+' \u5c0f\u65f6 '+parts.minutes+' \u5206\u949f"><strong>'+parts.hours+'</strong><span>h</span><strong>'+parts.minutes+'</strong><span>m</span></div></div>'+
+    '<div class="week-overview-card-head"><h3>\u4e13\u6ce8\u65f6\u957f</h3><div class="week-focus-total" aria-label="'+weekOverviewDurationLabel(focus.total)+'">'+weekOverviewDurationHtml(focus.total)+'</div></div>'+
     '<div class="week-focus-bars">'+renderWeekFocusBars(focus)+'</div>'+
     '</section>'
+}
+function bindWeekFocusHover(shell,totalMinutes){
+  const card=shell&&shell.querySelector(".week-focus-card");
+  const bars=card&&card.querySelector(".week-focus-bars"),output=card&&card.querySelector(".week-focus-total");
+  if(!bars||!output)return;
+  const update=function(minutes){
+    output.innerHTML=weekOverviewDurationHtml(minutes);
+    output.setAttribute("aria-label",weekOverviewDurationLabel(minutes))
+  };
+  bars.addEventListener("mouseover",function(event){
+    const day=event.target.closest(".week-focus-day");
+    if(day&&bars.contains(day))update(day.dataset.focusMinutes)
+  });
+  bars.addEventListener("mouseout",function(event){
+    const day=event.target.closest(".week-focus-day");
+    if(!day||!bars.contains(day)||day.contains(event.relatedTarget))return;
+    update(totalMinutes)
+  })
 }
 function renderWeekRailDecoration(){
   return '<div class="week-rail-decoration" aria-hidden="true"><svg class="week-rail-decoration__leaf" viewBox="0 0 120 120" fill="none" focusable="false"><path d="M99 20C67 22 40 36 27 59c-8 14-7 28 0 39 12 2 26-1 38-10 22-16 31-43 34-68Z"></path><path d="M19 105c17-32 40-55 71-70"></path><path d="M48 72c1-12-1-22-7-30"></path><path d="M63 56c10 1 19 5 27 12"></path></svg></div>'
@@ -612,7 +638,8 @@ function renderWeekTaskOverviewSidebar(selStr){
     const status=weekOverviewRhythmStatus(day),tone=weekOverviewRhythmTone(day),cls="week-rhythm-day"+(day.isToday?" is-today":"")+(day.isFocus?" is-focus":"")+(day.isOverdue?" is-overdue":"")+(day.pending?" has-pending":day.total?" is-clear":" is-empty");
     return '<button type="button" class="'+cls+'" onclick="jumpWeekDay(\''+day.ds+'\')" aria-label="\u5207\u6362\u5230 '+day.label+' '+day.dateText+' '+status+'"><span class="week-rhythm-rail" aria-hidden="true"><span class="week-rhythm-node week-rhythm-node--'+tone+'">'+weekOverviewRhythmIcon(day)+'</span></span><span class="week-rhythm-main"><span class="week-rhythm-copy"><span class="week-rhythm-week">'+day.label+'</span><span class="week-rhythm-date">'+day.dateText+'</span></span>'+weekOverviewRhythmStateHtml(day)+'</span></button>'
   }).join("");
-  shell.innerHTML=renderWeekTaskStatCard(stat)+renderWeekFocusCard(focus)+'<section class="week-overview-card week-rhythm-card week-overview-section week-overview-section--rhythm" aria-label="\u672c\u5468\u8282\u594f"><div class="week-overview-section-title"><span>\u672c\u5468\u8282\u594f</span></div><div class="week-rhythm-list">'+rhythmRows+'</div></section>'+renderWeekRailDecoration()
+  shell.innerHTML=renderWeekTaskStatCard(stat)+renderWeekFocusCard(focus)+'<section class="week-overview-card week-rhythm-card week-overview-section week-overview-section--rhythm" aria-label="\u672c\u5468\u8282\u594f"><div class="week-overview-section-title"><span>\u672c\u5468\u8282\u594f</span></div><div class="week-rhythm-list">'+rhythmRows+'</div></section>'+renderWeekRailDecoration();
+  bindWeekFocusHover(shell,focus.total)
 }
 function ensureOverdueTaskOverviewShell(root){
   return ensureTaskOverviewShell(root,"overdue")
