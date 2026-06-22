@@ -416,9 +416,13 @@
   --week-rhythm-task-week-color: #111827;
   --week-rhythm-date-color: #9ca3af;
   --week-rhythm-complete-color: #48d486;
+  --week-rhythm-line-color: #eef3f8;
+  --week-rhythm-line-width: 1px;
   --week-rhythm-week-size: 13px;
   --week-rhythm-date-size: 12px;
   --week-rhythm-empty-text: #c4c8cf;
+  --week-rhythm-empty-node-color: #d6deea;
+  --week-rhythm-empty-node-size: 5px;
   --week-rhythm-row-edge-space: 10px;
   --week-stat-label-size: 12px;
   --week-stat-empty-ring-color: #e2e8f0;

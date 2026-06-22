@@ -526,6 +526,7 @@
 }
 
 .week-rhythm-list {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 1px;
@@ -535,6 +536,19 @@
     var(--week-rhythm-group-optical-offset)
   );
   border-top: 0;
+}
+
+.week-rhythm-list::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 17px;
+  bottom: 17px;
+  left: 12px;
+  width: var(--week-rhythm-line-width, 1px);
+  background: var(--week-rhythm-line-color, #eef3f8);
+  transform: translateX(-50%);
+  pointer-events: none;
 }
 
 .week-rhythm-day {
@@ -562,29 +576,9 @@
   min-height: 34px;
 }
 
-.week-rhythm-rail::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: -3px;
-  bottom: -3px;
-  width: 1px;
-  border-radius: 999px;
-  background: #eef3f8;
-  transform: translateX(-50%);
-}
-
-.week-rhythm-day:first-child .week-rhythm-rail::before {
-  top: 50%;
-}
-
-.week-rhythm-day:last-child .week-rhythm-rail::before {
-  bottom: 50%;
-}
-
 .week-rhythm-node {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -614,7 +608,11 @@
 }
 
 .week-rhythm-node--empty {
-  color: #d6deea;
+  width: var(--week-rhythm-empty-node-size, 5px);
+  height: var(--week-rhythm-empty-node-size, 5px);
+  flex: 0 0 auto;
+  color: transparent;
+  background: var(--week-rhythm-empty-node-color, #d6deea);
 }
 
 .week-rhythm-main {
