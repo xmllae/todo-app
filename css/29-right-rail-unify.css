@@ -422,6 +422,7 @@
   --week-rhythm-row-edge-space: 10px;
   --week-stat-label-size: 12px;
   --week-stat-empty-ring-color: #e2e8f0;
+  --week-stat-ring-stroke: 12;
   --week-card-padding: 20px;
   --week-card-title-color: #666666;
   --week-card-title-size: 14px;
@@ -521,11 +522,11 @@
 #taskMode .task-dash-col.is-week-action .week-stat-ring-track,
 #taskMode .task-dash-col.is-week-action .week-stat-ring-arc {
   fill: none;
-  stroke-width: 6;
+  stroke-width: var(--week-stat-ring-stroke);
 }
 
 #taskMode .task-dash-col.is-week-action .week-stat-ring-track {
-  stroke: #e9edf3;
+  stroke: transparent;
 }
 
 #taskMode .task-dash-col.is-week-action .week-stat-ring.is-empty .week-stat-ring-track {
@@ -645,6 +646,7 @@
   margin-left: auto;
   min-width: 0;
   color: var(--rail-text);
+  font-family: var(--week-number-font);
   white-space: nowrap;
 }
 
@@ -659,9 +661,10 @@
 
 #taskMode .task-dash-col.is-week-action .week-focus-total span {
   color: var(--rail-muted);
+  font-family: var(--week-number-font);
   font-size: 12px;
   line-height: 1;
-  font-weight: 560;
+  font-weight: 400;
 }
 
 #taskMode .task-dash-col.is-week-action .week-focus-bars {
@@ -838,7 +841,7 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, .16);
 }
 
-.dark #taskMode .task-dash-col.is-week-action .week-stat-ring-track {
+.dark #taskMode .task-dash-col.is-week-action .week-stat-ring.is-empty .week-stat-ring-track {
   stroke: rgba(148, 163, 184, .22);
 }
 

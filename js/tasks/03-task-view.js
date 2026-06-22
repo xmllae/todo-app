@@ -524,7 +524,7 @@ function getWeekTaskStatSummary(data){
   return stat
 }
 function weekOverviewRingSegments(stat){
-  const circumference=326.73,gap=stat.total>0?12:0;
+  const circumference=326.73,gap=stat.total>0?WEEK_STAT_RING_SEGMENT_GAP:0;
   const segments=[
     {value:stat.done,tone:"done"},
     {value:stat.overdue,tone:"overdue"},
@@ -582,9 +582,9 @@ function weekOverviewDurationLabel(minutes){
 }
 function renderWeekTaskStatLegend(stat){
   const rows=[
-    {label:"\u5df2\u5b8c\u6210",value:stat.done,tone:"done"},
+    {label:"\u5f85\u529e",value:stat.todo,tone:"todo"},
     {label:"\u903e\u671f",value:stat.overdue,tone:"overdue"},
-    {label:"\u5f85\u529e",value:stat.todo,tone:"todo"}
+    {label:"\u5df2\u5b8c\u6210",value:stat.done,tone:"done"}
   ];
   return rows.map(function(row){
     return '<div class="week-stat-legend-row week-stat-legend-row--'+row.tone+'"><span class="week-stat-dot" aria-hidden="true"></span><span class="week-stat-label">'+row.label+'</span><strong>'+row.value+'</strong></div>'
@@ -1023,6 +1023,7 @@ const WEEK_DONE_COLLAPSE_LS_KEY="tuole_week_done_collapsed";
 const WEEK_DONE_FOCUS_MIGRATION_KEY="tuole_week_done_focus_migrated";
 const WEEK_DAY_PREVIEW_MAX=4;
 const WEEK_TASK_DONE_ANIM_MS=520;
+const WEEK_STAT_RING_SEGMENT_GAP=18;
 const WEEK_HEADER_ADD_ICON='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>';
 const WEEK_HEADER_EXPAND_ICON='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 8 12 13 17 8"></polyline><polyline points="7 12 12 17 17 12"></polyline></svg>';
 const WEEK_HEADER_COLLAPSE_ICON='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 16 12 11 17 16"></polyline><polyline points="7 12 12 7 17 12"></polyline></svg>';
