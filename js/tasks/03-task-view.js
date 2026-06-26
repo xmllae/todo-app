@@ -599,8 +599,8 @@ function renderWeekFocusBars(focus){
   }).join("")
 }
 function renderWeekTaskStatCard(stat){
-  return '<section class="week-overview-card week-stat-card" aria-label="\u4efb\u52a1\u7edf\u8ba1">'+
-    '<div class="week-overview-card-head"><h3>\u4efb\u52a1\u7edf\u8ba1</h3></div>'+
+  return '<section class="week-overview-card week-stat-card" aria-label="\u672c\u5468\u6982\u89c8">'+
+    '<div class="week-overview-card-head"><h3>\u672c\u5468\u6982\u89c8</h3></div>'+
     '<div class="week-stat-body">'+renderWeekTaskStatRing(stat)+'<div class="week-stat-legend">'+renderWeekTaskStatLegend(stat)+'</div></div>'+
     '</section>'
 }
