@@ -880,7 +880,9 @@
   --day-card-title-size: 14px;
   --day-card-title-weight: 650;
   --day-stat-done: #48d486;
+  --day-stat-overdue: #ff626d;
   --day-stat-todo: #619cff;
+  --day-stat-primary: var(--day-stat-todo);
   --day-stat-track: #e2e8f0;
   --day-stat-label-size: 12px;
   --day-number-font: "Inter", "Roboto", "DIN Alternate", "Segoe UI", sans-serif;
@@ -972,8 +974,8 @@
   stroke: var(--day-stat-done);
 }
 
-#taskMode .task-dash-col .dash-day-stat-ring-arc--todo {
-  stroke: var(--day-stat-todo);
+#taskMode .task-dash-col .dash-day-stat-ring-arc--primary {
+  stroke: var(--day-stat-primary);
 }
 
 #taskMode .task-dash-col .dash-day-stat-center {
@@ -1030,8 +1032,8 @@
   font-weight: 400;
 }
 
-#taskMode .task-dash-col .dash-day-stat-row--todo {
-  --day-stat-row-color: var(--day-stat-todo);
+#taskMode .task-dash-col .dash-day-stat-row--primary {
+  --day-stat-row-color: var(--day-stat-primary);
 }
 
 #taskMode .task-dash-col .dash-day-stat-row--done {

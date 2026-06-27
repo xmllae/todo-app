@@ -390,27 +390,45 @@ function getTaskDayOverviewTitle(ds){
   if(currentDs===fd(tomorrowDate))return"\u660e\u5929\u6982\u89c8";
   return"\u5f53\u65e5\u6982\u89c8"
 }
-function ensureDayTaskOverviewMarkup(root){
-  const title=getTaskDayOverviewTitle();
+function getTaskDayOverviewPrimaryMeta(ds){
+  const currentDs=typeof ds==="string"&&ds?ds:typeof sel==="string"&&sel?sel:(typeof todayKey==="function"?todayKey():fd(new Date())),todayDs=typeof todayKey==="function"?todayKey():fd(new Date());
+  if(currentDs&&todayDs&&currentDs<todayDs)return{label:"\u903e\u671f",tone:"overdue"};
+  return{label:"\u5f85\u529e",tone:"todo"}
+}
+function syncDayTaskOverviewMode(ds,root){
+  const host=root||document.getElementById("taskDashCol"),card=host&&host.querySelector(".dash-overview");
+  if(!card)return null;
+  const title=getTaskDayOverviewTitle(ds),primaryMeta=getTaskDayOverviewPrimaryMeta(ds),titleEl=card.querySelector(".dash-hd-tit"),labelEl=card.querySelector("#dashDayPrimaryLabel");
+  if(titleEl)titleEl.textContent=title;
+  if(labelEl)labelEl.textContent=primaryMeta.label;
+  card.setAttribute("aria-label",title);
+  card.style.setProperty("--day-stat-primary",primaryMeta.tone==="overdue"?"var(--day-stat-overdue)":"var(--day-stat-todo)");
+  card.dataset.dayPrimaryTone=primaryMeta.tone;
+  return card
+}
+function ensureDayTaskOverviewMarkup(root,ds){
+  const title=getTaskDayOverviewTitle(ds),primaryMeta=getTaskDayOverviewPrimaryMeta(ds);
   const card=root&&root.querySelector(".dash-overview");
-  if(!card||card.dataset.dayOverviewVersion==="3")return card;
-  card.dataset.dayOverviewVersion="3";
+  if(!card||card.dataset.dayOverviewVersion==="4")return syncDayTaskOverviewMode(ds,root);
+  card.dataset.dayOverviewVersion="4";
   card.classList.add("dash-overview--day-stat");
   card.setAttribute("role","region");
   card.setAttribute("aria-label",title);
+  card.style.setProperty("--day-stat-primary",primaryMeta.tone==="overdue"?"var(--day-stat-overdue)":"var(--day-stat-todo)");
+  card.dataset.dayPrimaryTone=primaryMeta.tone;
   card.innerHTML=
     '<div class="dash-hd dash-day-stat-head"><span class="dash-hd-tit">'+title+'</span></div>'+
     '<div class="dash-day-stat-body">'+
       '<div class="dash-day-stat-ring is-empty" id="dashDayStatRing">'+
         '<svg class="dash-day-stat-ring-svg" viewBox="0 0 120 120" aria-hidden="true">'+
           '<circle class="dash-day-stat-ring-track" cx="60" cy="60" r="52"></circle>'+
-          '<circle id="dashDayTodoArc" class="dash-day-stat-ring-arc dash-day-stat-ring-arc--todo" cx="60" cy="60" r="52" pathLength="326.73"></circle>'+
+          '<circle id="dashDayPrimaryArc" class="dash-day-stat-ring-arc dash-day-stat-ring-arc--primary" cx="60" cy="60" r="52" pathLength="326.73"></circle>'+
           '<circle id="dashDayDoneArc" class="dash-day-stat-ring-arc dash-day-stat-ring-arc--done" cx="60" cy="60" r="52" pathLength="326.73"></circle>'+
         '</svg>'+
         '<div class="dash-day-stat-center"><strong id="dashTotal">0</strong><span>\u603b\u4efb\u52a1</span></div>'+
       '</div>'+
       '<div class="dash-day-stat-legend">'+
-        '<div class="dash-day-stat-row dash-day-stat-row--todo"><span class="dash-day-stat-dot" aria-hidden="true"></span><span class="dash-day-stat-label">\u5f85\u529e</span><strong id="dashDayTodo">0</strong></div>'+
+        '<div class="dash-day-stat-row dash-day-stat-row--primary"><span class="dash-day-stat-dot" aria-hidden="true"></span><span id="dashDayPrimaryLabel" class="dash-day-stat-label">'+primaryMeta.label+'</span><strong id="dashDayPrimaryCount">0</strong></div>'+
         '<div class="dash-day-stat-row dash-day-stat-row--done"><span class="dash-day-stat-dot" aria-hidden="true"></span><span class="dash-day-stat-label">\u5df2\u5b8c\u6210</span><strong id="dashDone">0</strong></div>'+
       '</div>'+
     '</div>'+
@@ -420,7 +438,7 @@ function ensureDayTaskOverviewMarkup(root){
 function dayTaskOverviewSegments(stat){
   const circumference=326.73,gap=stat.total>0?18:0;
   const segments=[
-    {value:stat.todo,id:"dashDayTodoArc"},
+    {value:stat.primary,id:"dashDayPrimaryArc"},
     {value:stat.done,id:"dashDayDoneArc"}
   ].filter(function(segment){return segment.value>0});
   if(!stat.total||!segments.length)return[];
@@ -432,7 +450,7 @@ function dayTaskOverviewSegments(stat){
   })
 }
 function updateDayTaskOverviewRing(stat){
-  const ring=document.getElementById("dashDayStatRing"),arcs=["dashDayTodoArc","dashDayDoneArc"];
+  const ring=document.getElementById("dashDayStatRing"),arcs=["dashDayPrimaryArc","dashDayDoneArc"];
   if(ring)ring.classList.toggle("is-empty",!stat.total);
   arcs.forEach(function(id){
     const arc=document.getElementById(id);
@@ -452,8 +470,10 @@ function updateDayTaskOverviewRing(stat){
 function renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,selStr){
   const root=document.getElementById("taskDashCol");
   if(!root)return;
-  ensureDayTaskOverviewMarkup(root);
-  if(!parseDS(selStr))return;
+  ensureDayTaskOverviewMarkup(root,selStr);
+  syncDayTaskOverviewMode(selStr,root);
+  const base=parseDS(selStr);
+  if(!base)return;
   const pctEl=document.getElementById("dashProgPct");
   if(pctEl)pctEl.textContent=pct+"%";
   const C=2*Math.PI*52;
@@ -466,10 +486,10 @@ function renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,selStr){
   if(dEl)dEl.textContent=String(doneForProg);
   if(tEl)tEl.textContent=String(totalForProg);
   const listedTasks=Array.isArray(nonArchived)?nonArchived:[];
-  const todoCount=Math.max(0,totalForProg-doneForProg);
-  const todoEl=document.getElementById("dashDayTodo");
-  if(todoEl)todoEl.textContent=String(todoCount);
-  updateDayTaskOverviewRing({total:Math.max(0,totalForProg),done:Math.max(0,doneForProg),todo:todoCount});
+  const primaryCount=Math.max(0,totalForProg-doneForProg);
+  const primaryEl=document.getElementById("dashDayPrimaryCount");
+  if(primaryEl)primaryEl.textContent=String(primaryCount);
+  updateDayTaskOverviewRing({total:Math.max(0,totalForProg),done:Math.max(0,doneForProg),primary:primaryCount});
   const hiP=listedTasks.filter(function(task){return task.priority==="high"}),hiCol=typeof priorityColors!=="undefined"&&priorityColors.high||"#ef4444",hiN=hiP.length,hiDone=hiP.filter(function(task){return task.done}).length;
   const elHi=document.getElementById("dashOvHiCnt");
   if(elHi)elHi.textContent=String(hiN);
@@ -1099,8 +1119,9 @@ root.setAttribute("aria-label","\u903e\u671f\u4efb\u52a1\u6982\u89c8");
 return
 }
 root.classList.remove("is-week-action","is-overdue-action");
-const card=ensureDayTaskOverviewMarkup(root);
+const card=ensureDayTaskOverviewMarkup(root,sel);
 if(!card)return;
+syncDayTaskOverviewMode(sel,root);
 const title=scope==="inbox"?"\u6536\u4ef6\u7bb1\u6982\u89c8":getTaskDayOverviewTitle();
 const titleEl=card.querySelector(".dash-hd-tit");
 if(titleEl)titleEl.textContent=title;
