@@ -627,6 +627,7 @@
 }
 
 #taskMode .task-dash-col.is-week-action .week-stat-label {
+  font-size: 13px;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -872,13 +873,25 @@
 }
 
 /* Today rail summary card */
+#taskMode .task-dash-col {
+  --dash-rail-title-color: #666666;
+  --dash-rail-title-size: 14px;
+  --dash-rail-title-weight: 650;
+}
+
+#taskMode .task-dash-col .dash-drag-handle,
+#taskMode .task-dash-col .dash-hd-ico,
+#taskMode .task-dash-col .dash-focus-set-ico {
+  display: none;
+}
+
 #taskMode .task-dash-col .dash-overview--day-stat {
   --day-card-padding: 20px;
   --day-card-radius: 14px;
   --day-card-shadow: 0 8px 24px rgba(0, 0, 0, .04);
-  --day-card-title-color: #666666;
-  --day-card-title-size: 14px;
-  --day-card-title-weight: 650;
+  --day-card-title-color: var(--dash-rail-title-color);
+  --day-card-title-size: var(--dash-rail-title-size);
+  --day-card-title-weight: var(--dash-rail-title-weight);
   --day-stat-done: #48d486;
   --day-stat-overdue: #ff626d;
   --day-stat-todo: #619cff;
@@ -919,6 +932,38 @@
   line-height: 1.2;
   font-weight: var(--day-card-title-weight);
   letter-spacing: 0;
+}
+
+#taskMode .task-dash-col .dash-hd-tit,
+#taskMode .task-dash-col .dash-focus-top .dash-hd-tit {
+  color: var(--dash-rail-title-color);
+  font-size: var(--dash-rail-title-size);
+  line-height: 1.2;
+  font-weight: var(--dash-rail-title-weight);
+  letter-spacing: 0;
+}
+
+#taskMode .task-dash-col .dash-hd,
+#taskMode .task-dash-col .dash-focus-top {
+  gap: 0;
+  margin-bottom: 16px;
+}
+
+#taskMode .task-dash-col .dash-focus-top {
+  justify-content: space-between;
+}
+
+#taskMode .task-dash-col .dash-focus-top-l {
+  gap: 0;
+}
+
+#taskMode .task-dash-col .dash-focus-set {
+  gap: 0;
+  padding: 0;
+}
+
+#taskMode .task-dash-col .dash-focus-set-txt {
+  min-width: auto;
 }
 
 #taskMode .task-dash-col .dash-day-stat-body {
@@ -1049,6 +1094,7 @@
 }
 
 #taskMode .task-dash-col .dash-day-stat-label {
+  font-size: 13px;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
