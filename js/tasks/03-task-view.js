@@ -383,14 +383,77 @@ return`<div class="task-item${t.done&&subAllDone?" done":""}${t.done?" task-main
 }
 
 function initTaskDashReorder(){var root=document.getElementById("taskDashCol");if(!root||root._dashReorderInit)return;root._dashReorderInit=1;function saveOrd(){var ids=[];root.querySelectorAll(".dash-card[data-dash-id]").forEach(function(c){ids.push(c.getAttribute("data-dash-id"))});try{localStorage.setItem("tuole_dash_order",JSON.stringify(ids))}catch(e){}}function applyOrd(){var cards=[].slice.call(root.querySelectorAll(".dash-card[data-dash-id]"));if(!cards.length)return;var map={};cards.forEach(function(c){map[c.getAttribute("data-dash-id")]=c});var def=cards.map(function(c){return c.getAttribute("data-dash-id")});var order;try{order=JSON.parse(localStorage.getItem("tuole_dash_order")||"null")}catch(e){order=null}if(!Array.isArray(order)||!order.length)return;var seen=new Set,merged=[];order.forEach(function(id){if(map[id]&&!seen.has(id)){seen.add(id);merged.push(id)}});def.forEach(function(id){if(!seen.has(id)){seen.add(id);merged.push(id)}});merged.forEach(function(id){var el=map[id];if(el)root.appendChild(el)})}applyOrd();var allowD=0,dragId=null;root.addEventListener("mousedown",function(e){allowD=e.target.closest(".dash-drag-handle")?1:0});root.addEventListener("mouseup",function(){allowD=0});[].forEach.call(root.querySelectorAll(".dash-card[data-dash-id]"),function(card){card.setAttribute("draggable","true");card.addEventListener("dragstart",function(e){if(!allowD){e.preventDefault();return}allowD=0;dragId=card.getAttribute("data-dash-id");e.dataTransfer.effectAllowed="move";e.dataTransfer.setData("text/plain",dragId);card.classList.add("dash-dragging")});card.addEventListener("dragend",function(){card.classList.remove("dash-dragging");[].forEach.call(root.querySelectorAll(".dash-card.drag-dash-over"),function(c){c.classList.remove("drag-dash-over")});dragId=null});card.addEventListener("dragover",function(e){e.preventDefault();if(!dragId||dragId===card.getAttribute("data-dash-id"))return;e.dataTransfer.dropEffect="move";[].forEach.call(root.querySelectorAll(".dash-card.drag-dash-over"),function(c){c.classList.remove("drag-dash-over")});card.classList.add("drag-dash-over")});card.addEventListener("dragleave",function(e){if(!card.contains(e.relatedTarget))card.classList.remove("drag-dash-over")});card.addEventListener("drop",function(e){e.preventDefault();card.classList.remove("drag-dash-over");var fromId=e.dataTransfer.getData("text/plain"),toId=card.getAttribute("data-dash-id");if(!fromId||fromId===toId)return;var fromEl=root.querySelector('.dash-card[data-dash-id="'+fromId+'"]');if(!fromEl)return;var rect=card.getBoundingClientRect(),before=e.clientY<rect.top+rect.height/2;if(before)root.insertBefore(fromEl,card);else root.insertBefore(fromEl,card.nextSibling);saveOrd()})})}
+function getTaskDayOverviewTitle(ds){
+  const currentDs=typeof ds==="string"&&ds?ds:typeof sel==="string"&&sel?sel:(typeof todayKey==="function"?todayKey():fd(new Date())),todayDs=typeof todayKey==="function"?todayKey():fd(new Date()),tomorrowDate=parseDS(todayDs);
+  tomorrowDate.setDate(tomorrowDate.getDate()+1);
+  if(currentDs===todayDs)return"\u4eca\u5929\u6982\u89c8";
+  if(currentDs===fd(tomorrowDate))return"\u660e\u5929\u6982\u89c8";
+  return"\u5f53\u65e5\u6982\u89c8"
+}
+function ensureDayTaskOverviewMarkup(root){
+  const title=getTaskDayOverviewTitle();
+  const card=root&&root.querySelector(".dash-overview");
+  if(!card||card.dataset.dayOverviewVersion==="3")return card;
+  card.dataset.dayOverviewVersion="3";
+  card.classList.add("dash-overview--day-stat");
+  card.setAttribute("role","region");
+  card.setAttribute("aria-label",title);
+  card.innerHTML=
+    '<div class="dash-hd dash-day-stat-head"><span class="dash-hd-tit">'+title+'</span></div>'+
+    '<div class="dash-day-stat-body">'+
+      '<div class="dash-day-stat-ring is-empty" id="dashDayStatRing">'+
+        '<svg class="dash-day-stat-ring-svg" viewBox="0 0 120 120" aria-hidden="true">'+
+          '<circle class="dash-day-stat-ring-track" cx="60" cy="60" r="52"></circle>'+
+          '<circle id="dashDayTodoArc" class="dash-day-stat-ring-arc dash-day-stat-ring-arc--todo" cx="60" cy="60" r="52" pathLength="326.73"></circle>'+
+          '<circle id="dashDayDoneArc" class="dash-day-stat-ring-arc dash-day-stat-ring-arc--done" cx="60" cy="60" r="52" pathLength="326.73"></circle>'+
+        '</svg>'+
+        '<div class="dash-day-stat-center"><strong id="dashTotal">0</strong><span>\u603b\u4efb\u52a1</span></div>'+
+      '</div>'+
+      '<div class="dash-day-stat-legend">'+
+        '<div class="dash-day-stat-row dash-day-stat-row--todo"><span class="dash-day-stat-dot" aria-hidden="true"></span><span class="dash-day-stat-label">\u5f85\u529e</span><strong id="dashDayTodo">0</strong></div>'+
+        '<div class="dash-day-stat-row dash-day-stat-row--done"><span class="dash-day-stat-dot" aria-hidden="true"></span><span class="dash-day-stat-label">\u5df2\u5b8c\u6210</span><strong id="dashDone">0</strong></div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="dash-day-stat-progress" aria-hidden="true"><span id="dashProgPct">0%</span><span class="dash-day-stat-progress-line"><span id="dashMainBar"></span></span></div>';
+  return card
+}
+function dayTaskOverviewSegments(stat){
+  const circumference=326.73,gap=stat.total>0?18:0;
+  const segments=[
+    {value:stat.todo,id:"dashDayTodoArc"},
+    {value:stat.done,id:"dashDayDoneArc"}
+  ].filter(function(segment){return segment.value>0});
+  if(!stat.total||!segments.length)return[];
+  let cursor=0;
+  return segments.map(function(segment){
+    const raw=segment.value/stat.total*circumference,start=cursor+(segments.length>1?gap/2:0);
+    cursor+=raw;
+    return {id:segment.id,length:Math.max(3,raw-(segments.length>1?gap:0)),offset:-start}
+  })
+}
+function updateDayTaskOverviewRing(stat){
+  const ring=document.getElementById("dashDayStatRing"),arcs=["dashDayTodoArc","dashDayDoneArc"];
+  if(ring)ring.classList.toggle("is-empty",!stat.total);
+  arcs.forEach(function(id){
+    const arc=document.getElementById(id);
+    if(!arc)return;
+    arc.style.opacity="0";
+    arc.setAttribute("stroke-dasharray","0 326.73");
+    arc.setAttribute("stroke-dashoffset","0")
+  });
+  dayTaskOverviewSegments(stat).forEach(function(segment){
+    const arc=document.getElementById(segment.id);
+    if(!arc)return;
+    arc.style.opacity="1";
+    arc.setAttribute("stroke-dasharray",segment.length.toFixed(2)+" 326.73");
+    arc.setAttribute("stroke-dashoffset",segment.offset.toFixed(2))
+  })
+}
 function renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,selStr){
   const root=document.getElementById("taskDashCol");
   if(!root)return;
-  const base=parseDS(selStr);
-  if(!base)return;
-  const shortDate=(base.getMonth()+1)+"\u6708"+base.getDate()+"\u65e5";
-  const sdEl=document.getElementById("dashShortDate");
-  if(sdEl)sdEl.textContent=shortDate;
+  ensureDayTaskOverviewMarkup(root);
+  if(!parseDS(selStr))return;
   const pctEl=document.getElementById("dashProgPct");
   if(pctEl)pctEl.textContent=pct+"%";
   const C=2*Math.PI*52;
@@ -403,6 +466,10 @@ function renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,selStr){
   if(dEl)dEl.textContent=String(doneForProg);
   if(tEl)tEl.textContent=String(totalForProg);
   const listedTasks=Array.isArray(nonArchived)?nonArchived:[];
+  const todoCount=Math.max(0,totalForProg-doneForProg);
+  const todoEl=document.getElementById("dashDayTodo");
+  if(todoEl)todoEl.textContent=String(todoCount);
+  updateDayTaskOverviewRing({total:Math.max(0,totalForProg),done:Math.max(0,doneForProg),todo:todoCount});
   const hiP=listedTasks.filter(function(task){return task.priority==="high"}),hiCol=typeof priorityColors!=="undefined"&&priorityColors.high||"#ef4444",hiN=hiP.length,hiDone=hiP.filter(function(task){return task.done}).length;
   const elHi=document.getElementById("dashOvHiCnt");
   if(elHi)elHi.textContent=String(hiN);
@@ -911,7 +978,7 @@ renderTaskDash=function(pct,totalForProg,doneForProg,nonArchived,fl,selStr){
     return
   }
   root.classList.remove("is-week-action","is-overdue-action");
-  root.setAttribute("aria-label","\u4eca\u65e5\u6982\u89c8");
+  root.setAttribute("aria-label",getTaskDayOverviewTitle(selStr));
   return renderTaskDashLegacy(pct,totalForProg,doneForProg,nonArchived,fl,selStr)
 };
 var _ftInited=false,_ftIv=null,_ftO=null;
@@ -1015,7 +1082,31 @@ function getTaskWeekRangeText(meta){
 function getTaskWeekOffset(ds){const targetStart=getTaskWeekMeta(ds).start,baseStart=getTaskWeekMeta(fd(now)).start,targetDate=new Date(targetStart.getFullYear(),targetStart.getMonth(),targetStart.getDate()),baseDate=new Date(baseStart.getFullYear(),baseStart.getMonth(),baseStart.getDate());return Math.round((targetDate-baseDate)/604800000)}
 function getCnWeekNum(n){const d=["\u96f6","\u4e00","\u4e8c","\u4e09","\u56db","\u4e94","\u516d","\u4e03","\u516b","\u4e5d"],v=Math.max(0,Math.floor(Number(n)||0));if(v<10)return d[v];if(v===10)return"\u5341";if(v<20)return"\u5341"+d[v%10];const t=Math.floor(v/10),u=v%10;return d[t]+"\u5341"+(u?d[u]:"")}
 function getTaskWeekScopeTitle(ds){const off=getTaskWeekOffset(ds);if(off===0)return"\u672c\u5468";if(off===1)return"\u4e0b\u5468";if(off===-1)return"\u4e0a\u5468";if(off>1)return"\u7b2c"+getCnWeekNum(off+1)+"\u5468";return"\u524d"+getCnWeekNum(-off+1)+"\u5468"}
-function setTaskDashScope(scope,metaText){const titleEl=document.querySelector(".dash-overview .dash-hd-tit"),subEl=document.querySelector(".dash-overview .dash-ov-count-sub"),shortEl=document.getElementById("dashShortDate"),root=document.getElementById("taskDashCol");if(scope==="week"){if(titleEl)titleEl.textContent="\u672c\u5468\u603b\u89c8";if(subEl)subEl.textContent="\u5468\u4efb\u52a1\u5df2\u5b8c\u6210";if(shortEl&&metaText)shortEl.textContent=metaText;if(root)root.setAttribute("aria-label","\u672c\u5468\u6982\u89c8");return}if(scope==="overdue"){if(titleEl)titleEl.textContent="\u903e\u671f\u603b\u89c8";if(subEl)subEl.textContent="\u5386\u53f2\u672a\u5b8c\u6210\u4efb\u52a1";if(shortEl)shortEl.textContent=metaText||"\u5386\u53f2";if(root)root.setAttribute("aria-label","\u903e\u671f\u6982\u89c8");return}if(scope==="inbox"){if(titleEl)titleEl.textContent="\u6536\u4ef6\u7bb1\u6982\u89c8";if(subEl)subEl.textContent="\u4eca\u65e5\u672a\u5b89\u6392\u4efb\u52a1";if(shortEl)shortEl.textContent=metaText||"\u672a\u5b89\u6392";if(root)root.setAttribute("aria-label","\u6536\u4ef6\u7bb1\u6982\u89c8");return}if(titleEl)titleEl.textContent="\u4eca\u65e5\u603b\u89c8";if(subEl)subEl.textContent="\u4efb\u52a1\u5df2\u5b8c\u6210";if(root)root.setAttribute("aria-label","\u4eca\u65e5\u6982\u89c8")}
+function setTaskDashScope(scope,metaText){const titleEl=document.querySelector(".dash-overview .dash-hd-tit"),subEl=document.querySelector(".dash-overview .dash-ov-count-sub"),root=document.getElementById("taskDashCol");if(scope==="week"){if(titleEl)titleEl.textContent="\u672c\u5468\u603b\u89c8";if(subEl)subEl.textContent="\u5468\u4efb\u52a1\u5df2\u5b8c\u6210";if(root)root.setAttribute("aria-label","\u672c\u5468\u6982\u89c8");return}if(scope==="overdue"){if(titleEl)titleEl.textContent="\u903e\u671f\u603b\u89c8";if(subEl)subEl.textContent="\u5386\u53f2\u672a\u5b8c\u6210\u4efb\u52a1";if(root)root.setAttribute("aria-label","\u903e\u671f\u6982\u89c8");return}if(scope==="inbox"){if(titleEl)titleEl.textContent="\u6536\u4ef6\u7bb1\u6982\u89c8";if(subEl)subEl.textContent="\u4eca\u65e5\u672a\u5b89\u6392\u4efb\u52a1";if(root)root.setAttribute("aria-label","\u6536\u4ef6\u7bb1\u6982\u89c8");return}const dayTitle=getTaskDayOverviewTitle();if(titleEl)titleEl.textContent=dayTitle;if(subEl)subEl.textContent="\u4efb\u52a1\u5df2\u5b8c\u6210";if(root)root.setAttribute("aria-label",dayTitle)}
+function primeTaskDashScope(scope){
+const root=document.getElementById("taskDashCol");
+if(!root)return;
+if(scope==="week"){
+root.classList.remove("is-overdue-action");
+root.classList.add("is-week-action");
+root.setAttribute("aria-label","\u672c\u5468\u4efb\u52a1\u6982\u89c8");
+return
+}
+if(scope==="overdue"){
+root.classList.remove("is-week-action");
+root.classList.add("is-overdue-action");
+root.setAttribute("aria-label","\u903e\u671f\u4efb\u52a1\u6982\u89c8");
+return
+}
+root.classList.remove("is-week-action","is-overdue-action");
+const card=ensureDayTaskOverviewMarkup(root);
+if(!card)return;
+const title=scope==="inbox"?"\u6536\u4ef6\u7bb1\u6982\u89c8":getTaskDayOverviewTitle();
+const titleEl=card.querySelector(".dash-hd-tit");
+if(titleEl)titleEl.textContent=title;
+card.setAttribute("aria-label",title);
+root.setAttribute("aria-label",title)
+}
 const weekDayExpandState=new Set();
 const weekDoneDayRevealState=new Set();
 const weekTaskTogglePendingIds=new Set();
@@ -1768,6 +1859,7 @@ function rT(){
   const list=document.getElementById("tList");
   if(!list)return;
   const quickMode=getTaskQuickMode(),weekMode=quickMode==="week",overdueMode=quickMode==="overdue",inboxMode=quickMode==="inbox-view";
+  primeTaskDashScope(weekMode?"week":overdueMode?"overdue":inboxMode?"inbox":"day");
   if(weekMode){
     const wm=getTaskWeekMeta(sel);
     wm.days.forEach(function(ds){generateRecurring(ds)})

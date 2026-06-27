@@ -570,6 +570,12 @@
     if (typeof taskMoreMenuId !== "undefined") taskMoreMenuId = null;
   }
 
+  function rerenderTaskSceneImmediately() {
+    if (typeof rCal === "function") rCal();
+    if (typeof rAll === "function") rAll();
+    else if (typeof rT === "function") rT();
+  }
+
   function selectDate(ds, quickName) {
     if (typeof flushPendingTogIfAny === "function") flushPendingTogIfAny();
     if (typeof window.markTaskTitleNoMotion === "function") window.markTaskTitleNoMotion();
@@ -579,12 +585,10 @@
     cM = d.getMonth();
     FMulti = new Set(["pending"]);
     resetTaskOverlays();
-    setQuickModeValue(quickName || "");
+    setQuickModeValue(quickName === "today" ? "" : quickName || "");
     persistState();
-    if (typeof navigate === "function") navigate("/");
-    if (typeof rCal === "function") rCal();
-    if (typeof rAll === "function") rAll();
-    else if (typeof rT === "function") rT();
+    syncNavUi();
+    rerenderTaskSceneImmediately();
     scheduleRefresh();
   }
 
@@ -604,10 +608,8 @@
     resetTaskOverlays();
     setQuickModeValue(INBOX_MODE);
     persistState();
-    if (typeof navigate === "function") navigate("/");
-    if (typeof rCal === "function") rCal();
-    if (typeof rAll === "function") rAll();
-    else if (typeof rT === "function") rT();
+    syncNavUi();
+    rerenderTaskSceneImmediately();
     scheduleRefresh();
   }
 
@@ -635,6 +637,7 @@
       FMulti = new Set([key]);
       if (typeof rT === "function") rT();
     }
+    syncNavUi();
     scheduleRefresh();
   }
 
@@ -656,6 +659,7 @@
     }
     if (typeof rFilterBar === "function") rFilterBar();
     if (typeof rT === "function") rT();
+    syncNavUi();
     scheduleRefresh();
   }
 
@@ -722,16 +726,17 @@
     }, msUntilNextDayBoundary());
   }
 
+  function syncNavUi() {
+    renderSideNav();
+    renderTaskListSupport();
+  }
+
   function scheduleRefresh() {
     if (gsnRefreshTimer) clearTimeout(gsnRefreshTimer);
     gsnRefreshTimer = setTimeout(function () {
       gsnRefreshTimer = null;
-      if (syncQuickModeForCurrentData()) {
-        rerenderTaskSceneForNavState();
-        return;
-      }
-      renderSideNav();
-      renderTaskListSupport();
+      if (syncQuickModeForCurrentData()) rerenderTaskSceneForNavState();
+      syncNavUi();
     }, 0);
   }
 
