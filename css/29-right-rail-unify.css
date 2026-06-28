@@ -1121,8 +1121,8 @@
   display: flex;
   min-height: 202px;
   flex-direction: column;
-  gap: 14px;
-  padding: 18px 20px 16px;
+  gap: 16px;
+  padding: 20px;
   border: 0;
   border-radius: 14px;
   background: var(--card);
@@ -1140,10 +1140,10 @@
 
 #taskMode .task-dash-col .dash-focus-summary__head {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  min-height: 0;
+  gap: 10px;
+  min-height: 22px;
 }
 
 #taskMode .task-dash-col .dash-focus-summary__metric {
@@ -1160,31 +1160,31 @@
 
 #taskMode .task-dash-col .dash-focus-summary__metric-main {
   display: flex;
-  align-items: flex-end;
+  align-items: baseline;
   justify-content: flex-end;
-  gap: 6px;
+  gap: 4px;
   min-width: 0;
 }
 
 #taskMode .task-dash-col .dash-focus-summary__metric-main strong {
   color: var(--text);
-  font-family: "DIN Alternate", "DIN 2014", "Bahnschrift", "Inter", "SF Pro Display", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  font-size: 2rem;
-  line-height: .88;
-  font-weight: 720;
+  font-family: "DIN Alternate", "DIN 2014", "Bahnschrift", "Inter", "Roboto", "Segoe UI", sans-serif;
+  font-size: 27px;
+  line-height: 1;
+  font-weight: 400;
   letter-spacing: 0;
   font-style: normal;
-  font-variant-numeric: lining-nums tabular-nums;
-  font-feature-settings: "lnum" 1, "tnum" 1;
+  font-variant-numeric: tabular-nums;
 }
 
 #taskMode .task-dash-col .dash-focus-summary__metric-main span {
-  align-self: flex-end;
-  margin-bottom: 2px;
+  align-self: auto;
+  margin-bottom: 0;
   color: var(--text2);
+  font-family: "DIN Alternate", "DIN 2014", "Bahnschrift", "Inter", "Roboto", "Segoe UI", sans-serif;
   font-size: 12px;
   line-height: 1;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: 0;
 }
 
@@ -1237,7 +1237,7 @@
   color: var(--text3);
   font-size: 12px;
   line-height: 1;
-  font-weight: 600;
+  font-weight: 400;
   letter-spacing: 0;
 }
 

@@ -545,9 +545,9 @@ function focusTimerSummaryDisplay(minutes){
   const safe=Math.max(0,parseInt(minutes,10)||0);
   if(safe>=60){
     const hours=Math.round(safe/6)/10;
-    return{value:String(hours).replace(/\.0$/,""),unit:"\u5c0f\u65f6",aria:String(hours).replace(/\.0$/,"")+" \u5c0f\u65f6"}
+    return{value:String(hours).replace(/\.0$/,""),unit:"h",aria:String(hours).replace(/\.0$/,"")+" \u5c0f\u65f6"}
   }
-  return{value:String(safe),unit:"\u5206\u949f",aria:safe+" \u5206\u949f"}
+  return{value:String(safe),unit:"m",aria:safe+" \u5206\u949f"}
 }
 function focusTimerSummarySmoothHours(hours){
   return hours.map(function(value,idx){
