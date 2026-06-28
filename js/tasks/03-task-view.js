@@ -489,9 +489,11 @@ function ensureTaskDayFocusSummaryCard(root){
       '</div>'+
       '<div class="dash-focus-summary__chart" aria-hidden="true">'+
         '<svg class="dash-focus-summary__svg" id="dashFocusSummarySvg" viewBox="0 0 268 92" preserveAspectRatio="none"></svg>'+
-      '</div>'+
-      '<div class="dash-focus-summary__axis" aria-hidden="true"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>';
+        '<div class="dash-focus-summary__axis" aria-hidden="true"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>'+
+      '</div>';
   }
+  const chart=card.querySelector(".dash-focus-summary__chart"),axis=card.querySelector(".dash-focus-summary__axis");
+  if(chart&&axis&&axis.parentElement!==chart)chart.appendChild(axis);
   if(focusCard.previousElementSibling!==card)root.insertBefore(card,focusCard);
   card.classList.toggle("is-hidden",!isTaskDayDashScope(root));
   return card

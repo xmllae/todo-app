@@ -877,6 +877,7 @@
   --dash-rail-title-color: #666666;
   --dash-rail-title-size: 14px;
   --dash-rail-title-weight: 650;
+  --focus-rail-card-height: 179px;
 }
 
 #taskMode .task-dash-col .dash-drag-handle,
@@ -1119,14 +1120,20 @@
   --focus-summary-accent: #35c97b;
   --focus-summary-accent-soft: rgba(53, 201, 123, .16);
   display: flex;
-  min-height: 202px;
+  min-height: var(--focus-rail-card-height);
+  height: var(--focus-rail-card-height);
   flex-direction: column;
-  gap: 16px;
+  gap: 0;
   padding: 20px;
   border: 0;
   border-radius: 14px;
   background: var(--card);
   box-shadow: 0 8px 24px rgba(0, 0, 0, .04);
+}
+
+#taskMode .task-dash-col.is-week-action .week-focus-card {
+  min-height: var(--focus-rail-card-height);
+  height: var(--focus-rail-card-height);
 }
 
 #taskMode .task-dash-col .dash-focus-summary.is-hidden,
@@ -1144,6 +1151,7 @@
   justify-content: space-between;
   gap: 10px;
   min-height: 22px;
+  margin-bottom: 16px;
 }
 
 #taskMode .task-dash-col .dash-focus-summary__metric {
@@ -1195,8 +1203,9 @@
 #taskMode .task-dash-col .dash-focus-summary__chart {
   position: relative;
   min-height: 94px;
-  padding-top: 4px;
-  flex: 1 1 auto;
+  height: 94px;
+  padding-top: 0;
+  flex: 0 0 auto;
 }
 
 #taskMode .task-dash-col .dash-focus-summary__svg {
@@ -1234,11 +1243,17 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin-top: 0;
   color: var(--text3);
   font-size: 12px;
   line-height: 1;
   font-weight: 400;
   letter-spacing: 0;
+  pointer-events: none;
 }
 
 .dark #taskMode .task-dash-col .dash-focus-summary {
@@ -1274,6 +1289,10 @@
 }
 
 @media (max-width: 760px) {
+  #taskMode .task-dash-col {
+    --focus-rail-card-height: 171px;
+  }
+
   #taskMode .task-dash-col .dash-overview--day-stat {
     --day-card-padding: 16px;
   }
