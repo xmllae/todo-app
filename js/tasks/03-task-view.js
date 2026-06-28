@@ -467,11 +467,138 @@ function updateDayTaskOverviewRing(stat){
     arc.setAttribute("stroke-dashoffset",segment.offset.toFixed(2))
   })
 }
+function isTaskDayDashScope(root){
+  return!!root&&!root.classList.contains("is-week-action")&&!root.classList.contains("is-overdue-action")&&!root.classList.contains("is-priority-action")&&!root.classList.contains("is-repeat-action")&&!root.classList.contains("is-frozen-action")
+}
+function ensureTaskDayFocusSummaryCard(root){
+  if(!root)return null;
+  const focusCard=root.querySelector("#dashFocusCard");
+  if(!focusCard)return null;
+  let card=root.querySelector("#dashFocusSummaryCard");
+  if(!card){
+    card=document.createElement("section");
+    card.className="dash-card dash-focus-summary";
+    card.id="dashFocusSummaryCard";
+    card.setAttribute("aria-label","\u4e13\u6ce8\u65f6\u957f");
+    card.innerHTML=
+      '<div class="dash-focus-summary__head">'+
+        '<span class="dash-hd-tit">\u4e13\u6ce8\u65f6\u957f</span>'+
+        '<div class="dash-focus-summary__metric">'+
+          '<div class="dash-focus-summary__metric-main"><strong id="dashFocusSummaryValue">0</strong><span id="dashFocusSummaryUnit">\u5206\u949f</span></div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="dash-focus-summary__chart" aria-hidden="true">'+
+        '<svg class="dash-focus-summary__svg" id="dashFocusSummarySvg" viewBox="0 0 268 92" preserveAspectRatio="none"></svg>'+
+      '</div>'+
+      '<div class="dash-focus-summary__axis" aria-hidden="true"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>';
+  }
+  if(focusCard.previousElementSibling!==card)root.insertBefore(card,focusCard);
+  card.classList.toggle("is-hidden",!isTaskDayDashScope(root));
+  return card
+}
+function focusTimerSummaryState(){
+  if(_ftO)return _ftO;
+  try{
+    const raw=localStorage.getItem("tuole_focus_v2");
+    if(!raw)return focusTimerDefaults();
+    const parsed=JSON.parse(raw);
+    return parsed&&typeof parsed==="object"?parsed:focusTimerDefaults()
+  }catch(e){
+    return focusTimerDefaults()
+  }
+}
+function focusTimerSummaryDayMinutes(ds,state){
+  const rec=state&&state.byDay&&state.byDay[ds];
+  const minutes=rec?parseInt(rec.m,10):0;
+  return Number.isFinite(minutes)&&minutes>0?Math.min(1440,minutes):0
+}
+function focusTimerSummaryHourWeights(){
+  return[0,0,0,0,0,0.15,0.28,0.48,0.8,1.08,1.34,1.58,1.92,2.2,2.04,1.76,1.48,1.26,1.14,1.3,1.48,1.12,0.7,0.34]
+}
+function focusTimerSummaryRebuildHours(totalMinutes){
+  const safe=Math.max(0,parseInt(totalMinutes,10)||0),weights=focusTimerSummaryHourWeights(),sum=weights.reduce(function(acc,item){return acc+item},0);
+  if(!safe||!sum)return new Array(24).fill(0);
+  let remain=safe;
+  return weights.map(function(weight,idx){
+    if(idx===weights.length-1)return remain;
+    const value=Math.max(0,Math.round(safe*weight/sum));
+    remain=Math.max(0,remain-value);
+    return value
+  })
+}
+function focusTimerSummaryDayHours(ds,state){
+  const slots=state&&state.byHour&&state.byHour[ds],hours=new Array(24).fill(0);
+  let hasLogged=false;
+  if(slots&&typeof slots==="object"){
+    Object.keys(slots).forEach(function(key){
+      const hour=Math.max(0,Math.min(23,parseInt(key,10)||0)),minutes=Math.max(0,parseFloat(slots[key])||0);
+      if(minutes>0){
+        hours[hour]+=minutes;
+        hasLogged=true
+      }
+    })
+  }
+  if(hasLogged)return hours;
+  return focusTimerSummaryRebuildHours(focusTimerSummaryDayMinutes(ds,state))
+}
+function focusTimerSummaryDisplay(minutes){
+  const safe=Math.max(0,parseInt(minutes,10)||0);
+  if(safe>=60){
+    const hours=Math.round(safe/6)/10;
+    return{value:String(hours).replace(/\.0$/,""),unit:"\u5c0f\u65f6",aria:String(hours).replace(/\.0$/,"")+" \u5c0f\u65f6"}
+  }
+  return{value:String(safe),unit:"\u5206\u949f",aria:safe+" \u5206\u949f"}
+}
+function focusTimerSummarySmoothHours(hours){
+  return hours.map(function(value,idx){
+    const prev=hours[idx-1]||0,next=hours[idx+1]||0;
+    return idx===0||idx===hours.length-1?(value+next+prev)/Math.max(1,(idx===0||idx===hours.length-1)?2:3):(prev+value*2+next)/4
+  })
+}
+function focusTimerSummaryCurve(points){
+  if(!points.length)return"";
+  let path="M "+points[0].x.toFixed(2)+" "+points[0].y.toFixed(2);
+  for(let i=0;i<points.length-1;i++){
+    const p0=points[i-1]||points[i],p1=points[i],p2=points[i+1],p3=points[i+2]||p2;
+    const cp1x=p1.x+(p2.x-p0.x)/6,cp1y=p1.y+(p2.y-p0.y)/6,cp2x=p2.x-(p3.x-p1.x)/6,cp2y=p2.y-(p3.y-p1.y)/6;
+    path+=" C "+cp1x.toFixed(2)+" "+cp1y.toFixed(2)+" "+cp2x.toFixed(2)+" "+cp2y.toFixed(2)+" "+p2.x.toFixed(2)+" "+p2.y.toFixed(2)
+  }
+  return path
+}
+function focusTimerSummaryChartMarkup(ds,state){
+  const width=268,height=92,padX=10,padTop=10,padBottom=18,baseY=height-padBottom,series=focusTimerSummarySmoothHours(focusTimerSummaryDayHours(ds,state)),maxValue=Math.max.apply(null,series.concat([0]));
+  if(maxValue<=0)return'<line class="dash-focus-summary__baseline" x1="'+padX+'" y1="'+baseY+'" x2="'+(width-padX)+'" y2="'+baseY+'"></line>';
+  const innerWidth=width-padX*2,innerHeight=height-padTop-padBottom,points=series.map(function(value,idx){
+    const x=padX+innerWidth*(idx/23),y=baseY-innerHeight*(value/maxValue);
+    return{x:x,y:y}
+  });
+  const linePath=focusTimerSummaryCurve(points),areaPath=linePath+" L "+points[points.length-1].x.toFixed(2)+" "+baseY.toFixed(2)+" L "+points[0].x.toFixed(2)+" "+baseY.toFixed(2)+" Z",lastPoint=points[points.length-1];
+  return'<line class="dash-focus-summary__baseline" x1="'+padX+'" y1="'+baseY+'" x2="'+(width-padX)+'" y2="'+baseY+'"></line>'+
+    '<path class="dash-focus-summary__area" d="'+areaPath+'"></path>'+
+    '<path class="dash-focus-summary__line" d="'+linePath+'"></path>'+
+    '<circle class="dash-focus-summary__line-end" cx="'+lastPoint.x.toFixed(2)+'" cy="'+lastPoint.y.toFixed(2)+'" r="2.8"></circle>'
+}
+function focusTimerPaintSummaryCard(ds){
+  const root=document.getElementById("taskDashCol"),card=ensureTaskDayFocusSummaryCard(root);
+  if(!card)return;
+  if(!isTaskDayDashScope(root)){
+    card.classList.add("is-hidden");
+    return
+  }
+  const targetDs=typeof ds==="string"&&ds?ds:typeof sel==="string"&&sel?sel:fd(new Date()),state=focusTimerSummaryState(),minutes=focusTimerSummaryDayMinutes(targetDs,state),display=focusTimerSummaryDisplay(minutes),valueEl=document.getElementById("dashFocusSummaryValue"),unitEl=document.getElementById("dashFocusSummaryUnit"),svg=document.getElementById("dashFocusSummarySvg");
+  card.classList.remove("is-hidden");
+  card.classList.toggle("is-zero",minutes<=0);
+  if(valueEl)valueEl.textContent=display.value;
+  if(unitEl)unitEl.textContent=display.unit;
+  if(svg)svg.innerHTML=focusTimerSummaryChartMarkup(targetDs,state);
+  card.setAttribute("aria-label","\u4e13\u6ce8\u65f6\u957f\uff0c"+display.aria)
+}
 function renderTaskDash(pct,totalForProg,doneForProg,nonArchived,fl,selStr){
   const root=document.getElementById("taskDashCol");
   if(!root)return;
   ensureDayTaskOverviewMarkup(root,selStr);
   syncDayTaskOverviewMode(selStr,root);
+  ensureTaskDayFocusSummaryCard(root);
   const base=parseDS(selStr);
   if(!base)return;
   const pctEl=document.getElementById("dashProgPct");
@@ -1003,8 +1130,8 @@ renderTaskDash=function(pct,totalForProg,doneForProg,nonArchived,fl,selStr){
 };
 var _ftInited=false,_ftIv=null,_ftO=null;
 function focusTimerYesterday(){var d=new Date(now.getFullYear(),now.getMonth(),now.getDate()-1);return fd(d)}
-function focusTimerDefaults(){return{F:25,S:5,L:15,mode:"focus",run:0,p:0,rem:1500,end:0,round:1,streak:0,lastDay:"",byDay:{},task:null}}
-function focusTimerLoad(){var o=focusTimerDefaults();try{var j=JSON.parse(localStorage.getItem("tuole_focus_v2")||"{}");if(+j.F>0)o.F=+j.F;if(+j.S>0)o.S=+j.S;if(+j.L>0)o.L=+j.L;if(["focus","short","long"].indexOf(j.mode)>=0)o.mode=j.mode;if(j.run)o.run=1;if(j.p)o.p=1;if(+j.rem>=0)o.rem=+j.rem;if(+j.end>0)o.end=+j.end;if(+j.round>=1&&+j.round<=4)o.round=+j.round;if(+j.streak>=0)o.streak=+j.streak;if(j.lastDay)o.lastDay=j.lastDay;if(j.byDay&&typeof j.byDay==="object")o.byDay=j.byDay;if(j.task&&j.task.d)o.task=j.task}catch(e){}_ftO=o;if(_ftO.run&&!_ftO.p&&_ftO.end)_ftO.rem=Math.max(0,Math.ceil((_ftO.end-Date.now())/1e3));if(!_ftO.rem)_ftO.rem=focusTimerTotalSec()}
+function focusTimerDefaults(){return{F:25,S:5,L:15,mode:"focus",run:0,p:0,rem:1500,end:0,round:1,streak:0,lastDay:"",byDay:{},byHour:{},task:null}}
+function focusTimerLoad(){var o=focusTimerDefaults();try{var j=JSON.parse(localStorage.getItem("tuole_focus_v2")||"{}");if(+j.F>0)o.F=+j.F;if(+j.S>0)o.S=+j.S;if(+j.L>0)o.L=+j.L;if(["focus","short","long"].indexOf(j.mode)>=0)o.mode=j.mode;if(j.run)o.run=1;if(j.p)o.p=1;if(+j.rem>=0)o.rem=+j.rem;if(+j.end>0)o.end=+j.end;if(+j.round>=1&&+j.round<=4)o.round=+j.round;if(+j.streak>=0)o.streak=+j.streak;if(j.lastDay)o.lastDay=j.lastDay;if(j.byDay&&typeof j.byDay==="object")o.byDay=j.byDay;if(j.byHour&&typeof j.byHour==="object")o.byHour=j.byHour;if(j.task&&j.task.d)o.task=j.task}catch(e){}_ftO=o;if(_ftO.run&&!_ftO.p&&_ftO.end)_ftO.rem=Math.max(0,Math.ceil((_ftO.end-Date.now())/1e3));if(!_ftO.rem)_ftO.rem=focusTimerTotalSec()}
 function focusTimerSave(){try{localStorage.setItem("tuole_focus_v2",JSON.stringify(_ftO))}catch(e){}}
 function focusTimerTotalSec(){var o=_ftO;return o.mode==="focus"?o.F*60:o.mode==="short"?o.S*60:o.L*60}
 function focusTimerSyncEnd(){if(!_ftO.run||_ftO.p||!_ftO.end)return;var x=Math.ceil((_ftO.end-Date.now())/1e3);if(x<0)x=0;_ftO.rem=x}
@@ -1015,8 +1142,8 @@ function focusTimerSyncTaskLabel(){var el=document.getElementById("ftTaskLabel")
 function focusTimerUpdateTabLabels(){var f=document.getElementById("ftLabF"),s=document.getElementById("ftLabS"),l=document.getElementById("ftLabL");if(f)f.textContent=String(_ftO.F);if(s)s.textContent=String(_ftO.S);if(l)l.textContent=String(_ftO.L)}
 function focusTimerUpdateTabs(){var m=_ftO.mode,f=document.getElementById("ftTabFocus"),a=document.getElementById("ftTabShort"),b=document.getElementById("ftTabLong");if(f)f.classList.toggle("active",m==="focus");if(a)a.classList.toggle("active",m==="short");if(b)b.classList.toggle("active",m==="long")}
 function focusTimerPaintDots(){var el=document.getElementById("ftDots"),dm=document.getElementById("ftDotsMeta");if(!el)return;var h="",o=_ftO;for(var i=1;i<=4;i++){var c="ft-dot";if(i<o.round)c+=" on";else if(i===o.round)c+=" on cur";h+='<div class="'+c+'"></div>'}el.innerHTML=h;if(dm)dm.textContent=o.mode==="focus"?"\u7b2c "+o.round+" \u4e2a":o.mode==="short"?"\u77ed\u4f11\u606f":"\u957f\u4f11\u606f"}
-function focusTimerPaint(){if(!_ftO)return;focusTimerUpdateTabLabels();focusTimerUpdateTabs();var o=_ftO,te=document.getElementById("ftTimeDisp"),st=document.getElementById("ftStatusDisp"),pb=document.getElementById("ftPlayBtn"),ring=document.getElementById("ftRingProg");if(!te||!ring)return;var mx=Math.floor(o.rem/60),sx=o.rem%60;te.textContent=(mx<10?"0":"")+mx+":"+(sx<10?"0":"")+sx;var lab=o.mode==="focus"?"\u4e13\u6ce8\u4e2d":o.mode==="short"?"\u77ed\u4f11\u4e2d":"\u957f\u4f11\u4e2d";if(!o.run)st.textContent="\u5c31\u7eea";else if(o.p)st.textContent="\u5df2\u6682\u505c";else st.textContent=lab;var pip=pb&&pb.querySelector(".ft-ico-play"),pau=pb&&pb.querySelector(".ft-ico-pause");if(pip&&pau){if(o.run&&!o.p){pip.classList.add("hidden");pau.classList.remove("hidden")}else{pau.classList.add("hidden");pip.classList.remove("hidden")}}if(pb)pb.classList.toggle("ft-running",!!(o.run&&!o.p));var tot=Math.max(1,focusTimerTotalSec()),C=2*Math.PI*52;ring.style.strokeDasharray=String(C);ring.style.strokeDashoffset=String(C*(1-Math.min(1,o.rem/tot)));var td=fd(now),rec=o.byDay[td]||{p:0,m:0},sp=document.getElementById("ftStatPomo"),sm=document.getElementById("ftStatMin"),ss=document.getElementById("ftStatStreak");if(sp)sp.textContent=String(rec.p||0);if(sm)sm.textContent=String(rec.m||0);if(ss)ss.textContent=String(o.streak||0);focusTimerPaintDots()}
-function focusTimerRecordPomo(){var o=_ftO,td=fd(now),n=Math.round(o.F);if(!o.byDay[td])o.byDay[td]={p:0,m:0};o.byDay[td].p=(o.byDay[td].p||0)+1;o.byDay[td].m=(o.byDay[td].m||0)+n;var yd=focusTimerYesterday();if(o.lastDay!==td){if(o.lastDay===yd)o.streak=(o.streak||0)+1;else o.streak=1;o.lastDay=td}}
+function focusTimerPaint(){if(!_ftO)return;focusTimerUpdateTabLabels();focusTimerUpdateTabs();var o=_ftO,te=document.getElementById("ftTimeDisp"),st=document.getElementById("ftStatusDisp"),pb=document.getElementById("ftPlayBtn"),ring=document.getElementById("ftRingProg");if(!te||!ring)return;var mx=Math.floor(o.rem/60),sx=o.rem%60;te.textContent=(mx<10?"0":"")+mx+":"+(sx<10?"0":"")+sx;var lab=o.mode==="focus"?"\u4e13\u6ce8\u4e2d":o.mode==="short"?"\u77ed\u4f11\u4e2d":"\u957f\u4f11\u4e2d";if(!o.run)st.textContent="\u5c31\u7eea";else if(o.p)st.textContent="\u5df2\u6682\u505c";else st.textContent=lab;var pip=pb&&pb.querySelector(".ft-ico-play"),pau=pb&&pb.querySelector(".ft-ico-pause");if(pip&&pau){if(o.run&&!o.p){pip.classList.add("hidden");pau.classList.remove("hidden")}else{pau.classList.add("hidden");pip.classList.remove("hidden")}}if(pb)pb.classList.toggle("ft-running",!!(o.run&&!o.p));var tot=Math.max(1,focusTimerTotalSec()),C=2*Math.PI*52;ring.style.strokeDasharray=String(C);ring.style.strokeDashoffset=String(C*(1-Math.min(1,o.rem/tot)));var td=fd(now),rec=o.byDay[td]||{p:0,m:0},sp=document.getElementById("ftStatPomo"),sm=document.getElementById("ftStatMin"),ss=document.getElementById("ftStatStreak");if(sp)sp.textContent=String(rec.p||0);if(sm)sm.textContent=String(rec.m||0);if(ss)ss.textContent=String(o.streak||0);focusTimerPaintDots();focusTimerPaintSummaryCard(typeof sel==="string"?sel:"")}
+function focusTimerRecordPomo(){var o=_ftO,stamp=new Date,td=fd(stamp),n=Math.round(o.F),hour=stamp.getHours();if(!o.byDay[td])o.byDay[td]={p:0,m:0};o.byDay[td].p=(o.byDay[td].p||0)+1;o.byDay[td].m=(o.byDay[td].m||0)+n;if(!o.byHour||typeof o.byHour!=="object")o.byHour={};if(!o.byHour[td]||typeof o.byHour[td]!=="object")o.byHour[td]={};o.byHour[td][hour]=(parseInt(o.byHour[td][hour],10)||0)+n;var yd=focusTimerYesterday();if(o.lastDay!==td){if(o.lastDay===yd)o.streak=(o.streak||0)+1;else o.streak=1;o.lastDay=td}}
 function focusTimerAdvance(donePomo){var o=_ftO;if(o.mode==="focus"){if(donePomo)focusTimerRecordPomo();if(o.round===4){o.mode="long";o.round=1}else{o.mode="short";o.round=o.round+1}}else{o.mode="focus"}o.rem=focusTimerTotalSec()}
 function focusTimerOnPhaseEnd(){if(!_ftO)return;_ftO.run=0;_ftO.p=0;_ftO.end=0;focusTimerAdvance(true);focusTimerSave();toast("\u23f1 \u65f6\u95f4\u5230");focusTimerPaint()}
 function focusTimerSetMode(m){if(!_ftO)focusTimerLoad();if(m===_ftO.mode)return;_ftO.mode=m;_ftO.run=0;_ftO.p=0;_ftO.end=0;_ftO.rem=focusTimerTotalSec();focusTimerSave();focusTimerPaint()}
