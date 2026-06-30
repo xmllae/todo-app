@@ -551,19 +551,61 @@ function focusTimerSummaryDisplay(minutes){
   }
   return{value:String(safe),unit:"m",aria:safe+" \u5206\u949f"}
 }
+function focusTimerSummaryKernelSmooth(hours,kernel){
+  const safeSeries=Array.isArray(hours)?hours:new Array(24).fill(0),safeKernel=Array.isArray(kernel)&&kernel.length?kernel:[1],radius=Math.floor(safeKernel.length/2),sourceTotal=safeSeries.reduce(function(acc,item){return acc+Math.max(0,Number(item)||0)},0);
+  if(!sourceTotal)return safeSeries.map(function(){return 0});
+  const smoothed=safeSeries.map(function(_,idx){
+    let weightedSum=0,weightTotal=0;
+    for(let offset=-radius;offset<=radius;offset++){
+      const target=idx+offset;
+      if(target<0||target>=safeSeries.length)continue;
+      const weight=safeKernel[offset+radius];
+      if(!(weight>0))continue;
+      weightedSum+=Math.max(0,Number(safeSeries[target])||0)*weight;
+      weightTotal+=weight
+    }
+    return weightTotal?weightedSum/weightTotal:0
+  });
+  const smoothedTotal=smoothed.reduce(function(acc,item){return acc+item},0);
+  if(!(smoothedTotal>0))return safeSeries.map(function(){return 0});
+  const scale=sourceTotal/smoothedTotal;
+  return smoothed.map(function(item){return item*scale})
+}
 function focusTimerSummarySmoothHours(hours){
-  return hours.map(function(value,idx){
-    const prev=hours[idx-1]||0,next=hours[idx+1]||0;
-    return idx===0||idx===hours.length-1?(value+next+prev)/Math.max(1,(idx===0||idx===hours.length-1)?2:3):(prev+value*2+next)/4
-  })
+  const primary=focusTimerSummaryKernelSmooth(hours,[0.1,0.22,0.36,0.22,0.1]);
+  return focusTimerSummaryKernelSmooth(primary,[0.2,0.6,0.2])
 }
 function focusTimerSummaryCurve(points){
   if(!points.length)return"";
-  let path="M "+points[0].x.toFixed(2)+" "+points[0].y.toFixed(2);
+  if(points.length===1)return"M "+points[0].x.toFixed(2)+" "+points[0].y.toFixed(2);
+  const xs=points.map(function(point){return point.x}),ys=points.map(function(point){return point.y}),slopes=[],tangents=new Array(points.length).fill(0);
   for(let i=0;i<points.length-1;i++){
-    const p0=points[i-1]||points[i],p1=points[i],p2=points[i+1],p3=points[i+2]||p2;
-    const cp1x=p1.x+(p2.x-p0.x)/6,cp1y=p1.y+(p2.y-p0.y)/6,cp2x=p2.x-(p3.x-p1.x)/6,cp2y=p2.y-(p3.y-p1.y)/6;
-    path+=" C "+cp1x.toFixed(2)+" "+cp1y.toFixed(2)+" "+cp2x.toFixed(2)+" "+cp2y.toFixed(2)+" "+p2.x.toFixed(2)+" "+p2.y.toFixed(2)
+    const dx=xs[i+1]-xs[i],dy=ys[i+1]-ys[i];
+    slopes[i]=dx?dy/dx:0
+  }
+  tangents[0]=slopes[0]||0;
+  tangents[points.length-1]=slopes[slopes.length-1]||0;
+  for(let i=1;i<points.length-1;i++){
+    const prev=slopes[i-1],next=slopes[i];
+    tangents[i]=prev*next<=0?0:(prev+next)/2
+  }
+  for(let i=0;i<slopes.length;i++){
+    if(!slopes[i]){
+      tangents[i]=0;
+      tangents[i+1]=0;
+      continue
+    }
+    const a=tangents[i]/slopes[i],b=tangents[i+1]/slopes[i],norm=a*a+b*b;
+    if(norm>9){
+      const scale=3/Math.sqrt(norm);
+      tangents[i]=scale*a*slopes[i];
+      tangents[i+1]=scale*b*slopes[i]
+    }
+  }
+  let path="M "+xs[0].toFixed(2)+" "+ys[0].toFixed(2);
+  for(let i=0;i<points.length-1;i++){
+    const dx=xs[i+1]-xs[i],cp1x=xs[i]+dx/3,cp1y=ys[i]+tangents[i]*dx/3,cp2x=xs[i+1]-dx/3,cp2y=ys[i+1]-tangents[i+1]*dx/3,minY=Math.min(ys[i],ys[i+1]),maxY=Math.max(ys[i],ys[i+1]);
+    path+=" C "+cp1x.toFixed(2)+" "+Math.min(maxY,Math.max(minY,cp1y)).toFixed(2)+" "+cp2x.toFixed(2)+" "+Math.min(maxY,Math.max(minY,cp2y)).toFixed(2)+" "+xs[i+1].toFixed(2)+" "+ys[i+1].toFixed(2)
   }
   return path
 }
@@ -578,7 +620,7 @@ function focusTimerSummaryChartMarkup(ds,state){
   return'<line class="dash-focus-summary__baseline" x1="'+padX+'" y1="'+baseY+'" x2="'+(width-padX)+'" y2="'+baseY+'"></line>'+
     '<path class="dash-focus-summary__area" d="'+areaPath+'"></path>'+
     '<path class="dash-focus-summary__line" d="'+linePath+'"></path>'+
-    '<circle class="dash-focus-summary__line-end" cx="'+lastPoint.x.toFixed(2)+'" cy="'+lastPoint.y.toFixed(2)+'" r="2.8"></circle>'
+    '<circle class="dash-focus-summary__line-end" cx="'+lastPoint.x.toFixed(2)+'" cy="'+lastPoint.y.toFixed(2)+'" r="2.15"></circle>'
 }
 function focusTimerPaintSummaryCard(ds){
   const root=document.getElementById("taskDashCol"),card=ensureTaskDayFocusSummaryCard(root);

@@ -1217,17 +1217,17 @@
 
 #taskMode .task-dash-col .dash-focus-summary__baseline {
   stroke: rgba(148, 163, 184, .28);
-  stroke-width: 1.2;
+  stroke-width: 1.1;
 }
 
 #taskMode .task-dash-col .dash-focus-summary__area {
-  fill: var(--focus-summary-accent-soft);
+  fill: color-mix(in srgb, var(--focus-summary-accent) 12%, transparent);
 }
 
 #taskMode .task-dash-col .dash-focus-summary__line {
   fill: none;
   stroke: var(--focus-summary-accent);
-  stroke-width: 3;
+  stroke-width: 2.35;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
@@ -1235,7 +1235,7 @@
 #taskMode .task-dash-col .dash-focus-summary__line-end {
   fill: var(--focus-summary-accent);
   stroke: color-mix(in srgb, var(--card) 82%, #fff);
-  stroke-width: 2;
+  stroke-width: 1.7;
 }
 
 #taskMode .task-dash-col .dash-focus-summary__axis {
