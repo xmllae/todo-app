@@ -662,11 +662,12 @@
   color: var(--rail-text);
   font-family: "DIN Alternate", "DIN 2014", "Bahnschrift", "Inter", "Roboto", "Segoe UI", sans-serif;
   white-space: nowrap;
+  transform: translateY(var(--focus-summary-metric-shift-y));
 }
 
 #taskMode .task-dash-col.is-week-action .week-focus-total strong {
   font-family: "DIN Alternate", "DIN 2014", "Bahnschrift", "Inter", "Roboto", "Segoe UI", sans-serif;
-  font-size: 27px;
+  font-size: var(--focus-summary-metric-size);
   line-height: 1;
   font-weight: 400;
   letter-spacing: 0;
@@ -676,7 +677,7 @@
 #taskMode .task-dash-col.is-week-action .week-focus-total span {
   color: var(--rail-muted);
   font-family: "DIN Alternate", "DIN 2014", "Bahnschrift", "Inter", "Roboto", "Segoe UI", sans-serif;
-  font-size: 12px;
+  font-size: var(--focus-summary-metric-unit-size);
   line-height: 1;
   font-weight: 400;
 }
@@ -905,6 +906,9 @@
   --dash-rail-card-shadow: 0 8px 24px rgba(0, 0, 0, .04);
   --dash-rail-head-gap: 12px;
   --focus-rail-card-height: 179px;
+  --focus-summary-metric-size: 25px;
+  --focus-summary-metric-unit-size: 11px;
+  --focus-summary-metric-shift-y: -12px;
 }
 
 #taskMode .task-dash-col .dash-drag-handle,
@@ -1174,9 +1178,6 @@
 #taskMode .task-dash-col .dash-focus-summary {
   --focus-summary-accent: #35c97b;
   --focus-summary-accent-soft: rgba(53, 201, 123, .16);
-  --focus-summary-metric-size: 25px;
-  --focus-summary-metric-unit-size: 11px;
-  --focus-summary-metric-shift-y: -12px;
   display: flex;
   min-height: var(--focus-rail-card-height);
   height: var(--focus-rail-card-height);
