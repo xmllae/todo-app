@@ -433,6 +433,7 @@
   --week-card-title-size: 14px;
   --week-card-title-weight: 650;
   --week-card-title-line-height: var(--dash-rail-title-line-height);
+  --week-rhythm-title-ink-top: calc(var(--dash-rail-title-ink-top) + 3px);
   --week-card-shadow: 0 8px 24px rgba(0, 0, 0, .04);
   --week-number-font: "Inter", "Roboto", "DIN Alternate", "Segoe UI", sans-serif;
   position: relative;
@@ -761,6 +762,8 @@
 }
 
 #taskMode .task-dash-col.is-week-action .week-overview-section--rhythm {
+  --dash-rail-title-ink-top: var(--week-rhythm-title-ink-top);
+  --dash-rail-title-shift-y: calc(var(--dash-rail-title-inset) - var(--week-rhythm-title-ink-top));
   flex: 0 0 auto;
   margin-top: 0;
   padding: var(--week-card-padding);
