@@ -84,6 +84,7 @@
 }
 
 #taskMode .task-dash-col.is-week-action .week-overview-kicker,
+#taskMode .task-dash-col.is-week-action .week-overview-card-head h3,
 #taskMode .task-dash-col.is-overdue-action .week-overview-kicker,
 #taskMode .task-dash-col.is-overdue-action .overdue-overview-section-title,
 #taskMode .task-dash-col.is-week-action .week-overview-section-title span,
@@ -503,7 +504,6 @@
   letter-spacing: 0;
   text-box-trim: trim-both;
   text-box-edge: cap alphabetic;
-  transform: none;
 }
 
 #taskMode .task-dash-col.is-week-action .week-stat-body {
@@ -780,7 +780,6 @@
   font-weight: var(--week-card-title-weight);
   text-box-trim: trim-both;
   text-box-edge: cap alphabetic;
-  transform: none;
 }
 
 #taskMode .task-dash-col.is-week-action .week-rhythm-day:hover {
@@ -971,6 +970,19 @@
   letter-spacing: 0;
   text-box-trim: trim-both;
   text-box-edge: cap alphabetic;
+}
+
+#taskMode .task-dash-col :is(
+  .dash-hd-tit,
+  .week-overview-kicker,
+  .week-overview-card-head h3,
+  .overdue-overview-section-title,
+  .week-overview-section-title span,
+  .priority-overview__kicker,
+  .priority-overview__section-title,
+  .repeat-side-card__head,
+  .frozen-side-card__title
+) {
   transform: translate(var(--dash-rail-title-shift-x), var(--dash-rail-title-shift-y));
   transform-origin: 0 0;
 }
