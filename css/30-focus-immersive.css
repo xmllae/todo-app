@@ -1,0 +1,612 @@
+body.focus-immersive-on {
+  overflow: hidden;
+}
+
+.focus-immersive {
+  --focus-immersive-accent: color-mix(in srgb, var(--acc) 84%, #8b5cf6);
+  --focus-immersive-accent-soft: color-mix(in srgb, var(--acc) 16%, transparent);
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+  background: rgba(248, 250, 252, 0.78);
+  backdrop-filter: blur(18px) saturate(1.04);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.28s ease, visibility 0.28s ease;
+}
+
+.focus-immersive::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 22% 24%, color-mix(in srgb, var(--acc) 11%, transparent) 0%, transparent 34%),
+    radial-gradient(circle at 78% 18%, rgba(99, 102, 241, 0.06) 0%, transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.12));
+  pointer-events: none;
+}
+
+.focus-immersive.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.focus-immersive__scrim {
+  position: absolute;
+  inset: 0;
+}
+
+.focus-immersive__shell {
+  position: relative;
+  z-index: 1;
+  width: min(1080px, 100%);
+  min-height: min(640px, calc(100vh - 48px));
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 20px;
+  border: 1px solid color-mix(in srgb, var(--task-bd) 62%, rgba(255, 255, 255, 0.3));
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.58);
+  box-shadow:
+    0 44px 80px -52px rgba(15, 23, 42, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  transform: translateY(18px) scale(0.97);
+  transform-origin: var(--fi-origin-x, 50%) var(--fi-origin-y, 50%);
+  transition: transform 0.36s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.36s ease;
+  overflow: hidden;
+}
+
+.focus-immersive.is-active .focus-immersive__shell {
+  transform: translateY(0) scale(1);
+}
+
+.focus-immersive__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.focus-immersive__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text2);
+  letter-spacing: 0;
+}
+
+.focus-immersive__eyebrow-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--focus-immersive-accent);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--acc) 16%, transparent);
+}
+
+.focus-immersive__exit {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid color-mix(in srgb, var(--task-bd) 78%, transparent);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.68);
+  color: var(--text2);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.18s ease, border-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.focus-immersive__exit:hover,
+.focus-immersive__exit:focus-visible {
+  color: var(--acc);
+  border-color: color-mix(in srgb, var(--acc) 34%, var(--task-bd));
+  box-shadow: 0 16px 28px -28px color-mix(in srgb, var(--acc) 82%, transparent);
+  outline: none;
+}
+
+.focus-immersive__exit:active {
+  transform: scale(0.97);
+}
+
+.focus-immersive__stage {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
+  gap: 18px;
+}
+
+.focus-immersive__panel {
+  position: relative;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 28px;
+  border: 1px solid color-mix(in srgb, var(--task-bd) 58%, rgba(255, 255, 255, 0.35));
+  border-radius: 26px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.72)),
+    linear-gradient(180deg, color-mix(in srgb, var(--card) 92%, white), color-mix(in srgb, var(--card) 88%, var(--hov)));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.88),
+    0 24px 50px -42px rgba(15, 23, 42, 0.34);
+}
+
+.focus-immersive__panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  opacity: 0.9;
+}
+
+.focus-immersive__panel--task::before {
+  content: '';
+  position: absolute;
+  top: 28px;
+  left: 28px;
+  width: 58px;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--focus-immersive-accent), rgba(99, 102, 241, 0.18));
+  opacity: 0.9;
+}
+
+.focus-immersive__task-wrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 18px;
+  padding-top: 18px;
+}
+
+.focus-immersive__task-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.focus-immersive__task-kicker {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text2);
+}
+
+.focus-immersive__task-title {
+  margin: 0;
+  color: var(--text);
+  font-size: 2.72rem;
+  line-height: 1.14;
+  font-weight: 700;
+  letter-spacing: 0;
+  word-break: break-word;
+}
+
+.focus-immersive__task-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.focus-immersive__task-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--hov) 82%, white);
+  color: var(--text2);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.focus-immersive__task-pill--high {
+  background: color-mix(in srgb, #ef4444 12%, white);
+  color: #dc2626;
+}
+
+.focus-immersive__task-pill--overdue {
+  background: color-mix(in srgb, #f97316 14%, white);
+  color: #ea580c;
+}
+
+.focus-immersive__task-pill--time {
+  background: color-mix(in srgb, var(--acc) 8%, white);
+  color: color-mix(in srgb, var(--acc) 72%, var(--text2));
+}
+
+.focus-immersive__task-foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.focus-immersive__task-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid color-mix(in srgb, var(--acc) 22%, var(--task-bd));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--acc) 8%, white);
+  color: var(--acc);
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.focus-immersive__task-action:hover,
+.focus-immersive__task-action:focus-visible {
+  background: color-mix(in srgb, var(--acc) 13%, white);
+  border-color: color-mix(in srgb, var(--acc) 38%, var(--task-bd));
+  box-shadow: 0 20px 36px -32px color-mix(in srgb, var(--acc) 82%, transparent);
+  outline: none;
+}
+
+.focus-immersive__task-action:active {
+  transform: scale(0.98);
+}
+
+.focus-immersive__panel--task.is-empty .focus-immersive__task-title {
+  font-size: 2.18rem;
+}
+
+.focus-immersive__task-empty-copy {
+  max-width: 30rem;
+  font-size: 0.94rem;
+  line-height: 1.7;
+  color: var(--text2);
+}
+
+.focus-immersive__panel--timer {
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  overflow: hidden;
+}
+
+.focus-immersive__timer-top {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.focus-immersive__mode-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--acc) 10%, white);
+  color: var(--acc);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.focus-immersive__timer-hint {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text3);
+}
+
+.focus-immersive__ring-wrap {
+  position: relative;
+  width: 288px;
+  max-width: 100%;
+  aspect-ratio: 1;
+  margin: auto 0;
+}
+
+.focus-immersive__ring-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 26%;
+  border-radius: 50%;
+  background: var(--focus-immersive-accent-soft);
+  filter: blur(34px);
+  opacity: 0.72;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.focus-immersive__panel--timer.is-running .focus-immersive__ring-wrap::before {
+  animation: focus-immersive-glow 3.2s ease-in-out infinite;
+}
+
+.focus-immersive__ring-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.focus-immersive__ring-bg {
+  stroke: color-mix(in srgb, var(--acc) 12%, var(--task-bd));
+}
+
+.focus-immersive__ring-prog {
+  stroke: var(--focus-immersive-accent);
+  filter: drop-shadow(0 12px 22px color-mix(in srgb, var(--acc) 18%, transparent));
+  transition: stroke-dashoffset 0.3s linear;
+}
+
+.focus-immersive__ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.focus-immersive__time {
+  color: var(--text);
+  font-family: "DIN Alternate", "DIN 2014", "Bahnschrift", "Inter", "Roboto", "Segoe UI", sans-serif;
+  font-size: 4.1rem;
+  line-height: 0.92;
+  font-weight: 400;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.focus-immersive__status {
+  margin-top: 10px;
+  color: var(--text2);
+  font-size: 0.95rem;
+  line-height: 1.35;
+  font-weight: 600;
+}
+
+.focus-immersive__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.focus-immersive__ctrl {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+}
+
+.focus-immersive__ctrl:active {
+  transform: scale(0.96);
+}
+
+.focus-immersive__ctrl--ghost {
+  width: 46px;
+  height: 46px;
+  border: 1px solid color-mix(in srgb, var(--task-bd) 86%, transparent);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--text2);
+}
+
+.focus-immersive__ctrl--ghost:hover,
+.focus-immersive__ctrl--ghost:focus-visible {
+  color: var(--acc);
+  border-color: color-mix(in srgb, var(--acc) 38%, var(--task-bd));
+  box-shadow: 0 18px 28px -26px color-mix(in srgb, var(--acc) 82%, transparent);
+  outline: none;
+}
+
+.focus-immersive__ctrl--main {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--focus-immersive-accent), color-mix(in srgb, var(--acc2) 72%, #7c3aed));
+  color: #fff;
+  box-shadow:
+    0 18px 34px -24px color-mix(in srgb, var(--acc) 82%, transparent),
+    0 10px 18px -16px rgba(79, 70, 229, 0.46);
+}
+
+.focus-immersive__ctrl--main:hover,
+.focus-immersive__ctrl--main:focus-visible {
+  transform: translateY(-1px);
+  box-shadow:
+    0 24px 40px -26px color-mix(in srgb, var(--acc) 88%, transparent),
+    0 12px 22px -16px rgba(79, 70, 229, 0.52);
+  outline: none;
+}
+
+.focus-immersive__ctrl--main.is-running {
+  box-shadow:
+    0 26px 44px -30px color-mix(in srgb, var(--acc) 92%, transparent),
+    0 12px 22px -16px rgba(79, 70, 229, 0.58);
+}
+
+.dark .focus-immersive {
+  background: rgba(2, 6, 23, 0.76);
+}
+
+.dark .focus-immersive::before {
+  background:
+    radial-gradient(circle at 22% 24%, color-mix(in srgb, var(--acc2) 18%, transparent) 0%, transparent 34%),
+    radial-gradient(circle at 78% 18%, rgba(129, 140, 248, 0.09) 0%, transparent 28%),
+    linear-gradient(180deg, rgba(15, 23, 42, 0.5), rgba(15, 23, 42, 0.2));
+}
+
+.dark .focus-immersive__shell {
+  background: rgba(15, 23, 42, 0.76);
+  border-color: rgba(148, 163, 184, 0.18);
+  box-shadow:
+    0 48px 82px -52px rgba(2, 6, 23, 0.72),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.dark .focus-immersive__panel {
+  background:
+    linear-gradient(180deg, rgba(30, 41, 59, 0.92), rgba(15, 23, 42, 0.84)),
+    linear-gradient(180deg, color-mix(in srgb, var(--card) 92%, #0f172a), color-mix(in srgb, var(--hov) 78%, #0f172a));
+  border-color: rgba(148, 163, 184, 0.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 24px 54px -42px rgba(2, 6, 23, 0.72);
+}
+
+.dark .focus-immersive__exit,
+.dark .focus-immersive__ctrl--ghost {
+  background: rgba(15, 23, 42, 0.78);
+}
+
+.dark .focus-immersive__task-pill {
+  background: rgba(30, 41, 59, 0.86);
+}
+
+.dark .focus-immersive__task-pill--high {
+  background: color-mix(in srgb, #ef4444 20%, rgba(15, 23, 42, 0.82));
+  color: #fecaca;
+}
+
+.dark .focus-immersive__task-pill--overdue {
+  background: color-mix(in srgb, #f97316 20%, rgba(15, 23, 42, 0.82));
+  color: #fdba74;
+}
+
+.dark .focus-immersive__task-pill--time,
+.dark .focus-immersive__mode-chip,
+.dark .focus-immersive__task-action {
+  background: color-mix(in srgb, var(--acc) 14%, rgba(15, 23, 42, 0.82));
+}
+
+.dark .focus-immersive__task-action:hover,
+.dark .focus-immersive__task-action:focus-visible {
+  background: color-mix(in srgb, var(--acc) 22%, rgba(15, 23, 42, 0.9));
+}
+
+@keyframes focus-immersive-glow {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(0.98);
+  }
+
+  50% {
+    opacity: 0.92;
+    transform: scale(1.04);
+  }
+}
+
+@media (max-width: 960px) {
+  .focus-immersive {
+    padding: 16px;
+  }
+
+  .focus-immersive__shell {
+    min-height: calc(100vh - 32px);
+    padding: 16px;
+    border-radius: 24px;
+  }
+
+  .focus-immersive__stage {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .focus-immersive__panel {
+    padding: 22px;
+    border-radius: 22px;
+  }
+
+  .focus-immersive__task-title {
+    font-size: 2.12rem;
+  }
+
+  .focus-immersive__ring-wrap {
+    width: 244px;
+  }
+
+  .focus-immersive__time {
+    font-size: 3.46rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .focus-immersive__head {
+    align-items: flex-start;
+  }
+
+  .focus-immersive__exit {
+    min-height: 34px;
+    padding: 0 12px;
+  }
+
+  .focus-immersive__task-title {
+    font-size: 1.76rem;
+  }
+
+  .focus-immersive__task-pill,
+  .focus-immersive__mode-chip {
+    min-height: 28px;
+    padding: 0 10px;
+    font-size: 0.74rem;
+  }
+
+  .focus-immersive__ring-wrap {
+    width: 212px;
+  }
+
+  .focus-immersive__time {
+    font-size: 3rem;
+  }
+
+  .focus-immersive__controls {
+    gap: 12px;
+  }
+
+  .focus-immersive__ctrl--ghost {
+    width: 42px;
+    height: 42px;
+  }
+
+  .focus-immersive__ctrl--main {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .focus-immersive,
+  .focus-immersive__shell,
+  .focus-immersive__exit,
+  .focus-immersive__task-action,
+  .focus-immersive__ctrl,
+  .focus-immersive__ring-wrap::before,
+  .focus-immersive__ring-prog {
+    transition: none;
+    animation: none;
+  }
+}

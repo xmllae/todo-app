@@ -1139,24 +1139,376 @@ function focusTimerTotalSec(){var o=_ftO;return o.mode==="focus"?o.F*60:o.mode==
 function focusTimerSyncEnd(){if(!_ftO.run||_ftO.p||!_ftO.end)return;var x=Math.ceil((_ftO.end-Date.now())/1e3);if(x<0)x=0;_ftO.rem=x}
 function focusTimerTick(){if(!document.getElementById("ftRingProg")||!_ftO)return;if(_ftO.run&&!_ftO.p&&_ftO.end){focusTimerSyncEnd();if(_ftO.rem<=0){_ftO.rem=0;focusTimerSave();focusTimerOnPhaseEnd()}else focusTimerPaint()}}
 function focusTimerVis(){if(document.visibilityState==="visible"&&_ftO&&_ftO.run&&!_ftO.p)focusTimerSyncEnd();focusTimerPaint()}
-function focusTimerAfterRender(){if(!document.getElementById("ftRingProg"))return;if(!_ftInited){_ftInited=true;focusTimerLoad();_ftIv=setInterval(focusTimerTick,1e3);document.addEventListener("visibilitychange",focusTimerVis)}focusTimerSyncTaskLabel();focusTimerPaint()}
-function focusTimerSyncTaskLabel(){var el=document.getElementById("ftTaskLabel");if(!el)return;var tk=_ftO&&_ftO.task;if(!tk){el.textContent="+ \u5173\u8054\u4efb\u52a1\uff08\u53ef\u9009\uff09";return}var arr=typeof T!=="undefined"&&T[tk.d]||[],x=arr.find(function(q){return q.id===tk.id});el.textContent=x&&x.text?x.text:"+ \u5173\u8054\u4efb\u52a1\uff08\u53ef\u9009\uff09"}
+var _ftImmActive=false,_ftImmKeyBound=false,_ftImmLastTrigger=null;
+function focusTimerAfterRender(){
+  if(!document.getElementById("ftRingProg"))return;
+  if(!_ftInited){
+    _ftInited=true;
+    focusTimerLoad();
+    _ftIv=setInterval(focusTimerTick,1e3);
+    document.addEventListener("visibilitychange",focusTimerVis)
+  }
+  focusTimerSyncTaskLabel();
+  focusTimerPaint()
+}
+function focusTimerFirstPendingTaskForDate(ds){
+  var key=String(ds||"").trim();
+  if(!key||typeof T==="undefined"||!T||!Array.isArray(T[key]))return null;
+  return T[key].find(function(task){return typeof isPendingListedTask==="function"?isPendingListedTask(task):!!task&&!task.done&&!task.frozen})||null
+}
+function focusTimerPendingTasksForDate(ds){
+  var key=String(ds||"").trim();
+  if(!key||typeof T==="undefined"||!T||!Array.isArray(T[key]))return [];
+  return T[key].filter(function(task){return typeof isPendingListedTask==="function"?isPendingListedTask(task):!!task&&!task.done&&!task.frozen})
+}
+function focusTimerLinkedTaskEntry(){
+  if(!_ftO||!_ftO.task||!_ftO.task.d)return null;
+  var task=focusTimerPendingTasksForDate(_ftO.task.d).find(function(row){return+row.id===+_ftO.task.id})||null;
+  return task?{ds:_ftO.task.d,task:task}:null
+}
+function focusTimerAnyPendingTask(){
+  var keys=Object.keys(T||{}).sort();
+  for(var i=0;i<keys.length;i++){
+    var ds=keys[i],task=focusTimerFirstPendingTaskForDate(ds);
+    if(task)return{ds:ds,task:task}
+  }
+  return null
+}
+function focusTimerStartingTaskEntry(){
+  var selectedDs=typeof sel==="string"&&sel?sel:fd(now),linked=focusTimerLinkedTaskEntry();
+  if(linked&&linked.ds===selectedDs)return linked;
+  var selectedTask=focusTimerFirstPendingTaskForDate(selectedDs);
+  if(selectedTask)return{ds:selectedDs,task:selectedTask};
+  if(linked)return linked;
+  var todayDs=fd(now),todayTask=focusTimerFirstPendingTaskForDate(todayDs);
+  if(todayTask)return{ds:todayDs,task:todayTask};
+  return focusTimerAnyPendingTask()
+}
+function focusTimerResolveDisplayTask(){
+  var linked=focusTimerLinkedTaskEntry();
+  if(linked)return linked;
+  var selectedDs=typeof sel==="string"&&sel?sel:fd(now),selectedTask=focusTimerFirstPendingTaskForDate(selectedDs);
+  if(selectedTask)return{ds:selectedDs,task:selectedTask};
+  var todayDs=fd(now),todayTask=focusTimerFirstPendingTaskForDate(todayDs);
+  if(todayTask)return{ds:todayDs,task:todayTask};
+  return focusTimerAnyPendingTask()
+}
+function focusTimerEnsureSessionTask(){
+  if(!_ftO)focusTimerLoad();
+  var entry=focusTimerStartingTaskEntry();
+  if(!entry)return null;
+  var changed=!_ftO.task||_ftO.task.d!==entry.ds||+_ftO.task.id!==+entry.task.id;
+  if(changed){
+    _ftO.task={d:entry.ds,id:+entry.task.id};
+    focusTimerSave()
+  }
+  focusTimerSyncTaskLabel();
+  focusTimerSyncTaskHighlight();
+  return entry
+}
+function focusTimerSyncTaskHighlight(){
+  var list=document.getElementById("tList");
+  if(!list)return;
+  list.querySelectorAll(".task-item.ft-focus-task").forEach(function(item){item.classList.remove("ft-focus-task")});
+  var ref=_ftO&&_ftO.task;
+  if(!ref||ref.d!==sel)return;
+  var item=list.querySelector('.task-item[data-id="'+ref.id+'"]:not(.archived-item)');
+  if(item)item.classList.add("ft-focus-task")
+}
+function focusTimerSyncTaskLabel(){
+  var el=document.getElementById("ftTaskLabel");
+  if(!el){
+    focusTimerSyncTaskHighlight();
+    return
+  }
+  var linked=focusTimerLinkedTaskEntry();
+  el.textContent=linked&&linked.task&&linked.task.text?linked.task.text:"+ \u5173\u8054\u4efb\u52a1\uff08\u53ef\u9009\uff09";
+  focusTimerSyncTaskHighlight()
+}
+function focusTimerClockText(sec){
+  var safe=Math.max(0,parseInt(sec,10)||0),mx=Math.floor(safe/60),sx=safe%60;
+  return(mx<10?"0":"")+mx+":"+(sx<10?"0":"")+sx
+}
+function focusTimerStatusText(){
+  if(!_ftO)return"\u5c31\u7eea";
+  if(!_ftO.run)return"\u5c31\u7eea";
+  if(_ftO.p)return"\u5df2\u6682\u505c";
+  return _ftO.mode==="focus"?"\u4e13\u6ce8\u4e2d":_ftO.mode==="short"?"\u77ed\u4f11\u4e2d":"\u957f\u4f11\u4e2d"
+}
+function focusTimerModeStageText(){
+  if(!_ftO)return"\u51c6\u5907\u4e13\u6ce8";
+  return _ftO.mode==="focus"?"\u7b2c "+_ftO.round+" \u4e2a\u4e13\u6ce8":_ftO.mode==="short"?"\u77ed\u4f11\u606f":"\u957f\u4f11\u606f"
+}
 function focusTimerUpdateTabLabels(){var f=document.getElementById("ftLabF"),s=document.getElementById("ftLabS"),l=document.getElementById("ftLabL");if(f)f.textContent=String(_ftO.F);if(s)s.textContent=String(_ftO.S);if(l)l.textContent=String(_ftO.L)}
 function focusTimerUpdateTabs(){var m=_ftO.mode,f=document.getElementById("ftTabFocus"),a=document.getElementById("ftTabShort"),b=document.getElementById("ftTabLong");if(f)f.classList.toggle("active",m==="focus");if(a)a.classList.toggle("active",m==="short");if(b)b.classList.toggle("active",m==="long")}
 function focusTimerPaintDots(){var el=document.getElementById("ftDots"),dm=document.getElementById("ftDotsMeta");if(!el)return;var h="",o=_ftO;for(var i=1;i<=4;i++){var c="ft-dot";if(i<o.round)c+=" on";else if(i===o.round)c+=" on cur";h+='<div class="'+c+'"></div>'}el.innerHTML=h;if(dm)dm.textContent=o.mode==="focus"?"\u7b2c "+o.round+" \u4e2a":o.mode==="short"?"\u77ed\u4f11\u606f":"\u957f\u4f11\u606f"}
-function focusTimerPaint(){if(!_ftO)return;focusTimerUpdateTabLabels();focusTimerUpdateTabs();var o=_ftO,te=document.getElementById("ftTimeDisp"),st=document.getElementById("ftStatusDisp"),pb=document.getElementById("ftPlayBtn"),ring=document.getElementById("ftRingProg");if(!te||!ring)return;var mx=Math.floor(o.rem/60),sx=o.rem%60;te.textContent=(mx<10?"0":"")+mx+":"+(sx<10?"0":"")+sx;var lab=o.mode==="focus"?"\u4e13\u6ce8\u4e2d":o.mode==="short"?"\u77ed\u4f11\u4e2d":"\u957f\u4f11\u4e2d";if(!o.run)st.textContent="\u5c31\u7eea";else if(o.p)st.textContent="\u5df2\u6682\u505c";else st.textContent=lab;var pip=pb&&pb.querySelector(".ft-ico-play"),pau=pb&&pb.querySelector(".ft-ico-pause");if(pip&&pau){if(o.run&&!o.p){pip.classList.add("hidden");pau.classList.remove("hidden")}else{pau.classList.add("hidden");pip.classList.remove("hidden")}}if(pb)pb.classList.toggle("ft-running",!!(o.run&&!o.p));var tot=Math.max(1,focusTimerTotalSec()),C=2*Math.PI*52;ring.style.strokeDasharray=String(C);ring.style.strokeDashoffset=String(C*(1-Math.min(1,o.rem/tot)));var td=fd(now),rec=o.byDay[td]||{p:0,m:0},sp=document.getElementById("ftStatPomo"),sm=document.getElementById("ftStatMin"),ss=document.getElementById("ftStatStreak");if(sp)sp.textContent=String(rec.p||0);if(sm)sm.textContent=String(rec.m||0);if(ss)ss.textContent=String(o.streak||0);focusTimerPaintDots();focusTimerPaintSummaryCard(typeof sel==="string"?sel:"")}
+function focusTimerSetImmersiveOrigin(originEl){
+  var root=document.getElementById("focusImmersiveLayer");
+  if(!root)return;
+  if(!originEl||!originEl.getBoundingClientRect){
+    root.style.setProperty("--fi-origin-x","50%");
+    root.style.setProperty("--fi-origin-y","50%");
+    return
+  }
+  var rect=originEl.getBoundingClientRect(),x=(rect.left+rect.width/2)/Math.max(window.innerWidth,1)*100,y=(rect.top+rect.height/2)/Math.max(window.innerHeight,1)*100;
+  root.style.setProperty("--fi-origin-x",x.toFixed(2)+"%");
+  root.style.setProperty("--fi-origin-y",y.toFixed(2)+"%")
+}
+function focusTimerTaskMetaHtml(entry){
+  if(!entry||!entry.task)return"";
+  var task=entry.task,ds=entry.ds,todayDs=fd(now),tomorrowDs=fd(new Date(now.getFullYear(),now.getMonth(),now.getDate()+1)),dayLabel=ds===todayDs?"\u4eca\u5929":ds===tomorrowDs?"\u660e\u5929":typeof disp==="function"?disp(ds):ds,parts=['<span class="focus-immersive__task-pill focus-immersive__task-pill--day">'+esc(dayLabel)+"</span>"];
+  if((task.priority||"normal")==="high")parts.push('<span class="focus-immersive__task-pill focus-immersive__task-pill--high">\u9ad8\u4f18\u5148</span>');
+  if(taskIsOverdueForDate(task,ds))parts.push('<span class="focus-immersive__task-pill focus-immersive__task-pill--overdue">\u5df2\u903e\u671f</span>');
+  parts.push('<span class="focus-immersive__task-pill focus-immersive__task-pill--time">'+esc(taskRowPlainTimeText(task,"\u5168\u5929"))+"</span>");
+  var duration=taskRowDurationMinutes(task);
+  if(duration>0)parts.push('<span class="focus-immersive__task-pill focus-immersive__task-pill--time">'+duration+" \u5206\u949f</span>");
+  return parts.join("")
+}
+function ensureFocusImmersiveLayer(){
+  var root=document.getElementById("focusImmersiveLayer");
+  if(root)return root;
+  root=document.createElement("div");
+  root.id="focusImmersiveLayer";
+  root.className="focus-immersive";
+  root.setAttribute("aria-hidden","true");
+  root.innerHTML='<div class="focus-immersive__scrim" data-fi-close="1"></div><section class="focus-immersive__shell" role="dialog" aria-modal="true" aria-labelledby="focusImmTaskTitle"><div class="focus-immersive__head"><div class="focus-immersive__eyebrow"><span class="focus-immersive__eyebrow-dot" aria-hidden="true"></span><span>\u6c89\u6d78\u6a21\u5f0f</span></div><button type="button" class="focus-immersive__exit" id="focusImmExitBtn" aria-label="\u9000\u51fa\u6c89\u6d78\u6a21\u5f0f"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg><span>\u9000\u51fa</span></button></div><div class="focus-immersive__stage"><article class="focus-immersive__panel focus-immersive__panel--task" id="focusImmTaskCard"><div class="focus-immersive__task-wrap"><div class="focus-immersive__task-copy"><p class="focus-immersive__task-kicker">\u5f53\u524d\u4efb\u52a1</p><h2 class="focus-immersive__task-title" id="focusImmTaskTitle">\u6682\u65e0\u4efb\u52a1</h2><div class="focus-immersive__task-meta" id="focusImmTaskMeta"></div></div><div class="focus-immersive__task-foot"><button type="button" class="focus-immersive__task-action" id="focusImmTaskPickBtn">\u66f4\u6362\u4efb\u52a1</button></div></div></article><article class="focus-immersive__panel focus-immersive__panel--timer" id="focusImmTimerCard"><div class="focus-immersive__timer-top"><span class="focus-immersive__mode-chip" id="focusImmModeChip">\u7b2c 1 \u4e2a\u4e13\u6ce8</span><span class="focus-immersive__timer-hint">Esc \u9000\u51fa</span></div><div class="focus-immersive__ring-wrap"><svg class="focus-immersive__ring-svg" viewBox="0 0 120 120" aria-hidden="true"><circle class="focus-immersive__ring-bg" cx="60" cy="60" r="52" fill="none" stroke-width="8"></circle><circle class="focus-immersive__ring-prog" id="focusImmRingProg" cx="60" cy="60" r="52" fill="none" stroke-width="8" stroke-linecap="round" transform="rotate(-90 60 60)" stroke-dasharray="326.73" stroke-dashoffset="326.73"></circle></svg><div class="focus-immersive__ring-center"><div class="focus-immersive__time" id="focusImmTime">25:00</div><div class="focus-immersive__status" id="focusImmStatus">\u5c31\u7eea</div></div></div><div class="focus-immersive__controls"><button type="button" class="focus-immersive__ctrl focus-immersive__ctrl--ghost" onclick="focusTimerReset()" aria-label="\u91cd\u7f6e"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg></button><button type="button" class="focus-immersive__ctrl focus-immersive__ctrl--main" id="focusImmPlayBtn" onclick="focusTimerTogglePlay()" aria-label="\u5f00\u59cb\u6216\u6682\u505c"><span class="ft-ico-play" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span><span class="ft-ico-pause hidden" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg></span></button><button type="button" class="focus-immersive__ctrl focus-immersive__ctrl--ghost" onclick="focusTimerSkip()" aria-label="\u8df3\u8fc7"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 4 16 12 6 20 6 4" fill="currentColor" stroke="none"></polygon><line x1="18" y1="5" x2="18" y2="19"></line></svg></button></div></article></div></section>';
+  document.body.appendChild(root);
+  var closeTarget=root.querySelector("[data-fi-close]"),exitBtn=root.querySelector("#focusImmExitBtn"),pickBtn=root.querySelector("#focusImmTaskPickBtn");
+  if(closeTarget)closeTarget.addEventListener("click",function(){focusTimerExitImmersiveMode()});
+  if(exitBtn)exitBtn.addEventListener("click",function(){focusTimerExitImmersiveMode()});
+  if(pickBtn)pickBtn.addEventListener("click",function(){focusTimerOpenTaskPick()});
+  if(!_ftImmKeyBound){
+    document.addEventListener("keydown",function(event){
+      if(event.key==="Escape"&&_ftImmActive){
+        event.preventDefault();
+        focusTimerExitImmersiveMode()
+      }
+    });
+    _ftImmKeyBound=true
+  }
+  return root
+}
+function focusTimerEnterImmersiveMode(originEl){
+  if(!_ftO||_ftO.mode!=="focus")return;
+  var root=ensureFocusImmersiveLayer();
+  if(!root)return;
+  _ftImmLastTrigger=originEl||document.getElementById("ftPlayBtn")||null;
+  focusTimerEnsureSessionTask();
+  focusTimerSetImmersiveOrigin(_ftImmLastTrigger);
+  focusTimerPaintImmersive();
+  _ftImmActive=true;
+  document.body.classList.add("focus-immersive-on");
+  root.setAttribute("aria-hidden","false");
+  root.classList.add("is-active");
+  var playBtn=document.getElementById("focusImmPlayBtn");
+  if(playBtn)requestAnimationFrame(function(){try{playBtn.focus({preventScroll:true})}catch(e){playBtn.focus()}})
+}
+function focusTimerExitImmersiveMode(){
+  var root=document.getElementById("focusImmersiveLayer");
+  _ftImmActive=false;
+  document.body.classList.remove("focus-immersive-on");
+  if(root){
+    root.classList.remove("is-active");
+    root.setAttribute("aria-hidden","true")
+  }
+  if(_ftImmLastTrigger&&document.body.contains(_ftImmLastTrigger)){
+    try{_ftImmLastTrigger.focus({preventScroll:true})}catch(e){}
+  }
+}
+function focusTimerPaintImmersive(){
+  var root=document.getElementById("focusImmersiveLayer");
+  if(!root||!_ftO)return;
+  var taskCard=document.getElementById("focusImmTaskCard"),timerCard=document.getElementById("focusImmTimerCard"),title=document.getElementById("focusImmTaskTitle"),meta=document.getElementById("focusImmTaskMeta"),pickBtn=document.getElementById("focusImmTaskPickBtn"),modeChip=document.getElementById("focusImmModeChip"),timeEl=document.getElementById("focusImmTime"),statusEl=document.getElementById("focusImmStatus"),ring=document.getElementById("focusImmRingProg"),playBtn=document.getElementById("focusImmPlayBtn");
+  if(!title||!meta||!modeChip||!timeEl||!statusEl||!ring)return;
+  var entry=focusTimerResolveDisplayTask(),hasTask=!!(entry&&entry.task);
+  title.textContent=hasTask&&entry.task.text?entry.task.text:"\u6682\u65e0\u53ef\u4e13\u6ce8\u4efb\u52a1";
+  meta.innerHTML=hasTask?focusTimerTaskMetaHtml(entry):'<span class="focus-immersive__task-empty-copy">\u53ef\u4ee5\u5148\u9009\u62e9\u4e00\u4e2a\u5f85\u529e\uff0c\u518d\u8fdb\u5165\u8fd9\u4e2a\u66f4\u5b89\u9759\u7684\u4e13\u6ce8\u754c\u9762\u3002</span>';
+  if(taskCard)taskCard.classList.toggle("is-empty",!hasTask);
+  if(pickBtn){
+    pickBtn.textContent=hasTask?"\u66f4\u6362\u4efb\u52a1":"\u9009\u62e9\u4efb\u52a1";
+    pickBtn.disabled=!focusTimerTaskPickerDay()
+  }
+  modeChip.textContent=focusTimerModeStageText();
+  timeEl.textContent=focusTimerClockText(_ftO.rem);
+  statusEl.textContent=focusTimerStatusText();
+  if(timerCard)timerCard.classList.toggle("is-running",!!(_ftO.run&&!_ftO.p));
+  var pip=playBtn&&playBtn.querySelector(".ft-ico-play"),pau=playBtn&&playBtn.querySelector(".ft-ico-pause");
+  if(pip&&pau){
+    if(_ftO.run&&!_ftO.p){
+      pip.classList.add("hidden");
+      pau.classList.remove("hidden")
+    }else{
+      pau.classList.add("hidden");
+      pip.classList.remove("hidden")
+    }
+  }
+  if(playBtn)playBtn.classList.toggle("is-running",!!(_ftO.run&&!_ftO.p));
+  var C=2*Math.PI*52,tot=Math.max(1,focusTimerTotalSec());
+  ring.style.strokeDasharray=String(C);
+  ring.style.strokeDashoffset=String(C*(1-Math.min(1,_ftO.rem/tot)))
+}
+function focusTimerTaskPickerDay(){
+  var selectedDs=typeof sel==="string"&&sel?sel:fd(now),selectedTasks=focusTimerPendingTasksForDate(selectedDs);
+  if(_ftImmActive){
+    var activeEntry=focusTimerResolveDisplayTask();
+    if(activeEntry)return activeEntry.ds
+  }
+  if(selectedTasks.length)return selectedDs;
+  var linked=focusTimerLinkedTaskEntry();
+  if(linked)return linked.ds;
+  var todayDs=fd(now),todayTasks=focusTimerPendingTasksForDate(todayDs);
+  if(todayTasks.length)return todayDs;
+  var any=focusTimerAnyPendingTask();
+  return any?any.ds:selectedDs||todayDs
+}
+function focusTimerPaint(){
+  if(!_ftO)return;
+  focusTimerUpdateTabLabels();
+  focusTimerUpdateTabs();
+  var o=_ftO,te=document.getElementById("ftTimeDisp"),st=document.getElementById("ftStatusDisp"),pb=document.getElementById("ftPlayBtn"),ring=document.getElementById("ftRingProg");
+  if(!te||!ring)return;
+  te.textContent=focusTimerClockText(o.rem);
+  st.textContent=focusTimerStatusText();
+  var pip=pb&&pb.querySelector(".ft-ico-play"),pau=pb&&pb.querySelector(".ft-ico-pause");
+  if(pip&&pau){
+    if(o.run&&!o.p){
+      pip.classList.add("hidden");
+      pau.classList.remove("hidden")
+    }else{
+      pau.classList.add("hidden");
+      pip.classList.remove("hidden")
+    }
+  }
+  if(pb)pb.classList.toggle("ft-running",!!(o.run&&!o.p));
+  var tot=Math.max(1,focusTimerTotalSec()),C=2*Math.PI*52;
+  ring.style.strokeDasharray=String(C);
+  ring.style.strokeDashoffset=String(C*(1-Math.min(1,o.rem/tot)));
+  var td=fd(now),rec=o.byDay[td]||{p:0,m:0},sp=document.getElementById("ftStatPomo"),sm=document.getElementById("ftStatMin"),ss=document.getElementById("ftStatStreak");
+  if(sp)sp.textContent=String(rec.p||0);
+  if(sm)sm.textContent=String(rec.m||0);
+  if(ss)ss.textContent=String(o.streak||0);
+  focusTimerPaintDots();
+  focusTimerPaintSummaryCard(typeof sel==="string"?sel:"");
+  focusTimerPaintImmersive()
+}
 function focusTimerRecordPomo(){var o=_ftO,stamp=new Date,td=fd(stamp),n=Math.round(o.F),hour=stamp.getHours();if(!o.byDay[td])o.byDay[td]={p:0,m:0};o.byDay[td].p=(o.byDay[td].p||0)+1;o.byDay[td].m=(o.byDay[td].m||0)+n;if(!o.byHour||typeof o.byHour!=="object")o.byHour={};if(!o.byHour[td]||typeof o.byHour[td]!=="object")o.byHour[td]={};o.byHour[td][hour]=(parseInt(o.byHour[td][hour],10)||0)+n;var yd=focusTimerYesterday();if(o.lastDay!==td){if(o.lastDay===yd)o.streak=(o.streak||0)+1;else o.streak=1;o.lastDay=td}}
 function focusTimerAdvance(donePomo){var o=_ftO;if(o.mode==="focus"){if(donePomo)focusTimerRecordPomo();if(o.round===4){o.mode="long";o.round=1}else{o.mode="short";o.round=o.round+1}}else{o.mode="focus"}o.rem=focusTimerTotalSec()}
-function focusTimerOnPhaseEnd(){if(!_ftO)return;_ftO.run=0;_ftO.p=0;_ftO.end=0;focusTimerAdvance(true);focusTimerSave();toast("\u23f1 \u65f6\u95f4\u5230");focusTimerPaint()}
-function focusTimerSetMode(m){if(!_ftO)focusTimerLoad();if(m===_ftO.mode)return;_ftO.mode=m;_ftO.run=0;_ftO.p=0;_ftO.end=0;_ftO.rem=focusTimerTotalSec();focusTimerSave();focusTimerPaint()}
-function focusTimerTogglePlay(){if(!_ftO)focusTimerLoad();if(_ftO.run&&!_ftO.p){_ftO.p=1;focusTimerSyncEnd();_ftO.end=0;focusTimerSave();focusTimerPaint()}else{_ftO.run=1;_ftO.p=0;if(_ftO.rem<=0)_ftO.rem=focusTimerTotalSec();_ftO.end=Date.now()+_ftO.rem*1e3;focusTimerSave();focusTimerPaint()}}
-function focusTimerReset(){if(!_ftO)return;_ftO.run=0;_ftO.p=0;_ftO.end=0;_ftO.rem=focusTimerTotalSec();focusTimerSave();focusTimerPaint()}
-function focusTimerSkip(){if(!_ftO)return;_ftO.run=0;_ftO.p=0;_ftO.end=0;focusTimerAdvance(false);focusTimerSave();focusTimerPaint()}
-function focusTimerToggleSettings(){var sv=document.getElementById("ftSettingsView"),tv=document.getElementById("ftTimerView");if(!sv||!tv||!_ftO)return;var show=sv.classList.contains("hidden");if(show){sv.classList.remove("hidden");tv.classList.add("hidden");var f=document.getElementById("ftInF"),s=document.getElementById("ftInS"),l=document.getElementById("ftInL");if(f)f.value=_ftO.F;if(s)s.value=_ftO.S;if(l)l.value=_ftO.L;var tx=document.querySelector("#dashFocusCard .dash-focus-set-txt");if(tx)tx.textContent="\u8fd4\u56de";var b=document.querySelector("#dashFocusCard .dash-focus-set");if(b)b.title="\u8fd4\u56de"}else{sv.classList.add("hidden");tv.classList.remove("hidden");var tx=document.querySelector("#dashFocusCard .dash-focus-set-txt");if(tx)tx.textContent="\u8bbe\u7f6e";var b=document.querySelector("#dashFocusCard .dash-focus-set");if(b)b.title="\u8bbe\u7f6e"}}
+function focusTimerOnPhaseEnd(){
+  if(!_ftO)return;
+  _ftO.run=0;
+  _ftO.p=0;
+  _ftO.end=0;
+  focusTimerAdvance(true);
+  focusTimerSave();
+  if(_ftO.mode!=="focus")focusTimerExitImmersiveMode();
+  toast("\u23f1 \u65f6\u95f4\u5230");
+  focusTimerPaint()
+}
+function focusTimerSetMode(m){
+  if(!_ftO)focusTimerLoad();
+  if(m===_ftO.mode)return;
+  _ftO.mode=m;
+  _ftO.run=0;
+  _ftO.p=0;
+  _ftO.end=0;
+  _ftO.rem=focusTimerTotalSec();
+  focusTimerSave();
+  if(m!=="focus")focusTimerExitImmersiveMode();
+  focusTimerPaint()
+}
+function focusTimerTogglePlay(){
+  if(!_ftO)focusTimerLoad();
+  if(_ftO.run&&!_ftO.p){
+    _ftO.p=1;
+    focusTimerSyncEnd();
+    _ftO.end=0;
+    focusTimerSave();
+    focusTimerPaint();
+    return
+  }
+  if(_ftO.mode==="focus")focusTimerEnsureSessionTask();
+  _ftO.run=1;
+  _ftO.p=0;
+  if(_ftO.rem<=0)_ftO.rem=focusTimerTotalSec();
+  _ftO.end=Date.now()+_ftO.rem*1e3;
+  focusTimerSave();
+  focusTimerPaint();
+  if(_ftO.mode==="focus")focusTimerEnterImmersiveMode(document.activeElement&&document.activeElement.id==="focusImmPlayBtn"?_ftImmLastTrigger:document.getElementById("ftPlayBtn"));
+  else focusTimerExitImmersiveMode()
+}
+function focusTimerReset(){
+  if(!_ftO)return;
+  _ftO.run=0;
+  _ftO.p=0;
+  _ftO.end=0;
+  _ftO.rem=focusTimerTotalSec();
+  focusTimerSave();
+  focusTimerExitImmersiveMode();
+  focusTimerPaint()
+}
+function focusTimerSkip(){
+  if(!_ftO)return;
+  _ftO.run=0;
+  _ftO.p=0;
+  _ftO.end=0;
+  focusTimerAdvance(false);
+  focusTimerSave();
+  focusTimerExitImmersiveMode();
+  focusTimerPaint()
+}
+function focusTimerToggleSettings(){
+  var sv=document.getElementById("ftSettingsView"),tv=document.getElementById("ftTimerView");
+  if(!sv||!tv||!_ftO)return;
+  var show=sv.classList.contains("hidden");
+  if(show){
+    focusTimerExitImmersiveMode();
+    sv.classList.remove("hidden");
+    tv.classList.add("hidden");
+    var f=document.getElementById("ftInF"),s=document.getElementById("ftInS"),l=document.getElementById("ftInL");
+    if(f)f.value=_ftO.F;
+    if(s)s.value=_ftO.S;
+    if(l)l.value=_ftO.L;
+    var tx=document.querySelector("#dashFocusCard .dash-focus-set-txt");
+    if(tx)tx.textContent="\u8fd4\u56de";
+    var b=document.querySelector("#dashFocusCard .dash-focus-set");
+    if(b)b.title="\u8fd4\u56de"
+  }else{
+    sv.classList.add("hidden");
+    tv.classList.remove("hidden");
+    var txBack=document.querySelector("#dashFocusCard .dash-focus-set-txt");
+    if(txBack)txBack.textContent="\u8bbe\u7f6e";
+    var btnBack=document.querySelector("#dashFocusCard .dash-focus-set");
+    if(btnBack)btnBack.title="\u8bbe\u7f6e"
+  }
+}
 function focusTimerSaveSettings(){if(!_ftO)return;var a=+document.getElementById("ftInF").value,b=+document.getElementById("ftInS").value,c=+document.getElementById("ftInL").value;if(a>=1&&a<=180)_ftO.F=Math.round(a);if(b>=1&&b<=60)_ftO.S=Math.round(b);if(c>=1&&c<=90)_ftO.L=Math.round(c);_ftO.run=0;_ftO.p=0;_ftO.end=0;_ftO.rem=focusTimerTotalSec();var sv=document.getElementById("ftSettingsView"),tv=document.getElementById("ftTimerView");if(sv)sv.classList.add("hidden");if(tv)tv.classList.remove("hidden");var tx=document.querySelector("#dashFocusCard .dash-focus-set-txt");if(tx)tx.textContent="\u8bbe\u7f6e";var b=document.querySelector("#dashFocusCard .dash-focus-set");if(b)b.title="\u8bbe\u7f6e";focusTimerSave();focusTimerPaint();toast("\u5df2\u4fdd\u5b58")}
-function focusTimerOpenTaskPick(){var day=fd(now),tasks=(T[day]||[]).filter(function(t){return isPendingListedTask(t)});var body=document.getElementById("mBody"),bg=document.getElementById("mBg");if(!body||!bg)return;var h;if(!tasks.length)h='<div class="m-sheet-wrap"><p class="m-sheet-title">\u4eca\u65e5\u65e0\u53ef\u7528\u4efb\u52a1</p><button type="button" class="m-sheet-btn m-sheet-btn--accent" onclick="clM()">\u5173\u95ed</button></div>';else h='<div class="m-sheet-wrap"><p class="m-sheet-title">\u9009\u62e9\u4e13\u6ce8\u4efb\u52a1</p><div class="ft-pick-list">'+tasks.map(function(t){return'<button type="button" class="ft-pick-item" onclick="focusTimerPickTask(\''+day+'\','+t.id+')">'+esc(t.text)+'</button>'}).join("")+'</div><div class="ft-pick-actions"><button type="button" class="m-sheet-btn m-sheet-btn--ghost" onclick="clM()">\u53d6\u6d88</button><button type="button" class="m-sheet-btn ft-pick-deselect" onclick="focusTimerClearPick()">\u53d6\u6d88\u9009\u62e9</button></div></div>';body.innerHTML=h;bg.classList.add("show")}
-function focusTimerPickTask(d,id){if(!_ftO)focusTimerLoad();_ftO.task={d:d,id:+id};focusTimerSave();clM();rT()}
-function focusTimerClearPick(){if(!_ftO)focusTimerLoad();_ftO.task=null;focusTimerSave();clM();rT()}
+function focusTimerOpenTaskPick(){
+  var day=focusTimerTaskPickerDay(),tasks=focusTimerPendingTasksForDate(day),body=document.getElementById("mBody"),bg=document.getElementById("mBg");
+  if(!body||!bg)return;
+  var dayLabel=day&&typeof disp==="function"?disp(day):"\u4eca\u5929",h;
+  if(!tasks.length)h='<div class="m-sheet-wrap"><p class="m-sheet-title">'+esc(dayLabel)+' \u6682\u65e0\u53ef\u7528\u4efb\u52a1</p><button type="button" class="m-sheet-btn m-sheet-btn--accent" onclick="clM()">\u5173\u95ed</button></div>';
+  else h='<div class="m-sheet-wrap"><p class="m-sheet-title">\u9009\u62e9\u4e13\u6ce8\u4efb\u52a1</p><div class="ft-pick-list">'+tasks.map(function(t){return'<button type="button" class="ft-pick-item" onclick="focusTimerPickTask(\''+day+'\','+t.id+')">'+esc(t.text)+'</button>'}).join("")+'</div><div class="ft-pick-actions"><button type="button" class="m-sheet-btn m-sheet-btn--ghost" onclick="clM()">\u53d6\u6d88</button><button type="button" class="m-sheet-btn ft-pick-deselect" onclick="focusTimerClearPick()">\u53d6\u6d88\u9009\u62e9</button></div></div>';
+  body.innerHTML=h;
+  bg.classList.add("show")
+}
+function focusTimerPickTask(d,id){
+  if(!_ftO)focusTimerLoad();
+  _ftO.task={d:d,id:+id};
+  focusTimerSave();
+  focusTimerSyncTaskLabel();
+  focusTimerPaint();
+  clM();
+  rT()
+}
+function focusTimerClearPick(){
+  if(!_ftO)focusTimerLoad();
+  _ftO.task=null;
+  focusTimerSave();
+  focusTimerSyncTaskLabel();
+  focusTimerPaint();
+  clM();
+  rT()
+}
 function isTaskOverdueHeaderMode(){
 const root=document.getElementById("taskMode");
 return getTaskQuickMode()==="overdue"||!!(root&&root.classList&&root.classList.contains("task-mode--overdue-view"))
