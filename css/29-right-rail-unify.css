@@ -427,10 +427,11 @@
   --week-stat-label-size: 12px;
   --week-stat-empty-ring-color: #e2e8f0;
   --week-stat-ring-stroke: 12;
-  --week-card-padding: 20px;
+  --week-card-padding: var(--dash-rail-title-inset);
   --week-card-title-color: #666666;
   --week-card-title-size: 14px;
   --week-card-title-weight: 650;
+  --week-card-title-line-height: var(--dash-rail-title-line-height);
   --week-card-shadow: 0 8px 24px rgba(0, 0, 0, .04);
   --week-number-font: "Inter", "Roboto", "DIN Alternate", "Segoe UI", sans-serif;
   position: relative;
@@ -483,19 +484,26 @@
 
 #taskMode .task-dash-col.is-week-action .week-overview-card-head {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 10px;
-  margin: 0 0 16px;
+  min-height: 0;
+  margin: 0 0 var(--dash-rail-head-gap);
 }
 
 #taskMode .task-dash-col.is-week-action .week-overview-card-head h3 {
+  display: block;
+  align-self: flex-start;
   margin: 0;
+  font-family: var(--dash-rail-title-font-family);
   color: var(--week-card-title-color);
   font-size: var(--week-card-title-size);
-  line-height: 1.2;
+  line-height: var(--week-card-title-line-height);
   font-weight: var(--week-card-title-weight);
   letter-spacing: 0;
+  text-box-trim: trim-both;
+  text-box-edge: cap alphabetic;
+  transform: none;
 }
 
 #taskMode .task-dash-col.is-week-action .week-stat-body {
@@ -759,13 +767,20 @@
 }
 
 #taskMode .task-dash-col.is-week-action .week-overview-section--rhythm .week-overview-section-title {
-  margin-bottom: 10px;
+  margin-bottom: var(--dash-rail-head-gap);
 }
 
 #taskMode .task-dash-col.is-week-action .week-overview-section--rhythm .week-overview-section-title span {
+  display: block;
+  margin: 0;
+  font-family: var(--dash-rail-title-font-family);
   color: var(--week-card-title-color);
   font-size: var(--week-card-title-size);
+  line-height: var(--week-card-title-line-height);
   font-weight: var(--week-card-title-weight);
+  text-box-trim: trim-both;
+  text-box-edge: cap alphabetic;
+  transform: none;
 }
 
 #taskMode .task-dash-col.is-week-action .week-rhythm-day:hover {
@@ -877,6 +892,16 @@
   --dash-rail-title-color: #666666;
   --dash-rail-title-size: 14px;
   --dash-rail-title-weight: 650;
+  --dash-rail-title-line-height: 1;
+  --dash-rail-title-font-family: "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", "Noto Sans SC", "Source Han Sans SC", sans-serif;
+  --dash-rail-title-inset: 20px;
+  --dash-rail-title-ink-top: 25px;
+  --dash-rail-title-ink-left: 26px;
+  --dash-rail-title-shift-x: calc(var(--dash-rail-title-inset) - var(--dash-rail-title-ink-left));
+  --dash-rail-title-shift-y: calc(var(--dash-rail-title-inset) - var(--dash-rail-title-ink-top));
+  --dash-rail-card-radius: 14px;
+  --dash-rail-card-shadow: 0 8px 24px rgba(0, 0, 0, .04);
+  --dash-rail-head-gap: 12px;
   --focus-rail-card-height: 179px;
 }
 
@@ -886,10 +911,16 @@
   display: none;
 }
 
+#taskMode .task-dash-col :is(.dash-card.dash-overview.dash-overview--day-stat, .dash-focus-summary, .dash-card.dash-focus) {
+  /* Lock the rail cards to a true 20px inset across legacy sidebar overrides. */
+  padding: var(--dash-rail-title-inset) !important;
+  border: 0;
+  border-radius: var(--dash-rail-card-radius);
+  background: var(--card);
+  box-shadow: var(--dash-rail-card-shadow);
+}
+
 #taskMode .task-dash-col .dash-overview--day-stat {
-  --day-card-padding: 20px;
-  --day-card-radius: 14px;
-  --day-card-shadow: 0 8px 24px rgba(0, 0, 0, .04);
   --day-card-title-color: var(--dash-rail-title-color);
   --day-card-title-size: var(--dash-rail-title-size);
   --day-card-title-weight: var(--dash-rail-title-weight);
@@ -903,58 +934,67 @@
   position: relative;
   z-index: 1;
   flex: 0 0 auto;
-  padding: var(--day-card-padding);
   overflow: visible;
-  border: 0;
-  border-radius: var(--day-card-radius);
-  background: var(--card);
-  box-shadow: var(--day-card-shadow);
-}
-
-.app.app--with-global-nav > #taskMode > .task-dash-col .dash-card.dash-overview.dash-overview--day-stat {
-  padding: var(--day-card-padding);
-  border: 0;
-  border-radius: var(--day-card-radius);
-  background: var(--card);
-  box-shadow: var(--day-card-shadow);
 }
 
 #taskMode .task-dash-col .dash-overview--day-stat .dash-day-stat-head {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
   gap: 0;
-  margin: 0 0 16px;
+  min-height: 0;
+  margin: 0 0 var(--dash-rail-head-gap);
 }
 
 #taskMode .task-dash-col .dash-overview--day-stat .dash-hd-tit {
+  margin: 0;
+  font-family: var(--dash-rail-title-font-family);
   color: var(--day-card-title-color);
   font-size: var(--day-card-title-size);
-  line-height: 1.2;
+  line-height: var(--dash-rail-title-line-height);
   font-weight: var(--day-card-title-weight);
   letter-spacing: 0;
+  text-box-trim: trim-both;
+  text-box-edge: cap alphabetic;
 }
 
 #taskMode .task-dash-col .dash-hd-tit,
 #taskMode .task-dash-col .dash-focus-top .dash-hd-tit {
+  display: block;
+  align-self: flex-start;
+  margin: 0;
+  font-family: var(--dash-rail-title-font-family);
   color: var(--dash-rail-title-color);
   font-size: var(--dash-rail-title-size);
-  line-height: 1.2;
+  line-height: var(--dash-rail-title-line-height);
   font-weight: var(--dash-rail-title-weight);
   letter-spacing: 0;
+  text-box-trim: trim-both;
+  text-box-edge: cap alphabetic;
+  transform: translate(var(--dash-rail-title-shift-x), var(--dash-rail-title-shift-y));
+  transform-origin: 0 0;
 }
 
 #taskMode .task-dash-col .dash-hd,
 #taskMode .task-dash-col .dash-focus-top {
+  align-items: flex-start;
   gap: 0;
-  margin-bottom: 16px;
+  min-height: 0;
+  margin-bottom: var(--dash-rail-head-gap);
 }
 
 #taskMode .task-dash-col .dash-focus-top {
   justify-content: space-between;
 }
 
+.app.app--with-global-nav > #taskMode > .task-dash-col .dash-card.dash-overview.dash-overview--day-stat .dash-day-stat-head,
+.app.app--with-global-nav > #taskMode > .task-dash-col .dash-focus-summary .dash-focus-summary__head,
+.app.app--with-global-nav > #taskMode > .task-dash-col .dash-card.dash-focus .dash-focus-top {
+  margin-bottom: var(--dash-rail-head-gap) !important;
+}
+
 #taskMode .task-dash-col .dash-focus-top-l {
+  align-items: flex-start;
   gap: 0;
 }
 
@@ -1124,11 +1164,6 @@
   height: var(--focus-rail-card-height);
   flex-direction: column;
   gap: 0;
-  padding: 20px;
-  border: 0;
-  border-radius: 14px;
-  background: var(--card);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, .04);
 }
 
 #taskMode .task-dash-col.is-week-action .week-focus-card {
@@ -1147,11 +1182,11 @@
 
 #taskMode .task-dash-col .dash-focus-summary__head {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 10px;
-  min-height: 22px;
-  margin-bottom: 16px;
+  min-height: 0;
+  margin-bottom: var(--dash-rail-head-gap);
 }
 
 #taskMode .task-dash-col .dash-focus-summary__metric {
@@ -1202,8 +1237,8 @@
 
 #taskMode .task-dash-col .dash-focus-summary__chart {
   position: relative;
-  min-height: 94px;
-  height: 94px;
+  min-height: 88px;
+  height: 88px;
   padding-top: 0;
   flex: 0 0 auto;
 }
@@ -1211,7 +1246,7 @@
 #taskMode .task-dash-col .dash-focus-summary__svg {
   display: block;
   width: 100%;
-  height: 94px;
+  height: 88px;
   overflow: visible;
 }
 
@@ -1290,11 +1325,9 @@
 
 @media (max-width: 760px) {
   #taskMode .task-dash-col {
+    --dash-rail-title-inset: 20px;
+    --dash-rail-head-gap: 10px;
     --focus-rail-card-height: 171px;
-  }
-
-  #taskMode .task-dash-col .dash-overview--day-stat {
-    --day-card-padding: 16px;
   }
 
   #taskMode .task-dash-col .dash-day-stat-body {
@@ -1304,10 +1337,6 @@
 
   #taskMode .task-dash-col .dash-day-stat-legend {
     width: 100%;
-  }
-
-  #taskMode .task-dash-col .dash-focus-summary {
-    padding: 16px;
   }
 
   #taskMode .task-dash-col .dash-focus-summary__metric-main strong {
