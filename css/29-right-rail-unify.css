@@ -1174,6 +1174,9 @@
 #taskMode .task-dash-col .dash-focus-summary {
   --focus-summary-accent: #35c97b;
   --focus-summary-accent-soft: rgba(53, 201, 123, .16);
+  --focus-summary-metric-size: 25px;
+  --focus-summary-metric-unit-size: 11px;
+  --focus-summary-metric-shift-y: -12px;
   display: flex;
   min-height: var(--focus-rail-card-height);
   height: var(--focus-rail-card-height);
@@ -1214,6 +1217,7 @@
   margin-left: auto;
   text-align: right;
   flex: 0 0 auto;
+  transform: translateY(var(--focus-summary-metric-shift-y));
 }
 
 #taskMode .task-dash-col .dash-focus-summary__metric-main {
@@ -1227,7 +1231,7 @@
 #taskMode .task-dash-col .dash-focus-summary__metric-main strong {
   color: var(--text);
   font-family: "DIN Alternate", "DIN 2014", "Bahnschrift", "Inter", "Roboto", "Segoe UI", sans-serif;
-  font-size: 27px;
+  font-size: var(--focus-summary-metric-size);
   line-height: 1;
   font-weight: 400;
   letter-spacing: 0;
@@ -1240,7 +1244,7 @@
   margin-bottom: 0;
   color: var(--text2);
   font-family: "DIN Alternate", "DIN 2014", "Bahnschrift", "Inter", "Roboto", "Segoe UI", sans-serif;
-  font-size: 12px;
+  font-size: var(--focus-summary-metric-unit-size);
   line-height: 1;
   font-weight: 400;
   letter-spacing: 0;
@@ -1355,6 +1359,6 @@
   }
 
   #taskMode .task-dash-col .dash-focus-summary__metric-main strong {
-    font-size: 1.84rem;
+    font-size: var(--focus-summary-metric-size);
   }
 }
