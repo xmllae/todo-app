@@ -606,68 +606,6 @@
     };
   }
 
-  function setArrowAvailability(dateNav, disabled) {
-    if (!dateNav) {
-      return;
-    }
-
-    dateNav.querySelectorAll('.nav-arrow').forEach(function (btn) {
-      if (disabled) {
-        if (!btn.dataset.goalPrevTabIndex) {
-          btn.dataset.goalPrevTabIndex = btn.getAttribute('tabindex') || '';
-        }
-        if (!btn.dataset.goalPrevVisibility) {
-          btn.dataset.goalPrevVisibility = btn.style.visibility || '';
-        }
-        if (!btn.dataset.goalPrevPointerEvents) {
-          btn.dataset.goalPrevPointerEvents = btn.style.pointerEvents || '';
-        }
-        btn.setAttribute('aria-hidden', 'true');
-        btn.tabIndex = -1;
-        btn.style.visibility = 'hidden';
-        btn.style.pointerEvents = 'none';
-        return;
-      }
-
-      btn.removeAttribute('aria-hidden');
-      if (btn.dataset.goalPrevTabIndex) {
-        btn.setAttribute('tabindex', btn.dataset.goalPrevTabIndex);
-      } else {
-        btn.removeAttribute('tabindex');
-      }
-      btn.style.visibility = btn.dataset.goalPrevVisibility || '';
-      btn.style.pointerEvents = btn.dataset.goalPrevPointerEvents || '';
-      delete btn.dataset.goalPrevTabIndex;
-      delete btn.dataset.goalPrevVisibility;
-      delete btn.dataset.goalPrevPointerEvents;
-    });
-  }
-
-  function syncReturnTodayButton(dateNav, hidden) {
-    if (!dateNav) {
-      return;
-    }
-
-    const btn = dateNav.querySelector('.date-nav-return-today');
-    if (hidden) {
-      if (!btn) {
-        return;
-      }
-      if (typeof hideTaskBackTodayBtn === 'function') {
-        hideTaskBackTodayBtn(btn, true);
-      } else {
-        btn.classList.remove('is-visible', 'has-range');
-        btn.setAttribute('aria-hidden', 'true');
-        btn.tabIndex = -1;
-      }
-      return;
-    }
-
-    if (typeof setTaskBackTodayBtn === 'function' && typeof sel === 'string' && sel) {
-      setTaskBackTodayBtn(sel);
-    }
-  }
-
   function bindGoalTitleClickGuard(dateNav) {
     if (!dateNav || dateNav.dataset.goalClickGuardBound) {
       return;
@@ -956,8 +894,6 @@
     if (dateNav) {
       dateNav.classList.toggle(GOAL_NAV_CLASS, !!state);
       bindGoalTitleClickGuard(dateNav);
-      setArrowAvailability(dateNav, !!state);
-      syncReturnTodayButton(dateNav, !!state);
     }
 
     if (!state) {

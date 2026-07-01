@@ -30,60 +30,6 @@
     return "\u672a\u5b8c\u6210\u7684\u5386\u53f2\u4efb\u52a1";
   }
 
-  function setArrowAvailability(dateNav, disabled) {
-    if (!dateNav) return;
-    dateNav.querySelectorAll(".nav-arrow").forEach(function (btn) {
-      if (disabled) {
-        if (!btn.dataset.overduePrevTabIndex) {
-          btn.dataset.overduePrevTabIndex = btn.getAttribute("tabindex") || "";
-        }
-        if (!btn.dataset.overduePrevVisibility) {
-          btn.dataset.overduePrevVisibility = btn.style.visibility || "";
-        }
-        if (!btn.dataset.overduePrevPointerEvents) {
-          btn.dataset.overduePrevPointerEvents = btn.style.pointerEvents || "";
-        }
-        btn.setAttribute("aria-hidden", "true");
-        btn.tabIndex = -1;
-        btn.style.visibility = "hidden";
-        btn.style.pointerEvents = "none";
-        return;
-      }
-
-      btn.removeAttribute("aria-hidden");
-      if (btn.dataset.overduePrevTabIndex) {
-        btn.setAttribute("tabindex", btn.dataset.overduePrevTabIndex);
-      } else {
-        btn.removeAttribute("tabindex");
-      }
-      btn.style.visibility = btn.dataset.overduePrevVisibility || "";
-      btn.style.pointerEvents = btn.dataset.overduePrevPointerEvents || "";
-      delete btn.dataset.overduePrevTabIndex;
-      delete btn.dataset.overduePrevVisibility;
-      delete btn.dataset.overduePrevPointerEvents;
-    });
-  }
-
-  function syncReturnTodayButton(dateNav, hidden) {
-    if (!dateNav) return;
-
-    var btn = dateNav.querySelector(".date-nav-return-today");
-    if (hidden) {
-      if (!btn) return;
-      if (typeof hideTaskBackTodayBtn === "function") hideTaskBackTodayBtn(btn, true);
-      else {
-        btn.classList.remove("is-visible", "has-range");
-        btn.setAttribute("aria-hidden", "true");
-        btn.tabIndex = -1;
-      }
-      return;
-    }
-
-    if (typeof setTaskBackTodayBtn === "function" && typeof sel === "string" && sel) {
-      setTaskBackTodayBtn(sel);
-    }
-  }
-
   function closeOverdueCreateEntries() {
     if (typeof closeAddSplitMenu === "function") closeAddSplitMenu();
     if (window._quickImportModalOpen && typeof closeQuickImportModal === "function") closeQuickImportModal();
@@ -199,8 +145,6 @@
     if (dateNav) {
       dateNav.classList.toggle(OVERDUE_NAV_CLASS, overdue);
       bindOverdueTitleClickGuard(dateNav);
-      setArrowAvailability(dateNav, overdue);
-      syncReturnTodayButton(dateNav, overdue);
     }
 
     if (overdue) {

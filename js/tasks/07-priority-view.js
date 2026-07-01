@@ -112,60 +112,6 @@
     return "";
   }
 
-  function setArrowAvailability(dateNav, disabled) {
-    if (!dateNav) return;
-    dateNav.querySelectorAll(".nav-arrow").forEach(function (btn) {
-      if (disabled) {
-        if (!btn.dataset.priorityPrevTabIndex) {
-          btn.dataset.priorityPrevTabIndex = btn.getAttribute("tabindex") || "";
-        }
-        if (!btn.dataset.priorityPrevVisibility) {
-          btn.dataset.priorityPrevVisibility = btn.style.visibility || "";
-        }
-        if (!btn.dataset.priorityPrevPointerEvents) {
-          btn.dataset.priorityPrevPointerEvents = btn.style.pointerEvents || "";
-        }
-        btn.setAttribute("aria-hidden", "true");
-        btn.tabIndex = -1;
-        btn.style.visibility = "hidden";
-        btn.style.pointerEvents = "none";
-        return;
-      }
-
-      btn.removeAttribute("aria-hidden");
-      if (btn.dataset.priorityPrevTabIndex) {
-        btn.setAttribute("tabindex", btn.dataset.priorityPrevTabIndex);
-      } else {
-        btn.removeAttribute("tabindex");
-      }
-      btn.style.visibility = btn.dataset.priorityPrevVisibility || "";
-      btn.style.pointerEvents = btn.dataset.priorityPrevPointerEvents || "";
-      delete btn.dataset.priorityPrevTabIndex;
-      delete btn.dataset.priorityPrevVisibility;
-      delete btn.dataset.priorityPrevPointerEvents;
-    });
-  }
-
-  function syncReturnTodayButton(dateNav, hidden) {
-    if (!dateNav) return;
-
-    var btn = dateNav.querySelector(".date-nav-return-today");
-    if (hidden) {
-      if (!btn) return;
-      if (typeof hideTaskBackTodayBtn === "function") hideTaskBackTodayBtn(btn, true);
-      else {
-        btn.classList.remove("is-visible", "has-range");
-        btn.setAttribute("aria-hidden", "true");
-        btn.tabIndex = -1;
-      }
-      return;
-    }
-
-    if (typeof setTaskBackTodayBtn === "function" && typeof sel === "string" && sel) {
-      setTaskBackTodayBtn(sel);
-    }
-  }
-
   function bindPriorityTitleClickGuard(dateNav) {
     if (!dateNav || dateNav.dataset.priorityClickGuardBound) return;
     var titleWrap = dateNav.querySelector("h3");
@@ -286,8 +232,6 @@
     if (dateNav) {
       dateNav.classList.toggle(PRIORITY_NAV_CLASS, !!state);
       bindPriorityTitleClickGuard(dateNav);
-      setArrowAvailability(dateNav, !!state);
-      syncReturnTodayButton(dateNav, !!state);
     }
 
     if (!state) {

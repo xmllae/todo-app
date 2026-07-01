@@ -6,15 +6,6 @@
   margin-bottom: 8px !important;
 }
 
-#taskMode.task-mode--frozen-view .task-main-col > .task-card > .date-nav.date-nav--frozen-view .nav-arrow,
-.app.app--with-global-nav #taskMode.task-mode--frozen-view .task-main-col > .task-card > .date-nav.date-nav--frozen-view .nav-arrow,
-#taskMode.task-mode--frozen-view .task-main-col > .task-card > .date-nav.date-nav--frozen-view .date-nav-return-today,
-.app.app--with-global-nav #taskMode.task-mode--frozen-view .task-main-col > .task-card > .date-nav.date-nav--frozen-view .date-nav-return-today {
-  display: inline-flex !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-}
-
 #taskMode.task-mode--frozen-view .task-main-col > .task-card > .date-nav.date-nav--frozen-view h3,
 .app.app--with-global-nav #taskMode.task-mode--frozen-view .task-main-col > .task-card > .date-nav.date-nav--frozen-view h3 {
   position: relative;
@@ -96,8 +87,6 @@
   padding-bottom: 1.5rem;
 }
 
-body.body--frozen-view #sidebar,
-body.body--frozen-view #sidebarMask,
 body.body--frozen-view #multiBar {
   display: none !important;
 }

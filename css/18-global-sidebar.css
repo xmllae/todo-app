@@ -100,11 +100,6 @@
   display: block;
 }
 
-#taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today,
-.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today {
-  display: none !important;
-}
-
 .global-side-nav {
   --gsn-shell-bg: rgba(255, 255, 255, 0.56);
   --gsn-shell-border: rgba(163, 176, 196, 0.24);
@@ -1459,152 +1454,10 @@
 
 /* Schedule center-panel reference layout polish (desktop-first). */
 @media (min-width: 1181px) {
-  #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today,
-  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today {
-    display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    height: 38px;
-    box-sizing: border-box;
-    margin-left: 0;
-    padding: 0;
-    max-width: 0;
-    overflow: hidden;
-    border: 1px solid transparent;
-    border-radius: 12px;
-    background: #ffffff;
-    color: #64748b;
-    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1;
-    white-space: nowrap;
-    opacity: 0;
-    transform: translateX(-8px);
-    pointer-events: none;
-    transition:
-      max-width 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 0.2s ease,
-      transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-      margin-left 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-      padding 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-      border-color 0.2s ease;
-    will-change: max-width, opacity, transform, margin-left, padding;
-  }
-
-  #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today.date-nav-return-today--no-motion,
-  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today.date-nav-return-today--no-motion {
-    transition: none !important;
-    animation: none !important;
-  }
-
-  #taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav .date-nav-return-today,
-  .app.app--with-global-nav #taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav .date-nav-return-today {
-    transition: none !important;
-    animation: none !important;
-  }
-
-  #taskMode.task-mode--route-enter .task-main-col > .task-card > .date-nav .date-nav-return-today,
-  .app.app--with-global-nav #taskMode.task-mode--route-enter .task-main-col > .task-card > .date-nav .date-nav-return-today,
   .app.app--with-global-nav #taskMode.task-mode--route-enter .task-main-col > .task-card > .date-nav .date-nav-actions .add-split,
   .app.app--with-global-nav #taskMode.task-mode--route-enter .task-main-col > .task-card > .date-nav .date-nav-actions .add-split-main {
     transition: none !important;
     animation: none !important;
-  }
-
-  #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today.is-visible,
-  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today.is-visible {
-    max-width: 168px;
-    margin-left: 14px;
-    padding: 0 14px;
-    border-color: #dbe4ef;
-    opacity: 1;
-    transform: translateX(0);
-    pointer-events: auto;
-  }
-
-  #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today.has-range.is-visible,
-  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today.has-range.is-visible {
-    max-width: 236px;
-  }
-
-  #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today svg,
-  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today svg {
-    width: 16px;
-    height: 16px;
-    flex-shrink: 0;
-  }
-
-  #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today span,
-  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today span {
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1;
-  }
-
-  #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today .date-nav-return-today-divider,
-  #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today .date-nav-return-today-meta,
-  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today .date-nav-return-today-divider,
-  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today .date-nav-return-today-meta {
-    display: none;
-  }
-
-  #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today.has-range .date-nav-return-today-divider,
-  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today.has-range .date-nav-return-today-divider {
-    display: block;
-    width: 1px;
-    height: 14px;
-    background: #dbe4ef;
-    opacity: 0.95;
-  }
-
-  #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today.has-range .date-nav-return-today-meta,
-  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today.has-range .date-nav-return-today-meta {
-    display: inline-flex;
-    align-items: center;
-    font-size: 12px;
-    font-weight: 600;
-    line-height: 1;
-    color: #94a3b8;
-    letter-spacing: 0;
-  }
-
-  #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today:hover,
-  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today:hover {
-    color: #475569;
-    border-color: #cfd9e6;
-    background: #f8fafc;
-  }
-
-  .dark #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today,
-  .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today {
-    background: #111827;
-    color: #cbd5e1;
-    border-color: transparent;
-    box-shadow: 0 2px 10px rgba(2, 6, 23, 0.34);
-  }
-
-  .dark #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today.is-visible,
-  .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today.is-visible {
-    border-color: #334155;
-  }
-
-  .dark #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today.has-range .date-nav-return-today-divider,
-  .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today.has-range .date-nav-return-today-divider {
-    background: #334155;
-  }
-
-  .dark #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today.has-range .date-nav-return-today-meta,
-  .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today.has-range .date-nav-return-today-meta {
-    color: #a8b3c7;
-  }
-
-  .dark #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today:hover,
-  .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-return-today:hover {
-    color: #e2e8f0;
-    background: #1f2937;
-    border-color: #475569;
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav {
@@ -1624,6 +1477,14 @@
     --date-nav-title-sub-line-height: 1.5;
     --date-nav-title-sub-letter-spacing: 0.025em;
     --date-nav-title-sub-gap: 4px;
+    --date-nav-inline-main-size: 22px;
+    --date-nav-inline-sub-size: 18px;
+    --date-nav-inline-main-color: #111827;
+    --date-nav-inline-muted-color: #9aa6b8;
+    --date-nav-inline-separator-gap: 8px;
+    --date-nav-inline-arrow-size: 8px;
+    --date-nav-inline-arrow-gap: 12px;
+    --date-nav-inline-arrow-stroke: 2px;
     margin: 0 !important;
     width: 100% !important;
     padding: 16px 28px 6px !important;
@@ -1636,10 +1497,6 @@
     position: relative;
     z-index: 150;
     overflow: visible;
-  }
-
-  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-arrow-group {
-    display: none !important;
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 {
@@ -1675,49 +1532,6 @@
   .app.app--with-global-nav #taskMode.task-mode--title-no-motion .task-main-col > .task-card > .date-nav h3 #dTitle .date-nav-date-main,
   .app.app--with-global-nav #taskMode.task-mode--title-no-motion .task-main-col > .task-card > .date-nav h3 #dTitle .date-nav-date-sub {
     transform: none !important;
-  }
-
-  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow {
-    width: 36px;
-    height: 36px;
-    min-width: 36px;
-    border-radius: 999px;
-    border: 1px solid transparent;
-    background: transparent;
-    color: #a7b4c6;
-    font-size: 0;
-    padding: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: none;
-    transition:
-      color 0.16s ease,
-      border-color 0.16s ease,
-      background 0.16s ease,
-      box-shadow 0.16s ease;
-  }
-
-  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow svg {
-    width: 19px;
-    height: 19px;
-    display: block;
-    stroke-width: 2.2;
-  }
-
-  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow:hover {
-    color: #5d6f88;
-    border-color: #d5dfea;
-    background: #f2f6fb;
-    box-shadow: 0 2px 8px rgba(148, 163, 184, 0.2);
-  }
-
-  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow:focus-visible {
-    color: #5d6f88;
-    border-color: #d5dfea;
-    background: #f2f6fb;
-    box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.26);
-    outline: none;
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 .date-nav-h3-ico {
@@ -1767,6 +1581,64 @@
     white-space: nowrap;
     margin-top: var(--date-nav-title-sub-gap);
     text-align: center;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3:has(#dTitle:is(.is-relative, .is-range-offset, .is-plain-date)) {
+    flex: 0 0 var(--date-nav-title-visible-box-w);
+    width: var(--date-nav-title-visible-box-w);
+    min-width: var(--date-nav-title-visible-box-w);
+    overflow: visible;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-relative, .is-range-offset, .is-plain-date) {
+    width: auto;
+    min-height: 0;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    line-height: 1;
+    overflow: visible;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-relative, .is-range-offset, .is-plain-date) .date-nav-date-main {
+    width: auto;
+    font-size: var(--date-nav-inline-main-size);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--date-nav-inline-main-color);
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-relative, .is-range-offset, .is-plain-date) .date-nav-date-sub {
+    display: inline-flex;
+    align-items: center;
+    width: auto;
+    margin: 0;
+    font-size: var(--date-nav-inline-sub-size);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0;
+    color: var(--date-nav-inline-muted-color);
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-relative, .is-range-offset, .is-plain-date) .date-nav-date-sub::before {
+    content: "\00b7";
+    margin: 0 var(--date-nav-inline-separator-gap);
+    color: var(--date-nav-inline-muted-color);
+    font-weight: 700;
+  }
+
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-relative, .is-range-offset, .is-plain-date)::after {
+    content: "";
+    width: var(--date-nav-inline-arrow-size);
+    height: var(--date-nav-inline-arrow-size);
+    margin-left: var(--date-nav-inline-arrow-gap);
+    border-right: var(--date-nav-inline-arrow-stroke) solid var(--date-nav-inline-muted-color);
+    border-bottom: var(--date-nav-inline-arrow-stroke) solid var(--date-nav-inline-muted-color);
+    transform: rotate(45deg) translateY(-2px);
+    transform-origin: center;
+    flex: 0 0 auto;
   }
 
   .app.app--with-global-nav #taskMode.task-mode--priority-view .task-main-col > .task-card > .date-nav.date-nav--priority h3 #dTitle.is-priority-scope,
@@ -1932,26 +1804,9 @@
     color: #9aa9bd;
   }
 
-
-  .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow {
-    color: rgba(195, 209, 226, 0.66);
-    border-color: transparent;
-    background: transparent;
-  }
-
-  .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow:hover {
-    color: #e8f1ff;
-    border-color: rgba(148, 163, 184, 0.46);
-    background: rgba(148, 163, 184, 0.16);
-    box-shadow: 0 2px 10px rgba(2, 6, 23, 0.26);
-  }
-
-  .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .nav-arrow:focus-visible {
-    color: #e8f1ff;
-    border-color: rgba(148, 163, 184, 0.46);
-    background: rgba(148, 163, 184, 0.16);
-    box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.28);
-    outline: none;
+  .dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav {
+    --date-nav-inline-main-color: #e2e8f0;
+    --date-nav-inline-muted-color: #9aa9bd;
   }
 
   .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .date-nav-actions .add-split {
@@ -3890,46 +3745,6 @@
     gap: 10px !important;
   }
 
-  #taskMode .task-main-col > .task-card > .date-nav .nav-arrow {
-    width: 40px !important;
-    height: 40px !important;
-    min-width: 40px !important;
-    min-height: 40px !important;
-    padding: 0 !important;
-    border-radius: 999px !important;
-    border: 0 !important;
-    background: transparent !important;
-    color: #aab6c7 !important;
-    box-shadow: none !important;
-  }
-
-  #taskMode .task-main-col > .task-card > .date-nav .nav-arrow:hover,
-  #taskMode .task-main-col > .task-card > .date-nav .nav-arrow:focus-visible {
-    color: #5d6f88 !important;
-    border: 1px solid #d5dfea !important;
-    background: #f2f6fb !important;
-    box-shadow: 0 2px 8px rgba(148, 163, 184, 0.2) !important;
-    outline: none !important;
-  }
-
-  .dark #taskMode .task-main-col > .task-card > .date-nav .nav-arrow {
-    color: rgba(195, 209, 226, 0.66) !important;
-  }
-
-  .dark #taskMode .task-main-col > .task-card > .date-nav .nav-arrow:hover,
-  .dark #taskMode .task-main-col > .task-card > .date-nav .nav-arrow:focus-visible {
-    color: #e8f1ff !important;
-    border: 1px solid rgba(148, 163, 184, 0.46) !important;
-    background: rgba(148, 163, 184, 0.16) !important;
-    box-shadow: 0 2px 10px rgba(2, 6, 23, 0.26) !important;
-  }
-
-  #taskMode .task-main-col > .task-card > .date-nav .nav-arrow svg {
-    width: 20px !important;
-    height: 20px !important;
-    stroke-width: 2 !important;
-  }
-
   #taskMode .task-main-col > .task-card > .date-nav h3 {
     flex: 0 0 140px !important;
     width: 140px !important;
@@ -3955,6 +3770,65 @@
     letter-spacing: 0.025em !important;
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif !important;
     color: #64748b !important;
+  }
+
+  #taskMode .task-main-col > .task-card > .date-nav h3:has(#dTitle:is(.is-relative, .is-range-offset, .is-plain-date)) {
+    flex: 0 0 var(--date-nav-title-visible-box-w) !important;
+    width: var(--date-nav-title-visible-box-w) !important;
+    min-width: var(--date-nav-title-visible-box-w) !important;
+    overflow: visible !important;
+  }
+
+  #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-relative, .is-range-offset, .is-plain-date) {
+    width: auto !important;
+    min-height: 0 !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0 !important;
+    line-height: 1 !important;
+    overflow: visible !important;
+  }
+
+  #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-relative, .is-range-offset, .is-plain-date) .date-nav-date-main {
+    width: auto !important;
+    margin: 0 !important;
+    font-size: var(--date-nav-inline-main-size) !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    letter-spacing: -0.02em !important;
+    color: var(--date-nav-inline-main-color) !important;
+  }
+
+  #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-relative, .is-range-offset, .is-plain-date) .date-nav-date-sub {
+    display: inline-flex !important;
+    align-items: center !important;
+    width: auto !important;
+    margin: 0 !important;
+    font-size: var(--date-nav-inline-sub-size) !important;
+    font-weight: 600 !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+    color: var(--date-nav-inline-muted-color) !important;
+  }
+
+  #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-relative, .is-range-offset, .is-plain-date) .date-nav-date-sub::before {
+    content: "\00b7";
+    margin: 0 var(--date-nav-inline-separator-gap);
+    color: var(--date-nav-inline-muted-color);
+    font-weight: 700;
+  }
+
+  #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-relative, .is-range-offset, .is-plain-date)::after {
+    content: "";
+    width: var(--date-nav-inline-arrow-size);
+    height: var(--date-nav-inline-arrow-size);
+    margin-left: var(--date-nav-inline-arrow-gap);
+    border-right: var(--date-nav-inline-arrow-stroke) solid var(--date-nav-inline-muted-color);
+    border-bottom: var(--date-nav-inline-arrow-stroke) solid var(--date-nav-inline-muted-color);
+    transform: rotate(45deg) translateY(-2px);
+    transform-origin: center;
+    flex: 0 0 auto;
   }
 
   #taskMode .list-panel .batch-bar {
@@ -4075,6 +3949,317 @@
   #taskMode .batch-bar-left .filter-seg-badge.filter-seg-badge--on {
     background: #ede9fe !important;
     color: #7c3aed !important;
+  }
+}
+/* #endregion */
+
+/* #region Task date picker popover */
+#taskMode .task-main-col > .task-card > .date-nav,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav {
+  position: relative;
+}
+
+#taskMode .task-main-col > .task-card > .date-nav h3[aria-haspopup="dialog"],
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3[aria-haspopup="dialog"] {
+  cursor: pointer;
+}
+
+#taskMode .task-main-col > .task-card > .date-nav h3.is-date-picker-open #dTitle:is(.is-relative, .is-range-offset, .is-plain-date)::after,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3.is-date-picker-open #dTitle:is(.is-relative, .is-range-offset, .is-plain-date)::after {
+  transform: rotate(225deg) translate(-2px, -1px);
+}
+
+#taskMode .task-main-col > .task-card > .date-nav .task-date-picker-popover,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-popover {
+  position: absolute;
+  left: 18px;
+  top: calc(100% + 4px);
+  z-index: 680;
+  width: 404px;
+  box-sizing: border-box;
+  padding: 20px 24px 0;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow:
+    0 18px 40px rgba(15, 23, 42, 0.12),
+    0 2px 10px rgba(15, 23, 42, 0.06);
+  color: #1f2937;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-6px) scale(0.985);
+  transform-origin: 210px 0;
+  transition:
+    opacity 0.16s ease,
+    visibility 0.16s ease,
+    transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+#taskMode .task-main-col > .task-card > .date-nav .task-date-picker-popover.is-open,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-popover.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+#taskMode .task-main-col > .task-card > .date-nav .task-date-picker-caret,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-caret {
+  position: absolute;
+  top: -8px;
+  left: 204px;
+  width: 14px;
+  height: 14px;
+  border-left: 1px solid rgba(226, 232, 240, 0.95);
+  border-top: 1px solid rgba(226, 232, 240, 0.95);
+  background: rgba(255, 255, 255, 0.98);
+  transform: rotate(45deg);
+}
+
+#taskMode .task-main-col > .task-card > .date-nav .task-date-picker-head,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-head {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) 36px;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+#taskMode .task-main-col > .task-card > .date-nav .task-date-picker-nav-btn,
+#taskMode .task-main-col > .task-card > .date-nav .task-date-picker-month-btn,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-nav-btn,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-month-btn {
+  border: 0;
+  background: transparent;
+  color: #94a3b8;
+  font: inherit;
+  cursor: pointer;
+}
+
+#taskMode .task-main-col > .task-card > .date-nav .task-date-picker-nav-btn,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 50%;
+}
+
+#taskMode .task-main-col > .task-card > .date-nav .task-date-picker-nav-btn:hover,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-nav-btn:hover {
+  color: #64748b;
+  background: #f8fafc;
+}
+
+#taskMode .task-main-col > .task-card > .date-nav .task-date-picker-nav-btn svg,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-nav-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+#taskMode .task-main-col > .task-card > .date-nav .task-date-picker-month-btn,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-month-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-width: 0;
+  height: 36px;
+  padding: 0 10px;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0;
+  color: #475569;
+}
+
+#taskMode .task-main-col > .task-card > .date-nav .task-date-picker-month-btn svg,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-month-btn svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: #a8b3c3;
+  stroke-width: 2.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+#taskMode .task-main-col > .task-card > .date-nav .task-date-picker-grid,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 42px;
+  align-items: center;
+  justify-items: center;
+  row-gap: 2px;
+  margin-bottom: 12px;
+}
+
+#taskMode .task-main-col > .task-card > .date-nav .task-date-picker-week,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-week {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+  color: #9aa6b8;
+}
+
+#taskMode .task-main-col > .task-card > .date-nav .task-date-picker-day,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-day {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #475569;
+  font: inherit;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    color 0.16s ease,
+    background-color 0.16s ease,
+    box-shadow 0.16s ease;
+}
+
+#taskMode .task-main-col > .task-card > .date-nav .task-date-picker-day.is-muted,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-day.is-muted {
+  color: #b6c0ce;
+}
+
+#taskMode .task-main-col > .task-card > .date-nav .task-date-picker-day:hover,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-day:hover {
+  color: #2563eb;
+  background: #eef4ff;
+}
+
+#taskMode .task-main-col > .task-card > .date-nav .task-date-picker-day.is-today:not(.is-selected),
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-day.is-today:not(.is-selected) {
+  color: #3b82f6;
+  font-weight: 700;
+}
+
+#taskMode .task-main-col > .task-card > .date-nav .task-date-picker-day.is-selected,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-day.is-selected {
+  color: #fff;
+  background: linear-gradient(180deg, #6fa0ff, #4f7df3);
+  font-weight: 700;
+  box-shadow: 0 7px 14px rgba(59, 130, 246, 0.28);
+}
+
+#taskMode .task-main-col > .task-card > .date-nav .task-date-picker-quick,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-quick {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  padding: 15px 0 18px;
+  border-top: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+#taskMode .task-main-col > .task-card > .date-nav .task-date-picker-quick button,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-quick button {
+  border: 0;
+  background: transparent;
+  color: #6ea0ff;
+  font: inherit;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+}
+
+#taskMode .task-main-col > .task-card > .date-nav .task-date-picker-quick button:hover,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-quick button:hover {
+  color: #2563eb;
+}
+
+.dark #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-popover,
+.dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-popover {
+  border-color: rgba(51, 65, 85, 0.9);
+  background: rgba(15, 23, 42, 0.98);
+  color: #e2e8f0;
+  box-shadow:
+    0 18px 40px rgba(2, 6, 23, 0.42),
+    0 2px 10px rgba(2, 6, 23, 0.3);
+}
+
+.dark #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-caret,
+.dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-caret {
+  border-color: rgba(51, 65, 85, 0.9);
+  background: rgba(15, 23, 42, 0.98);
+}
+
+.dark #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-month-btn,
+.dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-month-btn {
+  color: #e2e8f0;
+}
+
+.dark #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-day,
+.dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-day {
+  color: #cbd5e1;
+}
+
+.dark #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-day.is-muted,
+.dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-day.is-muted,
+.dark #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-week,
+.dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-week {
+  color: #7f8da3;
+}
+
+.dark #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-day:hover,
+.dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-day:hover {
+  color: #bfdbfe;
+  background: rgba(59, 130, 246, 0.16);
+}
+
+.dark #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-quick,
+.dark .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-quick {
+  border-color: rgba(51, 65, 85, 0.86);
+}
+
+@media (max-width: 640px) {
+  #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-popover,
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-popover {
+    left: 10px;
+    right: 10px;
+    top: calc(100% + 6px);
+    width: auto;
+    padding: 18px 18px 0;
+    transform-origin: 50% 0;
+  }
+
+  #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-caret,
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-caret {
+    left: 50%;
+    margin-left: -7px;
+  }
+
+  #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-month-btn,
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-month-btn {
+    font-size: 19px;
+  }
+
+  #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-day,
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-day,
+  #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-quick button,
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav .task-date-picker-quick button {
+    font-size: 16px;
   }
 }
 /* #endregion */
@@ -4253,13 +4438,6 @@
 #taskMode .batch-bar-left .filter-seg-badge.filter-seg-badge--on {
   background: #ede9fe !important;
   color: #7c3aed !important;
-}
-
-#taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue .nav-arrow,
-.app.app--with-global-nav #taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue .nav-arrow {
-  display: inline-flex !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
 }
 
 #taskMode.task-mode--overdue-view .task-main-col > .task-card > .date-nav.date-nav--overdue,

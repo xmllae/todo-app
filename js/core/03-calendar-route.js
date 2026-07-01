@@ -1,7 +1,5 @@
-// ????????????????
-function rCal(){const g=document.getElementById("cGrid");const mn=["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];document.getElementById("mTitle").textContent=`${cY}年${mn[cM]}`;let h=["日","一","二","三","四","五","六"].map(d=>`<div class="cal-head">${d}</div>`).join("");const f1=new Date(cY,cM,1).getDay(),dm=new Date(cY,cM+1,0).getDate(),pm=new Date(cY,cM,0).getDate(),ts=fd(now);for(let i=f1-1;i>=0;i--){const d=pm-i,pmo=cM===0?11:cM-1,py=cM===0?cY-1:cY;const ds=`${py}-${String(pmo+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;const dw=new Date(py,pmo,d).getDay();h+=`<div class="${"cal-day other"+(dw===0||dw===6?" weekend":"")}" onclick="pick('${ds}')">${d}${cntDot(ds)}</div>`}for(let d=1;d<=dm;d++){const ds=`${cY}-${String(cM+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;const dw=new Date(cY,cM,d).getDay();let c="cal-day";if(ds===ts)c+=" today";if(ds===sel)c+=" selected";if(dw===0||dw===6)c+=" weekend";h+=`<div class="${c}" onclick="pick('${ds}')">${d}${cntDot(ds)}</div>`}const tot=f1+dm,rem=tot%7===0?0:7-tot%7;for(let d=1;d<=rem;d++){const nm=cM===11?0:cM+1,ny=cM===11?cY+1:cY;const ds=`${ny}-${String(nm+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;const dw=new Date(ny,nm,d).getDay();h+=`<div class="${"cal-day other"+(dw===0||dw===6?" weekend":"")}" onclick="pick('${ds}')">${d}${cntDot(ds)}</div>`}g.innerHTML=h;rStreak();rSbQNav()}
-function cntDot(ds){if(!T[ds]||!T[ds].length)return"";const active=T[ds].filter(x=>isListedTask(x));const archCnt=T[ds].filter(x=>x.archived&&!x.dismissed).length;if(!active.length&&!archCnt)return"";if(!active.length&&archCnt>0)return`<div class="cal-cnt" style="color:#22c55e;font-weight:600">✓${archCnt}</div>`;const doneCnt=active.filter(x=>x.done).length;return`<div class="cal-cnt">${doneCnt}/${active.length}${archCnt?'<span style="color:#22c55e">●</span>':""}</div>`}
-function chgM(d){cM+=d;if(cM>11){cM=0;cY++}if(cM<0){cM=11;cY--}rCal()}
+// Date state refresh hook. The old side calendar has been removed.
+function rCal(){const panel=document.getElementById("taskDatePicker");if(panel&&panel.classList.contains("is-open")&&typeof renderTaskDatePicker==="function")renderTaskDatePicker()}
 function getGlobalQuickMode(){return typeof getGlobalSideNavQuickMode==="function"?getGlobalSideNavQuickMode():""}
 function clearGlobalQuickMode(){if(typeof setGlobalSideNavQuickMode==="function")setGlobalSideNavQuickMode("",true)}
 let _taskTitleNoMotionBudget=0;
@@ -42,12 +40,148 @@ function consumeTaskTitleNoMotion(){
 window.markTaskTitleNoMotion=markTaskTitleNoMotion;
 window.consumeTaskTitleNoMotion=consumeTaskTitleNoMotion;
 function goToday(keepWeekMode){flushPendingTogIfAny();const qm=getGlobalQuickMode();if(keepWeekMode&&qm==="week"){if(typeof setGlobalSideNavQuickMode==="function")setGlobalSideNavQuickMode("week",true)}else clearGlobalQuickMode();cY=now.getFullYear();cM=now.getMonth();sel=fd(now);expandedId=null;if(typeof clearSubtaskCollapseOverrides==="function")clearSubtaskCollapseOverrides();closeTaskMoreFloat();taskMoreMenuId=null;rCal();rAll()}
-function pick(ds){flushPendingTogIfAny();clearGlobalQuickMode();sel=ds;const p=ds.split("-");cY=+p[0];cM=+p[1]-1;expandedId=null;if(typeof clearSubtaskCollapseOverrides==="function")clearSubtaskCollapseOverrides();closeTaskMoreFloat();taskMoreMenuId=null;rCal();rAll();if(window.innerWidth<640)closeSidebar()}
+function pick(ds){flushPendingTogIfAny();clearGlobalQuickMode();sel=ds;const p=ds.split("-");cY=+p[0];cM=+p[1]-1;expandedId=null;if(typeof clearSubtaskCollapseOverrides==="function")clearSubtaskCollapseOverrides();closeTaskMoreFloat();taskMoreMenuId=null;rCal();rAll()}
 function quickGo(o){if(o===0){goToday(getGlobalQuickMode()==="week");return}flushPendingTogIfAny();const qm=getGlobalQuickMode();const d=parseDS(sel);d.setDate(d.getDate()+(qm==="week"?o*7:o));sel=fd(d);if(qm!=="week")clearGlobalQuickMode();cY=d.getFullYear();cM=d.getMonth();expandedId=null;if(typeof clearSubtaskCollapseOverrides==="function")clearSubtaskCollapseOverrides();closeTaskMoreFloat();taskMoreMenuId=null;rCal();rAll()}
-function rStreak(){let s=0;const d=new Date(now);for(let i=0;i<365;i++){const ds=fd(d),dt=T[ds]||[];const v=dt.filter(t=>isListedTask(t)&&!t.frozen);if(v.length>0&&v.every(t=>t.done)){s++;d.setDate(d.getDate()-1)}else if(v.length===0&&i===0){d.setDate(d.getDate()-1)}else break}document.getElementById("streakArea").innerHTML=s>0?`<div class="streak-badge">🔥 连续 ${s} 天</div>`:`<div class="streak-badge cold">💤 尚未连续记录</div>`}
-function rSbQNav(){const y=new Date(now);y.setDate(y.getDate()-1);const tm=new Date(now);tm.setDate(tm.getDate()+1);document.getElementById("sbQNav").innerHTML=[{ds:fd(y),l:"昨天"},{ds:fd(now),l:"今天"},{ds:fd(tm),l:"明天"}].map(d=>`<button class="${d.ds===sel?"qn-active":""}" onclick="pick('${d.ds}')">${d.l}</button>`).join("")}
-function openSidebar(){document.getElementById("sidebar").classList.add("open");document.getElementById("sidebarMask").classList.add("open");document.body.style.overflow="hidden"}
-function closeSidebar(){document.getElementById("sidebar").classList.remove("open");document.getElementById("sidebarMask").classList.remove("open");document.body.style.overflow=""}
+var _taskDatePickerYear=0,_taskDatePickerMonth=0,_taskDatePickerDocBound=false;
+function taskDatePickerIsDateKey(ds){return typeof ds==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(ds)}
+function taskDatePickerBaseDate(){try{return taskDatePickerIsDateKey(sel)?parseDS(sel):new Date(now)}catch(e){return new Date(now)}}
+function taskDatePickerMonthLabel(y,m){return y+"\u5e74"+(m+1)+"\u6708"}
+function taskDatePickerWeekStart(ds){const d=taskDatePickerIsDateKey(ds)?parseDS(ds):new Date(now);d.setHours(0,0,0,0);const diff=d.getDay()===0?-6:1-d.getDay();d.setDate(d.getDate()+diff);return fd(d)}
+function ensureTaskDatePicker(){
+  const nav=document.querySelector("#taskMode .task-main-col > .task-card > .date-nav");
+  if(!nav)return null;
+  const title=nav.querySelector("h3");
+  if(title&&!title.dataset.datePickerBound){
+    title.dataset.datePickerBound="1";
+    title.removeAttribute("onclick");
+    title.setAttribute("role","button");
+    title.setAttribute("tabindex","0");
+    title.setAttribute("aria-haspopup","dialog");
+    title.setAttribute("aria-controls","taskDatePicker");
+    title.setAttribute("aria-expanded","false");
+    title.addEventListener("click",toggleTaskDatePicker);
+    title.addEventListener("keydown",function(e){
+      if(e.key==="Enter"||e.key===" "){e.preventDefault();toggleTaskDatePicker(e)}
+      else if(e.key==="Escape")closeTaskDatePicker()
+    })
+  }
+  let panel=document.getElementById("taskDatePicker");
+  if(!panel){
+    panel=document.createElement("div");
+    panel.id="taskDatePicker";
+    panel.className="task-date-picker-popover";
+    panel.setAttribute("role","dialog");
+    panel.setAttribute("aria-label","\u9009\u62e9\u65e5\u671f");
+    panel.setAttribute("aria-hidden","true");
+    nav.appendChild(panel);
+    panel.addEventListener("click",function(e){
+      e.stopPropagation();
+      const btn=e.target.closest("[data-tdp-action]");
+      if(!btn)return;
+      const action=btn.getAttribute("data-tdp-action");
+      if(action==="prev")changeTaskDatePickerMonth(-1);
+      else if(action==="next")changeTaskDatePickerMonth(1);
+      else if(action==="pick")pickTaskDatePickerDate(btn.getAttribute("data-ds")||"");
+      else if(action==="today")pickTaskDatePickerDate(fd(now));
+      else if(action==="tomorrow"){const d=new Date(now);d.setDate(d.getDate()+1);pickTaskDatePickerDate(fd(d))}
+      else if(action==="week")pickTaskDatePickerWeek(0);
+      else if(action==="next-week")pickTaskDatePickerWeek(1)
+    })
+  }
+  return panel
+}
+function renderTaskDatePicker(){
+  const panel=ensureTaskDatePicker();
+  if(!panel)return;
+  if(!_taskDatePickerYear||_taskDatePickerMonth<0){
+    const base=taskDatePickerBaseDate();
+    _taskDatePickerYear=base.getFullYear();
+    _taskDatePickerMonth=base.getMonth()
+  }
+  const selected=taskDatePickerIsDateKey(sel)?sel:fd(now),today=fd(now),weekStart=taskDatePickerWeekStart(selected);
+  const firstDay=new Date(_taskDatePickerYear,_taskDatePickerMonth,1).getDay();
+  const gridStart=new Date(_taskDatePickerYear,_taskDatePickerMonth,1-firstDay);
+  const heads=["\u65e5","\u4e00","\u4e8c","\u4e09","\u56db","\u4e94","\u516d"].map(function(w){return'<span class="task-date-picker-week">'+w+"</span>"}).join("");
+  let days="";
+  for(let i=0;i<42;i++){
+    const d=new Date(gridStart);
+    d.setDate(gridStart.getDate()+i);
+    const ds=fd(d),other=d.getMonth()!==_taskDatePickerMonth;
+    let cls="task-date-picker-day";
+    if(other)cls+=" is-muted";
+    if(ds===today)cls+=" is-today";
+    if(ds===selected)cls+=" is-selected";
+    if(ds>=weekStart&&ds<fd(new Date(parseDS(weekStart).getFullYear(),parseDS(weekStart).getMonth(),parseDS(weekStart).getDate()+7)))cls+=" is-in-week";
+    days+='<button type="button" class="'+cls+'" data-tdp-action="pick" data-ds="'+ds+'" aria-label="'+ds+'">'+d.getDate()+"</button>"
+  }
+  panel.innerHTML='<div class="task-date-picker-caret" aria-hidden="true"></div><div class="task-date-picker-head"><button type="button" class="task-date-picker-nav-btn" data-tdp-action="prev" aria-label="\u4e0a\u4e00\u6708"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18 9 12l6-6"/></svg></button><div class="task-date-picker-month-btn" aria-label="\u5f53\u524d\u6708\u4efd"><span>'+taskDatePickerMonthLabel(_taskDatePickerYear,_taskDatePickerMonth)+'</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></div><button type="button" class="task-date-picker-nav-btn" data-tdp-action="next" aria-label="\u4e0b\u4e00\u6708"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button></div><div class="task-date-picker-grid">'+heads+days+'</div><div class="task-date-picker-quick"><button type="button" data-tdp-action="today">\u4eca\u5929</button><button type="button" data-tdp-action="tomorrow">\u660e\u5929</button><button type="button" data-tdp-action="week">\u672c\u5468</button><button type="button" data-tdp-action="next-week">\u4e0b\u5468</button></div>'
+}
+function openTaskDatePicker(e){
+  if(e){e.preventDefault();e.stopPropagation()}
+  const base=taskDatePickerBaseDate();
+  _taskDatePickerYear=base.getFullYear();
+  _taskDatePickerMonth=base.getMonth();
+  renderTaskDatePicker();
+  const panel=document.getElementById("taskDatePicker"),title=document.querySelector("#taskMode .task-main-col > .task-card > .date-nav h3");
+  if(!panel)return;
+  panel.classList.add("is-open");
+  panel.setAttribute("aria-hidden","false");
+  if(title){title.classList.add("is-date-picker-open");title.setAttribute("aria-expanded","true")}
+  if(!_taskDatePickerDocBound){
+    _taskDatePickerDocBound=true;
+    setTimeout(function(){
+      document.addEventListener("click",handleTaskDatePickerDocClick);
+      document.addEventListener("keydown",handleTaskDatePickerKeydown)
+    },0)
+  }
+}
+function closeTaskDatePicker(){
+  const panel=document.getElementById("taskDatePicker"),title=document.querySelector("#taskMode .task-main-col > .task-card > .date-nav h3");
+  if(panel){panel.classList.remove("is-open");panel.setAttribute("aria-hidden","true")}
+  if(title){title.classList.remove("is-date-picker-open");title.setAttribute("aria-expanded","false")}
+}
+function toggleTaskDatePicker(e){
+  const panel=ensureTaskDatePicker();
+  if(panel&&panel.classList.contains("is-open")){if(e){e.preventDefault();e.stopPropagation()}closeTaskDatePicker();return}
+  openTaskDatePicker(e)
+}
+function handleTaskDatePickerDocClick(e){
+  const panel=document.getElementById("taskDatePicker"),title=document.querySelector("#taskMode .task-main-col > .task-card > .date-nav h3");
+  if(!panel||!panel.classList.contains("is-open"))return;
+  if(panel.contains(e.target)||(title&&title.contains(e.target)))return;
+  closeTaskDatePicker()
+}
+function handleTaskDatePickerKeydown(e){if(e.key==="Escape")closeTaskDatePicker()}
+function changeTaskDatePickerMonth(delta){
+  _taskDatePickerMonth+=delta;
+  if(_taskDatePickerMonth>11){_taskDatePickerMonth=0;_taskDatePickerYear++}
+  if(_taskDatePickerMonth<0){_taskDatePickerMonth=11;_taskDatePickerYear--}
+  renderTaskDatePicker()
+}
+function pickTaskDatePickerDate(ds){
+  if(!taskDatePickerIsDateKey(ds))return;
+  if(typeof pick==="function")pick(ds);
+  closeTaskDatePicker()
+}
+function pickTaskDatePickerWeek(offset){
+  const d=new Date(now);
+  d.setDate(d.getDate()+offset*7);
+  const ds=fd(d);
+  if(typeof flushPendingTogIfAny==="function")flushPendingTogIfAny();
+  if(typeof window.markTaskTitleNoMotion==="function")window.markTaskTitleNoMotion();
+  if(typeof setGlobalSideNavQuickMode==="function")setGlobalSideNavQuickMode("week");
+  sel=ds;cY=d.getFullYear();cM=d.getMonth();
+  if(typeof FMulti!=="undefined")FMulti=new Set(["pending"]);
+  if(typeof FTag!=="undefined")FTag="";
+  expandedId=null;
+  if(typeof clearSubtaskCollapseOverrides==="function")clearSubtaskCollapseOverrides();
+  if(typeof closeTaskMoreFloat==="function")closeTaskMoreFloat();
+  taskMoreMenuId=null;
+  if(typeof rCal==="function")rCal();
+  if(typeof rAll==="function")rAll();
+  closeTaskDatePicker()
+}
+ensureTaskDatePicker();
 function enhanceHeaderSearchTrigger(){const btn=document.querySelector('.header-tools .icon-btn[onclick="toggleSearch()"]');if(!btn)return;btn.classList.add("header-search-trigger");btn.setAttribute("aria-label","搜索任务，快捷键 Ctrl K");btn.setAttribute("title","搜索任务 (Ctrl+K)");if(!btn.querySelector(".header-search-kbd"))btn.innerHTML='<i class="header-utility-ico ph ph-magnifying-glass" aria-hidden="true"></i><span class="header-search-placeholder">搜索任务...</span><span class="header-search-kbd" aria-hidden="true">Ctrl K</span>'}
 function toggleSearch(forceOpen){const w=document.getElementById("searchWrap"),input=document.getElementById("searchIn"),res=document.getElementById("searchResults");if(!w||!input)return;const open=typeof forceOpen==="boolean"?forceOpen:!w.classList.contains("open");w.classList.toggle("open",open);if(open){requestAnimationFrame(()=>{input.focus();input.select()})}else{input.value="";if(res)res.classList.add("hidden")}}
 enhanceHeaderSearchTrigger();

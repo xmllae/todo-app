@@ -32,46 +32,6 @@
     return "created";
   }
 
-  function ensureArrowGroup(dateNav) {
-    var h3 = dateNav.querySelector("h3");
-    if (!h3) return;
-    var arrows = dateNav.querySelectorAll(".nav-arrow");
-    if (!arrows || arrows.length < 2) return;
-    var group = dateNav.querySelector(".date-nav-arrow-group");
-    if (!group) {
-      group = document.createElement("div");
-      group.className = "date-nav-arrow-group";
-    }
-    group.appendChild(arrows[0]);
-    group.appendChild(arrows[1]);
-    dateNav.insertBefore(group, h3);
-  }
-
-  function restoreArrowOrder(dateNav) {
-    var group = dateNav.querySelector(".date-nav-arrow-group");
-    var h3 = dateNav.querySelector("h3");
-    if (!group || !h3) return;
-    var arrows = group.querySelectorAll(".nav-arrow");
-    if (arrows.length >= 2) {
-      dateNav.insertBefore(arrows[0], h3);
-      if (h3.nextSibling) dateNav.insertBefore(arrows[1], h3.nextSibling);
-      else dateNav.appendChild(arrows[1]);
-    }
-    group.remove();
-  }
-
-  function ensureDateArrowIcons(dateNav) {
-    if (!dateNav) return;
-    var left = dateNav.querySelector('.nav-arrow[aria-label*="\u4e0a"]');
-    var right = dateNav.querySelector('.nav-arrow[aria-label*="\u4e0b"]');
-    var leftSvg =
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>';
-    var rightSvg =
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>';
-    if (left && !left.querySelector("svg")) left.innerHTML = leftSvg;
-    if (right && !right.querySelector("svg")) right.innerHTML = rightSvg;
-  }
-
   function ensureSortButtonLabel(batchBar) {
     var sortBtn = batchBar.querySelector(".batch-sort-btn");
     if (!sortBtn) return;
@@ -226,11 +186,9 @@
 
     var actionWrap = dateNav.querySelector(".date-nav-actions");
     var movedAdd = dateNav.querySelector(".date-nav-actions .add-split");
-    ensureDateArrowIcons(dateNav);
     ensureBatchActionIcons(batchBar);
 
     if (!isDesktop()) {
-      restoreArrowOrder(dateNav);
       if (movedAdd) batchLeft.insertBefore(movedAdd, batchLeft.firstChild || null);
       var inlineAdd = batchLeft.querySelector(".add-split");
       if (inlineAdd) ensureQuickImportShortcut(inlineAdd);
@@ -244,8 +202,6 @@
       cleanupSortButtonLabel(batchBar);
       return;
     }
-
-    restoreArrowOrder(dateNav);
 
     var desktopTodayBtns = dateNav.querySelectorAll(".date-nav-today-btn");
     desktopTodayBtns.forEach(function (el) {

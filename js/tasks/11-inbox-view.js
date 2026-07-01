@@ -363,65 +363,6 @@
     title.classList.remove('is-inbox-scope');
   }
 
-  function setArrowAvailability(dateNav, disabled) {
-    if (!dateNav) {
-      return;
-    }
-    dateNav.querySelectorAll('.nav-arrow').forEach(function (btn) {
-      if (disabled) {
-        if (!btn.dataset.inboxPrevTabIndex) {
-          btn.dataset.inboxPrevTabIndex = btn.getAttribute('tabindex') || '';
-        }
-        if (!btn.dataset.inboxPrevVisibility) {
-          btn.dataset.inboxPrevVisibility = btn.style.visibility || '';
-        }
-        if (!btn.dataset.inboxPrevPointerEvents) {
-          btn.dataset.inboxPrevPointerEvents = btn.style.pointerEvents || '';
-        }
-        btn.setAttribute('aria-hidden', 'true');
-        btn.tabIndex = -1;
-        btn.style.visibility = 'hidden';
-        btn.style.pointerEvents = 'none';
-        return;
-      }
-
-      btn.removeAttribute('aria-hidden');
-      if (btn.dataset.inboxPrevTabIndex) {
-        btn.setAttribute('tabindex', btn.dataset.inboxPrevTabIndex);
-      } else {
-        btn.removeAttribute('tabindex');
-      }
-      btn.style.visibility = btn.dataset.inboxPrevVisibility || '';
-      btn.style.pointerEvents = btn.dataset.inboxPrevPointerEvents || '';
-      delete btn.dataset.inboxPrevTabIndex;
-      delete btn.dataset.inboxPrevVisibility;
-      delete btn.dataset.inboxPrevPointerEvents;
-    });
-  }
-
-  function syncReturnTodayButton(dateNav, hidden) {
-    if (!dateNav) {
-      return;
-    }
-    const btn = dateNav.querySelector('.date-nav-return-today');
-    if (hidden) {
-      if (!btn) {
-        return;
-      }
-      if (typeof hideTaskBackTodayBtn === 'function') {
-        hideTaskBackTodayBtn(btn, true);
-      } else {
-        btn.classList.remove('is-visible', 'has-range');
-        btn.setAttribute('aria-hidden', 'true');
-        btn.tabIndex = -1;
-      }
-      return;
-    }
-    if (typeof setTaskBackTodayBtn === 'function' && typeof sel === 'string' && sel) {
-      setTaskBackTodayBtn(sel);
-    }
-  }
-
   function bindInboxTitleClickGuard(dateNav) {
     if (!dateNav || dateNav.dataset.inboxClickGuardBound) {
       return;
@@ -451,8 +392,6 @@
     if (dateNav) {
       dateNav.classList.toggle(INBOX_NAV_CLASS, inbox);
       bindInboxTitleClickGuard(dateNav);
-      setArrowAvailability(dateNav, inbox);
-      syncReturnTodayButton(dateNav, inbox);
     }
 
     if (inbox) {

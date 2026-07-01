@@ -972,9 +972,6 @@
     if (typeof closeTaskMoreFloat === 'function') {
       closeTaskMoreFloat();
     }
-    if (typeof closeSidebar === 'function') {
-      closeSidebar();
-    }
   }
 
   function renderFrozenModeFrame() {

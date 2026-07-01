@@ -1551,71 +1551,6 @@ function focusTimerClearPick(){
   clM();
   rT()
 }
-function isTaskOverdueHeaderMode(){
-const root=document.getElementById("taskMode");
-return getTaskQuickMode()==="overdue"||!!(root&&root.classList&&root.classList.contains("task-mode--overdue-view"))
-}
-function runTaskBackTodayBtnWithoutMotion(btn,mutate){
-if(!btn){
-if(typeof mutate==="function")mutate();
-return
-}
-btn.classList.add("date-nav-return-today--no-motion");
-if(typeof mutate==="function")mutate();
-const clearNoMotion=function(){btn.classList.remove("date-nav-return-today--no-motion")};
-if(typeof requestAnimationFrame==="function")requestAnimationFrame(function(){requestAnimationFrame(clearNoMotion)});
-else setTimeout(clearNoMotion,0)
-}
-function hideTaskBackTodayBtn(btn,immediate){
-if(!btn)return;
-const applyHide=function(){
-btn.classList.remove("is-visible","has-range");
-btn.setAttribute("aria-hidden","true");
-btn.tabIndex=-1
-};
-if(immediate)runTaskBackTodayBtnWithoutMotion(btn,applyHide);
-else applyHide()
-}
-function setTaskBackTodayBtn(ds){
-const nav=document.querySelector("#taskMode .task-main-col > .task-card > .date-nav");
-if(!nav)return;
-let btn=nav.querySelector(".date-nav-return-today");
-if(isTaskOverdueHeaderMode()){
-hideTaskBackTodayBtn(btn,true);
-return
-}
-if(!btn){
-btn=document.createElement("button");
-btn.type="button";
-btn.className="date-nav-return-today";
-btn.setAttribute("aria-label","\u56de\u5230\u4eca\u5929");
-btn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg><span class="date-nav-return-today-main"></span><span class="date-nav-return-today-divider" aria-hidden="true"></span><span class="date-nav-return-today-meta" aria-hidden="true"></span>';
-btn.onclick=function(e){e.stopPropagation();const weekMode=getTaskQuickMode()==="week";if(typeof goToday==="function")goToday(weekMode);else if(typeof quickGo==="function")quickGo(0)}
-}
-const arrows=nav.querySelectorAll(".nav-arrow");
-const right=arrows&&arrows.length>1?arrows[1]:null;
-if(right){if(right.nextSibling)nav.insertBefore(btn,right.nextSibling);else nav.appendChild(btn)}
-const weekMode=getTaskQuickMode()==="week";
-const backText=weekMode?"\u56de\u5230\u672c\u5468":"\u56de\u5230\u4eca\u5929";
-const show=weekMode?getTaskWeekOffset(ds)!==0:ds!==fd(now);
-const mainEl=btn.querySelector(".date-nav-return-today-main");
-if(mainEl)mainEl.textContent=backText;
-const metaEl=btn.querySelector(".date-nav-return-today-meta");
-if(metaEl){
-metaEl.textContent="";
-metaEl.setAttribute("aria-hidden","true")
-}
-const dividerEl=btn.querySelector(".date-nav-return-today-divider");
-if(dividerEl)dividerEl.setAttribute("aria-hidden","true");
-btn.classList.remove("has-range");
-if(!show)hideTaskBackTodayBtn(btn);
-else{
-btn.classList.add("is-visible");
-btn.setAttribute("aria-hidden","false");
-btn.tabIndex=0
-}
-btn.setAttribute("aria-label",backText)
-}
 function getTaskQuickMode(){return typeof getGlobalSideNavQuickMode==="function"?getGlobalSideNavQuickMode():(window.__gsnQuickMode||"")}
 function getTaskWeekMeta(ds){const base=parseDS(ds),start=new Date(base),diff=start.getDay()===0?-6:1-start.getDay();start.setDate(start.getDate()+diff);start.setHours(0,0,0,0);const end=new Date(start);end.setDate(end.getDate()+6);const days=[];for(let i=0;i<7;i++){const d=new Date(start);d.setDate(start.getDate()+i);days.push(fd(d))}return{start:start,end:end,days:days}}
 function getTaskWeekRangeText(meta){
@@ -2392,7 +2327,6 @@ function setTaskDateTitle(ds){
     el.classList.toggle("is-plain-date",!isWeekScope&&!useRangeOffset&&!useRelative);
     if(subEl.classList.contains("is-empty")===!!subText)subEl.classList.toggle("is-empty",!subText)
   }
-  setTaskBackTodayBtn(ds)
 }
 function taskCompleteEmptyIconMarkup(){return'<svg class="empty-complete-illustration" width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><circle cx="60" cy="60" r="50" fill="#ECFDF5"/><circle cx="60" cy="60" r="36" fill="#D1FAE5"/><path d="M48 60L56 68L74 50" stroke="#10B981" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M30 36L31.5 31.5L36 30L31.5 28.5L30 24L28.5 28.5L24 30L28.5 31.5L30 36Z" fill="#34D399"/><path d="M88 34L89 31L92 30L89 29L88 26L87 29L84 30L87 31L88 34Z" fill="#6EE7B7"/><path d="M82 86L82.5 84.5L84 84L82.5 83.5L82 82L81.5 83.5L80 84L81.5 84.5L82 86Z" fill="#A7F3D0"/></svg>'}
 function rT(){

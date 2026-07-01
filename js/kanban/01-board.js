@@ -988,9 +988,11 @@ function kbHandlePageClick(event) {
   }
 
   if (action === 'open-calendar') {
-    if (typeof openSidebar === 'function') {
-      openSidebar();
-    }
+    kbRunInTaskMode(function openTaskDatePickerFromBoard() {
+      if (typeof openTaskDatePicker === 'function') {
+        openTaskDatePicker();
+      }
+    });
     return;
   }
 

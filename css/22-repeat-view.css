@@ -6,15 +6,6 @@
   margin-bottom: 12px;
 }
 
-#taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view .nav-arrow,
-.app.app--with-global-nav #taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view .nav-arrow,
-#taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view .date-nav-return-today,
-.app.app--with-global-nav #taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view .date-nav-return-today {
-  display: inline-flex !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-}
-
 #taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view h3,
 .app.app--with-global-nav #taskMode.task-mode--repeat-view .task-main-col > .task-card > .date-nav.date-nav--repeat-view h3 {
   position: relative;
