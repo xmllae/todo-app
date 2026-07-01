@@ -47,6 +47,23 @@ function taskDatePickerIsDateKey(ds){return typeof ds==="string"&&/^\d{4}-\d{2}-
 function taskDatePickerBaseDate(){try{return taskDatePickerIsDateKey(sel)?parseDS(sel):new Date(now)}catch(e){return new Date(now)}}
 function taskDatePickerMonthLabel(y,m){return y+"\u5e74"+(m+1)+"\u6708"}
 function taskDatePickerWeekStart(ds){const d=taskDatePickerIsDateKey(ds)?parseDS(ds):new Date(now);d.setHours(0,0,0,0);const diff=d.getDay()===0?-6:1-d.getDay();d.setDate(d.getDate()+diff);return fd(d)}
+function positionTaskDatePicker(){
+  const panel=document.getElementById("taskDatePicker"),title=document.querySelector("#taskMode .task-main-col > .task-card > .date-nav h3");
+  if(!panel||!title)return;
+  const dTitle=title.querySelector("#dTitle"),anchor=dTitle||title,panelRect=panel.getBoundingClientRect(),anchorRect=anchor.getBoundingClientRect();
+  if(!panelRect.width||!anchorRect.width)return;
+  let arrowCenter=anchorRect.right;
+  if(dTitle){
+    const after=getComputedStyle(dTitle,"::after"),afterWidth=parseFloat(after.width)||0;
+    if(afterWidth)arrowCenter=anchorRect.right-afterWidth/2
+  }
+  const caret=panel.querySelector(".task-date-picker-caret"),caretWidth=caret?(parseFloat(getComputedStyle(caret).width)||14):14;
+  const minLeft=10,maxLeft=Math.max(minLeft,panelRect.width-caretWidth-10);
+  // The title chevron is a rotated border, so its visual center sits slightly right of its layout center.
+  const left=Math.max(minLeft,Math.min(maxLeft,arrowCenter+3-panelRect.left-caretWidth/2));
+  panel.style.setProperty("--task-date-picker-caret-left",left.toFixed(1)+"px");
+  panel.style.setProperty("--task-date-picker-transform-origin",(left+caretWidth/2).toFixed(1)+"px 0")
+}
 function ensureTaskDatePicker(){
   const nav=document.querySelector("#taskMode .task-main-col > .task-card > .date-nav");
   if(!nav)return null;
@@ -114,7 +131,8 @@ function renderTaskDatePicker(){
     if(ds>=weekStart&&ds<fd(new Date(parseDS(weekStart).getFullYear(),parseDS(weekStart).getMonth(),parseDS(weekStart).getDate()+7)))cls+=" is-in-week";
     days+='<button type="button" class="'+cls+'" data-tdp-action="pick" data-ds="'+ds+'" aria-label="'+ds+'">'+d.getDate()+"</button>"
   }
-  panel.innerHTML='<div class="task-date-picker-caret" aria-hidden="true"></div><div class="task-date-picker-head"><button type="button" class="task-date-picker-nav-btn" data-tdp-action="prev" aria-label="\u4e0a\u4e00\u6708"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18 9 12l6-6"/></svg></button><div class="task-date-picker-month-label" aria-label="\u5f53\u524d\u6708\u4efd">'+taskDatePickerMonthLabel(_taskDatePickerYear,_taskDatePickerMonth)+'</div><button type="button" class="task-date-picker-nav-btn" data-tdp-action="next" aria-label="\u4e0b\u4e00\u6708"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button></div><div class="task-date-picker-grid">'+heads+days+'</div><div class="task-date-picker-quick"><button type="button" data-tdp-action="today">\u4eca\u5929</button><button type="button" data-tdp-action="tomorrow">\u660e\u5929</button><button type="button" data-tdp-action="week">\u672c\u5468</button><button type="button" data-tdp-action="next-week">\u4e0b\u5468</button></div>'
+  panel.innerHTML='<div class="task-date-picker-caret" aria-hidden="true"></div><div class="task-date-picker-head"><button type="button" class="task-date-picker-nav-btn" data-tdp-action="prev" aria-label="\u4e0a\u4e00\u6708"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18 9 12l6-6"/></svg></button><div class="task-date-picker-month-label" aria-label="\u5f53\u524d\u6708\u4efd">'+taskDatePickerMonthLabel(_taskDatePickerYear,_taskDatePickerMonth)+'</div><button type="button" class="task-date-picker-nav-btn" data-tdp-action="next" aria-label="\u4e0b\u4e00\u6708"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button></div><div class="task-date-picker-grid">'+heads+days+'</div><div class="task-date-picker-quick"><button type="button" data-tdp-action="today">\u4eca\u5929</button><button type="button" data-tdp-action="tomorrow">\u660e\u5929</button><button type="button" data-tdp-action="week">\u672c\u5468</button><button type="button" data-tdp-action="next-week">\u4e0b\u5468</button></div>';
+  if(panel.classList.contains("is-open")){positionTaskDatePicker();requestAnimationFrame(positionTaskDatePicker)}
 }
 function openTaskDatePicker(e){
   if(e){e.preventDefault();e.stopPropagation()}
@@ -127,11 +145,14 @@ function openTaskDatePicker(e){
   panel.classList.add("is-open");
   panel.setAttribute("aria-hidden","false");
   if(title){title.classList.add("is-date-picker-open");title.setAttribute("aria-expanded","true")}
+  positionTaskDatePicker();
+  requestAnimationFrame(positionTaskDatePicker);
   if(!_taskDatePickerDocBound){
     _taskDatePickerDocBound=true;
     setTimeout(function(){
       document.addEventListener("click",handleTaskDatePickerDocClick);
-      document.addEventListener("keydown",handleTaskDatePickerKeydown)
+      document.addEventListener("keydown",handleTaskDatePickerKeydown);
+      window.addEventListener("resize",positionTaskDatePicker)
     },0)
   }
 }
