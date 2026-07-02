@@ -1937,20 +1937,6 @@ function getWeekBulkActionState(baseDs,days){
   const tip=allExpanded?"\u6536\u8d77\u672c\u5468\u5df2\u5c55\u5f00\u7684\u5f85\u529e\u4efb\u52a1":"\u5c55\u5f00\u672c\u5468\u5269\u4f59 "+hiddenPendingLabel+" \u9879\u672a\u5c55\u793a\u5f85\u529e";
   return{expandableDays:expandableDays,hasExpandable:expandableDays.length>0,allExpanded:allExpanded,hiddenPendingCount:hiddenPendingCount,label:label,tip:tip}
 }
-function syncWeekInlineAction(weekMeta){
-  const state=getWeekBulkActionState(sel,weekMeta&&weekMeta.expandableDays);
-  const btn=document.querySelector("#tList .week-view-inline-action");
-  if(!btn)return;
-  if(!state.hasExpandable){
-    btn.remove();
-    return
-  }
-  btn.classList.toggle("is-open",state.allExpanded);
-  btn.setAttribute("aria-expanded",state.allExpanded?"true":"false");
-  btn.setAttribute("aria-label",state.tip);
-  btn.setAttribute("title",state.tip);
-  btn.innerHTML=(state.allExpanded?WEEK_HEADER_COLLAPSE_ICON:WEEK_HEADER_EXPAND_ICON)+"<span>"+state.label+"</span>"
-}
 function playWeekTaskTitleDoneAnim(row,isDone){
   const title=row&&row.querySelector(".week-task-title"),text=title&&title.querySelector(".week-task-title-text"),strike=title&&title.querySelector(".week-task-title-strike");
   if(!title||!strike)return;
@@ -2046,13 +2032,6 @@ function getWeekExpandableDays(baseDs){
     return getWeekRenderedRows(ds).length>WEEK_DAY_PREVIEW_MAX
   })
 }
-function toggleWeekAllDays(baseDs){
-  const expandableDays=getWeekExpandableDays(baseDs);
-  if(!expandableDays.length)return;
-  const shouldExpand=expandableDays.some(function(ds){return!isWeekDayExpanded(ds)});
-  expandableDays.forEach(function(ds){setWeekDayExpanded(ds,shouldExpand)});
-  syncWeekHeaderAction(true,{expandableDays:expandableDays})
-}
 function markWeekHeaderActionInstant(addSplit){
   if(!addSplit||!addSplit.classList)return;
   addSplit.classList.add("add-split--instant-restore");
@@ -2082,7 +2061,6 @@ function syncWeekHeaderAction(weekMode,weekMeta){
   }
   if(weekMode){
     const state=getWeekBulkActionState(sel,weekMeta&&weekMeta.expandableDays);
-    syncWeekInlineAction({expandableDays:state.expandableDays});
     if(addSplit){
       addSplit.classList.add("is-week-bulk-hidden");
       addSplit.classList.remove("is-week-bulk-booting");
@@ -2152,17 +2130,14 @@ function weekTaskCheckRingHtml(t,ds){
 }
 function renderWeekTaskScene(list,baseDs){
   const meta=getTaskWeekMeta(baseDs),rangeText=getTaskWeekRangeText(meta),todayDs=fd(now),weekAllTasks=[],weekFilteredTasks=[],expandableDays=[],doneCollapsed=isWeekDoneCollapsed();
-  let doneAll=0,pendingAll=0;
-  const dailyOverview=[];
+  let doneAll=0;
   const weekNames=["\u4e00","\u4e8c","\u4e09","\u56db","\u4e94","\u516d","\u65e5"];
   const cardList=meta.days.map(function(ds,idx){
     const raw=(T[ds]||[]).filter(function(t){return isListedTask(t)});
     raw.forEach(function(t){weekAllTasks.push(t)});
     const dayDone=raw.filter(function(t){return t.done}).length,dayPending=raw.filter(function(t){return!t.done&&!t.frozen}).length;
     doneAll+=dayDone;
-    pendingAll+=dayPending;
     const isOverdueDay=ds<todayDs&&dayPending>0;
-    dailyOverview.push({ds:ds,idx:idx,pending:dayPending,done:dayDone,total:raw.length,isToday:ds===todayDs,isFocus:ds===baseDs,isOverdue:isOverdueDay});
     const allRows=getWeekVisibleRows(ds),showDayDone=isWeekDoneDayShown(ds),dayDoneRows=allRows.filter(function(t){return t.done});
     let dayRows=allRows.filter(function(t){return!t.done});
     allRows.forEach(function(t){weekFilteredTasks.push(t)});
@@ -2200,17 +2175,10 @@ function renderWeekTaskScene(list,baseDs){
     const taskBody=rowsHtml||'<button type="button" class="week-day-empty" onclick="pick(\''+ds+'\')" title="\u6253\u5f00\u5f53\u65e5\u8be6\u60c5"><span class="week-day-empty-dot" aria-hidden="true"></span><span>\u6682\u65e0\u4efb\u52a1</span></button>';
     return{html:'<section class="'+cls+'" data-week-ds="'+ds+'" data-week-task-count="'+dayRows.length+'" data-week-task-total="'+totalDayRows+'" style="--week-delay:'+(idx*24)+'ms"><div class="week-day-head"><button type="button" class="week-day-title-btn" onclick="pick(\''+ds+'\')" aria-label="\u6253\u5f00\u5468'+weekNames[idx]+' '+md+'"><span class="week-day-name"><span class="week-day-week">\u5468'+weekNames[idx]+'</span></span><span class="week-day-meta"><span class="week-day-date-label">'+titleMeta+'</span></span></button>'+countHtml+'</div><div class="'+listCls+'">'+taskBody+'</div></section>',pending:dayPending,done:dayDoneCount,total:totalDayRows,idx:idx,ds:ds,weekName:weekNames[idx],md:md}
   });
-  const totalAll=weekAllTasks.length,pct=totalAll?Math.round(doneAll/totalAll*100):0;
-  const doneStatHtml='<span class="week-view-stat week-view-stat--done"><b>'+doneAll+'</b><span>\u5b8c\u6210</span></span>';
-  const bulkState=getWeekBulkActionState(baseDs,expandableDays);
-  const weekInlineActionHtml=bulkState.hasExpandable?'<button type="button" class="week-view-inline-action'+(bulkState.allExpanded?" is-open":"")+'" aria-expanded="'+(bulkState.allExpanded?"true":"false")+'" aria-label="'+bulkState.tip+'" title="'+bulkState.tip+'" onclick="event.stopPropagation();toggleWeekAllDays(\''+baseDs+'\')">'+(bulkState.allExpanded?WEEK_HEADER_COLLAPSE_ICON:WEEK_HEADER_EXPAND_ICON)+'<span>'+bulkState.label+'</span></button>':"";
-  const dayStripHtml='<div class="week-view-day-strip" aria-label="\u672c\u5468\u6bcf\u65e5\u5f85\u529e\u6982\u89c8"><div class="week-view-day-pills">'+dailyOverview.map(function(day){
-    const name=weekNames[day.idx],d=parseDS(day.ds),dateText=d?d.getMonth()+1+"/"+d.getDate():"",state=day.isOverdue?"\u903e\u671f "+day.pending+" \u9879":day.pending?day.pending+" \u9879\u5f85\u529e":day.total?"\u5df2\u5168\u90e8\u5b8c\u6210":"\u6682\u65e0\u4efb\u52a1",cls="week-view-day-pill"+(day.isToday?" is-today":"")+(day.isFocus?" is-focus":"")+(day.isOverdue?" is-overdue":"")+(day.pending?" has-pending":day.total?" is-clear":" is-empty"),dateLabel=d?d.getDate():"",valueHtml=day.isOverdue?'<span class="week-view-day-pill-state week-view-day-pill-state--overdue">'+WEEK_OVERDUE_ICON+'<span class="week-view-day-pill-state-text">\u903e\u671f</span><span class="week-view-day-pill-count">'+day.pending+'</span></span>':day.pending?'<span class="week-view-day-pill-state"><span class="week-view-day-pill-count">'+day.pending+'</span><span class="week-view-day-pill-state-text">\u5f85\u529e</span></span>':'<span class="week-view-day-pill-state week-view-day-pill-state--quiet"><span class="week-view-day-pill-state-text">'+(day.total?"\u5df2\u5b8c\u6210":"\u65e0\u4efb\u52a1")+'</span></span>';
-    return'<button type="button" class="'+cls+'" aria-label="\u5b9a\u4f4d\u5230\u5468'+name+' '+dateText+'\uff0c'+state+'" title="\u5468'+name+' '+dateText+'\uff1a'+state+'" onclick="jumpWeekDay(\''+day.ds+'\')"><span class="week-view-day-pill-main"><span class="week-view-day-pill-name">\u5468'+name+'</span><span class="week-view-day-pill-date">'+dateLabel+'</span></span>'+valueHtml+'</button>'
-  }).join("")+'</div></div>';
+  const totalAll=weekAllTasks.length;
   const activeCards=cardList.filter(function(item){return item.pending>0}),completedOnlyCards=cardList.filter(function(item){return item.pending<=0&&item.total>0});
   const gridInner=activeCards.concat(completedOnlyCards).map(function(item){return item.html}).join("");
-  list.innerHTML='<div class="week-view'+(doneCollapsed?" is-done-collapsed":"")+'"><div class="week-view-head">'+dayStripHtml+'</div><div class="week-day-grid is-focus-first">'+gridInner+'</div></div>';
+  list.innerHTML='<div class="week-view'+(doneCollapsed?" is-done-collapsed":"")+'"><div class="week-day-grid is-focus-first">'+gridInner+'</div></div>';
   syncWeekExtraHeights(list);
   requestAnimationFrame(function(){syncWeekExtraHeights(list)});
   initWeekViewPressFeedback(list);

@@ -1583,14 +1583,14 @@
     text-align: center;
   }
 
-  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3:has(#dTitle:is(.is-relative, .is-range-offset, .is-plain-date)) {
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3:has(#dTitle:is(.is-week-scope, .is-relative, .is-range-offset, .is-plain-date)) {
     flex: 0 0 var(--date-nav-title-visible-box-w);
     width: var(--date-nav-title-visible-box-w);
     min-width: var(--date-nav-title-visible-box-w);
     overflow: visible;
   }
 
-  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-relative, .is-range-offset, .is-plain-date) {
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-week-scope, .is-relative, .is-range-offset, .is-plain-date) {
     width: auto;
     min-height: 0;
     flex-direction: row;
@@ -1601,7 +1601,7 @@
     overflow: visible;
   }
 
-  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-relative, .is-range-offset, .is-plain-date) .date-nav-date-main {
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-week-scope, .is-relative, .is-range-offset, .is-plain-date) .date-nav-date-main {
     width: auto;
     font-size: var(--date-nav-inline-main-size);
     font-weight: 700;
@@ -1610,7 +1610,7 @@
     color: var(--date-nav-inline-main-color);
   }
 
-  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-relative, .is-range-offset, .is-plain-date) .date-nav-date-sub {
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-week-scope, .is-relative, .is-range-offset, .is-plain-date) .date-nav-date-sub {
     display: inline-flex;
     align-items: center;
     width: auto;
@@ -1622,14 +1622,14 @@
     color: var(--date-nav-inline-muted-color);
   }
 
-  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-relative, .is-range-offset, .is-plain-date) .date-nav-date-sub::before {
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-week-scope, .is-relative, .is-range-offset, .is-plain-date) .date-nav-date-sub::before {
     content: "\00b7";
     margin: 0 var(--date-nav-inline-separator-gap);
     color: var(--date-nav-inline-muted-color);
     font-weight: 700;
   }
 
-  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-relative, .is-range-offset, .is-plain-date)::after {
+  .app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-week-scope, .is-relative, .is-range-offset, .is-plain-date)::after {
     content: "";
     width: var(--date-nav-inline-arrow-size);
     height: var(--date-nav-inline-arrow-size);
@@ -3772,14 +3772,14 @@
     color: #64748b !important;
   }
 
-  #taskMode .task-main-col > .task-card > .date-nav h3:has(#dTitle:is(.is-relative, .is-range-offset, .is-plain-date)) {
+  #taskMode .task-main-col > .task-card > .date-nav h3:has(#dTitle:is(.is-week-scope, .is-relative, .is-range-offset, .is-plain-date)) {
     flex: 0 0 var(--date-nav-title-visible-box-w) !important;
     width: var(--date-nav-title-visible-box-w) !important;
     min-width: var(--date-nav-title-visible-box-w) !important;
     overflow: visible !important;
   }
 
-  #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-relative, .is-range-offset, .is-plain-date) {
+  #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-week-scope, .is-relative, .is-range-offset, .is-plain-date) {
     width: auto !important;
     min-height: 0 !important;
     flex-direction: row !important;
@@ -3790,7 +3790,7 @@
     overflow: visible !important;
   }
 
-  #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-relative, .is-range-offset, .is-plain-date) .date-nav-date-main {
+  #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-week-scope, .is-relative, .is-range-offset, .is-plain-date) .date-nav-date-main {
     width: auto !important;
     margin: 0 !important;
     font-size: var(--date-nav-inline-main-size) !important;
@@ -3800,7 +3800,7 @@
     color: var(--date-nav-inline-main-color) !important;
   }
 
-  #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-relative, .is-range-offset, .is-plain-date) .date-nav-date-sub {
+  #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-week-scope, .is-relative, .is-range-offset, .is-plain-date) .date-nav-date-sub {
     display: inline-flex !important;
     align-items: center !important;
     width: auto !important;
@@ -3812,14 +3812,14 @@
     color: var(--date-nav-inline-muted-color) !important;
   }
 
-  #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-relative, .is-range-offset, .is-plain-date) .date-nav-date-sub::before {
+  #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-week-scope, .is-relative, .is-range-offset, .is-plain-date) .date-nav-date-sub::before {
     content: "\00b7";
     margin: 0 var(--date-nav-inline-separator-gap);
     color: var(--date-nav-inline-muted-color);
     font-weight: 700;
   }
 
-  #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-relative, .is-range-offset, .is-plain-date)::after {
+  #taskMode .task-main-col > .task-card > .date-nav h3 #dTitle:is(.is-week-scope, .is-relative, .is-range-offset, .is-plain-date)::after {
     content: "";
     width: var(--date-nav-inline-arrow-size);
     height: var(--date-nav-inline-arrow-size);
@@ -3964,8 +3964,8 @@
   cursor: pointer;
 }
 
-#taskMode .task-main-col > .task-card > .date-nav h3.is-date-picker-open #dTitle:is(.is-relative, .is-range-offset, .is-plain-date)::after,
-.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3.is-date-picker-open #dTitle:is(.is-relative, .is-range-offset, .is-plain-date)::after {
+#taskMode .task-main-col > .task-card > .date-nav h3.is-date-picker-open #dTitle:is(.is-week-scope, .is-relative, .is-range-offset, .is-plain-date)::after,
+.app.app--with-global-nav #taskMode .task-main-col > .task-card > .date-nav h3.is-date-picker-open #dTitle:is(.is-week-scope, .is-relative, .is-range-offset, .is-plain-date)::after {
   transform: rotate(225deg) translate(-2px, -1px);
 }
 

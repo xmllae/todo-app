@@ -135,6 +135,10 @@ function readSubscriptionsFromStorage() {
 
 function writeSubscriptionsToStorage(list) {
   localStorage.setItem("tuole_subs", JSON.stringify(list));
+
+  if (typeof save === "function") {
+    save();
+  }
 }
 
 function getInputValue(id) {

@@ -449,8 +449,7 @@ function _subRenewOne(id) {
   else if (s.cycle === "custom" && s.customDays) base.setDate(base.getDate() + +s.customDays);
   else base.setMonth(base.getMonth() + 1);
   s.expireDate = base.toISOString().slice(0, 10);
-  localStorage.setItem("tuole_subs", JSON.stringify(subscriptions));
-  if (typeof save === "function") save();
+  writeSubscriptionsToStorage(subscriptions);
   rSubscriptions();
   toast("✅ 已续期：" + _subNormalizeText(s.name));
 }

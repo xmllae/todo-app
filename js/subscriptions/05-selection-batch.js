@@ -20,8 +20,7 @@ function _subBatchDel() {
     return !_subSelected.has(s.id);
   });
 
-  localStorage.setItem("tuole_subs", JSON.stringify(subscriptions));
-  if (typeof save === "function") save();
+  writeSubscriptionsToStorage(subscriptions);
   _subSelected.clear();
   rSubscriptions();
   toast("🗑️ 已批量删除");
@@ -47,8 +46,7 @@ function _subBatchRenew() {
     updated++;
   });
 
-  localStorage.setItem("tuole_subs", JSON.stringify(subscriptions));
-  if (typeof save === "function") save();
+  writeSubscriptionsToStorage(subscriptions);
   _subSelected.clear();
   rSubscriptions();
   toast("✅ 已批量续期 " + updated + " 条订阅");
